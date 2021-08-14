@@ -1,0 +1,36 @@
+{
+    "Infantry": {
+        "AWBWId": 1,
+        "MaxFuel": 99,
+        "MaxAmmo": 0,
+        "FuelUsagePerTurn": 0,
+        "Vision": 2,
+        "MovementRange": 3,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 1000,
+        "MovementType": "LightInf",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Infantry",
+            "bd": "Team/BrownDesert/Infantry",
+            "os": "Team/OrangeStar/Infantry"
+        },
+        "Frames": [160, 160, 320, 160]
+    },
+    "Black Boat": {
+        "AWBWId": 28,
+        "MaxFuel": 60,
+        "MaxAmmo": 0,
+        "FuelUsagePerTurn": 1,
+        "Vision": 1,
+        "MovementRange": 7,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 7500,
+        "MovementType": "Lander",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/BlackBoat",
+            "bd": "Team/BrownDesert/BlackBoat",
+            "os": "Team/OrangeStar/BlackBoat"
+        },
+        "Frames": [320, 160, 160, 160]
+    },
+}

@@ -1,0 +1,548 @@
+{
+    "Plain": {
+        "AWBWID": 1,
+        "BaseDefence": 1,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 2,
+            "Air": 1
+        },
+        "BaseTexture": "Plain",
+        "FogOfWarTexture": "Plain"
+    },
+    "Mountain": {
+        "AWBWID": 2,
+        "BaseDefence": 4,
+        "SightDistanceIncrease": 2,
+        "MovementCostsPerType": {
+            "LightInf": 2,
+            "HeavyInf": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Mountain",
+        "FogOfWarTexture": "Mountain"
+    },
+    "Wood": {
+        "AWBWID": 3,
+        "BaseDefence": 2,
+        "LimitFogOfWarSightDistance": 1,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 2,
+            "Tire": 3,
+            "Air": 1
+        },
+        "BaseTexture": "Wood",
+        "FogOfWarTexture": "Wood"
+    },
+    "HRiver": {
+        "AWBWID": 4,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 2,
+            "Tire": 3,
+            "Air": 1
+        },
+        "BaseTexture": "River/H",
+        "FogOfWarTexture": "River/H"
+    },
+    "VRiver": {
+        "AWBWID": 5,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 2,
+            "Tire": 3,
+            "Air": 1
+        },
+        "BaseTexture": "River/V",
+        "FogOfWarTexture": "River/V"
+    },
+    "CRiver": {
+        "AWBWID": 6,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 2,
+            "Tire": 3,
+            "Air": 1
+        },
+        "BaseTexture": "River/C",
+        "FogOfWarTexture": "River/C"
+    },
+    "ESRiver": {
+        "AWBWID": 7,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 2,
+            "Tire": 3,
+            "Air": 1
+        },
+        "BaseTexture": "River/ES",
+        "FogOfWarTexture": "River/ES"
+    },
+    "SWRiver": {
+        "AWBWID": 8,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 2,
+            "Tire": 3,
+            "Air": 1
+        },
+        "BaseTexture": "River/SW",
+        "FogOfWarTexture": "River/SW"
+    },
+    "WNRiver": {
+        "AWBWID": 9,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 2,
+            "Tire": 3,
+            "Air": 1
+        },
+        "BaseTexture": "River/WN",
+        "FogOfWarTexture": "River/WN"
+    },
+    "NERiver": {
+        "AWBWID": 10,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 2,
+            "Tire": 3,
+            "Air": 1
+        },
+        "BaseTexture": "River/NE",
+        "FogOfWarTexture": "River/NE"
+    },
+    "ESWRiver": {
+        "AWBWID": 11,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 2,
+            "Tire": 3,
+            "Air": 1
+        },
+        "BaseTexture": "River/ESW",
+        "FogOfWarTexture": "River/ESW"
+    },
+    "SWNRiver": {
+        "AWBWID": 12,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 2,
+            "Tire": 3,
+            "Air": 1
+        },
+        "BaseTexture": "River/SWN",
+        "FogOfWarTexture": "River/SWN"
+    },
+    "WNERiver": {
+        "AWBWID": 13,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 2,
+            "Tire": 3,
+            "Air": 1
+        },
+        "BaseTexture": "River/WNE",
+        "FogOfWarTexture": "River/WNE"
+    },
+    "NESRiver": {
+        "AWBWID": 14,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 2,
+            "Tire": 3,
+            "Air": 1
+        },
+        "BaseTexture": "River/NES",
+        "FogOfWarTexture": "River/NES"
+    },
+    "HRoad": {
+        "AWBWID": 15,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Road/H",
+        "FogOfWarTexture": "Road/H"
+    },
+    "VRoad": {
+        "AWBWID": 16,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Road/V",
+        "FogOfWarTexture": "Road/V"
+    },
+    "CRoad": {
+        "AWBWID": 17,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Road/C",
+        "FogOfWarTexture": "Road/C"
+    },
+    "ESRoad": {
+        "AWBWID": 18,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Road/ES",
+        "FogOfWarTexture": "Road/ES"
+    },
+    "SWRoad": {
+        "AWBWID": 19,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Road/SW",
+        "FogOfWarTexture": "Road/SW"
+    },
+    "WNRoad": {
+        "AWBWID": 20,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Road/WN",
+        "FogOfWarTexture": "Road/WN"
+    },
+    "NERoad": {
+        "AWBWID": 21,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Road/NE",
+        "FogOfWarTexture": "Road/NE"
+    },
+    "ESWRoad": {
+        "AWBWID": 22,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Road/ESW",
+        "FogOfWarTexture": "Road/ESW"
+    },
+    "SWNRoad": {
+        "AWBWID": 23,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Road/SWN",
+        "FogOfWarTexture": "Road/SWN"
+    },
+    "WNERoad": {
+        "AWBWID": 24,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Road/WNE",
+        "FogOfWarTexture": "Road/WNE"
+    },
+    "NESRoad": {
+        "AWBWID": 25,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Road/NES",
+        "FogOfWarTexture": "Road/NES"
+    },
+    "HBridge": {
+        "AWBWID": 26,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Road/HBridge",
+        "FogOfWarTexture": "Road/HBridge"
+    },
+    "VBridge": {
+        "AWBWID": 27,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Road/VBridge",
+        "FogOfWarTexture": "Road/VBridge"
+    },
+    "Sea": {
+        "AWBWID": 28,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Sea",
+        "FogOfWarTexture": "Sea"
+    },
+    "HShoal": {
+        "AWBWID": 29,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Shoal/H",
+        "FogOfWarTexture": "Shoal/H"
+    },
+    "HShoalN": {
+        "AWBWID": 30,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Shoal/HN",
+        "FogOfWarTexture": "Shoal/HN"
+    },
+    "VShoal": {
+        "AWBWID": 31,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Shoal/V",
+        "FogOfWarTexture": "Shoal/V"
+    },
+    "VShoalE": {
+        "AWBWID": 32,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Shoal/VE",
+        "FogOfWarTexture": "Shoal/VE"
+    },
+    "Reef": {
+        "AWBWID": 33,
+        "BaseDefence": 1,
+        "LimitFogOfWarSightDistance": 1,
+        "MovementCostsPerType": {
+            "Sea": 2,
+            "Lander": 2,
+            "Air": 1
+        },
+        "BaseTexture": "Reef",
+        "FogOfWarTexture": "Reef"
+    },
+    "VPipe": {
+        "AWBWID": 101,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Pipe": 1
+        },
+        "BaseTexture": "Pipe/V",
+        "FogOfWarTexture": "Pipe/V"
+    },
+    "HPipe": {
+        "AWBWID": 102,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Pipe": 1
+        },
+        "BaseTexture": "Pipe/H",
+        "FogOfWarTexture": "Pipe/H"
+    },
+    "NEPipe": {
+        "AWBWID": 103,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Pipe": 1
+        },
+        "BaseTexture": "Pipe/NE",
+        "FogOfWarTexture": "Pipe/NE"
+    },
+    "ESPipe": {
+        "AWBWID": 104,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Pipe": 1
+        },
+        "BaseTexture": "Pipe/ES",
+        "FogOfWarTexture": "Pipe/ES"
+    },
+    "SWPipe": {
+        "AWBWID": 105,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Pipe": 1
+        },
+        "BaseTexture": "Pipe/SW",
+        "FogOfWarTexture": "Pipe/SW"
+    },
+    "WNPipe": {
+        "AWBWID": 106,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Pipe": 1
+        },
+        "BaseTexture": "Pipe/WN",
+        "FogOfWarTexture": "Pipe/WN"
+    },
+    "NPipe End": {
+        "AWBWID": 107,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Pipe": 1
+        },
+        "BaseTexture": "Pipe/NEnd",
+        "FogOfWarTexture": "Pipe/NEnd"
+    },
+    "EPipe End": {
+        "AWBWID": 108,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Pipe": 1
+        },
+        "BaseTexture": "Pipe/EEnd",
+        "FogOfWarTexture": "Pipe/EEnd"
+    },
+    "SPipe End": {
+        "AWBWID": 109,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Pipe": 1
+        },
+        "BaseTexture": "Pipe/SEnd",
+        "FogOfWarTexture": "Pipe/SEnd"
+    },
+    "WPipe End": {
+        "AWBWID": 110,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Pipe": 1
+        },
+        "BaseTexture": "Pipe/WEnd",
+        "FogOfWarTexture": "Pipe/WEnd"
+    },
+    "HPipe Rubble": {
+        "AWBWID": 115,
+        "BaseDefence": 1,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 2,
+            "Air": 1
+        },
+        "BaseTexture": "Pipe/HR",
+        "FogOfWarTexture": "Pipe/HR"
+    },
+    "VPipe Rubble": {
+        "AWBWID": 116,
+        "BaseDefence": 1,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 2,
+            "Air": 1
+        },
+        "BaseTexture": "Pipe/VR",
+        "FogOfWarTexture": "Pipe/VR"
+    },
+}

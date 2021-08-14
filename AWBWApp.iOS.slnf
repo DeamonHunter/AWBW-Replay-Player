@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "path": "AWBWApp.sln",
+    "projects": [
+      "AWBWApp.Game\\AWBWApp.Game.csproj",
+      "AWBWApp.Resources\\AWBWApp.Resources.csproj",
+      "AWBWApp.iOS\\AWBWApp.iOS.csproj"
+    ]
+  }
+}
