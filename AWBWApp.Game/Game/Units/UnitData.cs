@@ -38,7 +38,7 @@ namespace AWBWApp.Game.Game.Units
         public Dictionary<string, string> BaseTextureByTeam { get; set; }
 
         [JsonProperty]
-        public string FogOfWarTexture { get; set; }
+        public Dictionary<string, string> DivedTextureByTeam { get; set; }
 
         [JsonProperty]
         public double[] Frames { get; set; }

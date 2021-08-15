@@ -211,6 +211,39 @@ namespace AWBWApp.Game.Game.Logic
             return units[unitId];
         }
 
+        public void DestroyUnit(long unitId, bool playExplosion = true, bool immediate = false)
+        {
+            if (!units.Remove(unitId, out DrawableUnit unit))
+                return;
+
+            if (immediate)
+                removeUnit(unit, playExplosion);
+            else
+                unit.DelayUntilTransformsFinished().Finally(x => removeUnit(x, playExplosion));
+        }
+
+        public List<DrawableUnit> GetUnitsWithDistance(Vector2I position, int distance)
+        {
+            var unitsWithRange = new List<DrawableUnit>();
+
+            foreach (var unit in units)
+            {
+                if ((unit.Value.MapPosition - position).ManhattonDistance() > distance)
+                    continue;
+
+                unitsWithRange.Add(unit.Value);
+            }
+            return unitsWithRange;
+        }
+
+        void removeUnit(DrawableUnit unit, bool playExplosion)
+        {
+            unitsDrawable.Remove(unit);
+            if (!playExplosion)
+                return;
+            //Todo: Add explosion drawable
+        }
+
         public DrawableUnit GetDrawableUnit(Vector2I unitPosition)
         {
             //Todo: query by position rather than iterate over everything
@@ -236,9 +269,9 @@ namespace AWBWApp.Game.Game.Logic
                 return;
             }
 
-            if ((newTurn || (awbwBuilding.BuildingHP < 0 || awbwBuilding.ID != 0)) && building.BuildingTile.AWBWId != awbwBuilding.Terrain_Id)
+            if ((newTurn || (awbwBuilding.BuildingHP < 0 || awbwBuilding.Terrain_Id != 0)) && building.BuildingTile.AWBWId != awbwBuilding.Terrain_Id)
             {
-                Remove(building);
+                buildingsDrawable.Remove(building);
                 buildings.Remove(tilePosition);
 
                 if (awbwBuilding.Terrain_Id != 0)

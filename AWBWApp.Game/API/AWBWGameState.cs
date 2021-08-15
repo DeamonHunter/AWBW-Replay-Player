@@ -141,6 +141,9 @@ namespace AWBWApp.Game.API
         [JsonProperty("units_cargo2_units_id")]
         public string Cargo2;
 
+        [JsonProperty("units_sub_dive")]
+        public string UnitDived;
+
         [JsonProperty("generic_id")]
         public int? UnitId { get; set; }
 
@@ -149,6 +152,24 @@ namespace AWBWApp.Game.API
 
         [JsonProperty("countries_code")]
         public string CountryCode { get; set; }
+    }
+
+    public class AWBWAttackCOP
+    {
+        [JsonProperty]
+        public AWBWAttackCOPValue Attacker;
+        [JsonProperty]
+        public AWBWAttackCOPValue Defender;
+    }
+
+    public class AWBWAttackCOPValue
+    {
+        [JsonProperty]
+        public long PlayerId;
+        [JsonProperty]
+        public long? COPValue;
+        [JsonProperty]
+        public long? TagValue;
     }
 
     public class ArrayOrObjectConverterToIntDictionary<T> : JsonConverter
