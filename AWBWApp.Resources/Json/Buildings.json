@@ -124,6 +124,32 @@
         "BaseTexture": "Team/Neutral/VSeam",
         "FogOfWarTexture": "Team/Neutral/VSeam"
     },
+    "HPipe Rubble": {
+        "AWBWID": 115,
+        "BaseDefence": 1,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 2,
+            "Air": 1
+        },
+        "BaseTexture": "Team/Neutral/HRubble",
+        "FogOfWarTexture": "Team/Neutral/HRubble"
+    },
+    "VPipe Rubble": {
+        "AWBWID": 116,
+        "BaseDefence": 1,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 2,
+            "Air": 1
+        },
+        "BaseTexture": "Team/Neutral/VRubble",
+        "FogOfWarTexture": "Team/Neutral/VRubble"
+    },
     /*
     Orange Star
     */
@@ -142,7 +168,8 @@
         "frames": [
             400,
             1200
-        ]
+        ],
+        "frameOffset": 100
     },
     "Orange Star Base": {
         "AWBWID": 39,
@@ -257,6 +284,141 @@
             1200
         ],
         "frameOffset": 100
+    },
+    /*
+    Green Earth
+    */
+    "Green Earth Airport": {
+        "AWBWID": 50,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/GreenEarth/Airport",
+        "FogOfWarTexture": "Team/GreenEarth/Airport",
+        "frames": [
+            400,
+            1200
+        ],
+        "frameOffset": 300
+    },
+    "Green Earth Base": {
+        "AWBWID": 49,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "BaseTexture": "Team/GreenEarth/Base",
+        "FogOfWarTexture": "Team/GreenEarth/Base",
+        "frames": [
+            100,
+            300,
+            400,
+            400,
+            100,
+            300
+        ]
+    },
+    "Green Earth City": {
+        "AWBWID": 48,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/GreenEarth/City",
+        "FogOfWarTexture": "Team/GreenEarth/City",
+        "frames": [
+            400,
+            1200
+        ],
+        "frameOffset": 300
+    },
+    "Green Earth HQ": {
+        "AWBWID": 52,
+        "BaseDefence": 4,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/GreenEarth/HQ",
+        "FogOfWarTexture": "Team/GreenEarth/HQ",
+        "frames": [
+            400,
+            1200
+        ],
+        "frameOffset": 300
+    },
+    "Green Earth Port": {
+        "AWBWID": 51,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Team/GreenEarth/Port",
+        "FogOfWarTexture": "Team/GreenEarth/Port",
+        "frames": [
+            400,
+            1200
+        ],
+        "frameOffset": 300
+    },
+    "Green Earth Com Tower": {
+        "AWBWID": 131,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/GreenEarth/ComTower",
+        "FogOfWarTexture": "Team/GreenEarth/ComTower",
+        "frames": [
+            400,
+            1200
+        ],
+        "frameOffset": 300
+    },
+    "Green Earth Lab": {
+        "AWBWID": 142,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/GreenEarth/Lab",
+        "FogOfWarTexture": "Team/GreenEarth/Lab",
+        "frames": [
+            400,
+            1200
+        ],
+        "frameOffset": 300
     },
     /*
     Brown Desert

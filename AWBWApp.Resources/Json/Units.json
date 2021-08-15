@@ -9,12 +9,355 @@
         "AttackRange": {"x": 0, "y": 0},
         "Cost": 1000,
         "MovementType": "LightInf",
+        "SecondWeapon": false,
+        "Symbol": "A",
         "BaseTextureByTeam": {
             "ab": "Team/AmberBlaze/Infantry",
             "bd": "Team/BrownDesert/Infantry",
-            "os": "Team/OrangeStar/Infantry"
+            "ge": "Team/GreenEarth/Infantry",
+            "os": "Team/OrangeStar/Infantry",
         },
         "Frames": [160, 160, 320, 160]
+    },
+    "Mech": {
+        "AWBWId": 2,
+        "MaxFuel": 70,
+        "MaxAmmo": 3,
+        "FuelUsagePerTurn": 0,
+        "Vision": 2,
+        "MovementRange": 2,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 3000,
+        "MovementType": "HeavyInf",
+        "SecondWeapon": true,
+        "Symbol": "B",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Mech",
+            "bd": "Team/BrownDesert/Mech",
+            "ge": "Team/GreenEarth/Mech",
+            "os": "Team/OrangeStar/Mech"
+        },
+        "Frames": [480, 320]
+    },
+    "Md.Tank": {
+        "AWBWId": 3,
+        "MaxFuel": 50,
+        "MaxAmmo": 8,
+        "FuelUsagePerTurn": 0,
+        "Vision": 1,
+        "MovementRange": 5,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 16000,
+        "MovementType": "Tread",
+        "SecondWeapon": true,
+        "Symbol": "C",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/MdTank",
+            "bd": "Team/BrownDesert/MdTank",
+            "ge": "Team/GreenEarth/MdTank",
+            "os": "Team/OrangeStar/MdTank"
+        },
+        "Frames": [160, 160, 320, 160]
+    },
+    "Tank": {
+        "AWBWId": 4,
+        "MaxFuel": 70,
+        "MaxAmmo": 9,
+        "FuelUsagePerTurn": 0,
+        "Vision": 3,
+        "MovementRange": 6,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 7000,
+        "MovementType": "Tread",
+        "SecondWeapon": true,
+        "Symbol": "D",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Tank",
+            "bd": "Team/BrownDesert/Tank",
+            "ge": "Team/GreenEarth/Tank",
+            "os": "Team/OrangeStar/Tank"
+        },
+        "Frames": [160, 160, 320, 160]
+    },
+    "Recon": {
+        "AWBWId": 5,
+        "MaxFuel": 80,
+        "MaxAmmo": 0,
+        "FuelUsagePerTurn": 0,
+        "Vision": 5,
+        "MovementRange": 8,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 4000,
+        "MovementType": "Tire",
+        "SecondWeapon": false,
+        "Symbol": "E",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Recon",
+            "bd": "Team/BrownDesert/Recon",
+            "ge": "Team/GreenEarth/Recon",
+            "os": "Team/OrangeStar/Recon"
+        },
+        "Frames": [160, 160, 320, 160]
+    },
+    "APC": {
+        "AWBWId": 6,
+        "MaxFuel": 70,
+        "MaxAmmo": 0,
+        "FuelUsagePerTurn": 0,
+        "Vision": 1,
+        "MovementRange": 6,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 5000,
+        "MovementType": "Tread",
+        "SecondWeapon": false,
+        "Symbol": "F",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/APC",
+            "bd": "Team/BrownDesert/APC",
+            "ge": "Team/GreenEarth/APC",
+            "os": "Team/OrangeStar/APC"
+        },
+        "Frames": [160, 160, 320, 160]
+    },
+    "Artillery": {
+        "AWBWId": 7,
+        "MaxFuel": 50,
+        "MaxAmmo": 9,
+        "FuelUsagePerTurn": 0,
+        "Vision": 1,
+        "MovementRange": 5,
+        "AttackRange": {"x": 2, "y": 3},
+        "Cost": 6000,
+        "MovementType": "Tread",
+        "SecondWeapon": false,
+        "Symbol": "G",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Artillery",
+            "bd": "Team/BrownDesert/Artillery",
+            "ge": "Team/GreenEarth/Artillery",
+            "os": "Team/OrangeStar/Artillery"
+        },
+        "Frames": [160, 160, 320, 160]
+    },
+    "Rocket": {
+        "AWBWId": 8,
+        "MaxFuel": 50,
+        "MaxAmmo": 6,
+        "FuelUsagePerTurn": 0,
+        "Vision": 1,
+        "MovementRange": 5,
+        "AttackRange": {"x": 3, "y": 5},
+        "Cost": 15000,
+        "MovementType": "Tire",
+        "SecondWeapon": false,
+        "Symbol": "H",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Rocket",
+            "bd": "Team/BrownDesert/Rocket",
+            "ge": "Team/GreenEarth/Rocket",
+            "os": "Team/OrangeStar/Rocket"
+        },
+        "Frames": [320, 480]
+    },
+    "Anti-Air": {
+        "AWBWId": 9,
+        "MaxFuel": 60,
+        "MaxAmmo": 9,
+        "FuelUsagePerTurn": 0,
+        "Vision": 2,
+        "MovementRange": 6,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 8000,
+        "MovementType": "Tread",
+        "SecondWeapon": false,
+        "Symbol": "I",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Anti-Air",
+            "bd": "Team/BrownDesert/Anti-Air",
+            "ge": "Team/GreenEarth/Anti-Air",
+            "os": "Team/OrangeStar/Anti-Air"
+        },
+        "Frames": [160, 160, 320, 160]
+    },
+    "Missile": {
+        "AWBWId": 10,
+        "MaxFuel": 50,
+        "MaxAmmo": 6,
+        "FuelUsagePerTurn": 0,
+        "Vision": 5,
+        "MovementRange": 4,
+        "AttackRange": {"x": 3, "y": 5},
+        "Cost": 12000,
+        "MovementType": "Tire",
+        "SecondWeapon": false,
+        "Symbol": "J",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Missile",
+            "bd": "Team/BrownDesert/Missile",
+            "ge": "Team/GreenEarth/Missile",
+            "os": "Team/OrangeStar/Missile"
+        },
+        "Frames": [480, 320]
+    },
+    "Fighter": {
+        "AWBWId": 11,
+        "MaxFuel": 99,
+        "MaxAmmo": 9,
+        "FuelUsagePerTurn": 5,
+        "Vision": 2,
+        "MovementRange": 9,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 20000,
+        "MovementType": "Air",
+        "SecondWeapon": false,
+        "Symbol": "L",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Fighter",
+            "bd": "Team/BrownDesert/Fighter",
+            "ge": "Team/GreenEarth/Fighter",
+            "os": "Team/OrangeStar/Fighter"
+        },
+        "Frames": [320, 480]
+    },
+    "Bomber": {
+        "AWBWId": 12,
+        "MaxFuel": 99,
+        "MaxAmmo": 9,
+        "FuelUsagePerTurn": 5,
+        "Vision": 2,
+        "MovementRange": 7,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 22000,
+        "MovementType": "Air",
+        "SecondWeapon": false,
+        "Symbol": "M",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Bomber",
+            "bd": "Team/BrownDesert/Bomber",
+            "ge": "Team/GreenEarth/Bomber",
+            "os": "Team/OrangeStar/Bomber"
+        },
+        "Frames": [480, 320]
+    },
+    "B-Copter": {
+        "AWBWId": 13,
+        "MaxFuel": 99,
+        "MaxAmmo": 6,
+        "FuelUsagePerTurn": 2,
+        "Vision": 3,
+        "MovementRange": 6,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 9000,
+        "MovementType": "Air",
+        "SecondWeapon": true,
+        "Symbol": "N",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/B-Copter",
+            "bd": "Team/BrownDesert/B-Copter",
+            "ge": "Team/GreenEarth/B-Copter",
+            "os": "Team/OrangeStar/B-Copter"
+        },
+        "Frames": [160, 160, 320, 160]
+    },
+    "T-Copter": {
+        "AWBWId": 14,
+        "MaxFuel": 99,
+        "MaxAmmo": 0,
+        "FuelUsagePerTurn": 2,
+        "Vision": 2,
+        "MovementRange": 6,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 5000,
+        "MovementType": "Air",
+        "SecondWeapon": false,
+        "Symbol": "O",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/T-Copter",
+            "bd": "Team/BrownDesert/T-Copter",
+            "ge": "Team/GreenEarth/T-Copter",
+            "os": "Team/OrangeStar/T-Copter"
+        },
+        "Frames": [160, 160, 320, 160]
+    },
+    "Battleship": {
+        "AWBWId": 15,
+        "MaxFuel": 99,
+        "MaxAmmo": 9,
+        "FuelUsagePerTurn": 1,
+        "Vision": 2,
+        "MovementRange": 5,
+        "AttackRange": {"x": 2, "y": 6},
+        "Cost": 28000,
+        "MovementType": "Sea",
+        "SecondWeapon": false,
+        "Symbol": "P",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Battleship",
+            "bd": "Team/BrownDesert/Battleship",
+            "ge": "Team/GreenEarth/Battleship",
+            "os": "Team/OrangeStar/Battleship"
+        },
+        "Frames": [480, 320]
+    },
+    "Cruiser": {
+        "AWBWId": 16,
+        "MaxFuel": 99,
+        "MaxAmmo": 9,
+        "FuelUsagePerTurn": 1,
+        "Vision": 3,
+        "MovementRange": 6,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 18000,
+        "MovementType": "Sea",
+        "SecondWeapon": false,
+        "Symbol": "Q",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Cruiser",
+            "bd": "Team/BrownDesert/Cruiser",
+            "ge": "Team/GreenEarth/Cruiser",
+            "os": "Team/OrangeStar/Cruiser"
+        },
+        "Frames": [480, 320]
+    },
+    "Lander": {
+        "AWBWId": 17,
+        "MaxFuel": 99,
+        "MaxAmmo": 0,
+        "FuelUsagePerTurn": 1,
+        "Vision": 1,
+        "MovementRange": 6,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 12000,
+        "MovementType": "Lander",
+        "SecondWeapon": false,
+        "Symbol": "R",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Lander",
+            "bd": "Team/BrownDesert/Lander",
+            "ge": "Team/GreenEarth/Lander",
+            "os": "Team/OrangeStar/Lander"
+        },
+        "Frames": [320, 480]
+    },
+    "Sub": {
+        "AWBWId": 18,
+        "MaxFuel": 60,
+        "MaxAmmo": 6,
+        "FuelUsagePerTurn": 1,
+        "Vision": 5,
+        "MovementRange": 5,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 20000,
+        "MovementType": "Sea",
+        "SecondWeapon": false,
+        "Symbol": "S",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Sub",
+            "bd": "Team/BrownDesert/Sub",
+            "ge": "Team/GreenEarth/Sub",
+            "os": "Team/OrangeStar/Sub"
+        },
+        "Frames": [320, 160, 160, 160]
     },
     "Black Boat": {
         "AWBWId": 28,
@@ -26,11 +369,134 @@
         "AttackRange": {"x": 0, "y": 0},
         "Cost": 7500,
         "MovementType": "Lander",
+        "SecondWeapon": false,
+        "Symbol": "A",
         "BaseTextureByTeam": {
             "ab": "Team/AmberBlaze/BlackBoat",
             "bd": "Team/BrownDesert/BlackBoat",
+            "ge": "Team/GreenEarth/BlackBoat",
             "os": "Team/OrangeStar/BlackBoat"
         },
         "Frames": [320, 160, 160, 160]
+    },
+    "Carrier": {
+        "AWBWId": 29,
+        "MaxFuel": 99,
+        "MaxAmmo": 9,
+        "FuelUsagePerTurn": 1,
+        "Vision": 4,
+        "MovementRange": 5,
+        "AttackRange": {"x": 3, "y": 8},
+        "Cost": 30000,
+        "MovementType": "Sea",
+        "SecondWeapon": false,
+        "Symbol": "B",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Carrier",
+            "bd": "Team/BrownDesert/Carrier",
+            "ge": "Team/GreenEarth/Carrier",
+            "os": "Team/OrangeStar/Carrier"
+        },
+        "Frames": [320, 480]
+    },
+    "Stealth": {
+        "AWBWId": 30,
+        "MaxFuel": 60,
+        "MaxAmmo": 6,
+        "FuelUsagePerTurn": 5,
+        "Vision": 4,
+        "MovementRange": 6,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 24000,
+        "MovementType": "Air",
+        "SecondWeapon": false,
+        "Symbol": "D",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Stealth",
+            "bd": "Team/BrownDesert/Stealth",
+            "ge": "Team/GreenEarth/Stealth",
+            "os": "Team/OrangeStar/Stealth"
+        },
+        "Frames": [160, 160, 320, 160]
+    },
+    "Neotank": {
+        "AWBWId": 46,
+        "MaxFuel": 99,
+        "MaxAmmo": 9,
+        "FuelUsagePerTurn": 1,
+        "Vision": 1,
+        "MovementRange": 6,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 22000,
+        "MovementType": "Tread",
+        "SecondWeapon": true,
+        "Symbol": "T",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Neotank",
+            "bd": "Team/BrownDesert/Neotank",
+            "ge": "Team/GreenEarth/Neotank",
+            "os": "Team/OrangeStar/Neotank"
+        },
+        "Frames": [160, 160, 320, 160]
+    },
+    "Piperunner": {
+        "AWBWId": 960900,
+        "MaxFuel": 99,
+        "MaxAmmo": 9,
+        "FuelUsagePerTurn": 0,
+        "Vision": 4,
+        "MovementRange": 9,
+        "AttackRange": {"x": 2, "y": 5},
+        "Cost": 20000,
+        "MovementType": "Pipe",
+        "SecondWeapon": true,
+        "Symbol": "U",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/Piperunner",
+            "bd": "Team/BrownDesert/Piperunner",
+            "ge": "Team/GreenEarth/Piperunner",
+            "os": "Team/OrangeStar/Piperunner"
+        },
+        "Frames": [480, 320]
+    },
+    "Black Bomb": {
+        "AWBWId": 968731,
+        "MaxFuel": 45,
+        "MaxAmmo": 0,
+        "FuelUsagePerTurn": 5,
+        "Vision": 1,
+        "MovementRange": 9,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 25000,
+        "MovementType": "Air",
+        "SecondWeapon": false,
+        "Symbol": "V",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/BlackBomb",
+            "bd": "Team/BrownDesert/BlackBomb",
+            "ge": "Team/GreenEarth/BlackBomb",
+            "os": "Team/OrangeStar/BlackBomb"
+        },
+        "Frames": [160, 160, 320, 160]
+    },
+    "Mega Tank": {
+        "AWBWId": 1141438,
+        "MaxFuel": 50,
+        "MaxAmmo": 3,
+        "FuelUsagePerTurn": 0,
+        "Vision": 1,
+        "MovementRange": 4,
+        "AttackRange": {"x": 0, "y": 0},
+        "Cost": 28000,
+        "MovementType": "Tread",
+        "SecondWeapon": true,
+        "Symbol": "Z",
+        "BaseTextureByTeam": {
+            "ab": "Team/AmberBlaze/MegaTank",
+            "bd": "Team/BrownDesert/MegaTank",
+            "ge": "Team/GreenEarth/MegaTank",
+            "os": "Team/OrangeStar/MegaTank"
+        },
+        "Frames": [160, 160, 320, 160]
     },
 }

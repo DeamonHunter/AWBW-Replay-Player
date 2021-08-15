@@ -529,8 +529,8 @@
             "Tire": 2,
             "Air": 1
         },
-        "BaseTexture": "Pipe/HR",
-        "FogOfWarTexture": "Pipe/HR"
+        "BaseTexture": "Team/Neutral/HRubble-0",
+        "FogOfWarTexture": "Team/Neutral/HRubble-0"
     },
     "VPipe Rubble": {
         "AWBWID": 116,
@@ -542,7 +542,7 @@
             "Tire": 2,
             "Air": 1
         },
-        "BaseTexture": "Pipe/VR",
-        "FogOfWarTexture": "Pipe/VR"
+        "BaseTexture": "Team/Neutral/VRubble-0",
+        "FogOfWarTexture": "Team/Neutral/VRubble-0"
     },
 }
