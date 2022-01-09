@@ -8,6 +8,7 @@ using AWBWApp.Game.UI.Interrupts;
 using osu.Framework.Allocation;
 using osu.Framework.IO.Network;
 using osu.Framework.Logging;
+using osu.Framework.Testing;
 
 namespace AWBWApp.Game.Tests.Visual.Logic
 {
@@ -26,30 +27,33 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             Add(overlay = new InterruptDialogueOverlay());
         }
 
-        [BackgroundDependencyLoader]
-        private void load()
+        [SetUpSteps]
+        public void SetUpSteps()
         {
             //ReplayController.LoadInitialGameState(498571);
-            Schedule(() => DownloadReplayFile());
+            Task.Run(DownloadReplayFile);
         }
 
         private async void DownloadReplayFile()
         {
-            var gameId = 531380;
+            Logger.Log($"Starting replay download.", level: LogLevel.Important);
+            var gameId = 524439;
 
             var stream = replayStorage.GetStream(gameId);
 
             if (stream == null)
             {
+                Logger.Log($"Replay not Found. Requesting from AWBW.", level: LogLevel.Important);
                 var taskCompletionSource = new TaskCompletionSource<string>();
-                overlay.Push(new PasswordInputInterrupt(taskCompletionSource));
+                Schedule(() => overlay.Push(new PasswordInputInterrupt(taskCompletionSource)));
 
+                Logger.Log($"Pushed overlay", level: LogLevel.Important);
                 string sessionId = await taskCompletionSource.Task.ConfigureAwait(false);
 
                 if (sessionId == null)
                     throw new Exception("Failed to login.");
 
-                Logger.Log($"Replay of id '{gameId}' doesn't exist. Requesting from AWBW.");
+                Logger.Log($"Successfully logged in.", level: LogLevel.Important);
                 var link = "https://awbw.amarriner.com/replay_download.php?games_id=" + gameId;
                 var webRequest = new WebRequest(link);
                 webRequest.AddHeader("Cookie", sessionId);

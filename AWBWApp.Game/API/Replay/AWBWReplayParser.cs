@@ -256,7 +256,6 @@ namespace AWBWApp.Game.API.New
                     //Todo: Figure out how we will handle weather
 
                     case "weather_type":
-                    case "weather_start":
                     case "weather_code":
                     case "win_condition":
                     case "active":
@@ -268,6 +267,13 @@ namespace AWBWApp.Game.API.New
                     {
                         var value = ReadString(ref text, ref textIndex);
                         Logger.Log($"Replay contained known but incomplete string parameter: {entry}");
+                        break;
+                    }
+
+                    case "weather_start":
+                    {
+                        var value = ReadNullableInteger(ref text, ref textIndex);
+                        Logger.Log($"Replay contained known but incomplete int? parameter: {entry}");
                         break;
                     }
 
@@ -986,6 +992,34 @@ namespace AWBWApp.Game.API.New
         {
             if (text[index++] != 'i')
                 throw new Exception("Was expecting a integer.");
+            if (text[index++] != ':')
+                throw new Exception("Integer was badly formatted.");
+
+            var startIndex = index;
+
+            while (true)
+            {
+                var character = text[index++];
+                if (character == ';')
+                    break;
+            }
+            var number = text.Substring(startIndex, index - startIndex - 1);
+            return int.Parse(number);
+        }
+
+        int? ReadNullableInteger(ref string text, ref int index)
+        {
+            if (text[index++] != 'i')
+            {
+                if (text[index - 1] == 'N')
+                {
+                    if (text[index++] != ';')
+                        throw new Exception("Null was badly formatted.");
+                    return null;
+                }
+
+                throw new Exception("Was expecting a integer or null.");
+            }
             if (text[index++] != ':')
                 throw new Exception("Integer was badly formatted.");
 

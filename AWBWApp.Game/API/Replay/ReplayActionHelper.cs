@@ -72,7 +72,12 @@ namespace AWBWApp.Game.API.Replay
                 unit.TimesFired = (int)fired;
 
             if (jObject.TryGetValue("units_hit_points", out JToken hitPoints))
-                unit.HitPoints = (float)hitPoints;
+            {
+                if (hitPoints.Type == JTokenType.String) // May be given '?' as a value
+                    unit.HitPoints = null;
+                else
+                    unit.HitPoints = (float)hitPoints;
+            }
 
             if (jObject.TryGetValue("units_carried", out JToken beingCarried))
                 unit.BeingCarried = ParseReplayBool((string)beingCarried);
