@@ -1,0 +1,190 @@
+﻿using System;
+using System.Collections.Generic;
+using AWBWApp.Game.API;
+using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.API.Replay.Actions;
+using NUnit.Framework;
+using osu.Framework.Graphics.Primitives;
+
+namespace AWBWApp.Game.Tests.Visual.Logic.Actions
+{
+    //Todo: Add trapping
+    [TestFixture]
+    public class TestSceneMoveAction : BaseActionsTestScene
+    {
+        [Test]
+        public void TestStraightLine1Space()
+        {
+            AddStep("Setup", () => MoveTestBasic(1));
+            AddStep("Move Right", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(1, 1));
+            AddStep("Attack Up", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, 1));
+            AddStep("Attack Right", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(3, 1));
+            AddStep("Attack Down", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(4, 1));
+        }
+
+        [Test]
+        public void TestStraightLine3Spaces()
+        {
+            AddLabel("Straight Line - 3 spaces");
+            AddStep("Setup", () => MoveTestBasic(3));
+            AddStep("Move Right", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(1, 3));
+            AddStep("Attack Up", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, 3));
+            AddStep("Attack Right", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(3, 3));
+            AddStep("Attack Down", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(4, 3));
+        }
+
+        [Test]
+        public void TestStraightDiagonal1Spaces()
+        {
+            AddLabel("Move Diagonal - 1 spaces");
+            AddStep("Setup", () => MoveTestCorner(1));
+            AddStep("Move Right", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, 1));
+            AddStep("Attack Up", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(4, 1));
+        }
+
+        [Test]
+        public void TestStraightDiagonal3Spaces()
+        {
+            AddLabel("Move Diagonal - 3 spaces");
+            AddStep("Setup", () => MoveTestCorner(3));
+            AddStep("Move Right", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, 3));
+            AddStep("Attack Up", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(4, 3));
+        }
+
+        private void MoveTestBasic(int spaces)
+        {
+            var replayData = CreateBasicReplayData(2);
+
+            var turn = new TurnData();
+            turn.ReplayUnit = new Dictionary<long, ReplayUnit>();
+            turn.Buildings = new Dictionary<Vector2I, ReplayBuilding>();
+            turn.Actions = new List<IReplayAction>();
+
+            replayData.TurnData.Add(turn);
+
+            var mapSize = spaces + 1;
+
+            var movingUnit = CreateBasicReplayUnit(0, 1, "Infantry", new Vector2I(0, 0));
+
+            turn.ReplayUnit.Add(movingUnit.ID, movingUnit);
+
+            for (int i = 1; i < 5; i++)
+            {
+                var nextPosition = GetPositionForIteration(i, spaces);
+                var previousPosition = GetPositionForIteration(i - 1, spaces);
+
+                var moveUnitAction = new MoveUnitAction();
+                moveUnitAction.Unit = new ReplayUnit { ID = movingUnit.ID, Position = movingUnit.Position };
+                moveUnitAction.Unit.Position = nextPosition;
+
+                moveUnitAction.Path = CreatePath(previousPosition, nextPosition);
+                moveUnitAction.Distance = moveUnitAction.Path.Length;
+                moveUnitAction.Trapped = false;
+
+                turn.Actions.Add(moveUnitAction);
+            }
+
+            ReplayController.LoadReplay(replayData, CreateBasicMap(mapSize, mapSize));
+        }
+
+        private UnitPosition[] CreatePath(Vector2I previousPosition, Vector2I nextPosition)
+        {
+            var diff = nextPosition - previousPosition;
+
+            var path = new UnitPosition[Math.Abs(diff.X) + Math.Abs(diff.Y) + 1];
+            path[0] = new UnitPosition { Unit_Visible = true, X = previousPosition.X, Y = previousPosition.Y };
+
+            var pos = previousPosition;
+            var pathIdx = 1;
+
+            if (diff.X > 0)
+            {
+                for (pos.X += 1; pos.X < nextPosition.X; pos = new Vector2I(pos.X + 1, pos.Y))
+                    path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
+                path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
+            }
+
+            if (diff.Y > 0)
+            {
+                for (pos.Y += 1; pos.Y < nextPosition.Y; pos = new Vector2I(pos.X, pos.Y + 1))
+                    path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
+                path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
+            }
+
+            if (diff.X < 0)
+            {
+                for (pos.X -= 1; pos.X > nextPosition.X; pos = new Vector2I(pos.X - 1, pos.Y))
+                    path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
+                path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
+            }
+
+            if (diff.Y < 0)
+            {
+                for (pos.Y -= 1; pos.Y > nextPosition.Y; pos = new Vector2I(pos.X, pos.Y - 1))
+                    path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
+                path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
+            }
+
+            return path;
+        }
+
+        private void MoveTestCorner(int spaces)
+        {
+            var replayData = CreateBasicReplayData(2);
+
+            var turn = new TurnData();
+            turn.ReplayUnit = new Dictionary<long, ReplayUnit>();
+            turn.Buildings = new Dictionary<Vector2I, ReplayBuilding>();
+            turn.Actions = new List<IReplayAction>();
+
+            replayData.TurnData.Add(turn);
+
+            var mapSize = spaces + 1;
+
+            var movingUnit = CreateBasicReplayUnit(0, 1, "Infantry", new Vector2I(0, 0));
+
+            turn.ReplayUnit.Add(movingUnit.ID, movingUnit);
+
+            for (int i = 0; i < 2; i++)
+            {
+                var nextPosition = GetPositionForIteration(i * 2 + 2, spaces);
+                var previousPosition = GetPositionForIteration((i - 1) * 2 + 2, spaces);
+
+                var moveUnitAction = new MoveUnitAction();
+                moveUnitAction.Unit = new ReplayUnit { ID = movingUnit.ID, Position = movingUnit.Position };
+                moveUnitAction.Unit.Position = nextPosition;
+
+                moveUnitAction.Path = CreatePath(previousPosition, nextPosition);
+                moveUnitAction.Distance = moveUnitAction.Path.Length;
+                moveUnitAction.Trapped = false;
+
+                turn.Actions.Add(moveUnitAction);
+            }
+
+            ReplayController.LoadReplay(replayData, CreateBasicMap(mapSize, mapSize));
+        }
+
+        public Vector2I GetPositionForIteration(int i, int spaces) =>
+            i switch
+            {
+                0 => new Vector2I(0, 0),
+                1 => new Vector2I(spaces, 0),
+                2 => new Vector2I(spaces, spaces),
+                3 => new Vector2I(0, spaces),
+                4 => new Vector2I(0, 0),
+                _ => throw new InvalidOperationException($"{nameof(GetPositionForIteration)} only accepts values between 0-4 (inclusive)")
+            };
+    }
+}

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
+using AWBWApp.Game.API.Replay;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using osu.Framework.IO.Network;

@@ -1,16 +1,20 @@
 ﻿using System;
 using AWBWApp.Game.Helpers;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Animations;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
+using osuTK.Graphics;
 
 namespace AWBWApp.Game.Game.Building
 {
     public class DrawableBuilding : CompositeDrawable
     {
         public static readonly Vector2I BASE_SIZE = new Vector2I(16);
+
+        public Bindable<bool> HasDoneAction = new Bindable<bool>();
 
         public readonly BuildingTile BuildingTile;
 
@@ -25,6 +29,8 @@ namespace AWBWApp.Game.Game.Building
                 Anchor = Anchor.BottomLeft,
                 Origin = Anchor.BottomLeft
             };
+
+            HasDoneAction.BindValueChanged(updateHasActed);
         }
 
         [BackgroundDependencyLoader]
@@ -41,6 +47,8 @@ namespace AWBWApp.Game.Game.Building
                 return;
             }
 
+            textureAnimation.AddFrame(texture, BuildingTile.Frames[0]);
+
             for (var i = 1; i < BuildingTile.Frames.Length; i++)
             {
                 texture = store.Get($"{BuildingTile.BaseTexture}-{i}");
@@ -49,6 +57,16 @@ namespace AWBWApp.Game.Game.Building
                 textureAnimation.AddFrame(texture, BuildingTile.Frames[i]);
             }
             textureAnimation.Seek(BuildingTile.FrameOffset);
+        }
+
+        private void updateHasActed(ValueChangedEvent<bool> hasActed)
+        {
+            Color4 animationColour;
+            if (hasActed.NewValue)
+                animationColour = new Color4(200, 200, 200, 255);
+            else
+                animationColour = Color4.White;
+            textureAnimation.Colour = animationColour;
         }
     }
 }

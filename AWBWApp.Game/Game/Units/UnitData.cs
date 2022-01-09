@@ -8,6 +8,9 @@ namespace AWBWApp.Game.Game.Units
     public class UnitData
     {
         [JsonProperty]
+        public string Name { get; set; }
+
+        [JsonProperty]
         public int AWBWId { get; set; }
 
         [JsonProperty]

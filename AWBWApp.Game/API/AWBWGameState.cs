@@ -26,6 +26,19 @@ namespace AWBWApp.Game.API
 
         [JsonProperty]
         public Dictionary<long, AWBWGamePlayer> Players;
+
+        public static AWBWGameState GenerateBlankState()
+        {
+            var state = new AWBWGameState();
+            state.Terrain = new Dictionary<int, Dictionary<int, AWBWTile>>();
+            state.Buildings = new Dictionary<int, Dictionary<int, AWBWBuilding>>();
+            state.Units = new Dictionary<long, AWBWUnit>();
+            state.CurrentTurnPId = -1;
+            state.CurrentTurnIdx = -1;
+            state.GameWeather = new AWBWWeather();
+            state.Players = new Dictionary<long, AWBWGamePlayer>();
+            return state;
+        }
     }
 
     public class AWBWGamePlayer
@@ -152,24 +165,6 @@ namespace AWBWApp.Game.API
 
         [JsonProperty("countries_code")]
         public string CountryCode { get; set; }
-    }
-
-    public class AWBWAttackCOP
-    {
-        [JsonProperty]
-        public AWBWAttackCOPValue Attacker;
-        [JsonProperty]
-        public AWBWAttackCOPValue Defender;
-    }
-
-    public class AWBWAttackCOPValue
-    {
-        [JsonProperty]
-        public long PlayerId;
-        [JsonProperty]
-        public long? COPValue;
-        [JsonProperty]
-        public long? TagValue;
     }
 
     public class ArrayOrObjectConverterToIntDictionary<T> : JsonConverter

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace AWBWApp.Game.Game.Units
@@ -18,6 +19,11 @@ namespace AWBWApp.Game.Game.Units
 
             foreach (var tile in unitsByCode)
                 unitsByAWBWId.Add(tile.Value.AWBWId, tile.Value);
+        }
+
+        public List<int> GetAllUnitIds()
+        {
+            return unitsByAWBWId.Keys.ToList();
         }
 
         public UnitData GetUnitByAWBWId(int id)

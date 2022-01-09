@@ -166,10 +166,10 @@
         "BaseTexture": "Team/OrangeStar/Airport",
         "FogOfWarTexture": "Team/OrangeStar/Airport",
         "frames": [
-            400,
-            1200
-        ],
-        "frameOffset": 100
+            300,
+            1200,
+            100
+        ]
     },
     "Orange Star Base": {
         "AWBWID": 39,
@@ -206,10 +206,10 @@
         "BaseTexture": "Team/OrangeStar/City",
         "FogOfWarTexture": "Team/OrangeStar/City",
         "frames": [
-            400,
-            1200
-        ],
-        "frameOffset": 100
+            300,
+            1200,
+            100
+        ]
     },
     "Orange Star HQ": {
         "AWBWID": 42,
@@ -224,10 +224,10 @@
         "BaseTexture": "Team/OrangeStar/HQ",
         "FogOfWarTexture": "Team/OrangeStar/HQ",
         "frames": [
-            400,
-            1200
-        ],
-        "frameOffset": 100
+            300,
+            1200,
+            100
+        ]
     },
     "Orange Star Port": {
         "AWBWID": 41,
@@ -244,10 +244,10 @@
         "BaseTexture": "Team/OrangeStar/Port",
         "FogOfWarTexture": "Team/OrangeStar/Port",
         "frames": [
-            400,
-            1200
-        ],
-        "frameOffset": 100
+            300,
+            1200,
+            100
+        ]
     },
     "Orange Star Com Tower": {
         "AWBWID": 134,
@@ -262,10 +262,10 @@
         "BaseTexture": "Team/OrangeStar/ComTower",
         "FogOfWarTexture": "Team/OrangeStar/ComTower",
         "frames": [
-            400,
-            1200
-        ],
-        "frameOffset": 100
+            300,
+            1200,
+            100
+        ]
     },
     "Orange Star Lab": {
         "AWBWID": 146,
@@ -280,10 +280,145 @@
         "BaseTexture": "Team/OrangeStar/Lab",
         "FogOfWarTexture": "Team/OrangeStar/Lab",
         "frames": [
+            300,
+            1200,
+            100
+        ]
+    },
+    /*
+    Blue Moon
+    */
+    "Blue Moon Airport": {
+        "AWBWID": 45,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/BlueMoon/Airport",
+        "FogOfWarTexture": "Team/BlueMoon/Airport",
+        "frames": [
+            200,
+            1200,
+            200
+        ]
+    },
+    "Blue Moon Base": {
+        "AWBWID": 44,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "BaseTexture": "Team/BlueMoon/Base",
+        "FogOfWarTexture": "Team/BlueMoon/Base",
+        "frames": [
+            200,
+            200,
             400,
-            1200
-        ],
-        "frameOffset": 100
+            400,
+            200,
+            200
+        ]
+    },
+    "Blue Moon City": {
+        "AWBWID": 43,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/BlueMoon/City",
+        "FogOfWarTexture": "Team/BlueMoon/City",
+        "frames": [
+            200,
+            1200,
+            200
+        ]
+    },
+    "Blue Moon HQ": {
+        "AWBWID": 47,
+        "BaseDefence": 4,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/BlueMoon/HQ",
+        "FogOfWarTexture": "Team/BlueMoon/HQ",
+        "frames": [
+            200,
+            1200,
+            200
+        ]
+    },
+    "Blue Moon Port": {
+        "AWBWID": 46,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Team/BlueMoon/Port",
+        "FogOfWarTexture": "Team/BlueMoon/Port",
+        "frames": [
+            200,
+            1200,
+            200
+        ]
+    },
+    "Blue Moon Com Tower": {
+        "AWBWID": 129,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/BlueMoon/ComTower",
+        "FogOfWarTexture": "Team/BlueMoon/ComTower",
+        "frames": [
+            200,
+            1200,
+            200
+        ]
+    },
+    "Blue Moon Lab": {
+        "AWBWID": 140,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/BlueMoon/Lab",
+        "FogOfWarTexture": "Team/BlueMoon/Lab",
+        "frames": [
+            200,
+            1200,
+            200
+        ]
     },
     /*
     Green Earth
@@ -301,10 +436,10 @@
         "BaseTexture": "Team/GreenEarth/Airport",
         "FogOfWarTexture": "Team/GreenEarth/Airport",
         "frames": [
-            400,
-            1200
-        ],
-        "frameOffset": 300
+            100,
+            1200,
+            300
+        ]
     },
     "Green Earth Base": {
         "AWBWID": 49,
@@ -341,10 +476,10 @@
         "BaseTexture": "Team/GreenEarth/City",
         "FogOfWarTexture": "Team/GreenEarth/City",
         "frames": [
-            400,
-            1200
-        ],
-        "frameOffset": 300
+            100,
+            1200,
+            300
+        ]
     },
     "Green Earth HQ": {
         "AWBWID": 52,
@@ -359,10 +494,10 @@
         "BaseTexture": "Team/GreenEarth/HQ",
         "FogOfWarTexture": "Team/GreenEarth/HQ",
         "frames": [
-            400,
-            1200
-        ],
-        "frameOffset": 300
+            100,
+            1200,
+            300
+        ]
     },
     "Green Earth Port": {
         "AWBWID": 51,
@@ -379,10 +514,10 @@
         "BaseTexture": "Team/GreenEarth/Port",
         "FogOfWarTexture": "Team/GreenEarth/Port",
         "frames": [
-            400,
-            1200
-        ],
-        "frameOffset": 300
+            100,
+            1200,
+            300
+        ]
     },
     "Green Earth Com Tower": {
         "AWBWID": 131,
@@ -397,10 +532,10 @@
         "BaseTexture": "Team/GreenEarth/ComTower",
         "FogOfWarTexture": "Team/GreenEarth/ComTower",
         "frames": [
-            400,
-            1200
-        ],
-        "frameOffset": 300
+            100,
+            1200,
+            300
+        ]
     },
     "Green Earth Lab": {
         "AWBWID": 142,
@@ -415,10 +550,551 @@
         "BaseTexture": "Team/GreenEarth/Lab",
         "FogOfWarTexture": "Team/GreenEarth/Lab",
         "frames": [
+            100,
+            1200,
+            300
+        ]
+    },
+    /*
+    Yellow Comet
+    */
+    "Yellow Comet Airport": {
+        "AWBWID": 55,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/YellowComet/Airport",
+        "FogOfWarTexture": "Team/YellowComet/Airport",
+        "frames": [
+            1200,
+            400
+        ]
+    },
+    "Yellow Comet Base": {
+        "AWBWID": 54,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "BaseTexture": "Team/YellowComet/Base",
+        "FogOfWarTexture": "Team/YellowComet/Base",
+        "frames": [
             400,
-            1200
-        ],
-        "frameOffset": 300
+            400,
+            400,
+            400
+        ]
+    },
+    "Yellow Comet City": {
+        "AWBWID": 53,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/YellowComet/City",
+        "FogOfWarTexture": "Team/YellowComet/City",
+        "frames": [
+            1200,
+            400
+        ]
+    },
+    "Yellow Comet HQ": {
+        "AWBWID": 57,
+        "BaseDefence": 4,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/YellowComet/HQ",
+        "FogOfWarTexture": "Team/YellowComet/HQ",
+        "frames": [
+            1200,
+            400
+        ]
+    },
+    "Yellow Comet Port": {
+        "AWBWID": 56,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Team/YellowComet/Port",
+        "FogOfWarTexture": "Team/YellowComet/Port",
+        "frames": [
+            1200,
+            400
+        ]
+    },
+    "Yellow Comet Com Tower": {
+        "AWBWID": 136,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/YellowComet/ComTower",
+        "FogOfWarTexture": "Team/YellowComet/ComTower",
+        "frames": [
+            1200,
+            400
+        ]
+    },
+    "Yellow Comet Lab": {
+        "AWBWID": 148,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/YellowComet/Lab",
+        "FogOfWarTexture": "Team/YellowComet/Lab",
+        "frames": [
+            1200,
+            400
+        ]
+    },
+    /*
+    Red Fire
+    */
+    "Red Fire Airport": {
+        "AWBWID": 83,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/RedFire/Airport",
+        "FogOfWarTexture": "Team/RedFire/Airport",
+        "frames": [
+            1000,
+            400,
+            200
+        ]
+    },
+    "Red Fire Base": {
+        "AWBWID": 82,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "BaseTexture": "Team/RedFire/Base",
+        "FogOfWarTexture": "Team/RedFire/Base",
+        "frames": [
+            400,
+            400,
+            200,
+            200,
+            200,
+            200
+        ]
+    },
+    "Red Fire City": {
+        "AWBWID": 81,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/RedFire/City",
+        "FogOfWarTexture": "Team/RedFire/City",
+        "frames": [
+            1000,
+            400,
+            200
+        ]
+    },
+    "Red Fire HQ": {
+        "AWBWID": 85,
+        "BaseDefence": 4,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/RedFire/HQ",
+        "FogOfWarTexture": "Team/RedFire/HQ",
+        "frames": [
+            600,
+            400,
+            200,
+            200,
+            400,
+            600,
+            200,
+            400,
+            600,
+            600,
+            400,
+            200
+        ]
+    },
+    "Red Fire Port": {
+        "AWBWID": 84,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Team/RedFire/Port",
+        "FogOfWarTexture": "Team/RedFire/Port",
+        "frames": [
+            1000,
+            400,
+            200
+        ]
+    },
+    "Red Fire Com Tower": {
+        "AWBWID": 135,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/RedFire/ComTower",
+        "FogOfWarTexture": "Team/RedFire/ComTower",
+        "frames": [
+            1000,
+            400,
+            200
+        ]
+    },
+    "Red Fire Lab": {
+        "AWBWID": 147,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/RedFire/Lab",
+        "FogOfWarTexture": "Team/RedFire/Lab",
+        "frames": [
+            1000,
+            400,
+            200
+        ]
+    },
+    /*
+    Grey Sky
+    */
+    "Grey Sky Airport": {
+        "AWBWID": 88,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/GreySky/Airport",
+        "FogOfWarTexture": "Team/GreySky/Airport",
+        "frames": [
+            900,
+            400,
+            300
+        ]
+    },
+    "Grey Sky Base": {
+        "AWBWID": 87,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "BaseTexture": "Team/GreySky/Base",
+        "FogOfWarTexture": "Team/GreySky/Base",
+        "frames": [
+            400,
+            400,
+            100,
+            300,
+            100,
+            300
+        ]
+    },
+    "Grey Sky City": {
+        "AWBWID": 86,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/GreySky/City",
+        "FogOfWarTexture": "Team/GreySky/City",
+        "frames": [
+            900,
+            400,
+            300
+        ]
+    },
+    "Grey Sky HQ": {
+        "AWBWID": 90,
+        "BaseDefence": 4,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/GreySky/HQ",
+        "FogOfWarTexture": "Team/GreySky/HQ",
+        "frames": [
+            900,
+            400,
+            300
+        ]
+    },
+    "Grey Sky Port": {
+        "AWBWID": 89,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Team/GreySky/Port",
+        "FogOfWarTexture": "Team/GreySky/Port",
+        "frames": [
+            900,
+            400,
+            300
+        ]
+    },
+    "Grey Sky Com Tower": {
+        "AWBWID": 137,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/GreySky/ComTower",
+        "FogOfWarTexture": "Team/GreySky/ComTower",
+        "frames": [
+            900,
+            400,
+            300
+        ]
+    },
+    "Grey Sky Lab": {
+        "AWBWID": 143,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/GreySky/Lab",
+        "FogOfWarTexture": "Team/GreySky/Lab",
+        "frames": [
+            900,
+            400,
+            300
+        ]
+    },
+    /*
+    Black Hole
+    */
+    "Black Hole Airport": {
+        "AWBWID": 93,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/BlackHole/Airport",
+        "FogOfWarTexture": "Team/BlackHole/Airport",
+        "frames": [
+            1100,
+            400,
+            100
+        ]
+    },
+    "Black Hole Base": {
+        "AWBWID": 92,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "BaseTexture": "Team/BlackHole/Base",
+        "FogOfWarTexture": "Team/BlackHole/Base",
+        "frames": [
+            400,
+            400,
+            300,
+            100,
+            300,
+            100
+        ]
+    },
+    "Black Hole City": {
+        "AWBWID": 91,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/BlackHole/City",
+        "FogOfWarTexture": "Team/BlackHole/City",
+        "frames": [
+            1100,
+            400,
+            100
+        ]
+    },
+    "Black Hole HQ": {
+        "AWBWID": 95,
+        "BaseDefence": 4,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/BlackHole/HQ",
+        "FogOfWarTexture": "Team/BlackHole/HQ",
+        "frames": [
+            1100,
+            400,
+            100
+        ]
+    },
+    "Black Hole Port": {
+        "AWBWID": 94,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Team/BlackHole/Port",
+        "FogOfWarTexture": "Team/BlackHole/Port",
+        "frames": [
+            1100,
+            400,
+            100
+        ]
+    },
+    "Black Hole Com Tower": {
+        "AWBWID": 128,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/BlackHole/ComTower",
+        "FogOfWarTexture": "Team/BlackHole/ComTower",
+        "frames": [
+            1100,
+            400,
+            100
+        ]
+    },
+    "Black Hole Lab": {
+        "AWBWID": 139,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/BlackHole/Lab",
+        "FogOfWarTexture": "Team/BlackHole/Lab",
+        "frames": [
+            1100,
+            400,
+            100
+        ]
     },
     /*
     Brown Desert
@@ -436,10 +1112,10 @@
         "BaseTexture": "Team/BrownDesert/Airport",
         "FogOfWarTexture": "Team/BrownDesert/Airport",
         "frames": [
+            800,
             400,
-            1200
-        ],
-        "frameOffset": 400
+            400
+        ]
     },
     "Brown Desert Base": {
         "AWBWID": 97,
@@ -474,10 +1150,10 @@
         "BaseTexture": "Team/BrownDesert/City",
         "FogOfWarTexture": "Team/BrownDesert/City",
         "frames": [
-            1200,
+            800,
+            400,
             400
-        ],
-        "frameOffset": 400
+        ]
     },
     "Brown Desert HQ": {
         "AWBWID": 100,
@@ -492,10 +1168,11 @@
         "BaseTexture": "Team/BrownDesert/HQ",
         "FogOfWarTexture": "Team/BrownDesert/HQ",
         "frames": [
-            1200,
+            800,
+            200,
+            200,
             400
-        ],
-        "frameOffset": 400
+        ]
     },
     "Brown Desert Port": {
         "AWBWID": 99,
@@ -512,10 +1189,10 @@
         "BaseTexture": "Team/BrownDesert/Port",
         "FogOfWarTexture": "Team/BrownDesert/Port",
         "frames": [
-            1200,
+            800,
+            400,
             400
-        ],
-        "frameOffset": 400
+        ]
     },
     "Brown Desert Com Tower": {
         "AWBWID": 130,
@@ -530,10 +1207,10 @@
         "BaseTexture": "Team/BrownDesert/ComTower",
         "FogOfWarTexture": "Team/BrownDesert/ComTower",
         "frames": [
-            1200,
+            800,
+            400,
             400
-        ],
-        "frameOffset": 400
+        ]
     },
     "Brown Desert Lab": {
         "AWBWID": 141,
@@ -548,10 +1225,10 @@
         "BaseTexture": "Team/BrownDesert/Lab",
         "FogOfWarTexture": "Team/BrownDesert/Lab",
         "frames": [
-            1200,
+            800,
+            400,
             400
-        ],
-        "frameOffset": 400
+        ]
     },
     /*
     Amber Blaze
@@ -569,10 +1246,10 @@
         "BaseTexture": "Team/AmberBlaze/Airport",
         "FogOfWarTexture": "Team/AmberBlaze/Airport",
         "frames": [
-            1200,
-            400
-        ],
-        "frameOffset": 500
+            700,
+            400,
+            500
+        ]
     },
     "Amber Blaze Base": {
         "AWBWID": 118,
@@ -609,10 +1286,10 @@
         "BaseTexture": "Team/AmberBlaze/City",
         "FogOfWarTexture": "Team/AmberBlaze/City",
         "frames": [
-            1200,
-            400
-        ],
-        "frameOffset": 500
+            700,
+            400,
+            500
+        ]
     },
     "Amber Blaze HQ": {
         "AWBWID": 120,
@@ -627,10 +1304,10 @@
         "BaseTexture": "Team/AmberBlaze/HQ",
         "FogOfWarTexture": "Team/AmberBlaze/HQ",
         "frames": [
-            1200,
-            400
-        ],
-        "frameOffset": 500
+            700,
+            400,
+            500
+        ]
     },
     "Amber Blaze Port": {
         "AWBWID": 121,
@@ -647,10 +1324,10 @@
         "BaseTexture": "Team/AmberBlaze/Port",
         "FogOfWarTexture": "Team/AmberBlaze/Port",
         "frames": [
-            1200,
-            400
-        ],
-        "frameOffset": 500
+            700,
+            400,
+            500
+        ]
     },
     "Amber Blaze Com Tower": {
         "AWBWID": 127,
@@ -665,10 +1342,10 @@
         "BaseTexture": "Team/AmberBlaze/ComTower",
         "FogOfWarTexture": "Team/AmberBlaze/ComTower",
         "frames": [
-            1200,
-            400
-        ],
-        "frameOffset": 500
+            700,
+            400,
+            500
+        ]
     },
     "Amber Blaze Lab": {
         "AWBWID": 138,
@@ -683,9 +1360,965 @@
         "BaseTexture": "Team/AmberBlaze/Lab",
         "FogOfWarTexture": "Team/AmberBlaze/Lab",
         "frames": [
-            1200,
-            400
-        ],
-        "frameOffset": 500
+            700,
+            400,
+            500
+        ]
     },
+    /*
+    Jade Sun
+    */
+    "Jade Sun Airport": {
+        "AWBWID": 122,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/JadeSun/Airport",
+        "FogOfWarTexture": "Team/JadeSun/Airport",
+        "frames": [
+            600,
+            400,
+            600
+        ]
+    },
+    "Jade Sun Base": {
+        "AWBWID": 123,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "BaseTexture": "Team/JadeSun/Base",
+        "FogOfWarTexture": "Team/JadeSun/Base",
+        "frames": [
+            400,
+            200,
+            200,
+            200,
+            200,
+            400
+        ]
+    },
+    "Jade Sun City": {
+        "AWBWID": 124,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/JadeSun/City",
+        "FogOfWarTexture": "Team/JadeSun/City",
+        "frames": [
+            600,
+            400,
+            600
+        ]
+    },
+    "Jade Sun HQ": {
+        "AWBWID": 125,
+        "BaseDefence": 4,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/JadeSun/HQ",
+        "FogOfWarTexture": "Team/JadeSun/HQ",
+        "frames": [
+            600,
+            200,
+            200,
+            600
+        ]
+    },
+    "Jade Sun Port": {
+        "AWBWID": 126,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Team/JadeSun/Port",
+        "FogOfWarTexture": "Team/JadeSun/Port",
+        "frames": [
+            600,
+            400,
+            600
+        ]
+    },
+    "Jade Sun Com Tower": {
+        "AWBWID": 132,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/JadeSun/ComTower",
+        "FogOfWarTexture": "Team/JadeSun/ComTower",
+        "frames": [
+            600,
+            400,
+            600
+        ]
+    },
+    "Jade Sun Lab": {
+        "AWBWID": 144,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/JadeSun/Lab",
+        "FogOfWarTexture": "Team/JadeSun/Lab",
+        "frames": [
+            600,
+            400,
+            600
+        ]
+    },
+    /*
+    Cobalt Ice
+    */
+    "Cobalt Ice Airport": {
+        "AWBWID": 149,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/CobaltIce/Airport",
+        "FogOfWarTexture": "Team/CobaltIce/Airport",
+        "frames": [
+            500,
+            400,
+            700
+        ]
+    },
+    "Cobalt Ice Base": {
+        "AWBWID": 150,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "BaseTexture": "Team/CobaltIce/Base",
+        "FogOfWarTexture": "Team/CobaltIce/Base",
+        "frames": [
+            400,
+            100,
+            300,
+            100,
+            300,
+            400
+        ]
+    },
+    "Cobalt Ice City": {
+        "AWBWID": 151,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/CobaltIce/City",
+        "FogOfWarTexture": "Team/CobaltIce/City",
+        "frames": [
+            500,
+            400,
+            700
+        ]
+    },
+    "Cobalt Ice HQ": {
+        "AWBWID": 153,
+        "BaseDefence": 4,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/CobaltIce/HQ",
+        "FogOfWarTexture": "Team/CobaltIce/HQ",
+        "frames": [
+            500,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            700
+        ]
+    },
+    "Cobalt Ice Port": {
+        "AWBWID": 155,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Team/CobaltIce/Port",
+        "FogOfWarTexture": "Team/CobaltIce/Port",
+        "frames": [
+            500,
+            400,
+            700
+        ]
+    },
+    "Cobalt Ice Com Tower": {
+        "AWBWID": 152,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/CobaltIce/ComTower",
+        "FogOfWarTexture": "Team/CobaltIce/ComTower",
+        "frames": [
+            500,
+            400,
+            700
+        ]
+    },
+    "Cobalt Ice Lab": {
+        "AWBWID": 154,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/CobaltIce/Lab",
+        "FogOfWarTexture": "Team/CobaltIce/Lab",
+        "frames": [
+            500,
+            400,
+            700
+        ]
+    },
+    /*
+    Pink Cosmos
+    */
+    "Pink Cosmos Airport": {
+        "AWBWID": 156,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/PinkCosmos/Airport",
+        "FogOfWarTexture": "Team/PinkCosmos/Airport",
+        "frames": [
+            400,
+            400,
+            800
+        ]
+    },
+    "Pink Cosmos Base": {
+        "AWBWID": 157,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "BaseTexture": "Team/PinkCosmos/Base",
+        "FogOfWarTexture": "Team/PinkCosmos/Base",
+        "frames": [
+            400,
+            400,
+            400,
+            400
+        ]
+    },
+    "Pink Cosmos City": {
+        "AWBWID": 158,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/PinkCosmos/City",
+        "FogOfWarTexture": "Team/PinkCosmos/City",
+        "frames": [
+            400,
+            400,
+            800
+        ]
+    },
+    "Pink Cosmos HQ": {
+        "AWBWID": 160,
+        "BaseDefence": 4,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/PinkCosmos/HQ",
+        "FogOfWarTexture": "Team/PinkCosmos/HQ",
+        "frames": [
+            400,
+            400,
+            800
+        ]
+    },
+    "Pink Cosmos Port": {
+        "AWBWID": 162,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Team/PinkCosmos/Port",
+        "FogOfWarTexture": "Team/PinkCosmos/Port",
+        "frames": [
+            400,
+            400,
+            800
+        ]
+    },
+    "Pink Cosmos Com Tower": {
+        "AWBWID": 159,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/PinkCosmos/ComTower",
+        "FogOfWarTexture": "Team/PinkCosmos/ComTower",
+        "frames": [
+            400,
+            400,
+            800
+        ]
+    },
+    "Pink Cosmos Lab": {
+        "AWBWID": 161,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/PinkCosmos/Lab",
+        "FogOfWarTexture": "Team/PinkCosmos/Lab",
+        "frames": [
+            400,
+            400,
+            800
+        ]
+    },
+    /*
+    Teal Galaxy
+    */
+    "Teal Galaxy Airport": {
+        "AWBWID": 163,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/TealGalaxy/Airport",
+        "FogOfWarTexture": "Team/TealGalaxy/Airport",
+        "frames": [
+            300,
+            400,
+            900
+        ]
+    },
+    "Teal Galaxy Base": {
+        "AWBWID": 164,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "BaseTexture": "Team/TealGalaxy/Base",
+        "FogOfWarTexture": "Team/TealGalaxy/Base",
+        "frames": [
+            300,
+            100,
+            300,
+            100,
+            400,
+            400
+        ]
+    },
+    "Teal Galaxy City": {
+        "AWBWID": 165,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/TealGalaxy/City",
+        "FogOfWarTexture": "Team/TealGalaxy/City",
+        "frames": [
+            300,
+            400,
+            900
+        ]
+    },
+    "Teal Galaxy HQ": {
+        "AWBWID": 167,
+        "BaseDefence": 4,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/TealGalaxy/HQ",
+        "FogOfWarTexture": "Team/TealGalaxy/HQ",
+        "frames": [
+            300,
+            400,
+            900
+        ]
+    },
+    "Teal Galaxy Port": {
+        "AWBWID": 169,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Team/TealGalaxy/Port",
+        "FogOfWarTexture": "Team/TealGalaxy/Port",
+        "frames": [
+            300,
+            400,
+            900
+        ]
+    },
+    "Teal Galaxy Com Tower": {
+        "AWBWID": 166,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/TealGalaxy/ComTower",
+        "FogOfWarTexture": "Team/TealGalaxy/ComTower",
+        "frames": [
+            300,
+            400,
+            900
+        ]
+    },
+    "Teal Galaxy Lab": {
+        "AWBWID": 168,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/TealGalaxy/Lab",
+        "FogOfWarTexture": "Team/TealGalaxy/Lab",
+        "frames": [
+            300,
+            400,
+            900
+        ]
+    },
+    /*
+    Purple Lightning
+    */
+    "Purple Lightning Airport": {
+        "AWBWID": 170,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/PurpleLightning/Airport",
+        "FogOfWarTexture": "Team/PurpleLightning/Airport",
+        "frames": [
+            200,
+            400,
+            1000
+        ]
+    },
+    "Purple Lightning Base": {
+        "AWBWID": 171,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "BaseTexture": "Team/PurpleLightning/Base",
+        "FogOfWarTexture": "Team/PurpleLightning/Base",
+        "frames": [
+            200,
+            200,
+            200,
+            200,
+            400,
+            400
+        ]
+    },
+    "Purple Lightning City": {
+        "AWBWID": 172,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/PurpleLightning/City",
+        "FogOfWarTexture": "Team/PurpleLightning/City",
+        "frames": [
+            200,
+            400,
+            1000
+        ]
+    },
+    "Purple Lightning HQ": {
+        "AWBWID": 174,
+        "BaseDefence": 4,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/PurpleLightning/HQ",
+        "FogOfWarTexture": "Team/PurpleLightning/HQ",
+        "frames": [
+            200,
+            400,
+            1000
+        ]
+    },
+    "Purple Lightning Port": {
+        "AWBWID": 176,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Team/PurpleLightning/Port",
+        "FogOfWarTexture": "Team/PurpleLightning/Port",
+        "frames": [
+            200,
+            400,
+            1000
+        ]
+    },
+    "Purple Lightning Com Tower": {
+        "AWBWID": 173,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/PurpleLightning/ComTower",
+        "FogOfWarTexture": "Team/PurpleLightning/ComTower",
+        "frames": [
+            200,
+            400,
+            1000
+        ]
+    },
+    "Purple Lightning Lab": {
+        "AWBWID": 175,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/PurpleLightning/Lab",
+        "FogOfWarTexture": "Team/PurpleLightning/Lab",
+        "frames": [
+            200,
+            400,
+            1000
+        ]
+    },
+    /*
+    Acid Rain
+    */
+    "Acid Rain Airport": {
+        "AWBWID": 181,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/AcidRain/Airport",
+        "FogOfWarTexture": "Team/AcidRain/Airport",
+        "frames": [
+            100,
+            400,
+            1100
+        ]
+    },
+    "Acid Rain Base": {
+        "AWBWID": 182,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "BaseTexture": "Team/AcidRain/Base",
+        "FogOfWarTexture": "Team/AcidRain/Base",
+        "frames": [
+            100,
+            300,
+            100,
+            300,
+            400,
+            400
+        ]
+    },
+    "Acid Rain City": {
+        "AWBWID": 183,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/AcidRain/City",
+        "FogOfWarTexture": "Team/AcidRain/City",
+        "frames": [
+            100,
+            400,
+            1100
+        ]
+    },
+    "Acid Rain HQ": {
+        "AWBWID": 185,
+        "BaseDefence": 4,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/AcidRain/HQ",
+        "FogOfWarTexture": "Team/AcidRain/HQ",
+        "frames": [
+            100,
+            200,
+            200,
+            1100
+        ]
+    },
+    "Acid Rain Port": {
+        "AWBWID": 187,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Team/AcidRain/Port",
+        "FogOfWarTexture": "Team/AcidRain/Port",
+        "frames": [
+            100,
+            400,
+            1100
+        ]
+    },
+    "Acid Rain Com Tower": {
+        "AWBWID": 184,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/AcidRain/ComTower",
+        "FogOfWarTexture": "Team/AcidRain/ComTower",
+        "frames": [
+            100,
+            400,
+            1100
+        ]
+    },
+    "Acid Rain Lab": {
+        "AWBWID": 186,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/AcidRain/Lab",
+        "FogOfWarTexture": "Team/AcidRain/Lab",
+        "frames": [
+            100,
+            400,
+            1100
+        ]
+    },
+    /*
+    White Nova
+    */
+    "White Nova Airport": {
+        "AWBWID": 188,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/WhiteNova/Airport",
+        "FogOfWarTexture": "Team/WhiteNova/Airport",
+        "frames": [
+            400,
+            1200
+        ]
+    },
+    "White Nova Base": {
+        "AWBWID": 189,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "BaseTexture": "Team/WhiteNova/Base",
+        "FogOfWarTexture": "Team/WhiteNova/Base",
+        "frames": [
+            400,
+            400,
+            400,
+            400
+        ]
+    },
+    "White Nova City": {
+        "AWBWID": 190,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/WhiteNova/City",
+        "FogOfWarTexture": "Team/WhiteNova/City",
+        "frames": [
+            400,
+            1200
+        ]
+    },
+    "White Nova HQ": {
+        "AWBWID": 192,
+        "BaseDefence": 4,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/WhiteNova/HQ",
+        "FogOfWarTexture": "Team/WhiteNova/HQ",
+        "frames": [
+            400,
+            1200
+        ]
+    },
+    "White Nova Port": {
+        "AWBWID": 194,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "BaseTexture": "Team/WhiteNova/Port",
+        "FogOfWarTexture": "Team/WhiteNova/Port",
+        "frames": [
+            400,
+            1200
+        ]
+    },
+    "White Nova Com Tower": {
+        "AWBWID": 191,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/WhiteNova/ComTower",
+        "FogOfWarTexture": "Team/WhiteNova/ComTower",
+        "frames": [
+            400,
+            1200
+        ]
+    },
+    "White Nova Lab": {
+        "AWBWID": 193,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/WhiteNova/Lab",
+        "FogOfWarTexture": "Team/WhiteNova/Lab",
+        "frames": [
+            400,
+            1200
+        ]
+    }
 }

@@ -1,4 +1,5 @@
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.IO;
 using AWBWApp.Game.UI;
 using AWBWApp.Resources;
 using osu.Framework.Allocation;
@@ -20,7 +21,9 @@ namespace AWBWApp.Game
 
         private NearestNeighbourTextureStore unfilteredTextures;
         private DependencyContainer dependencies;
-        private ResourceStore<byte[]> fileStorage; //Todo: Probably should make a custom JSON storage
+        private ResourceStore<byte[]> fileStorage;
+        private ReplayFileStorage replayStorage;
+        private TerrainFileStorage terrainStorage;
 
         protected AWBWAppGameBase()
         {
@@ -43,6 +46,12 @@ namespace AWBWApp.Game
             fileStorage = new ResourceStore<byte[]>(Resources);
             fileStorage.AddExtension(".json");
             dependencies.Cache(fileStorage);
+
+            replayStorage = new ReplayFileStorage();
+            dependencies.Cache(replayStorage);
+
+            terrainStorage = new TerrainFileStorage();
+            dependencies.Cache(terrainStorage);
         }
 
         protected override UserInputManager CreateUserInputManager() => new AWBWAppUserInputManager();

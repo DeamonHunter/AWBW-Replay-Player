@@ -18,7 +18,7 @@ namespace AWBWApp.Game.UI
 
         protected override bool OnScroll(ScrollEvent e)
         {
-            var scale = (InternalChild.Scale + new Vector2(e.ScrollDelta.Y));
+            var scale = (InternalChild.Scale + new Vector2(e.ScrollDelta.Y * 0.1f));
             InternalChild.Scale = Vector2.Clamp(scale, Vector2.One, new Vector2(MaxScale));
             return base.OnScroll(e);
         }

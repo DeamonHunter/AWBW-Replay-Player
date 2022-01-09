@@ -1,42 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using AWBWApp.Game.Game.Logic;
+using AWBWApp.Game.API.Replay;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Primitives;
-using osu.Framework.Logging;
 
 namespace AWBWApp.Game.API
 {
-    public interface IReplayAction
-    {
-        void PerformAction(ReplayController controller);
-    }
-
-    public class MoveReplayAction : IReplayAction
-    {
-        [JsonProperty]
-        public AWBWUnit Unit;
-
-        [JsonProperty(PropertyName = "dist")]
-        public int? Distance { get; set; }
-
-        [JsonProperty]
-        public UnitPosition[] Path { get; set; }
-
-        [JsonProperty]
-        public bool Trapped { get; set; }
-
-        public void PerformAction(ReplayController controller)
-        {
-            Logger.Log("Performing Move Action.");
-            var unit = controller.Map.GetDrawableUnit(Unit.ID);
-            unit.UpdateUnit(Unit);
-            unit.FollowPath(Path);
-        }
-    }
-
+    /*
     public class LoadReplayAction : IReplayAction
     {
         [JsonProperty]
@@ -136,7 +105,7 @@ namespace AWBWApp.Game.API
             if (BlackBoatId.HasValue)
             {
                 var blackBoat = controller.Map.GetDrawableUnit(RepairedUnit.UnitId);
-                blackBoat.HasMoved.Value = false;
+                blackBoat.CanMove.Value = false;
             }
         }
 
@@ -163,22 +132,7 @@ namespace AWBWApp.Game.API
                 unit.HasCaptured.Value = true;
         }
     }
-
-    public class BuildReplayAction : IReplayAction
-    {
-        //[JsonProperty]
-        //public bool? Discovered { get; set; }
-
-        [JsonProperty]
-        public AWBWUnit NewUnit { get; set; }
-
-        public void PerformAction(ReplayController controller)
-        {
-            Logger.Log("Performing Build Action.");
-            controller.Map.AddUnit(NewUnit);
-        }
-    }
-
+    
     public class AttackReplayAction : IReplayAction
     {
         [JsonProperty]
@@ -275,7 +229,7 @@ namespace AWBWApp.Game.API
             Logger.Log("Performing Next Turn Action.");
             var unit = controller.Map.GetDrawableUnit(HiddenUnit);
 
-            unit.HasMoved.Value = false;
+            unit.CanMove.Value = false;
             unit.Dived.Value = true;
 
             //Todo: Update Fog
@@ -293,7 +247,7 @@ namespace AWBWApp.Game.API
             Logger.Log("Performing Next Turn Action.");
             var unit = controller.Map.GetDrawableUnit(UnhiddenUnit);
 
-            unit.HasMoved.Value = false;
+            unit.CanMove.Value = false;
             unit.Dived.Value = false;
 
             //Todo: Update Fog
@@ -346,6 +300,7 @@ namespace AWBWApp.Game.API
             //Todo: Pull up info overlay
         }
     }
+*/
 
     public class ReplayActionConverter : JsonConverter
     {
@@ -364,62 +319,6 @@ namespace AWBWApp.Game.API
 
             switch (type)
             {
-                case ReplayActionType.Move:
-                    result = new MoveReplayAction();
-                    break;
-
-                case ReplayActionType.NextTurn:
-                    result = new NextTurnAction();
-                    break;
-
-                case ReplayActionType.Fire:
-                    result = new AttackReplayAction();
-                    break;
-
-                case ReplayActionType.Build:
-                    result = new BuildReplayAction();
-                    break;
-
-                case ReplayActionType.Capt:
-                    result = new CaptureReplayAction();
-                    break;
-
-                case ReplayActionType.Load:
-                    result = new LoadReplayAction();
-                    break;
-
-                case ReplayActionType.Unload:
-                    result = new UnloadReplayAction();
-                    break;
-
-                case ReplayActionType.Supply:
-                    result = new SupplyReplayAction();
-                    break;
-
-                case ReplayActionType.Join:
-                    result = new JoinUnitsAction();
-                    break;
-
-                case ReplayActionType.Repair:
-                    result = new RepairReplayAction();
-                    break;
-
-                case ReplayActionType.Delete:
-                    result = new RepairReplayAction();
-                    break;
-
-                case ReplayActionType.Hide:
-                    result = new HideUnitAction();
-                    break;
-
-                case ReplayActionType.Unhide:
-                    result = new UnhideUnitAction();
-                    break;
-
-                case ReplayActionType.Explode:
-                    result = new ExplodeUnitAction();
-                    break;
-
                 default:
                     throw new ArgumentOutOfRangeException();
             }

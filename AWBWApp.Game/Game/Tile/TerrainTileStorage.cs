@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using AWBWApp.Game.Helpers;
 using Newtonsoft.Json;
 
 namespace AWBWApp.Game.Game.Tile
@@ -23,6 +25,16 @@ namespace AWBWApp.Game.Game.Tile
         public TerrainTile GetTileByAWBWId(int id)
         {
             return tilesByAWBWId[id];
+        }
+
+        public bool TryGetTileByAWBWId(int id, out TerrainTile tile)
+        {
+            return tilesByAWBWId.TryGetValue(id, out tile);
+        }
+
+        public TerrainTile GetRandomTerrainTile(Random random)
+        {
+            return random.Pick(tilesByAWBWId);
         }
     }
 }

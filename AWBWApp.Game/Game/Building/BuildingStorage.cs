@@ -24,5 +24,12 @@ namespace AWBWApp.Game.Game.Building
         {
             return buildingsByAWBWId[id];
         }
+
+        public bool TryGetBuildingByAWBWId(int id, out BuildingTile building)
+        {
+            return buildingsByAWBWId.TryGetValue(id, out building);
+        }
+
+        public bool ContainsBuildingWithAWBWId(int id) => buildingsByAWBWId.ContainsKey(id);
     }
 }

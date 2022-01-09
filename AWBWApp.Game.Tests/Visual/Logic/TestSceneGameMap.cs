@@ -1,44 +1,100 @@
-﻿using AWBWApp.Game.Game.Building;
-using AWBWApp.Game.Game.Logic;
-using AWBWApp.Game.Game.Tile;
-using AWBWApp.Game.Game.Units;
-using AWBWApp.Game.Tests.Visual;
+﻿using System;
+using System.Threading.Tasks;
+using AWBWApp.Game.API.New;
+using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.IO;
+using AWBWApp.Game.UI;
+using AWBWApp.Game.UI.Interrupts;
 using osu.Framework.Allocation;
-using osu.Framework.Graphics;
-using osu.Framework.IO.Stores;
+using osu.Framework.IO.Network;
+using osu.Framework.Logging;
 
-namespace AWBWApp.Game.Tests
+namespace AWBWApp.Game.Tests.Visual.Logic
 {
-    public class TestSceneGameMap : AWBWAppTestScene
+    public class TestSceneGameMap : BaseGameMapTestScene
     {
-        [Cached]
-        private TerrainTileStorage terrainTileStorage = new TerrainTileStorage();
-        [Cached]
-        private BuildingStorage buildingStorage = new BuildingStorage();
-        [Cached]
-        private UnitStorage unitStorage = new UnitStorage();
+        [Resolved]
+        private ReplayFileStorage replayStorage { get; set; }
 
-        private ReplayController replayController;
+        [Resolved]
+        private TerrainFileStorage terrainStorage { get; set; }
+
+        private InterruptDialogueOverlay overlay;
 
         public TestSceneGameMap()
         {
-            Add(replayController = new ReplayController()
-            {
-                RelativeSizeAxes = Axes.Both
-            });
+            Add(overlay = new InterruptDialogueOverlay());
         }
 
         [BackgroundDependencyLoader]
-        private void load(ResourceStore<byte[]> storage)
+        private void load()
         {
-            var tilesJson = storage.GetStream("Json/Tiles");
-            terrainTileStorage.LoadStream(tilesJson);
-            var buildingsJson = storage.GetStream("Json/Buildings");
-            buildingStorage.LoadStream(buildingsJson);
-            var unitsJson = storage.GetStream("Json/Units");
-            unitStorage.LoadStream(unitsJson);
+            //ReplayController.LoadInitialGameState(498571);
+            Schedule(() => DownloadReplayFile());
+        }
 
-            replayController.LoadInitialGameState(393637);
+        private async void DownloadReplayFile()
+        {
+            var gameId = 531380;
+
+            var stream = replayStorage.GetStream(gameId);
+
+            if (stream == null)
+            {
+                var taskCompletionSource = new TaskCompletionSource<string>();
+                overlay.Push(new PasswordInputInterrupt(taskCompletionSource));
+
+                string sessionId = await taskCompletionSource.Task.ConfigureAwait(false);
+
+                if (sessionId == null)
+                    throw new Exception("Failed to login.");
+
+                Logger.Log($"Replay of id '{gameId}' doesn't exist. Requesting from AWBW.");
+                var link = "https://awbw.amarriner.com/replay_download.php?games_id=" + gameId;
+                var webRequest = new WebRequest(link);
+                webRequest.AddHeader("Cookie", sessionId);
+                await webRequest.PerformAsync().ConfigureAwait(false);
+
+                if (webRequest.ResponseStream.Length <= 100)
+                    throw new Exception($"Unable to find the replay of game '{gameId}'. Is the session cookie correct?");
+
+                replayStorage.StoreStream(gameId, webRequest.ResponseStream);
+                stream = webRequest.ResponseStream;
+            }
+            else
+                Logger.Log($"Replay of id '{gameId}' existed locally.");
+
+            var parser = new AWBWReplayParser();
+
+            ReplayData replayData;
+
+            try
+            {
+                replayData = parser.ParseReplay(stream);
+            }
+            finally
+            {
+                stream.Dispose();
+            }
+
+            var terrainFile = terrainStorage.Get(replayData.GameData.MapId);
+
+            if (terrainFile == null)
+            {
+                Logger.Log($"Map of id '{replayData.GameData.MapId}' doesn't exist. Requesting from AWBW.");
+                var link = "https://awbw.amarriner.com/text_map.php?maps_id=" + replayData.GameData.MapId;
+                var webRequest = new WebRequest(link);
+                await webRequest.PerformAsync().ConfigureAwait(false);
+
+                if (webRequest.ResponseStream.Length <= 100)
+                    throw new Exception($"Unable to find the replay of game '{gameId}'. Is the session cookie correct?");
+
+                terrainFile = terrainStorage.ParseAndStoreResponseHTML(replayData.GameData.MapId, webRequest.GetResponseString());
+            }
+            else
+                Logger.Log($"Replay of id '{gameId}' existed locally.");
+
+            ReplayController.LoadReplay(replayData, terrainFile);
         }
     }
 }
