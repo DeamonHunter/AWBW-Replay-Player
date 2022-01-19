@@ -23,6 +23,7 @@ namespace AWBWApp.Game.Game.Unit
 
         public readonly UnitData UnitData;
         public long UnitID { get; private set; }
+        public long? OwnerID { get; private set; }
 
         public BindableInt HealthPoints = new BindableInt();
         public BindableInt Fuel = new BindableInt();
@@ -114,6 +115,7 @@ namespace AWBWApp.Game.Game.Unit
         public void UpdateUnit(AWBWUnit unit)
         {
             UnitID = unit.ID;
+            OwnerID = unit.OwnedBy;
             country = unit.CountryCode;
             HealthPoints.Value = unit.HitPoints;
             Fuel.Value = unit.Fuel;
@@ -134,6 +136,8 @@ namespace AWBWApp.Game.Game.Unit
         public void UpdateUnit(ReplayUnit unit)
         {
             UnitID = unit.ID;
+            if (unit.PlayerID.HasValue)
+                OwnerID = unit.PlayerID;
 
             if (unit.HitPoints.HasValue)
                 HealthPoints.Value = (int)unit.HitPoints.Value;

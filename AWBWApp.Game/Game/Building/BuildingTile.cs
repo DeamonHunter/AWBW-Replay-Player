@@ -10,6 +10,9 @@ namespace AWBWApp.Game.Game.Building
         public int AWBWId { get; set; }
 
         [JsonProperty]
+        public int CountryID { get; set; }
+
+        [JsonProperty]
         public int BaseDefence { get; set; }
 
         [JsonProperty]

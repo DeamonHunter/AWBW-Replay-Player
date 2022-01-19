@@ -34,7 +34,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 throw new Exception("Capture Replay Action did not contain information about Capture.");
 
             var combatInfoVision = attackData["combatInfoVision"];
-            var combatInfoVisionData = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)combatInfoVision, turnData.PlayerID.ToString());
+            var combatInfoVisionData = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)combatInfoVision, turnData.ActiveTeam, turnData.ActivePlayerID);
 
             var hasVision = (bool)combatInfoVisionData["hasVision"]; //Todo: What does this entail?
 
@@ -43,7 +43,16 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             var combatInfo = (JObject)combatInfoVisionData["combatInfo"];
 
-            action.Attacker = ReplayActionHelper.ParseJObjectIntoReplayUnit((JObject)combatInfo["attacker"]);
+            if (combatInfo["attacker"].Type == JTokenType.String)
+            {
+                //Todo: What is a "?" attacker when the player attacked with it. A dead unit?
+                Logger.Log("Attack action didn't have information on the player attacking?");
+                action.Attacker = action.MoveUnit.Unit;
+                action.Attacker.HitPoints = 0;
+            }
+            else
+                action.Attacker = ReplayActionHelper.ParseJObjectIntoReplayUnit((JObject)combatInfo["attacker"]);
+
             action.Defender = ReplayActionHelper.ParseJObjectIntoReplayUnit((JObject)combatInfo["defender"]);
 
             action.COPChanges = ReplayActionHelper.ParseJObjectIntoAttackCOPChange((JObject)attackData["copValues"]);
@@ -104,8 +113,12 @@ namespace AWBWApp.Game.API.Replay.Actions
                 sequence.OnComplete(x =>
                 {
                     attackerUnit.UpdateUnit(Attacker);
+
                     if (attackerUnit.HealthPoints.Value <= 0)
+                    {
                         controller.Map.DestroyUnit(attackerUnit.UnitID);
+                        controller.UpdateFogOfWar();
+                    }
                 });
             }
             transformables.Add(controller.Map.TargetReticule);

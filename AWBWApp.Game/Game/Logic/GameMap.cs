@@ -7,6 +7,7 @@ using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Unit;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.UI;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -40,6 +41,11 @@ namespace AWBWApp.Game.Game.Logic
         [Resolved]
         private UnitStorage unitStorage { get; set; }
 
+        private FogOfWarDrawable fogOfWarDrawable;
+        private FogOfWarGenerator fogOfWarGenerator;
+
+        public Dictionary<int, PlayerInfo> Players { get; private set; } = new Dictionary<int, PlayerInfo>();
+
         public GameMap()
         {
             AddRange(new Drawable[]
@@ -56,13 +62,9 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     AutoSizeAxes = Axes.Both
                 },
+                fogOfWarDrawable = new FogOfWarDrawable(),
                 TargetReticule = new TargetReticule()
             });
-        }
-
-        public void ScheduleInitialGameState(AWBWGameState gameState)
-        {
-            Schedule(() => SetToInitialGameState(gameState));
         }
 
         public void ScheduleInitialGameState(ReplayData gameState, ReplayMap map)
@@ -70,76 +72,17 @@ namespace AWBWApp.Game.Game.Logic
             Schedule(() => SetToInitialGameState(gameState, map));
         }
 
-        void SetToInitialGameState(AWBWGameState gameState)
-        {
-            MapSize = GetTerrainSize(gameState.Terrain);
-
-            //Calculate the map size as this isn't given by the api
-            //Todo: Check buildings
-            if (AutoSizeAxes == Axes.None)
-                Size = Vec2IHelper.ScalarMultiply(MapSize + new Vector2I(0, 1), DrawableTile.BASE_SIZE);
-
-            gameBoardDrawable.Clear();
-            buildingsDrawable.Clear();
-            unitsDrawable.Clear();
-
-            gameBoard = new DrawableTile[MapSize.X, MapSize.Y];
-            buildings = new Dictionary<Vector2I, DrawableBuilding>();
-            units = new Dictionary<long, DrawableUnit>();
-
-            for (int x = 0; x < MapSize.X; x++)
-            {
-                for (int y = 0; y < MapSize.Y; y++)
-                {
-                    TerrainTile terrainTile;
-
-                    if (gameState.Terrain.TryGetValue(x, out var row))
-                    {
-                        if (row.TryGetValue(y, out var awbwTile))
-                            terrainTile = terrainTileStorage.GetTileByAWBWId(awbwTile.Terrain_Id);
-                        else
-                            terrainTile = terrainTileStorage.GetTileByAWBWId(1); //Todo: Make this a const
-                    }
-                    else
-                        terrainTile = terrainTileStorage.GetTileByAWBWId(1); //Todo: Make this a const
-
-                    var tile = new DrawableTile(terrainTile) { Position = new Vector2(x * DrawableTile.BASE_SIZE.X, y * DrawableTile.BASE_SIZE.Y + DrawableTile.BASE_SIZE.Y - 1) };
-                    gameBoard[x, y] = tile;
-                    gameBoardDrawable.Add(tile);
-                }
-            }
-
-            for (int x = 0; x < MapSize.X; x++)
-            {
-                for (int y = 0; y < MapSize.Y; y++)
-                {
-                    if (gameState.Buildings.TryGetValue(x, out var buildingRow))
-                    {
-                        if (buildingRow.TryGetValue(y, out var awbwBuilding))
-                        {
-                            var building = buildingStorage.GetBuildingByAWBWId(awbwBuilding.Terrain_Id);
-                            var drawableBuilding = new DrawableBuilding(building) { Position = new Vector2(x * DrawableTile.BASE_SIZE.X, y * DrawableTile.BASE_SIZE.Y + DrawableTile.BASE_SIZE.Y - 1) };
-                            buildings.Add(new Vector2I(x, y), drawableBuilding);
-                            buildingsDrawable.Add(drawableBuilding);
-                        }
-                    }
-                }
-            }
-
-            foreach (var unit in gameState.Units)
-            {
-                var unitData = unitStorage.GetUnitByCode(unit.Value.UnitCode);
-                var drawableUnit = new DrawableUnit(unitData, unit.Value);
-                units.Add(unit.Key, drawableUnit);
-                unitsDrawable.Add(drawableUnit);
-            }
-
-            AutoSizeAxes = Axes.Both;
-        }
-
         void SetToInitialGameState(ReplayData gameState, ReplayMap map)
         {
             MapSize = map.Size;
+
+            Players.Clear();
+
+            for (int i = 0; i < gameState.ReplayInfo.Players.Length; i++)
+            {
+                var player = gameState.ReplayInfo.Players[i];
+                Players.Add(player.ID, new PlayerInfo(player));
+            }
 
             //Calculate the map size as this isn't given by the api
             //Todo: Check buildings
@@ -177,7 +120,8 @@ namespace AWBWApp.Game.Game.Logic
             {
                 var building = buildingStorage.GetBuildingByAWBWId(awbwBuilding.Value.TerrainID);
                 var position = awbwBuilding.Value.Position;
-                var drawableBuilding = new DrawableBuilding(building) { Position = new Vector2(position.X * DrawableTile.BASE_SIZE.X, position.Y * DrawableTile.BASE_SIZE.Y + DrawableTile.BASE_SIZE.Y - 1) };
+
+                var drawableBuilding = new DrawableBuilding(building, GetPlayerIDFromCountryID(building.CountryID), position);
                 buildings.Add(position, drawableBuilding);
                 buildingsDrawable.Add(drawableBuilding);
             }
@@ -189,18 +133,38 @@ namespace AWBWApp.Game.Game.Logic
                 foreach (var unit in replayUnits)
                 {
                     var unitData = unitStorage.GetUnitByCode(unit.Value.UnitName);
-                    var drawableUnit = new DrawableUnit(unitData, unit.Value, gameState.GameData.Players[gameState.GameData.PlayerIds[unit.Value.PlayerID.Value]].CountryCode());
+                    var drawableUnit = new DrawableUnit(unitData, unit.Value, gameState.ReplayInfo.Players[gameState.ReplayInfo.PlayerIds[unit.Value.PlayerID.Value]].CountryCode());
                     units.Add(unit.Value.ID, drawableUnit);
                     unitsDrawable.Add(drawableUnit);
                 }
             }
 
+            fogOfWarGenerator = new FogOfWarGenerator(this);
+            fogOfWarDrawable.NewStart(this, fogOfWarGenerator);
+
             AutoSizeAxes = Axes.Both;
+
+            UpdateFogOfWar(gameState.TurnData[0].ActivePlayerID);
         }
 
-        public void ScheduleUpdateToGameState(TurnData gameState, AWBWReplayPlayer[] players, Dictionary<int, int> playerIndexs)
+        private long? GetPlayerIDFromCountryID(int countryID)
         {
-            Schedule(() => updateToGameState(gameState, players, playerIndexs));
+            foreach (var player in Players)
+            {
+                if (player.Value.CountryID != countryID)
+                    continue;
+
+                return player.Key;
+            }
+
+            return null;
+        }
+
+        public static Vector2 GetDrawablePositionForTilePosition(Vector2I tilePos) => new Vector2(tilePos.X * DrawableTile.BASE_SIZE.X, (tilePos.Y + 1) * DrawableTile.BASE_SIZE.Y - 1);
+
+        public void ScheduleUpdateToGameState(TurnData gameState)
+        {
+            Schedule(() => updateToGameState(gameState));
         }
 
         Vector2I GetTerrainSize(Dictionary<int, Dictionary<int, AWBWTile>> tiles)
@@ -222,7 +186,7 @@ namespace AWBWApp.Game.Game.Logic
         }
 
         //Todo: Save this data
-        void updateToGameState(TurnData gameState, AWBWReplayPlayer[] players, Dictionary<int, int> playerIndexs)
+        void updateToGameState(TurnData gameState)
         {
             for (int x = 0; x < MapSize.X; x++)
             {
@@ -250,7 +214,7 @@ namespace AWBWApp.Game.Game.Logic
                 else
                 {
                     var unitData = unitStorage.GetUnitByCode(unit.Value.UnitName);
-                    var drawableUnit = new DrawableUnit(unitData, unit.Value, players[playerIndexs[unit.Value.PlayerID.Value]].CountryCode());
+                    var drawableUnit = new DrawableUnit(unitData, unit.Value, Players[unit.Value.PlayerID.Value].CountryCode);
                     units.Add(unit.Value.ID, drawableUnit);
                     unitsDrawable.Add(drawableUnit);
                 }
@@ -261,7 +225,11 @@ namespace AWBWApp.Game.Game.Logic
                 units.Remove(unit.Key);
                 unitsDrawable.Remove(unit.Value);
             }
+
+            UpdateFogOfWar(gameState.ActivePlayerID);
         }
+
+        public void UpdateFogOfWar(int playerId) => fogOfWarGenerator.GenerateFogForPlayer(playerId);
 
         public DrawableUnit AddUnit(ReplayUnit unit, string countryCode)
         {
@@ -323,6 +291,26 @@ namespace AWBWApp.Game.Game.Logic
             return null;
         }
 
+        public IEnumerable<DrawableUnit> GetDrawableUnitsFromPlayer(int playerId)
+        {
+            foreach (var unit in units)
+            {
+                if (unit.Value.OwnerID.HasValue && unit.Value.OwnerID == playerId)
+                    yield return unit.Value;
+            }
+        }
+
+        public IEnumerable<DrawableBuilding> GetDrawableBuildingsForPlayer(int playerId)
+        {
+            foreach (var building in buildings)
+            {
+                if (building.Value.OwnerID.HasValue && building.Value.OwnerID == playerId)
+                    yield return building.Value;
+            }
+        }
+
+        public DrawableTile GetDrawableTile(Vector2I position) => gameBoard[position.X, position.Y];
+
         public void UpdateBuilding(ReplayBuilding awbwBuilding, bool newTurn)
         {
             var tilePosition = awbwBuilding.Position;
@@ -330,7 +318,7 @@ namespace AWBWApp.Game.Game.Logic
             if (!buildings.TryGetValue(tilePosition, out DrawableBuilding building))
             {
                 var buildingTile = buildingStorage.GetBuildingByAWBWId(awbwBuilding.TerrainID);
-                var drawableBuilding = new DrawableBuilding(buildingTile) { Position = new Vector2(tilePosition.X * DrawableTile.BASE_SIZE.X, tilePosition.Y * DrawableTile.BASE_SIZE.Y + DrawableTile.BASE_SIZE.Y - 1) };
+                var drawableBuilding = new DrawableBuilding(buildingTile, GetPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
                 buildings.Add(tilePosition, drawableBuilding);
                 buildingsDrawable.Add(drawableBuilding);
                 return;
@@ -344,7 +332,7 @@ namespace AWBWApp.Game.Game.Logic
                 if (awbwBuilding.TerrainID != 0)
                 {
                     var buildingTile = buildingStorage.GetBuildingByAWBWId(awbwBuilding.TerrainID);
-                    var drawableBuilding = new DrawableBuilding(buildingTile) { Position = new Vector2(tilePosition.X * DrawableTile.BASE_SIZE.X, tilePosition.Y * DrawableTile.BASE_SIZE.Y + DrawableTile.BASE_SIZE.Y - 1) };
+                    var drawableBuilding = new DrawableBuilding(buildingTile, GetPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
                     buildings.Add(tilePosition, drawableBuilding);
                     buildingsDrawable.Add(drawableBuilding);
                 }

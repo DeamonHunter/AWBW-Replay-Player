@@ -112,105 +112,115 @@ namespace AWBWApp.Game.API.New
                     case "id":
                     {
                         var id = ReadInteger(ref text, ref textIndex);
-                        if (!firstTurn && replayData.GameData.ID != id)
+                        if (!firstTurn && replayData.ReplayInfo.ID != id)
                             throw new Exception("Data 'ID' changed per turn when not expected.");
-                        replayData.GameData.ID = id;
+                        replayData.ReplayInfo.ID = id;
                         break;
                     }
 
                     case "name":
                     {
                         var name = ReadString(ref text, ref textIndex);
-                        if (!firstTurn && replayData.GameData.Name != name)
+                        if (!firstTurn && replayData.ReplayInfo.Name != name)
                             throw new Exception("Data 'Name' changed per turn when not expected.");
-                        replayData.GameData.Name = name;
+                        replayData.ReplayInfo.Name = name;
                         break;
                     }
 
                     case "password":
                     {
                         var password = ReadString(ref text, ref textIndex);
-                        if (!firstTurn && replayData.GameData.Password != password)
+                        if (!firstTurn && replayData.ReplayInfo.Password != password)
                             throw new Exception("Data 'Password' changed per turn when not expected.");
-                        replayData.GameData.Password = password;
+                        replayData.ReplayInfo.Password = password;
                         break;
                     }
 
                     case "creator":
                     {
                         var creator = ReadInteger(ref text, ref textIndex);
-                        if (!firstTurn && replayData.GameData.CreatorId != creator)
+                        if (!firstTurn && replayData.ReplayInfo.CreatorId != creator)
                             throw new Exception("Data 'CreatorId' changed per turn when not expected.");
-                        replayData.GameData.CreatorId = creator;
+                        replayData.ReplayInfo.CreatorId = creator;
                         break;
                     }
 
                     case "maps_id":
                     {
                         var mapId = ReadInteger(ref text, ref textIndex);
-                        if (!firstTurn && replayData.GameData.MapId != mapId)
+                        if (!firstTurn && replayData.ReplayInfo.MapId != mapId)
                             throw new Exception("Data 'MapId' changed per turn when not expected.");
-                        replayData.GameData.MapId = mapId;
+                        replayData.ReplayInfo.MapId = mapId;
                         break;
                     }
 
                     case "funds":
                     {
                         var funds = ReadInteger(ref text, ref textIndex);
-                        if (!firstTurn && replayData.GameData.FundsPerBuilding != funds)
+                        if (!firstTurn && replayData.ReplayInfo.FundsPerBuilding != funds)
                             throw new Exception("Data 'FundsPerBuilding' changed per turn when not expected.");
-                        replayData.GameData.FundsPerBuilding = funds;
+                        replayData.ReplayInfo.FundsPerBuilding = funds;
                         break;
                     }
 
                     case "starting_funds":
                     {
                         var funds = ReadInteger(ref text, ref textIndex);
-                        if (!firstTurn && replayData.GameData.StartingFunds != funds)
+                        if (!firstTurn && replayData.ReplayInfo.StartingFunds != funds)
                             throw new Exception("Data 'StartingFunds' changed per turn when not expected.");
-                        replayData.GameData.StartingFunds = funds;
+                        replayData.ReplayInfo.StartingFunds = funds;
                         break;
                     }
 
                     case "fog":
                     {
                         var fog = ReadBool(ref text, ref textIndex);
-                        if (!firstTurn && replayData.GameData.Fog != fog)
+                        if (!firstTurn && replayData.ReplayInfo.Fog != fog)
                             throw new Exception("Data 'Fog' changed per turn when not expected.");
-                        replayData.GameData.Fog = fog;
+                        replayData.ReplayInfo.Fog = fog;
                         break;
                     }
 
                     case "use_powers":
                     {
                         var powersAvaliable = ReadBool(ref text, ref textIndex);
-                        if (!firstTurn && replayData.GameData.PowersAllowed != powersAvaliable)
+                        if (!firstTurn && replayData.ReplayInfo.PowersAllowed != powersAvaliable)
                             throw new Exception("Data 'PowersAllowed' changed per turn when not expected.");
-                        replayData.GameData.PowersAllowed = powersAvaliable;
+                        replayData.ReplayInfo.PowersAllowed = powersAvaliable;
                         break;
                     }
 
                     case "official":
                     {
                         var official = ReadBool(ref text, ref textIndex);
-                        if (!firstTurn && replayData.GameData.OfficialGame != official)
+                        if (!firstTurn && replayData.ReplayInfo.OfficialGame != official)
                             throw new Exception("Data 'OfficialGame' changed per turn when not expected.");
-                        replayData.GameData.OfficialGame = official;
+                        replayData.ReplayInfo.OfficialGame = official;
                         break;
                     }
 
                     case "league":
                     {
                         var leagueMatch = ReadString(ref text, ref textIndex);
-                        if (!firstTurn && replayData.GameData.LeagueMatch != leagueMatch)
+                        if (!firstTurn && replayData.ReplayInfo.LeagueMatch != leagueMatch)
                             throw new Exception("Data 'LeagueMatch' changed per turn when not expected.");
-                        replayData.GameData.LeagueMatch = leagueMatch;
+                        replayData.ReplayInfo.LeagueMatch = leagueMatch;
+                        break;
+                    }
+
+                    case "team":
+                    {
+                        var teamMatch = ReadBool(ref text, ref textIndex);
+                        if (!firstTurn && replayData.ReplayInfo.TeamMatch != teamMatch)
+                            throw new Exception("Data 'LeagueMatch' changed per turn when not expected.");
+
+                        replayData.ReplayInfo.TeamMatch = teamMatch;
                         break;
                     }
 
                     case "turn":
                     {
-                        newTurn.PlayerID = ReadInteger(ref text, ref textIndex);
+                        newTurn.ActivePlayerID = ReadInteger(ref text, ref textIndex);
                         break;
                     }
 
@@ -223,18 +233,18 @@ namespace AWBWApp.Game.API.New
                     case "start_date":
                     {
                         var startDate = ReadString(ref text, ref textIndex);
-                        if (!firstTurn && replayData.GameData.StartDate != startDate)
+                        if (!firstTurn && replayData.ReplayInfo.StartDate != startDate)
                             throw new Exception("Data 'StartDate' changed per turn when not expected.");
-                        replayData.GameData.StartDate = startDate;
+                        replayData.ReplayInfo.StartDate = startDate;
                         break;
                     }
 
                     case "end_date":
                     {
                         var startDate = ReadString(ref text, ref textIndex);
-                        if (!firstTurn && replayData.GameData.EndDate != startDate)
+                        if (!firstTurn && replayData.ReplayInfo.EndDate != startDate)
                             throw new Exception("Data 'EndDate' changed per turn when not expected.");
-                        replayData.GameData.EndDate = startDate;
+                        replayData.ReplayInfo.EndDate = startDate;
                         break;
                     }
 
@@ -262,7 +272,6 @@ namespace AWBWApp.Game.API.New
                     case "comment":
                     case "type":
                     case "max_rating":
-                    case "team":
                     case "aet_date":
                     {
                         var value = ReadString(ref text, ref textIndex);
@@ -295,6 +304,8 @@ namespace AWBWApp.Game.API.New
                 }
             }
 
+            newTurn.ActiveTeam = replayData.ReplayInfo.Players[replayData.ReplayInfo.PlayerIds[newTurn.ActivePlayerID]].TeamName;
+
             if (text[textIndex++] != '}')
                 throw new Exception("Player data does not end correctly.");
         }
@@ -310,10 +321,10 @@ namespace AWBWApp.Game.API.New
 
             if (firstTurn)
             {
-                data.GameData.Players = new AWBWReplayPlayer[numberOfPlayers];
-                data.GameData.PlayerIds = new Dictionary<int, int>();
+                data.ReplayInfo.Players = new AWBWReplayPlayer[numberOfPlayers];
+                data.ReplayInfo.PlayerIds = new Dictionary<int, int>();
             }
-            else if (data.GameData.Players.Length != numberOfPlayers)
+            else if (data.ReplayInfo.Players.Length != numberOfPlayers)
                 throw new Exception("Number of players changed?");
 
             turnData.Players = new AWBWReplayPlayerTurn[numberOfPlayers];
@@ -333,13 +344,13 @@ namespace AWBWApp.Game.API.New
 
                 AWBWReplayPlayer playerData;
 
-                if (data.GameData.Players[playerIndex] == null)
+                if (data.ReplayInfo.Players[playerIndex] == null)
                 {
                     playerData = new AWBWReplayPlayer();
-                    data.GameData.Players[playerIndex] = playerData;
+                    data.ReplayInfo.Players[playerIndex] = playerData;
                 }
                 else
-                    playerData = data.GameData.Players[playerIndex];
+                    playerData = data.ReplayInfo.Players[playerIndex];
 
                 var playerDataTurn = new AWBWReplayPlayerTurn();
                 turnData.Players[playerIndex] = playerDataTurn;
@@ -360,7 +371,7 @@ namespace AWBWApp.Game.API.New
                                 throw new Exception("Player 'id' changed per turn when not expected.");
                             playerData.ID = id;
                             playerDataTurn.ID = id;
-                            data.GameData.PlayerIds[id] = playerIndex;
+                            data.ReplayInfo.PlayerIds[id] = playerIndex;
                             break;
                         }
 
@@ -370,6 +381,15 @@ namespace AWBWApp.Game.API.New
                             if (!firstTurn && playerData.UserId != id)
                                 throw new Exception("Player 'users_id' changed per turn when not expected.");
                             playerData.UserId = id;
+                            break;
+                        }
+
+                        case "team":
+                        {
+                            var teamName = ReadString(ref text, ref textIndex);
+                            if (!firstTurn && playerData.TeamName != teamName)
+                                throw new Exception("Player 'teamName' changed per turn when not expected.");
+                            playerData.TeamName = teamName;
                             break;
                         }
 
@@ -431,23 +451,22 @@ namespace AWBWApp.Game.API.New
 
                         case "turn":
                         case "email":
-                        case "uniq_id":
                         case "last_read":
                         case "last_read_broadcasts":
                         case "emailpress":
                         case "signature":
                         case "accept_draw":
                         case "co_image":
-                        case "team":
                         case "turn_start":
                         case "tags_co_id":
                         case "tags_co_power":
                         case "tags_co_max_power":
                         case "tags_co_max_spower":
                         case "interface":
+                        case "uniq_id":
                         {
                             var value = ReadString(ref text, ref textIndex);
-                            Logger.Log($"Replay contained known but incomplete string parameter: {entry}");
+                            Logger.Log($"Replay contained known but incomplete string parameter: {entry}. Value was: {value}");
                             break;
                         }
 
@@ -458,7 +477,7 @@ namespace AWBWApp.Game.API.New
                         case "turn_clock":
                         {
                             var value = ReadInteger(ref text, ref textIndex);
-                            Logger.Log($"Replay contained known but incomplete int parameter: {entry}");
+                            Logger.Log($"Replay contained known but incomplete int parameter: {entry}. Value was: {value}");
                             break;
                         }
 
@@ -874,7 +893,7 @@ namespace AWBWApp.Game.API.New
 
             foreach (var turn in replayData.TurnData)
             {
-                if (turn.PlayerID != playerID || turn.Day != day)
+                if (turn.ActivePlayerID != playerID || turn.Day != day)
                     continue;
 
                 turnData = turn;

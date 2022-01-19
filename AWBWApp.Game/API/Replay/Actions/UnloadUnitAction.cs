@@ -17,7 +17,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             var action = new UnloadUnitAction();
 
-            var unit = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)jObject["unit"], turnData.PlayerID.ToString());
+            var unit = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)jObject["unit"], turnData.ActiveTeam, turnData.ActivePlayerID);
 
             action.UnloadedUnit = ReplayActionHelper.ParseJObjectIntoReplayUnit(unit);
             action.TransportID = (int)jObject["transportID"];
@@ -49,6 +49,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 transportUnit.Cargo.Remove(unloadingUnit.UnitID);
                 unloadingUnit.CanMove.Value = false;
+                controller.UpdateFogOfWar();
             });
 
             return new List<Transformable>

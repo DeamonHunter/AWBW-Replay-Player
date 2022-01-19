@@ -32,8 +32,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (attackData == null)
                 throw new Exception("Capture Replay Action did not contain information about Capture.");
 
-            action.LoadedId = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)attackData["loaded"], turnData.PlayerID.ToString());
-            action.TransportID = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)attackData["transport"], turnData.PlayerID.ToString());
+            action.LoadedId = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)attackData["loaded"], turnData.ActiveTeam, turnData.ActivePlayerID);
+            action.TransportID = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)attackData["transport"], turnData.ActiveTeam, turnData.ActivePlayerID);
             return action;
         }
     }

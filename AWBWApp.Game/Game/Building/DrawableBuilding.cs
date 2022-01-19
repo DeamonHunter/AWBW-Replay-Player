@@ -1,4 +1,5 @@
 ﻿using System;
+using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -16,14 +17,21 @@ namespace AWBWApp.Game.Game.Building
 
         public Bindable<bool> HasDoneAction = new Bindable<bool>();
 
+        public long? OwnerID { get; private set; }
+        public Vector2I TilePosition { get; private set; }
+
         public readonly BuildingTile BuildingTile;
 
         private TextureAnimation textureAnimation;
 
-        public DrawableBuilding(BuildingTile buildingTile)
+        public DrawableBuilding(BuildingTile buildingTile, long? ownerID, Vector2I tilePosition)
         {
             BuildingTile = buildingTile;
+            OwnerID = ownerID;
+            TilePosition = tilePosition;
+
             Size = BASE_SIZE;
+            Position = GameMap.GetDrawablePositionForTilePosition(tilePosition);
             InternalChild = textureAnimation = new TextureAnimation()
             {
                 Anchor = Anchor.BottomLeft,

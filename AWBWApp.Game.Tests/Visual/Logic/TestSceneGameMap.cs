@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AWBWApp.Game.API.New;
-using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.IO;
 using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Interrupts;
@@ -15,10 +13,10 @@ namespace AWBWApp.Game.Tests.Visual.Logic
     public class TestSceneGameMap : BaseGameMapTestScene
     {
         [Resolved]
-        private ReplayFileStorage replayStorage { get; set; }
+        private ReplayManager replayStorage { get; set; }
 
         [Resolved]
-        private TerrainFileStorage terrainStorage { get; set; }
+        private MapFileStorage mapStorage { get; set; }
 
         private InterruptDialogueOverlay overlay;
 
@@ -39,9 +37,9 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             Logger.Log($"Starting replay download.", level: LogLevel.Important);
             var gameId = 524439;
 
-            var stream = replayStorage.GetStream(gameId);
+            var replay = replayStorage.GetReplayData(gameId);
 
-            if (stream == null)
+            if (replay == null)
             {
                 Logger.Log($"Replay not Found. Requesting from AWBW.", level: LogLevel.Important);
                 var taskCompletionSource = new TaskCompletionSource<string>();
@@ -62,43 +60,29 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 if (webRequest.ResponseStream.Length <= 100)
                     throw new Exception($"Unable to find the replay of game '{gameId}'. Is the session cookie correct?");
 
-                replayStorage.StoreStream(gameId, webRequest.ResponseStream);
-                stream = webRequest.ResponseStream;
+                replay = replayStorage.ParseAndStoreReplay(gameId, webRequest.ResponseStream);
             }
             else
                 Logger.Log($"Replay of id '{gameId}' existed locally.");
 
-            var parser = new AWBWReplayParser();
-
-            ReplayData replayData;
-
-            try
-            {
-                replayData = parser.ParseReplay(stream);
-            }
-            finally
-            {
-                stream.Dispose();
-            }
-
-            var terrainFile = terrainStorage.Get(replayData.GameData.MapId);
+            var terrainFile = mapStorage.Get(replay.ReplayInfo.MapId);
 
             if (terrainFile == null)
             {
-                Logger.Log($"Map of id '{replayData.GameData.MapId}' doesn't exist. Requesting from AWBW.");
-                var link = "https://awbw.amarriner.com/text_map.php?maps_id=" + replayData.GameData.MapId;
+                Logger.Log($"Map of id '{replay.ReplayInfo.MapId}' doesn't exist. Requesting from AWBW.");
+                var link = "https://awbw.amarriner.com/text_map.php?maps_id=" + replay.ReplayInfo.MapId;
                 var webRequest = new WebRequest(link);
                 await webRequest.PerformAsync().ConfigureAwait(false);
 
                 if (webRequest.ResponseStream.Length <= 100)
                     throw new Exception($"Unable to find the replay of game '{gameId}'. Is the session cookie correct?");
 
-                terrainFile = terrainStorage.ParseAndStoreResponseHTML(replayData.GameData.MapId, webRequest.GetResponseString());
+                terrainFile = mapStorage.ParseAndStoreResponseHTML(replay.ReplayInfo.MapId, webRequest.GetResponseString());
             }
             else
                 Logger.Log($"Replay of id '{gameId}' existed locally.");
 
-            ReplayController.LoadReplay(replayData, terrainFile);
+            ReplayController.LoadReplay(replay, terrainFile);
         }
     }
 }

@@ -9,6 +9,6 @@ namespace AWBWApp.Game.API.Replay
         public Vector2I Position;
         public int Capture;
         public int LastCapture;
-        public int? Team;
+        public string Team;
     }
 }

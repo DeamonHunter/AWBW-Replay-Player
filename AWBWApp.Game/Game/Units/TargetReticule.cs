@@ -19,6 +19,7 @@ namespace AWBWApp.Game.Game.Units
         {
             Anchor = Anchor.TopLeft;
             Origin = Anchor.Centre;
+            Alpha = 0;
 
             texture = new Sprite();
 

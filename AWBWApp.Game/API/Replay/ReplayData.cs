@@ -5,11 +5,11 @@ namespace AWBWApp.Game.API.Replay
 {
     public class ReplayData
     {
-        public GameData GameData = new GameData();
+        public ReplayInfo ReplayInfo = new ReplayInfo();
         public List<TurnData> TurnData = new List<TurnData>();
     }
 
-    public class GameData
+    public class ReplayInfo
     {
         public int ID;
         public string Name;
@@ -29,6 +29,7 @@ namespace AWBWApp.Game.API.Replay
         //Todo: Remove when double checked
         public bool OfficialGame;
         public string LeagueMatch;
+        public bool TeamMatch;
 
         public int? MinimumRating;
         public int? MaximumRating;
@@ -50,13 +51,13 @@ namespace AWBWApp.Game.API.Replay
 
         public int CaptureWin; //Todo: "capture_win" What is this?
         public bool Type; //Todo: "type" What is this?
-        public string Team; //Todo: "team" What is this for?
     }
 
     public class TurnData
     {
-        public int PlayerID;
         public int Day;
+        public int ActivePlayerID;
+        public string ActiveTeam;
 
         public bool Active; //Todo: "active" What is this?
 

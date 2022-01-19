@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using AWBWApp.Game.API;
+using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Tile;
 using osu.Framework.Allocation;
+using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Tests.Visual.Logic
 {
@@ -33,28 +35,16 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
         public void RenderBasicMap(int xSize, int ySize)
         {
-            var state = AWBWGameState.GenerateBlankState();
-            state.Terrain.Clear();
-
-            for (int x = 0; x < xSize; x++)
-            {
-                var row = new Dictionary<int, AWBWTile>();
-
-                for (int y = 0; y < ySize; y++)
-                {
-                    var tile = new AWBWTile { Terrain_Id = grass_terrain_id };
-                    row.Add(y, tile);
-                }
-                state.Terrain.Add(x, row);
-            }
-
-            ReplayController.ShowGameState(state);
+            var replayData = new ReplayData();
+            ReplayController.LoadReplay(replayData, CreateBasicMap(xSize, ySize));
         }
 
         public void RenderRandomMap(int xSize, int ySize)
         {
-            var state = AWBWGameState.GenerateBlankState();
-            state.Terrain.Clear();
+            var replayData = new ReplayData();
+            var gameMap = new ReplayMap();
+            gameMap.Size = new Vector2I(xSize, ySize);
+            gameMap.Ids = new short[xSize * ySize];
 
             var random = new Random();
 
@@ -62,26 +52,28 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
             for (int x = 0; x < xSize; x++)
             {
-                var row = new Dictionary<int, AWBWTile>();
-
                 for (int y = 0; y < ySize; y++)
                 {
                     var randomTile = storage.GetRandomTerrainTile(random);
-
-                    var tile = new AWBWTile { Terrain_Id = randomTile.AWBWId };
-                    row.Add(y, tile);
+                    gameMap.Ids[x * ySize + y] = (short)randomTile.AWBWId;
                 }
-                state.Terrain.Add(x, row);
             }
 
-            ReplayController.ShowGameState(state);
+            ReplayController.LoadReplay(replayData, gameMap);
         }
 
         public void RenderMapWithAllIDs(int xSize, int ySize)
         {
-            var state = AWBWGameState.GenerateBlankState();
-            state.Terrain.Clear();
-            state.Buildings.Clear();
+            var replay = new ReplayData();
+            var turn = new TurnData
+            {
+                Buildings = new Dictionary<Vector2I, ReplayBuilding>()
+            };
+            replay.TurnData = new List<TurnData> { turn };
+
+            var gameMap = new ReplayMap();
+            gameMap.Size = new Vector2I(xSize, ySize);
+            gameMap.Ids = new short[xSize * ySize];
 
             var tileStorage = GetTileStorage();
             var buildingStorage = GetBuildingStorage();
@@ -101,26 +93,23 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
                     if (buildingStorage.TryGetBuildingByAWBWId(id, out BuildingTile building))
                     {
-                        row.Add(y, new AWBWTile { Terrain_Id = grass_terrain_id });
-
-                        if (!state.Buildings.TryGetValue(x, out Dictionary<int, AWBWBuilding> buildingsRow))
+                        var replayBuilding = new ReplayBuilding
                         {
-                            buildingsRow = new Dictionary<int, AWBWBuilding>();
-                            state.Buildings.Add(x, buildingsRow);
-                        }
-                        buildingsRow.Add(y, new AWBWBuilding { Terrain_Id = id });
+                            ID = building.AWBWId,
+                            TerrainID = building.AWBWId
+                        };
+
+                        turn.Buildings.Add(new Vector2I(x, y), replayBuilding);
+                        gameMap.Ids[x * ySize + y] = grass_terrain_id;
                     }
                     else if (tileStorage.TryGetTileByAWBWId(id, out TerrainTile tile))
-                    {
-                        row.Add(y, new AWBWTile { Terrain_Id = tile.AWBWId });
-                    }
+                        gameMap.Ids[x * ySize + y] = (short)tile.AWBWId;
                     else
                         throw new Exception($"Unknown AWBWID: {id}");
                 }
-                state.Terrain.Add(x, row);
             }
 
-            ReplayController.ShowGameState(state);
+            ReplayController.LoadReplay(replay, gameMap);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
                 CoPowers = new Dictionary<int, int>(),
                 Day = 0,
-                PlayerID = TeamIDs[0],
+                ActivePlayerID = TeamIDs[0],
                 ReplayUnit = new Dictionary<long, ReplayUnit>(),
                 Weather = new Weather(),
                 Players = new AWBWReplayPlayerTurn[TeamIDs.Length]
@@ -63,7 +63,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                     turn.ReplayUnit.Add(unit.ID, unit);
                 }
             }
-            ReplayController.Map.ScheduleUpdateToGameState(turn, players, playersIndex);
+            ReplayController.Map.ScheduleUpdateToGameState(turn);
         }
     }
 }

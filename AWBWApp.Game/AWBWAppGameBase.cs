@@ -1,3 +1,6 @@
+using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.Tile;
+using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.IO;
 using AWBWApp.Game.UI;
@@ -22,8 +25,12 @@ namespace AWBWApp.Game
         private NearestNeighbourTextureStore unfilteredTextures;
         private DependencyContainer dependencies;
         private ResourceStore<byte[]> fileStorage;
-        private ReplayFileStorage replayStorage;
-        private TerrainFileStorage terrainStorage;
+        private ReplayManager replayStorage;
+        private MapFileStorage mapStorage;
+
+        private TerrainTileStorage terrainTileStorage;
+        private BuildingStorage buildingStorage;
+        private UnitStorage unitStorage;
 
         protected AWBWAppGameBase()
         {
@@ -47,11 +54,26 @@ namespace AWBWApp.Game
             fileStorage.AddExtension(".json");
             dependencies.Cache(fileStorage);
 
-            replayStorage = new ReplayFileStorage();
+            replayStorage = new ReplayManager();
             dependencies.Cache(replayStorage);
 
-            terrainStorage = new TerrainFileStorage();
-            dependencies.Cache(terrainStorage);
+            mapStorage = new MapFileStorage();
+            dependencies.Cache(mapStorage);
+
+            var tilesJson = fileStorage.GetStream("Json/Tiles");
+            terrainTileStorage = new TerrainTileStorage();
+            terrainTileStorage.LoadStream(tilesJson);
+            dependencies.Cache(terrainTileStorage);
+
+            var buildingsJson = fileStorage.GetStream("Json/Buildings");
+            buildingStorage = new BuildingStorage();
+            buildingStorage.LoadStream(buildingsJson);
+            dependencies.Cache(buildingStorage);
+
+            var unitsJson = fileStorage.GetStream("Json/Units");
+            unitStorage = new UnitStorage();
+            unitStorage.LoadStream(unitsJson);
+            dependencies.Cache(unitStorage);
         }
 
         protected override UserInputManager CreateUserInputManager() => new AWBWAppUserInputManager();

@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
-using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.UI;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Transforms;
+using osu.Framework.Screens;
 using osuTK;
 
 namespace AWBWApp.Game.Game.Logic
 {
-    public class ReplayController : Container
+    public class ReplayController : Screen
     {
         public GameMap Map;
         public long GameID { get; private set; }
@@ -32,7 +31,7 @@ namespace AWBWApp.Game.Game.Logic
                 players.Add(new ReplayPlayer());
 
             Map = new GameMap();
-            AddRange(new Drawable[]
+            AddRangeInternal(new Drawable[]
             {
                 new MapCameraController(Map)
                 {
@@ -109,12 +108,6 @@ namespace AWBWApp.Game.Game.Logic
             Schedule(() => loadingLayer.Hide());
         }
 
-        public async void ShowGameState(AWBWGameState state)
-        {
-            Map.ScheduleInitialGameState(state);
-            Schedule(() => loadingLayer.Hide());
-        }
-
         public void GoToNextAction()
         {
             completeLastActionSequence();
@@ -187,13 +180,18 @@ namespace AWBWApp.Game.Game.Logic
 
             loadingLayer.Show();
             currentTurn = replayData.TurnData[turnIdx];
-            Map.ScheduleUpdateToGameState(currentTurn, replayData.GameData.Players, replayData.GameData.PlayerIds);
+            Map.ScheduleUpdateToGameState(currentTurn);
             Schedule(() => loadingLayer.Hide());
         }
 
         public string GetCountryCode(int playerId)
         {
-            return replayData.GameData.Players[replayData.GameData.PlayerIds[playerId]].CountryCode();
+            return replayData.ReplayInfo.Players[replayData.ReplayInfo.PlayerIds[playerId]].CountryCode();
+        }
+
+        public void UpdateFogOfWar()
+        {
+            Map.UpdateFogOfWar(currentTurn.ActivePlayerID);
         }
     }
 }

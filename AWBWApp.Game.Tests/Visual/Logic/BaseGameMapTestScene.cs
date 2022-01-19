@@ -7,6 +7,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.IO.Stores;
+using osu.Framework.Screens;
 
 namespace AWBWApp.Game.Tests.Visual.Logic
 {
@@ -21,9 +22,15 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
         protected ReplayController ReplayController;
 
+        protected ScreenStack ScreenStack;
+
         public BaseGameMapTestScene()
         {
-            Add(ReplayController = new ReplayController()
+            Add(ScreenStack = new ScreenStack
+            {
+                RelativeSizeAxes = Axes.Both
+            });
+            ScreenStack.Push(ReplayController = new ReplayController()
             {
                 RelativeSizeAxes = Axes.Both
             });

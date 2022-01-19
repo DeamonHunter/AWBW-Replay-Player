@@ -6,18 +6,20 @@ using AWBWApp.Game.API.Replay;
 using Newtonsoft.Json;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.IO.Stores;
+using osu.Framework.Logging;
 
 namespace AWBWApp.Game.IO
 {
-    public class TerrainFileStorage : IResourceStore<ReplayMap>
+    public class MapFileStorage : IResourceStore<ReplayMap>
     {
         private const string terrain_folder = "ReplayData/Terrain";
 
-        public TerrainFileStorage()
+        public MapFileStorage()
         {
             //Ensure that the replay directory always exists before getting it.
             if (!Directory.Exists(terrain_folder))
                 Directory.CreateDirectory(terrain_folder);
+            Logger.Log("Checked for directory.");
         }
 
         public ReplayMap Get(string name)
@@ -114,6 +116,9 @@ namespace AWBWApp.Game.IO
 
             var terrainFileSerialised = JsonConvert.SerializeObject(terrainFile);
 
+            //Todo: Was does non-attached debug need this
+            if (!Directory.Exists(terrain_folder))
+                Directory.CreateDirectory(terrain_folder);
             var path = $"{terrain_folder}/{gameId}.json";
             File.WriteAllText(path, terrainFileSerialised);
 
@@ -132,7 +137,7 @@ namespace AWBWApp.Game.IO
             }
         }
 
-        ~TerrainFileStorage()
+        ~MapFileStorage()
         {
             Dispose(false);
         }

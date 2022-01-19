@@ -17,10 +17,10 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             var action = new MoveUnitAction();
 
-            var unit = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)jObject["unit"], turnData.PlayerID.ToString());
+            var unit = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)jObject["unit"], turnData.ActiveTeam, turnData.ActivePlayerID);
             action.Unit = ReplayActionHelper.ParseJObjectIntoReplayUnit(unit);
 
-            var path = (JArray)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)jObject["paths"], turnData.PlayerID.ToString());
+            var path = (JArray)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)jObject["paths"], turnData.ActiveTeam, turnData.ActivePlayerID);
 
             action.Path = new UnitPosition[path.Count];
 
@@ -62,6 +62,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 unit.MoveToPosition(Unit.Position.Value);
                 unit.CanMove.Value = false;
                 unit.CheckForDesyncs(Unit);
+                controller.UpdateFogOfWar();
             });
 
             animations.Add(unit);

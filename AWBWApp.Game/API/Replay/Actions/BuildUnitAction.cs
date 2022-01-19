@@ -17,7 +17,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             var action = new BuildUnitAction();
 
-            var unit = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)jObject["newUnit"], turnData.PlayerID.ToString());
+            var unit = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)jObject["newUnit"], turnData.ActiveTeam, turnData.ActivePlayerID);
 
             Logger.Log("Missing Fog Parse.");
             action.NewUnit = ReplayActionHelper.ParseJObjectIntoReplayUnit(unit);
@@ -38,6 +38,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (controller.Map.TryGetDrawableBuilding(unit.MapPosition, out DrawableBuilding building))
                 building.HasDoneAction.Value = true;
 
+            controller.UpdateFogOfWar();
             return null;
         }
 

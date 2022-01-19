@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics.Primitives;
 
@@ -7,13 +8,17 @@ namespace AWBWApp.Game.API.Replay
 {
     public static class ReplayActionHelper
     {
-        public static JToken GetPlayerSpecificDataFromJObject(JObject jObject, string playerId)
+        public static JToken GetPlayerSpecificDataFromJObject(JObject jObject, string teamName, int playerId)
         {
             JToken data;
             if (jObject.ContainsKey("global"))
                 data = jObject["global"];
+            else if (teamName != null && jObject.ContainsKey(teamName))
+                data = jObject[teamName];
             else
                 data = jObject[playerId];
+
+            Debug.Assert(data != null);
 
             return data;
         }
@@ -115,7 +120,7 @@ namespace AWBWApp.Game.API.Replay
             building.ID = (int)jObject["buildings_id"];
             building.Capture = (int)jObject["buildings_capture"];
             building.Position = new Vector2I((int)jObject["buildings_x"], (int)jObject["buildings_y"]);
-            building.Team = (int?)jObject["buildings_team"];
+            building.Team = (string)jObject["buildings_team"];
 
             return building;
         }
