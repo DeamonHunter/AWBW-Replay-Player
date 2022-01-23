@@ -1,4 +1,5 @@
-﻿using AWBWApp.Game.API.Replay;
+﻿using System.Collections.Generic;
+using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
@@ -73,6 +74,23 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             for (int i = 0; i < map.Ids.Length; i++)
                 map.Ids[i] = 1;
             return map;
+        }
+
+        public ReplayData CreateEmptyReplay()
+        {
+            var data = new ReplayData();
+
+            data.ReplayInfo.Players = new AWBWReplayPlayer[0];
+            data.TurnData = new List<TurnData>
+            {
+                new TurnData
+                {
+                    ReplayUnit = new Dictionary<long, ReplayUnit>(),
+                    Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
+                }
+            };
+
+            return data;
         }
     }
 }

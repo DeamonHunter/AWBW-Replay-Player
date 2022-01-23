@@ -22,6 +22,11 @@ namespace AWBWApp.Game.Game.Tile
                 tilesByAWBWId.Add(tile.Value.AWBWId, tile.Value);
         }
 
+        public TerrainTile GetTileByCode(string code)
+        {
+            return tilesByCode[code];
+        }
+
         public TerrainTile GetTileByAWBWId(int id)
         {
             return tilesByAWBWId[id];

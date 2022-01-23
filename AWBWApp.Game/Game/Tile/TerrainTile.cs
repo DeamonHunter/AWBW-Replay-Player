@@ -25,6 +25,14 @@ namespace AWBWApp.Game.Game.Tile
         public string BaseTexture { get; set; }
 
         [JsonProperty]
-        public string FogOfWarTexture { get; set; }
+        public TerrainType TerrainType { get; set; }
+    }
+
+    public enum TerrainType
+    {
+        None,
+        Land,
+        Sea,
+        Shoal
     }
 }

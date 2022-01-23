@@ -9,6 +9,7 @@
             "Tire": 2,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Plain",
         "FogOfWarTexture": "Plain"
     },
@@ -21,6 +22,7 @@
             "HeavyInf": 1,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Mountain",
         "FogOfWarTexture": "Mountain"
     },
@@ -35,6 +37,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Wood",
         "FogOfWarTexture": "Wood"
     },
@@ -48,6 +51,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "River/H",
         "FogOfWarTexture": "River/H"
     },
@@ -61,6 +65,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "River/V",
         "FogOfWarTexture": "River/V"
     },
@@ -74,6 +79,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "River/C",
         "FogOfWarTexture": "River/C"
     },
@@ -87,6 +93,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "River/ES",
         "FogOfWarTexture": "River/ES"
     },
@@ -100,6 +107,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "River/SW",
         "FogOfWarTexture": "River/SW"
     },
@@ -113,6 +121,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "River/WN",
         "FogOfWarTexture": "River/WN"
     },
@@ -126,6 +135,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "River/NE",
         "FogOfWarTexture": "River/NE"
     },
@@ -139,6 +149,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "River/ESW",
         "FogOfWarTexture": "River/ESW"
     },
@@ -152,6 +163,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "River/SWN",
         "FogOfWarTexture": "River/SWN"
     },
@@ -178,6 +190,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "River/NES",
         "FogOfWarTexture": "River/NES"
     },
@@ -191,6 +204,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Road/H",
         "FogOfWarTexture": "Road/H"
     },
@@ -204,6 +218,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Road/V",
         "FogOfWarTexture": "Road/V"
     },
@@ -217,6 +232,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Road/C",
         "FogOfWarTexture": "Road/C"
     },
@@ -230,6 +246,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Road/ES",
         "FogOfWarTexture": "Road/ES"
     },
@@ -243,6 +260,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Road/SW",
         "FogOfWarTexture": "Road/SW"
     },
@@ -256,6 +274,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Road/WN",
         "FogOfWarTexture": "Road/WN"
     },
@@ -269,6 +288,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Road/NE",
         "FogOfWarTexture": "Road/NE"
     },
@@ -282,6 +302,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Road/ESW",
         "FogOfWarTexture": "Road/ESW"
     },
@@ -295,6 +316,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Road/SWN",
         "FogOfWarTexture": "Road/SWN"
     },
@@ -308,6 +330,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Road/WNE",
         "FogOfWarTexture": "Road/WNE"
     },
@@ -321,6 +344,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Road/NES",
         "FogOfWarTexture": "Road/NES"
     },
@@ -334,6 +358,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Road/HBridge",
         "FogOfWarTexture": "Road/HBridge"
     },
@@ -347,6 +372,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Road/VBridge",
         "FogOfWarTexture": "Road/VBridge"
     },
@@ -358,10 +384,11 @@
             "Lander": 1,
             "Air": 1
         },
-        "BaseTexture": "Sea",
-        "FogOfWarTexture": "Sea"
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/Sea",
+        "FogOfWarTexture": "Sea/Sea"
     },
-    "HShoal": {
+    "Shoal-N": {
         "AWBWID": 29,
         "BaseDefence": 0,
         "MovementCostsPerType": {
@@ -372,10 +399,11 @@
             "Air": 1,
             "Lander": 1
         },
-        "BaseTexture": "Shoal/H",
-        "FogOfWarTexture": "Shoal/H"
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/N",
+        "FogOfWarTexture": "Shoal/N"
     },
-    "HShoalN": {
+    "Shoal-S": {
         "AWBWID": 30,
         "BaseDefence": 0,
         "MovementCostsPerType": {
@@ -386,10 +414,11 @@
             "Air": 1,
             "Lander": 1
         },
-        "BaseTexture": "Shoal/HN",
-        "FogOfWarTexture": "Shoal/HN"
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/S",
+        "FogOfWarTexture": "Shoal/S"
     },
-    "VShoal": {
+    "Shoal-E": {
         "AWBWID": 31,
         "BaseDefence": 0,
         "MovementCostsPerType": {
@@ -400,10 +429,11 @@
             "Air": 1,
             "Lander": 1
         },
-        "BaseTexture": "Shoal/V",
-        "FogOfWarTexture": "Shoal/V"
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/E",
+        "FogOfWarTexture": "Shoal/E"
     },
-    "VShoalE": {
+    "Shoal-W": {
         "AWBWID": 32,
         "BaseDefence": 0,
         "MovementCostsPerType": {
@@ -414,8 +444,9 @@
             "Air": 1,
             "Lander": 1
         },
-        "BaseTexture": "Shoal/VE",
-        "FogOfWarTexture": "Shoal/VE"
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/W",
+        "FogOfWarTexture": "Shoal/W"
     },
     "Reef": {
         "AWBWID": 33,
@@ -426,6 +457,7 @@
             "Lander": 2,
             "Air": 1
         },
+        "TerrainType": "Sea",
         "BaseTexture": "Reef",
         "FogOfWarTexture": "Reef"
     },
@@ -435,6 +467,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Pipe/V",
         "FogOfWarTexture": "Pipe/V"
     },
@@ -444,6 +477,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Pipe/H",
         "FogOfWarTexture": "Pipe/H"
     },
@@ -453,6 +487,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Pipe/NE",
         "FogOfWarTexture": "Pipe/NE"
     },
@@ -462,6 +497,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Pipe/ES",
         "FogOfWarTexture": "Pipe/ES"
     },
@@ -471,6 +507,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Pipe/SW",
         "FogOfWarTexture": "Pipe/SW"
     },
@@ -480,6 +517,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Pipe/WN",
         "FogOfWarTexture": "Pipe/WN"
     },
@@ -489,6 +527,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Pipe/NEnd",
         "FogOfWarTexture": "Pipe/NEnd"
     },
@@ -498,6 +537,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Pipe/EEnd",
         "FogOfWarTexture": "Pipe/EEnd"
     },
@@ -507,6 +547,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Pipe/SEnd",
         "FogOfWarTexture": "Pipe/SEnd"
     },
@@ -516,6 +557,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Pipe/WEnd",
         "FogOfWarTexture": "Pipe/WEnd"
     },
@@ -529,6 +571,7 @@
             "Tire": 2,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Team/Neutral/HRubble-0",
         "FogOfWarTexture": "Team/Neutral/HRubble-0"
     },
@@ -542,7 +585,802 @@
             "Tire": 2,
             "Air": 1
         },
+        "TerrainType": "Land",
         "BaseTexture": "Team/Neutral/VRubble-0",
         "FogOfWarTexture": "Team/Neutral/VRubble-0"
+    },
+
+    //Custom Shoal Tiles
+    "Sea-N-E-S-W": {
+        "AWBWID": 1000,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/N-E-S-W",
+        "FogOfWarTexture": "Sea/N-E-S-W"
+    },
+    "Sea-E-S-W": {
+        "AWBWID": 1001,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/E-S-W",
+        "FogOfWarTexture": "Sea/E-S-W"
+    },
+    "Sea-N-S-W": {
+        "AWBWID": 1002,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/N-S-W",
+        "FogOfWarTexture": "Sea/N-S-W"
+    },
+    "Sea-N-E-W": {
+        "AWBWID": 1003,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/N-E-W",
+        "FogOfWarTexture": "Sea/N-E-W"
+    },
+    "Sea-N-E-S": {
+        "AWBWID": 1004,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/N-E-S",
+        "FogOfWarTexture": "Sea/N-E-S"
+    },
+    "Sea-N-S": {
+        "AWBWID": 1005,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/N-S",
+        "FogOfWarTexture": "Sea/N-S"
+    },
+    "Sea-E-W": {
+        "AWBWID": 1006,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/E-W",
+        "FogOfWarTexture": "Sea/E-W"
+    },
+    "Sea-N-E-SW": {
+        "AWBWID": 1007,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/N-E-SW",
+        "FogOfWarTexture": "Sea/N-E-SW"
+    },
+    "Sea-N-E": {
+        "AWBWID": 1008,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/N-E",
+        "FogOfWarTexture": "Sea/N-E"
+    },
+    "Sea-E-S-NW": {
+        "AWBWID": 1009,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/E-S-NW",
+        "FogOfWarTexture": "Sea/E-S-NW"
+    },
+    "Sea-E-S": {
+        "AWBWID": 1010,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/E-S",
+        "FogOfWarTexture": "Sea/E-S"
+    },
+    "Sea-S-W-NE": {
+        "AWBWID": 1011,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/S-W-NE",
+        "FogOfWarTexture": "Sea/S-W-NE"
+    },
+    "Sea-S-W": {
+        "AWBWID": 1012,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/S-W",
+        "FogOfWarTexture": "Sea/S-W"
+    },
+    "Sea-N-W-SE": {
+        "AWBWID": 1013,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/N-W-SE",
+        "FogOfWarTexture": "Sea/N-W-SE"
+    },
+    "Sea-N-W": {
+        "AWBWID": 1014,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/N-W",
+        "FogOfWarTexture": "Sea/N-W"
+    },
+    "Sea-N-SE-SW": {
+        "AWBWID": 1015,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/N-SE-SW",
+        "FogOfWarTexture": "Sea/N-SE-SW"
+    },
+    "Sea-N-SE": {
+        "AWBWID": 1016,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/N-SE",
+        "FogOfWarTexture": "Sea/N-SE"
+    },
+    "Sea-N-SW": {
+        "AWBWID": 1017,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/N-SW",
+        "FogOfWarTexture": "Sea/N-SW"
+    },
+    "Sea-N": {
+        "AWBWID": 1018,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/N",
+        "FogOfWarTexture": "Sea/N"
+    },
+    "Sea-E-NW-SW": {
+        "AWBWID": 1019,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/E-NW-SW",
+        "FogOfWarTexture": "Sea/E-NW-SW"
+    },
+    "Sea-E-NW": {
+        "AWBWID": 1020,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/E-NW",
+        "FogOfWarTexture": "Sea/E-NW"
+    },
+    "Sea-E-SW": {
+        "AWBWID": 1021,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/E-SW",
+        "FogOfWarTexture": "Sea/E-SW"
+    },
+    "Sea-E": {
+        "AWBWID": 1022,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/E",
+        "FogOfWarTexture": "Sea/E"
+    },
+    "Sea-S-NW-NE": {
+        "AWBWID": 1023,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/S-NW-NE",
+        "FogOfWarTexture": "Sea/S-NW-NE"
+    },
+    "Sea-S-NW": {
+        "AWBWID": 1024,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/S-NW",
+        "FogOfWarTexture": "Sea/S-NW"
+    },
+    "Sea-S-NE": {
+        "AWBWID": 1025,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/S-NE",
+        "FogOfWarTexture": "Sea/S-NE"
+    },
+    "Sea-S": {
+        "AWBWID": 1026,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/S",
+        "FogOfWarTexture": "Sea/S"
+    },
+    "Sea-W-NE-SE": {
+        "AWBWID": 1027,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/W-NE-SE",
+        "FogOfWarTexture": "Sea/W-NE-SE"
+    },
+    "Sea-W-NE": {
+        "AWBWID": 1028,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/W-NE",
+        "FogOfWarTexture": "Sea/W-NE"
+    },
+    "Sea-W-SE": {
+        "AWBWID": 1029,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/W-SE",
+        "FogOfWarTexture": "Sea/W-SE"
+    },
+    "Sea-W": {
+        "AWBWID": 1030,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/W",
+        "FogOfWarTexture": "Sea/W"
+    },
+    "Sea-NW-NE-SE-SW": {
+        "AWBWID": 1031,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/NW-NE-SE-SW",
+        "FogOfWarTexture": "Sea/NW-NE-SE-SW"
+    },
+    "Sea-NE-SE-SW": {
+        "AWBWID": 1032,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/NE-SE-SW",
+        "FogOfWarTexture": "Sea/NE-SE-SW"
+    },
+    "Sea-NW-SE-SW": {
+        "AWBWID": 1033,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/NW-SE-SW",
+        "FogOfWarTexture": "Sea/NW-SE-SW"
+    },
+    "Sea-NW-NE-SW": {
+        "AWBWID": 1034,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/NW-NE-SW",
+        "FogOfWarTexture": "Sea/NW-NE-SW"
+    },
+    "Sea-NW-NE-SE": {
+        "AWBWID": 1035,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/NW-NE-SE",
+        "FogOfWarTexture": "Sea/NW-NE-SE"
+    },
+    "Sea-SE-SW": {
+        "AWBWID": 1036,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/SE-SW",
+        "FogOfWarTexture": "Sea/SE-SW"
+    },
+    "Sea-NW-SW": {
+        "AWBWID": 1037,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/NW-SW",
+        "FogOfWarTexture": "Sea/NW-SW"
+    },
+    "Sea-NW-NE": {
+        "AWBWID": 1038,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/NW-NE",
+        "FogOfWarTexture": "Sea/NW-NE"
+    },
+    "Sea-NE-SE": {
+        "AWBWID": 1039,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/NE-SE",
+        "FogOfWarTexture": "Sea/NE-SE"
+    },
+    "Sea-NW-SE": {
+        "AWBWID": 1040,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/NW-SE",
+        "FogOfWarTexture": "Sea/NW-SE"
+    },
+    "Sea-NE-SW": {
+        "AWBWID": 1041,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/NE-SW",
+        "FogOfWarTexture": "Sea/NE-SW"
+    },
+    "Sea-NW": {
+        "AWBWID": 1042,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/NW",
+        "FogOfWarTexture": "Sea/NW"
+    },
+    "Sea-NE": {
+        "AWBWID": 1043,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/NE",
+        "FogOfWarTexture": "Sea/NE"
+    },
+    "Sea-SE": {
+        "AWBWID": 1044,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/SE",
+        "FogOfWarTexture": "Sea/SE"
+    },
+    "Sea-SW": {
+        "AWBWID": 1045,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "Sea": 1,
+            "Lander": 1,
+            "Air": 1
+        },
+        "TerrainType": "Sea",
+        "BaseTexture": "Sea/SW",
+        "FogOfWarTexture": "Sea/SW"
+    },
+    "Shoal-N-E-S-W": {
+        "AWBWID": 1046,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/N-E-S-W",
+        "FogOfWarTexture": "Shoal/N-E-S-W"
+    },
+    "Shoal": {
+        "AWBWID": 1047,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/Shoal",
+        "FogOfWarTexture": "Shoal/Shoal"
+    },
+    "Shoal-E-S-W": {
+        "AWBWID": 1048,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/E-S-W",
+        "FogOfWarTexture": "Shoal/E-S-W"
+    },
+    "Shoal-N-S-W": {
+        "AWBWID": 1049,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/N-S-W",
+        "FogOfWarTexture": "Shoal/N-S-W"
+    },
+    "Shoal-N-E-S": {
+        "AWBWID": 1050,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/N-E-S",
+        "FogOfWarTexture": "Shoal/N-E-S"
+    },
+    "Shoal-N-E-W": {
+        "AWBWID": 1051,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/N-E-W",
+        "FogOfWarTexture": "Shoal/N-E-W"
+    },
+    "Shoal-N-S": {
+        "AWBWID": 1052,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/N-S",
+        "FogOfWarTexture": "Shoal/N-S"
+    },
+    "Shoal-E-W": {
+        "AWBWID": 1053,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/E-W",
+        "FogOfWarTexture": "Shoal/E-W"
+    },
+    "Shoal-N-E": {
+        "AWBWID": 1054,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/N-E",
+        "FogOfWarTexture": "Shoal/N-E"
+    },
+    "Shoal-E-S": {
+        "AWBWID": 1055,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/E-S",
+        "FogOfWarTexture": "Shoal/E-S"
+    },
+    "Shoal-S-W": {
+        "AWBWID": 1056,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/S-W",
+        "FogOfWarTexture": "Shoal/S-W"
+    },
+    "Shoal-N-W": {
+        "AWBWID": 1057,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/N-W",
+        "FogOfWarTexture": "Shoal/N-W"
+    },
+    "Shoal-MN": {
+        "AWBWID": 1058,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/MN",
+        "FogOfWarTexture": "Shoal/MN"
+    },
+    "Shoal-ME": {
+        "AWBWID": 1059,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/ME",
+        "FogOfWarTexture": "Shoal/ME"
+    },
+    "Shoal-MS": {
+        "AWBWID": 1060,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/MS",
+        "FogOfWarTexture": "Shoal/MS"
+    },
+    "Shoal-MW": {
+        "AWBWID": 1061,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "TerrainType": "Shoal",
+        "BaseTexture": "Shoal/MW",
+        "FogOfWarTexture": "Shoal/MW"
     }
 }

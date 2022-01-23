@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
+using Newtonsoft.Json;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.IO.Stores;
 
 namespace AWBWApp.Game.Tests.Visual.Logic
 {
@@ -14,9 +18,15 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         private const int max_awbw_id = 194;
         private const int grass_terrain_id = 1;
 
+        private ResourceStore<byte[]> storage;
+
+        private CustomShoalGenerator generator;
+
         [BackgroundDependencyLoader]
-        private void load()
+        private void load(ResourceStore<byte[]> store)
         {
+            storage = store;
+
             AddLabel("Basic Rendering");
             AddStep("Render Small Map", () => RenderBasicMap(8, 8));
             AddStep("Render Tall Map", () => RenderBasicMap(8, 24));
@@ -31,17 +41,24 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
             AddLabel("Building Test");
             AddStep("Render All IDs", () => RenderMapWithAllIDs(16, 16));
+
+            AddLabel("Shoals Test");
+            AddStep("Map: Sea Test", () => LoadMapFromFile("Json/Maps/SeaTest"));
+            AddStep("Map: Shoal Test", () => LoadMapFromFile("Json/Maps/ShoalTest"));
+            AddStep("Map: Custom Shoals", () => LoadMapFromFile("Json/Maps/98331"));
+
+            generator = new CustomShoalGenerator(GetTileStorage(), GetBuildingStorage());
         }
 
         public void RenderBasicMap(int xSize, int ySize)
         {
-            var replayData = new ReplayData();
+            var replayData = CreateEmptyReplay();
             ReplayController.LoadReplay(replayData, CreateBasicMap(xSize, ySize));
         }
 
         public void RenderRandomMap(int xSize, int ySize)
         {
-            var replayData = new ReplayData();
+            var replayData = CreateEmptyReplay();
             var gameMap = new ReplayMap();
             gameMap.Size = new Vector2I(xSize, ySize);
             gameMap.Ids = new short[xSize * ySize];
@@ -64,11 +81,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
         public void RenderMapWithAllIDs(int xSize, int ySize)
         {
-            var replay = new ReplayData();
-            var turn = new TurnData
-            {
-                Buildings = new Dictionary<Vector2I, ReplayBuilding>()
-            };
+            var replay = CreateEmptyReplay();
+            var turn = replay.TurnData[0];
             replay.TurnData = new List<TurnData> { turn };
 
             var gameMap = new ReplayMap();
@@ -96,7 +110,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                         var replayBuilding = new ReplayBuilding
                         {
                             ID = building.AWBWId,
-                            TerrainID = building.AWBWId
+                            TerrainID = building.AWBWId,
+                            Position = new Vector2I(x, y)
                         };
 
                         turn.Buildings.Add(new Vector2I(x, y), replayBuilding);
@@ -110,6 +125,37 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             }
 
             ReplayController.LoadReplay(replay, gameMap);
+        }
+
+        public void LoadMapFromFile(string mapPath)
+        {
+            var replay = CreateEmptyReplay();
+            var turn = replay.TurnData[0];
+
+            ReplayMap gameMap;
+
+            using (var stream = storage.GetStream(mapPath))
+            {
+                using (var sr = new StreamReader(stream))
+                    gameMap = JsonConvert.DeserializeObject<ReplayMap>(sr.ReadToEnd());
+            }
+
+            var buildingStorage = GetBuildingStorage();
+
+            for (int i = 0; i < gameMap.Ids.Length; i++)
+            {
+                var tileId = gameMap.Ids[i];
+
+                if (!buildingStorage.TryGetBuildingByAWBWId(tileId, out _))
+                    continue;
+
+                var position = new Vector2I(i % gameMap.Size.X, i / gameMap.Size.X);
+                turn.Buildings.Add(position, new ReplayBuilding { ID = i, TerrainID = tileId, Position = position });
+            }
+
+            var shoal = generator.CreateCustomShoalVersion(gameMap);
+
+            ReplayController.LoadReplay(replay, shoal);
         }
     }
 }

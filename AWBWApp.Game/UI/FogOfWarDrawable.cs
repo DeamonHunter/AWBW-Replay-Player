@@ -14,6 +14,11 @@ namespace AWBWApp.Game.UI
     {
         private FogOfWarTile[,] tiles;
 
+        public FogOfWarDrawable()
+        {
+            AutoSizeAxes = Axes.Both;
+        }
+
         public void NewStart(GameMap map, FogOfWarGenerator generator)
         {
             Clear();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.IO;
 using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Interrupts;
@@ -19,6 +20,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         private MapFileStorage mapStorage { get; set; }
 
         private InterruptDialogueOverlay overlay;
+        private CustomShoalGenerator generator;
 
         public TestSceneGameMap()
         {
@@ -28,6 +30,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         [SetUpSteps]
         public void SetUpSteps()
         {
+            generator = new CustomShoalGenerator(GetTileStorage(), GetBuildingStorage());
+
             //ReplayController.LoadInitialGameState(498571);
             Task.Run(DownloadReplayFile);
         }
@@ -81,6 +85,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             }
             else
                 Logger.Log($"Replay of id '{gameId}' existed locally.");
+
+            terrainFile = generator.CreateCustomShoalVersion(terrainFile);
 
             ReplayController.LoadReplay(replay, terrainFile);
         }

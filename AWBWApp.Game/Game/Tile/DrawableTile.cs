@@ -35,7 +35,6 @@ namespace AWBWApp.Game.Game.Tile
         private void load(NearestNeighbourTextureStore store)
         {
             baseTexture = store.Get(TerrainTile.BaseTexture);
-            fogOfWarTexture = store.Get(TerrainTile.FogOfWarTexture);
 
             texture.Texture = baseTexture;
             texture.Size = baseTexture.Size;

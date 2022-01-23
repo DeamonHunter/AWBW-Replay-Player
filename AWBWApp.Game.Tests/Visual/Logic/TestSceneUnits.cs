@@ -19,7 +19,21 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             UnitIds = GetUnitStorage().GetAllUnitIds();
 
             var turnData = CreateBasicTurnData(TeamIDs.Length);
-            ReplayController.LoadReplay(new ReplayData { TurnData = new List<TurnData> { turnData } }, CreateBasicMap(UnitIds.Count, TeamIDs.Length));
+            var replayData = new ReplayData
+            {
+                TurnData = new List<TurnData> { turnData }
+            };
+            replayData.ReplayInfo.Players = new AWBWReplayPlayer[TeamIDs.Length];
+
+            for (int i = 0; i < TeamIDs.Length; i++)
+            {
+                replayData.ReplayInfo.Players[i] = new AWBWReplayPlayer
+                {
+                    ID = TeamIDs[i],
+                    CountryId = TeamIDs[i]
+                };
+            }
+            ReplayController.LoadReplay(replayData, CreateBasicMap(UnitIds.Count, TeamIDs.Length));
         }
 
         [Test]
