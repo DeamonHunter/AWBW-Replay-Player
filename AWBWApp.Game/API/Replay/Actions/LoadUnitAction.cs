@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
-using osu.Framework.Graphics.Transforms;
 using osu.Framework.Logging;
 
 namespace AWBWApp.Game.API.Replay.Actions
@@ -45,33 +44,22 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public MoveUnitAction MoveUnit;
 
-        public List<Transformable> PerformAction(ReplayController controller)
+        public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Supply Action.");
             Logger.Log("Load animation not completed.");
 
-            List<Transformable> transformables;
-
             if (MoveUnit != null)
             {
-                transformables = MoveUnit.PerformAction(controller);
-            }
-            else
-            {
-                transformables = new List<Transformable>();
+                foreach (var transformable in MoveUnit.PerformAction(controller))
+                    yield return transformable;
             }
 
             var loadingUnit = controller.Map.GetDrawableUnit(LoadedId);
             var transportUnit = controller.Map.GetDrawableUnit(TransportID);
 
-            var sequence = transportUnit.WaitForTransformationToComplete(loadingUnit);
-            sequence.OnComplete(x =>
-            {
-                loadingUnit.BeingCarried.Value = true;
-                transportUnit.Cargo.Add(loadingUnit.UnitID);
-            });
-
-            return transformables;
+            loadingUnit.BeingCarried.Value = true;
+            transportUnit.Cargo.Add(loadingUnit.UnitID);
         }
 
         public void UndoAction(ReplayController controller, bool immediate)

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
-using osu.Framework.Graphics.Transforms;
 using osu.Framework.Logging;
 
 namespace AWBWApp.Game.API.Replay.Actions
@@ -48,35 +47,23 @@ namespace AWBWApp.Game.API.Replay.Actions
         public int SupplyingUnitId;
         public List<int> SuppliedUnitIds;
 
-        public List<Transformable> PerformAction(ReplayController controller)
+        public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Supply Action.");
             Logger.Log("Supply animation not implemented.");
 
-            List<Transformable> transformables;
-
             if (MoveUnit != null)
             {
-                transformables = MoveUnit.PerformAction(controller);
-            }
-            else
-            {
-                transformables = new List<Transformable>();
+                foreach (var transformable in MoveUnit.PerformAction(controller))
+                    yield return transformable;
             }
 
-            var supplierUnit = controller.Map.GetDrawableUnit(SupplyingUnitId);
-            var sequence = supplierUnit.WaitForTransformationToComplete(supplierUnit);
-            sequence.OnComplete(x =>
+            foreach (var unitId in SuppliedUnitIds)
             {
-                foreach (var unitId in SuppliedUnitIds)
-                {
-                    var suppliedUnit = controller.Map.GetDrawableUnit(unitId);
-                    suppliedUnit.Ammo.Value = suppliedUnit.UnitData.MaxAmmo;
-                    suppliedUnit.Fuel.Value = suppliedUnit.UnitData.MaxFuel;
-                }
-            });
-
-            return transformables;
+                var suppliedUnit = controller.Map.GetDrawableUnit(unitId);
+                suppliedUnit.Ammo.Value = suppliedUnit.UnitData.MaxAmmo;
+                suppliedUnit.Fuel.Value = suppliedUnit.UnitData.MaxFuel;
+            }
         }
 
         public void UndoAction(ReplayController controller, bool immediate)

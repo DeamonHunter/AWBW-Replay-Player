@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
-using osu.Framework.Graphics.Primitives;
-using osu.Framework.Graphics.Transforms;
 using osu.Framework.Logging;
 
 namespace AWBWApp.Game.API.Replay.Actions
@@ -70,59 +69,66 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public MoveUnitAction MoveUnit;
 
-        public List<Transformable> PerformAction(ReplayController controller)
+        public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
-            Logger.Log("Performing Attack Action.");
-            Logger.Log("Attack animation not implemented.");
-
             var attackerUnit = controller.Map.GetDrawableUnit(Attacker.ID);
             var defenderUnit = controller.Map.GetDrawableUnit(Defender.ID);
 
-            List<Transformable> transformables;
+            var attackerStats = Attacker;
+            var defenderStats = Defender;
 
-            Vector2I attackerPosition;
+            if (!defenderUnit.OwnerID.HasValue)
+                throw new Exception("Defending unit doesn't have an owner id?");
+
+            //Reverse order if the defender has a power active that reverses order, but not if the attacker also has a power to reverse order.
+            var (_, attackerPower, _) = controller.ActivePowers.FirstOrDefault(x => x.playerID == attackerUnit.OwnerID.Value);
+            var (_, defenderPower, _) = controller.ActivePowers.FirstOrDefault(x => x.playerID == defenderUnit.OwnerID.Value);
+
+            if ((defenderPower?.ReverseAttackOrder ?? false) && !(attackerPower?.ReverseAttackOrder ?? false))
+            {
+                (attackerUnit, defenderUnit) = (defenderUnit, attackerUnit);
+                (attackerStats, defenderStats) = (defenderStats, attackerStats);
+            }
 
             if (MoveUnit != null)
             {
-                transformables = MoveUnit.PerformAction(controller);
-                attackerPosition = MoveUnit.Unit.Position.Value;
-            }
-            else
-            {
-                transformables = new List<Transformable>();
-                attackerPosition = attackerUnit.MapPosition;
+                foreach (var transformable in MoveUnit.PerformAction(controller))
+                    yield return transformable;
             }
 
-            controller.Map.TargetReticule.WaitForTransformationToComplete(attackerUnit);
-            var sequence = controller.Map.TargetReticule.PlayAttackAnimation(attackerPosition, defenderUnit.MapPosition, attackerUnit);
-            sequence.OnComplete(x =>
+            //Ensure that the target reticule isn't being used.
+            //Todo: Find way to instantiate multiples of these
+            yield return ReplayWait.WaitForTransformable(controller.Map.TargetReticule);
+
+            //Perform Attack vs Defender
+            controller.Map.TargetReticule.PlayAttackAnimation(attackerUnit.MapPosition, defenderUnit.MapPosition, attackerUnit);
+            yield return ReplayWait.WaitForTransformable(controller.Map.TargetReticule);
+
+            attackerUnit.CanMove.Value = false;
+            defenderUnit.UpdateUnit(defenderStats);
+
+            if (defenderUnit.HealthPoints.Value <= 0)
             {
-                defenderUnit.UpdateUnit(Defender);
-                attackerUnit.CanMove.Value = false;
-
-                if (defenderUnit.HealthPoints.Value <= 0)
-                {
-                    attackerUnit.UpdateUnit(Attacker);
-                    controller.Map.DestroyUnit(defenderUnit.UnitID);
-                }
-            });
-
-            if (defenderUnit.HealthPoints.Value >= 0)
-            {
-                sequence = controller.Map.TargetReticule.PlayAttackAnimation(defenderUnit.MapPosition, attackerPosition, defenderUnit);
-                sequence.OnComplete(x =>
-                {
-                    attackerUnit.UpdateUnit(Attacker);
-
-                    if (attackerUnit.HealthPoints.Value <= 0)
-                    {
-                        controller.Map.DestroyUnit(attackerUnit.UnitID);
-                        controller.UpdateFogOfWar();
-                    }
-                });
+                attackerUnit.UpdateUnit(Attacker);
+                controller.Map.DestroyUnit(defenderUnit.UnitID);
+                yield break;
             }
-            transformables.Add(controller.Map.TargetReticule);
-            return transformables;
+
+            //Todo: Figure out ammo usage
+            if (attackerUnit.UnitData.MaxAmmo != 99)
+                attackerUnit.Ammo.Value -= 1;
+
+            //Perform Attack vs Attacker
+            controller.Map.TargetReticule.PlayAttackAnimation(defenderUnit.MapPosition, attackerUnit.MapPosition, defenderUnit);
+            yield return ReplayWait.WaitForTransformable(controller.Map.TargetReticule);
+
+            attackerUnit.UpdateUnit(attackerStats);
+
+            if (attackerUnit.HealthPoints.Value <= 0)
+            {
+                controller.Map.DestroyUnit(attackerUnit.UnitID);
+                controller.UpdateFogOfWar();
+            }
         }
 
         public void UndoAction(ReplayController controller, bool immediate)

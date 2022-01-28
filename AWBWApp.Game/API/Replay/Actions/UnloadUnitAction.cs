@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using AWBWApp.Game.Game.Logic;
+using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
-using osu.Framework.Graphics.Transforms;
 using osu.Framework.Logging;
 
 namespace AWBWApp.Game.API.Replay.Actions
@@ -30,7 +30,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public long TransportID { get; set; }
         public ReplayUnit UnloadedUnit { get; set; }
 
-        public List<Transformable> PerformAction(ReplayController controller)
+        public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Load Action.");
             Logger.Log("Income change not implemented.");
@@ -39,23 +39,17 @@ namespace AWBWApp.Game.API.Replay.Actions
             var unloadingUnit = controller.Map.GetDrawableUnit(UnloadedUnit.ID);
 
             unloadingUnit.BeingCarried.Value = false;
-            var transformSequence = unloadingUnit.FollowPath(new List<UnitPosition>
+            transportUnit.Cargo.Remove(unloadingUnit.UnitID);
+
+            unloadingUnit.FollowPath(new List<UnitPosition>
             {
                 new UnitPosition { Unit_Visible = true, X = transportUnit.MapPosition.X, Y = transportUnit.MapPosition.Y },
                 new UnitPosition { Unit_Visible = true, X = UnloadedUnit.Position.Value.X, Y = UnloadedUnit.Position.Value.Y },
             });
+            yield return ReplayWait.WaitForTransformable(unloadingUnit);
 
-            transformSequence.OnComplete(x =>
-            {
-                transportUnit.Cargo.Remove(unloadingUnit.UnitID);
-                unloadingUnit.CanMove.Value = false;
-                controller.UpdateFogOfWar();
-            });
-
-            return new List<Transformable>
-            {
-                unloadingUnit
-            };
+            unloadingUnit.CanMove.Value = false;
+            controller.UpdateFogOfWar();
         }
 
         public void UndoAction(ReplayController controller, bool immediate)

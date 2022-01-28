@@ -22,7 +22,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private LoadingLayer loadingLayer;
 
-        private List<Transformable> lastActionTransformables;
+        private readonly Queue<IEnumerator<ReplayWait>> currentOngoingActions = new Queue<IEnumerator<ReplayWait>>();
 
         public ReplayController()
         {
@@ -51,52 +51,34 @@ namespace AWBWApp.Game.Game.Logic
             loadingLayer.Show();
         }
 
-        #region URL handlers
-
-        /*
-        public void LoadInitialGameState(long gameId)
+        protected override void Update()
         {
-            if (GameID == gameId)
-                return;
-            GameID = gameId;
-
-            replayData = null;
-            loadingLayer.Show();
-            Schedule(() => RequestNewTurn(0, 0, 0, true));
-        }
-
-        public void AddReplayTurn(ReplayTurnRequest replayTurn, int turnNumber)
-        {
-            while (turns.Count <= turnNumber)
-                turns.Add(null);
-
-            turns[turnNumber] = replayTurn;
-            RelativeSizeAxes = Axes.Both;
-        }
-
-        private async void RequestNewTurn(int turnNumber, long nextPlayerId, int day, bool initial)
-        {
-            var turn = ReplayTurnRequest.CreateRequest(GameID, turnNumber, day, nextPlayerId, true);
-            await turn.PerformAsync().ConfigureAwait(false);
-
-            AddReplayTurn(turn.ResponseObject, turnNumber);
-            currentTurnIndex = turnNumber;
-            currentTurn = turns[turnNumber];
-            currentActionIndex = -1;
-
-            if (initial)
+            for (int i = 0; i < currentOngoingActions.Count; i++)
             {
-                Map.ScheduleInitialGameState(currentTurn.GameState);
-                selectedPlayer = currentTurn.GameState.CurrentTurnPId;
-                //SetupGame();
-            }
-            else
-                Map.ScheduleUpdateToGameState(currentTurn.GameState);
-            Schedule(() => loadingLayer.Hide());
-        }
-        */
+                var ongoingAction = currentOngoingActions.Dequeue();
 
-        #endregion
+                if (ongoingAction.Current != null)
+                {
+                    if (!ongoingAction.Current.IsComplete(Time.Elapsed))
+                    {
+                        currentOngoingActions.Enqueue(ongoingAction);
+                        continue;
+                    }
+                }
+
+                while (true)
+                {
+                    if (!ongoingAction.MoveNext())
+                        break;
+
+                    if (ongoingAction.Current == null || ongoingAction.Current.IsComplete(Time.Elapsed))
+                        continue;
+
+                    currentOngoingActions.Enqueue(ongoingAction);
+                    break;
+                }
+            }
+        }
 
         public void LoadReplay(ReplayData replayData, ReplayMap map)
         {
@@ -110,7 +92,7 @@ namespace AWBWApp.Game.Game.Logic
 
         public void GoToNextAction()
         {
-            completeLastActionSequence();
+            completeAllActions();
 
             if (currentActionIndex + 1 >= currentTurn.Actions.Count)
             {
@@ -130,17 +112,18 @@ namespace AWBWApp.Game.Game.Logic
                 return;
             }
 
-            lastActionTransformables = action.PerformAction(this);
+            currentOngoingActions.Enqueue(action.PerformAction(this).GetEnumerator());
         }
 
-        private void completeLastActionSequence()
+        private void completeAllActions()
         {
-            if (lastActionTransformables == null)
+            if (currentOngoingActions.Count <= 0)
                 return;
 
-            foreach (var transformable in lastActionTransformables)
+            foreach (var ongoingAction in currentOngoingActions)
             {
-                transformable.FinishTransforms();
+                while (ongoingAction.MoveNext())
+                    ongoingAction.Current?.Transformable?.FinishTransforms();
             }
         }
 
@@ -151,7 +134,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private void goToTurnWithIdx(int turnIdx)
         {
-            completeLastActionSequence();
+            completeAllActions();
 
             if (turnIdx < 0)
                 turnIdx = 0;

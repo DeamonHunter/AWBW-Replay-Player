@@ -4,8 +4,6 @@ using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Unit;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Transforms;
 using osu.Framework.Logging;
 
 namespace AWBWApp.Game.API.Replay.Actions
@@ -63,36 +61,29 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public IncomeChanged[] IncomeChanges;
 
-        public List<Transformable> PerformAction(ReplayController controller)
+        public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Capture Action.");
             Logger.Log("Income change not implemented.");
 
-            DrawableUnit unit;
             if (MoveUnit != null)
-                unit = controller.Map.GetDrawableUnit(MoveUnit.Unit.ID);
-            else
-                unit = controller.Map.GetDrawableUnit(Building.Position);
-
-            List<Transformable> transformables;
-            if (MoveUnit != null)
-                transformables = MoveUnit.PerformAction(controller);
-            else
-                transformables = new List<Transformable>();
-
-            foreach (var transform in transformables)
-                unit.WaitForTransformationToComplete(transform);
-
-            var captureSequence = unit.DelayUntilTransformsFinished();
-            //Todo: Play capture animation
-            captureSequence.OnComplete(x =>
             {
-                controller.Map.UpdateBuilding(Building, false);
-                if (unit != null)
-                    unit.HasCaptured.Value = true;
-            });
+                foreach (var transformable in MoveUnit.PerformAction(controller))
+                    yield return transformable;
+            }
 
-            return transformables;
+            DrawableUnit capturingUnit;
+            if (MoveUnit != null)
+                capturingUnit = controller.Map.GetDrawableUnit(MoveUnit.Unit.ID);
+            else
+                capturingUnit = controller.Map.GetDrawableUnit(Building.Position);
+
+            yield return ReplayWait.WaitForTransformable(capturingUnit);
+
+            //Todo: Play a capture animation
+            controller.Map.UpdateBuilding(Building, false);
+            if (capturingUnit != null)
+                capturingUnit.HasCaptured.Value = true;
         }
 
         public void UndoAction(ReplayController controller, bool immediate)

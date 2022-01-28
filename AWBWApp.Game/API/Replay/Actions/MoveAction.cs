@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using AWBWApp.Game.Game.Logic;
+using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics.Primitives;
-using osu.Framework.Graphics.Transforms;
 using osu.Framework.Logging;
 
 namespace AWBWApp.Game.API.Replay.Actions
@@ -49,24 +49,19 @@ namespace AWBWApp.Game.API.Replay.Actions
         public UnitPosition[] Path { get; set; }
         public bool Trapped { get; set; }
 
-        public List<Transformable> PerformAction(ReplayController controller)
+        public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Move Action.");
             var unit = controller.Map.GetDrawableUnit(Unit.ID);
 
-            var animations = new List<Transformable>();
+            unit.FollowPath(Path);
 
-            var sequence = unit.FollowPath(Path);
-            sequence.OnComplete(x =>
-            {
-                unit.MoveToPosition(Unit.Position.Value);
-                unit.CanMove.Value = false;
-                unit.CheckForDesyncs(Unit);
-                controller.UpdateFogOfWar();
-            });
+            yield return ReplayWait.WaitForTransformable(unit);
 
-            animations.Add(unit);
-            return animations;
+            unit.MoveToPosition(Unit.Position.Value);
+            unit.CanMove.Value = false;
+            unit.CheckForDesyncs(Unit);
+            controller.UpdateFogOfWar();
         }
 
         public void UndoAction(ReplayController controller, bool immediate)

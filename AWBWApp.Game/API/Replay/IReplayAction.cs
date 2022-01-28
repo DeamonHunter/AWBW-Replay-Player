@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using AWBWApp.Game.Game.Logic;
-using osu.Framework.Graphics.Transforms;
+using AWBWApp.Game.Helpers;
 
 namespace AWBWApp.Game.API.Replay
 {
     public interface IReplayAction
     {
-        List<Transformable> PerformAction(ReplayController controller);
+        IEnumerable<ReplayWait> PerformAction(ReplayController controller);
         void UndoAction(ReplayController controller, bool immediate);
     }
 }
