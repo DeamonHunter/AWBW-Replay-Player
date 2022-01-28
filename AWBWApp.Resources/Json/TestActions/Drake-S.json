@@ -1,0 +1,22 @@
+{
+  "action": "Power",
+  "playerID": 1340783,
+  "coName": "Drake",
+  "coPower": "S",
+  "powerName": "Typhoon",
+  "playersCOP": 0,
+  "hpChange": {
+    "hpGain": "",
+    "hpLoss": {
+      "players": [
+        1340782
+      ],
+      "hp": -2,
+      "units_fuel": 0.5
+    }
+  },
+  "weather": {
+    "weatherCode": "R",
+    "weatherName": "Rain"
+  }
+}

@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.API.Replay.Actions;
+using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Transforms;
 using osu.Framework.Screens;
 using osuTK;
 
@@ -12,6 +14,8 @@ namespace AWBWApp.Game.Game.Logic
     {
         public GameMap Map;
         public long GameID { get; private set; }
+
+        public List<(int playerID, PowerAction action, int activeDay)> ActivePowers = new List<(int, PowerAction, int)>();
 
         private ReplayData replayData;
 
@@ -161,6 +165,7 @@ namespace AWBWApp.Game.Game.Logic
             }
             */
 
+            checkPowers();
             loadingLayer.Show();
             currentTurn = replayData.TurnData[turnIdx];
             Map.ScheduleUpdateToGameState(currentTurn);
@@ -174,7 +179,24 @@ namespace AWBWApp.Game.Game.Logic
 
         public void UpdateFogOfWar()
         {
-            Map.UpdateFogOfWar(currentTurn.ActivePlayerID);
+            var (playerID, action, activeDay) = ActivePowers.FirstOrDefault(x => x.playerID == currentTurn.ActivePlayerID);
+
+            Map.UpdateFogOfWar(currentTurn.ActivePlayerID, action?.SightRangeIncrease ?? 0, action?.CanSeeIntoHiddenTiles ?? false);
+        }
+
+        public void AddPowerAction(PowerAction activePower)
+        {
+            ActivePowers.Add((currentTurn.ActivePlayerID, activePower, currentTurn.Day));
+        }
+
+        void checkPowers()
+        {
+            for (int i = ActivePowers.Count - 1; i >= 0; i--)
+            {
+                var activePower = ActivePowers[i];
+                if (activePower.activeDay != currentTurn.Day)
+                    ActivePowers.RemoveAt(i);
+            }
         }
     }
 }

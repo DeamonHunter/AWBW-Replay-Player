@@ -33,7 +33,7 @@ namespace AWBWApp.Game.Game.Logic
             FogOfWar.TriggerChange();
         }
 
-        public void GenerateFogForPlayer(int player)
+        public void GenerateFogForPlayer(int player, int rangeIncrease, bool canSeeIntoHiddenTiles)
         {
             var fogArray = FogOfWar.Value;
             Array.Clear(fogArray, 0, fogArray.Length);
@@ -55,20 +55,25 @@ namespace AWBWApp.Game.Game.Logic
                             continue;
 
                         var distance = Math.Abs(x) + Math.Abs(y);
-                        if (distance > visionRange)
+                        if (distance > (visionRange + rangeIncrease))
                             continue;
 
-                        if (gameMap.TryGetDrawableBuilding(tilePosition, out DrawableBuilding building))
+                        if (!canSeeIntoHiddenTiles)
                         {
-                            if (building.BuildingTile.LimitFogOfWarSightDistance <= 0 || distance <= building.BuildingTile.LimitFogOfWarSightDistance)
-                                fogArray[tilePosition.X, tilePosition.Y] = true;
+                            if (gameMap.TryGetDrawableBuilding(tilePosition, out DrawableBuilding building))
+                            {
+                                if (building.BuildingTile.LimitFogOfWarSightDistance > 0 && distance > building.BuildingTile.LimitFogOfWarSightDistance)
+                                    continue;
+                            }
+                            else
+                            {
+                                var tile = gameMap.GetDrawableTile(tilePosition);
+                                if (tile.TerrainTile.LimitFogOfWarSightDistance > 0 && distance > tile.TerrainTile.LimitFogOfWarSightDistance)
+                                    continue;
+                            }
                         }
-                        else
-                        {
-                            var tile = gameMap.GetDrawableTile(tilePosition);
-                            if (tile.TerrainTile.LimitFogOfWarSightDistance <= 0 || distance <= tile.TerrainTile.LimitFogOfWarSightDistance)
-                                fogArray[tilePosition.X, tilePosition.Y] = true;
-                        }
+
+                        fogArray[tilePosition.X, tilePosition.Y] = true;
                     }
                 }
             }

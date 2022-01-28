@@ -144,7 +144,7 @@ namespace AWBWApp.Game.Game.Logic
 
             AutoSizeAxes = Axes.Both;
 
-            UpdateFogOfWar(gameState.TurnData[0].ActivePlayerID);
+            UpdateFogOfWar(gameState.TurnData[0].ActivePlayerID, 0, false); //Todo: CO range increases
         }
 
         private long? GetPlayerIDFromCountryID(int countryID)
@@ -226,15 +226,15 @@ namespace AWBWApp.Game.Game.Logic
                 unitsDrawable.Remove(unit.Value);
             }
 
-            UpdateFogOfWar(gameState.ActivePlayerID);
+            UpdateFogOfWar(gameState.ActivePlayerID, 0, false); //Todo: CO Range Increases
         }
 
-        public void UpdateFogOfWar(int playerId) => fogOfWarGenerator.GenerateFogForPlayer(playerId);
+        public void UpdateFogOfWar(int playerId, int rangeIncrease, bool canSeeIntoHiddenTiles) => fogOfWarGenerator.GenerateFogForPlayer(playerId, rangeIncrease, canSeeIntoHiddenTiles);
 
-        public DrawableUnit AddUnit(ReplayUnit unit, string countryCode)
+        public DrawableUnit AddUnit(ReplayUnit unit)
         {
             var unitData = unitStorage.GetUnitByCode(unit.UnitName);
-            var drawableUnit = new DrawableUnit(unitData, unit, countryCode);
+            var drawableUnit = new DrawableUnit(unitData, unit, Players[unit.PlayerID.Value].CountryCode);
             units.Add(unit.ID, drawableUnit);
             Schedule(() => unitsDrawable.Add(drawableUnit));
             return drawableUnit;
@@ -293,11 +293,7 @@ namespace AWBWApp.Game.Game.Logic
 
         public IEnumerable<DrawableUnit> GetDrawableUnitsFromPlayer(int playerId)
         {
-            foreach (var unit in units)
-            {
-                if (unit.Value.OwnerID.HasValue && unit.Value.OwnerID == playerId)
-                    yield return unit.Value;
-            }
+            return units.Values.Where(x => x.OwnerID.HasValue && x.OwnerID == playerId);
         }
 
         public IEnumerable<DrawableBuilding> GetDrawableBuildingsForPlayer(int playerId)
