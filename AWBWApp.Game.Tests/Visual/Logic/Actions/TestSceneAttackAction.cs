@@ -142,7 +142,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 Trapped = false,
                 Unit = new ReplayUnit
                 {
-                    ID = 1
+                    ID = 1,
+                    Position = new Vector2I(1, 2)
                 }
             };
             attackAction.Attacker = new ReplayUnit { ID = attackerUnit.ID, Ammo = 0, HitPoints = 9 };
