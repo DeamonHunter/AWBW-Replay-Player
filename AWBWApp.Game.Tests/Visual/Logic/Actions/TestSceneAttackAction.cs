@@ -13,6 +13,12 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         [BackgroundDependencyLoader]
         private void load()
         {
+            AddLabel("Destroy Unit");
+            AddStep("Setup", () => DestroyTest());
+            AddStep("Destroy Land", () => ReplayController.GoToNextAction());
+            AddStep("Destroy Sea", () => ReplayController.GoToNextAction());
+            AddStep("Destroy Air", () => ReplayController.GoToNextAction());
+
             AddLabel("1 space");
             AddStep("Setup", () => AttackTest(1));
             AddStep("Attack Left", () => ReplayController.GoToNextAction());
@@ -44,6 +50,53 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddLabel("Attack with Movement");
             AddStep("Setup", () => AttackWithMoveTest());
             AddStep("Perform", () => ReplayController.GoToNextAction());
+        }
+
+        private void DestroyTest()
+        {
+            var replayData = CreateBasicReplayData(2);
+
+            var turn = CreateBasicTurnData(2);
+            replayData.TurnData.Add(turn);
+
+            var attackerUnit = CreateBasicReplayUnit(0, 0, "Artillery", new Vector2I(2, 2));
+            attackerUnit.Ammo = 1;
+            turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
+
+            //Test Land Explosion
+            var attackAction = new AttackUnitAction();
+            var defendingLand = CreateBasicReplayUnit(1, 1, "Infantry", new Vector2I(2, 0));
+            defendingLand.Ammo = 0;
+            attackAction.Attacker = new ReplayUnit { ID = attackerUnit.ID, Ammo = attackerUnit.Ammo - 1, HitPoints = 10 };
+            attackAction.Defender = new ReplayUnit { ID = defendingLand.ID, Ammo = 0, HitPoints = 0 };
+
+            turn.ReplayUnit.Add(defendingLand.ID, defendingLand);
+            turn.Actions.Add(attackAction);
+
+            //Test Sea Explosion
+            attackAction = new AttackUnitAction();
+            var defendingSea = CreateBasicReplayUnit(2, 1, "Lander", new Vector2I(4, 2));
+            defendingSea.Ammo = 0;
+            attackAction.Attacker = new ReplayUnit { ID = attackerUnit.ID, Ammo = attackerUnit.Ammo - 1, HitPoints = 10 };
+            attackAction.Defender = new ReplayUnit { ID = defendingSea.ID, Ammo = 0, HitPoints = 0 };
+
+            turn.ReplayUnit.Add(defendingSea.ID, defendingSea);
+            turn.Actions.Add(attackAction);
+
+            //Test Air Explosion
+            attackAction = new AttackUnitAction();
+            var defendingAir = CreateBasicReplayUnit(3, 1, "Fighter", new Vector2I(2, 4));
+            defendingAir.Ammo = 0;
+            attackAction.Attacker = new ReplayUnit { ID = attackerUnit.ID, Ammo = attackerUnit.Ammo - 1, HitPoints = 10 };
+            attackAction.Defender = new ReplayUnit { ID = defendingAir.ID, Ammo = 0, HitPoints = 0 };
+
+            turn.ReplayUnit.Add(defendingAir.ID, defendingAir);
+            turn.Actions.Add(attackAction);
+
+            var map = CreateBasicMap(5, 5);
+            map.Ids[defendingSea.Position.Value.Y * 5 + defendingSea.Position.Value.X] = 28; //Set the tile under the lander to be sea just so it looks more correct.
+
+            ReplayController.LoadReplay(replayData, map);
         }
 
         private void AttackTest(int spaces)
