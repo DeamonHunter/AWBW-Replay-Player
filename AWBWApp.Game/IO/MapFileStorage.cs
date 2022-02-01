@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using AWBWApp.Game.API.Replay;
 using Newtonsoft.Json;
@@ -36,7 +37,7 @@ namespace AWBWApp.Game.IO
 
         public ReplayMap Get(int terrainId) => Get(terrainId.ToString());
 
-        public Task<ReplayMap> GetAsync(string name)
+        public Task<ReplayMap> GetAsync(string name, CancellationToken token)
         {
             throw new System.NotImplementedException(); //Todo: Is there gonna be a case where we don't check this?
         }
