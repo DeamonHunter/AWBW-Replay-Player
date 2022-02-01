@@ -8,6 +8,7 @@ using AWBWApp.Game.Game.Unit;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI;
+using AWBWApp.Game.UI.Replay;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -31,6 +32,7 @@ namespace AWBWApp.Game.Game.Logic
         private Dictionary<Vector2I, DrawableUnit> unitsByPosition;
 
         public TargetReticule TargetReticule;
+        public SelectionReticule SelectionReticule;
 
         [Resolved]
         private TerrainTileStorage terrainTileStorage { get; set; }
@@ -43,6 +45,8 @@ namespace AWBWApp.Game.Game.Logic
 
         private FogOfWarDrawable fogOfWarDrawable;
         private FogOfWarGenerator fogOfWarGenerator;
+
+        private EffectAnimationController effectAnimationController;
 
         public Dictionary<int, PlayerInfo> Players { get; private set; } = new Dictionary<int, PlayerInfo>();
 
@@ -63,6 +67,8 @@ namespace AWBWApp.Game.Game.Logic
                     AutoSizeAxes = Axes.Both
                 },
                 fogOfWarDrawable = new FogOfWarDrawable(),
+                effectAnimationController = new EffectAnimationController(),
+                SelectionReticule = new SelectionReticule(),
                 TargetReticule = new TargetReticule()
             });
         }
@@ -143,6 +149,7 @@ namespace AWBWApp.Game.Game.Logic
             fogOfWarDrawable.NewStart(this, fogOfWarGenerator);
 
             AutoSizeAxes = Axes.Both;
+            effectAnimationController.Size = gameBoardDrawable.Size;
 
             UpdateFogOfWar(gameState.TurnData[0].ActivePlayerID, 0, false); //Todo: CO range increases
         }
@@ -160,7 +167,8 @@ namespace AWBWApp.Game.Game.Logic
             return null;
         }
 
-        public static Vector2 GetDrawablePositionForTilePosition(Vector2I tilePos) => new Vector2(tilePos.X * DrawableTile.BASE_SIZE.X, (tilePos.Y + 1) * DrawableTile.BASE_SIZE.Y - 1);
+        public static Vector2 GetDrawablePositionForTopOfTile(Vector2I tilePos) => new Vector2(tilePos.X * DrawableTile.BASE_SIZE.X, tilePos.Y * DrawableTile.BASE_SIZE.Y - 1);
+        public static Vector2 GetDrawablePositionForBottomOfTile(Vector2I tilePos) => new Vector2(tilePos.X * DrawableTile.BASE_SIZE.X, (tilePos.Y + 1) * DrawableTile.BASE_SIZE.Y - 1);
 
         public void ScheduleUpdateToGameState(TurnData gameState)
         {
@@ -276,7 +284,29 @@ namespace AWBWApp.Game.Game.Logic
             unitsDrawable.Remove(unit);
             if (!playExplosion)
                 return;
+
+            switch (unit.UnitData.MovementType)
+            {
+                case MovementType.Air:
+                    PlayEffect("Effects/Explosion/Explosion-Air", 450, unit.MapPosition);
+                    break;
+
+                case MovementType.Sea:
+                case MovementType.Lander:
+                    PlayEffect("Effects/Explosion/Explosion-Sea", 350, unit.MapPosition);
+                    break;
+
+                default:
+                    PlayEffect("Effects/Explosion/Explosion-Land", 500, unit.MapPosition);
+                    break;
+            }
+
             //Todo: Add explosion drawable
+        }
+
+        public void PlayEffect(string animation, double duration, Vector2I mapPosition, double startDelay = 0, float rotation = 0)
+        {
+            effectAnimationController.PlayAnimation(animation, duration, mapPosition, startDelay, rotation);
         }
 
         public DrawableUnit GetDrawableUnit(Vector2I unitPosition)

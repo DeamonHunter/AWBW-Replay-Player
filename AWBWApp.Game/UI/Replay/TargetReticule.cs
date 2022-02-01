@@ -9,7 +9,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Transforms;
 using osuTK;
 
-namespace AWBWApp.Game.Game.Units
+namespace AWBWApp.Game.UI.Replay
 {
     public class TargetReticule : CompositeDrawable
     {
@@ -34,7 +34,7 @@ namespace AWBWApp.Game.Game.Units
         {
             return this.DelayUntilTransformsFinished().AddDelayDependingOnDifferenceBetweenEndTimes(this, attacker)
                        .FadeTo(0.5f).MoveTo(new Vector2((start.X + 0.5f) * DrawableTile.BASE_SIZE.X, (start.Y + 0.5f) * DrawableTile.BASE_SIZE.Y + Size.Y / 2)).RotateTo(0).ScaleTo(0.5f)
-                       .FadeTo(1, 0.25, Easing.In).MoveTo(new Vector2((end.X + 0.5f) * DrawableTile.BASE_SIZE.X, (end.Y + 0.5f) * DrawableTile.BASE_SIZE.Y + Size.Y / 2), 400, Easing.In).ScaleTo(1, 600, Easing.OutBounce).RotateTo(180, 400f)
+                       .FadeTo(1, 250, Easing.In).MoveTo(new Vector2((end.X + 0.5f) * DrawableTile.BASE_SIZE.X, (end.Y + 0.5f) * DrawableTile.BASE_SIZE.Y + Size.Y / 2), 400, Easing.In).ScaleTo(1, 600, Easing.OutBounce).RotateTo(180, 400f)
                        .Then().FadeTo(0);
         }
 
