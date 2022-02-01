@@ -11,6 +11,7 @@ namespace AWBWApp.Game.Game.Tile
     public class DrawableTile : CompositeDrawable
     {
         public static readonly Vector2I BASE_SIZE = new Vector2I(16);
+        public static readonly Vector2I HALF_BASE_SIZE = new Vector2I(8);
 
         public readonly TerrainTile TerrainTile;
 

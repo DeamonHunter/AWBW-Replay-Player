@@ -31,7 +31,7 @@ namespace AWBWApp.Game.UI
                 {
                     tiles[x, y] = new FogOfWarTile
                     {
-                        Position = GameMap.GetDrawablePositionForTilePosition(new Vector2I(x, y))
+                        Position = GameMap.GetDrawablePositionForBottomOfTile(new Vector2I(x, y))
                     };
                     Add(tiles[x, y]);
                 }

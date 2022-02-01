@@ -31,7 +31,7 @@ namespace AWBWApp.Game.Game.Building
             TilePosition = tilePosition;
 
             Size = BASE_SIZE;
-            Position = GameMap.GetDrawablePositionForTilePosition(tilePosition);
+            Position = GameMap.GetDrawablePositionForBottomOfTile(tilePosition);
             InternalChild = textureAnimation = new TextureAnimation()
             {
                 Anchor = Anchor.BottomLeft,

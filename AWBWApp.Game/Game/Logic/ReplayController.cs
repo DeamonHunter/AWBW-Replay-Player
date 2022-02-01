@@ -2,6 +2,7 @@
 using System.Linq;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
+using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI;
 using osu.Framework.Graphics;
@@ -25,6 +26,7 @@ namespace AWBWApp.Game.Game.Logic
         private long selectedPlayer;
 
         private LoadingLayer loadingLayer;
+        private MapCameraController camera;
 
         private readonly Queue<IEnumerator<ReplayWait>> currentOngoingActions = new Queue<IEnumerator<ReplayWait>>();
 
@@ -37,9 +39,10 @@ namespace AWBWApp.Game.Game.Logic
             Map = new GameMap();
             AddRangeInternal(new Drawable[]
             {
-                new MapCameraController(Map)
+                camera = new MapCameraController(Map)
                 {
                     MaxScale = 8,
+                    MapSpace = new MarginPadding { Top = DrawableTile.HALF_BASE_SIZE.Y, Bottom = DrawableTile.HALF_BASE_SIZE.Y, Left = DrawableTile.HALF_BASE_SIZE.Y, Right = 200 + DrawableTile.HALF_BASE_SIZE.Y }, //Offset so the centered position would be half the bar to the right, and half a tile up. Chosen to look nice.
                     RelativeSizeAxes = Axes.Both
                 },
                 new ReplayBarWidget(this),
@@ -91,7 +94,11 @@ namespace AWBWApp.Game.Game.Logic
             currentTurn = replayData.TurnData[0];
             currentTurnIndex = 0;
             currentActionIndex = -1;
-            Schedule(() => loadingLayer.Hide());
+            ScheduleAfterChildren(() =>
+            {
+                camera.FitMapToSpace();
+                loadingLayer.Hide();
+            });
         }
 
         public void GoToNextAction()
