@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
@@ -54,14 +55,75 @@ namespace AWBWApp.Game.API.Replay.Actions
             Logger.Log("Performing Move Action.");
             var unit = controller.Map.GetDrawableUnit(Unit.ID);
 
-            unit.FollowPath(Path);
+            controller.Map.SelectionReticule.PlaySelectAnimation(unit);
+            if (Path.Length > 1)
+                renderPath(Path, controller);
 
-            yield return ReplayWait.WaitForTransformable(unit);
+            yield return ReplayWait.WaitForTransformable(controller.Map.SelectionReticule);
+
+            if (Path.Length > 1)
+            {
+                unit.FollowPath(Path);
+                yield return ReplayWait.WaitForTransformable(unit);
+            }
 
             unit.MoveToPosition(Unit.Position.Value);
             unit.CanMove.Value = false;
             unit.CheckForDesyncs(Unit);
             controller.UpdateFogOfWar();
+        }
+
+        private void renderPath(UnitPosition[] path, ReplayController controller)
+        {
+            if (path.Length <= 1)
+                throw new Exception("Did we travel a path of only 1 tile?");
+
+            //Skip the zeroth index as we don't want to show an arrow over the top of the unit.
+            for (int i = 1; i < path.Length - 1; i++)
+            {
+                var prev = path[i - 1];
+                var current = path[i];
+                var next = path[i + 1];
+
+                var diffX = next.X - prev.X;
+                var diffY = next.Y - prev.Y;
+
+                var delay = (i - 1) * 25;
+
+                if (Math.Abs(diffX) >= 2)
+                    controller.Map.PlayEffect("UI/Arrow_Body", 250, new Vector2I(current.X, current.Y), delay, diffX > 0 ? 90 : -90);
+                else if (Math.Abs(diffY) >= 2)
+                    controller.Map.PlayEffect("UI/Arrow_Body", 250, new Vector2I(current.X, current.Y), delay, diffY > 0 ? 180 : 0);
+                else
+                {
+                    var prevToCurrentX = current.X - prev.X;
+                    var prevToCurrentY = current.Y - prev.Y;
+
+                    if (prevToCurrentX > 0)
+                        controller.Map.PlayEffect("UI/Arrow_Curved", 250, new Vector2I(current.X, current.Y), delay, diffY > 0 ? -90 : 0);
+                    else if (prevToCurrentX < 0)
+                        controller.Map.PlayEffect("UI/Arrow_Curved", 250, new Vector2I(current.X, current.Y), delay, diffY > 0 ? 180 : 90);
+                    else if (prevToCurrentY > 0)
+                        controller.Map.PlayEffect("UI/Arrow_Curved", 250, new Vector2I(current.X, current.Y), delay, diffX > 0 ? 90 : 0);
+                    else
+                        controller.Map.PlayEffect("UI/Arrow_Curved", 250, new Vector2I(current.X, current.Y), delay, diffX > 0 ? 180 : -90);
+                }
+            }
+
+            var beforeHead = path[^2];
+            var head = path[^1];
+
+            var headDiffX = head.X - beforeHead.X;
+            var headDiffY = head.Y - beforeHead.Y;
+
+            if (headDiffX > 0)
+                controller.Map.PlayEffect("UI/Arrow_Tip", 250, new Vector2I(head.X, head.Y), (path.Length - 2) * 25, -90);
+            else if (headDiffX < 0)
+                controller.Map.PlayEffect("UI/Arrow_Tip", 250, new Vector2I(head.X, head.Y), (path.Length - 2) * 25, 90);
+            else if (headDiffY > 0)
+                controller.Map.PlayEffect("UI/Arrow_Tip", 250, new Vector2I(head.X, head.Y), (path.Length - 2) * 25, 0);
+            else
+                controller.Map.PlayEffect("UI/Arrow_Tip", 250, new Vector2I(head.X, head.Y), (path.Length - 2) * 25, 180);
         }
 
         public void UndoAction(ReplayController controller, bool immediate)
