@@ -4,6 +4,7 @@ using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.UI.Replay;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -39,7 +40,7 @@ namespace AWBWApp.Game.Game.Unit
 
         private TextureAnimation textureAnimation;
         private TextureAnimation divedAnimation;
-        private SpriteText healthSpriteText;
+        private TextureSpriteText healthSpriteText;
         private TargetReticule targetReticule;
 
         private string country;
@@ -63,11 +64,11 @@ namespace AWBWApp.Game.Game.Unit
                     Origin = Anchor.BottomLeft,
                     Alpha = 0
                 },
-                healthSpriteText = new SpriteText()
+                healthSpriteText = new TextureSpriteText("UI/Health")
                 {
                     Anchor = Anchor.BottomRight,
                     Origin = Anchor.BottomRight,
-                    Font = new FontUsage(null, 8f)
+                    Font = new FontUsage(size: 1.5f)
                 }
             };
 
@@ -95,11 +96,11 @@ namespace AWBWApp.Game.Game.Unit
                     Origin = Anchor.BottomLeft,
                     Alpha = 0
                 },
-                healthSpriteText = new SpriteText()
+                healthSpriteText = new TextureSpriteText("UI/Health")
                 {
                     Anchor = Anchor.BottomRight,
                     Origin = Anchor.BottomRight,
-                    Font = new FontUsage(null, 8f)
+                    Font = new FontUsage(size: 1.5f)
                 }
             };
 
