@@ -32,7 +32,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
-            Logger.Log("Performing Load Action.");
+            Logger.Log("Performing Unload Action.");
             Logger.Log("Income change not implemented.");
 
             var transportUnit = controller.Map.GetDrawableUnit(TransportID);

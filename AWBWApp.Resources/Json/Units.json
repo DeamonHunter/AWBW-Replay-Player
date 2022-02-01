@@ -692,8 +692,8 @@
         },
         "Frames": [480, 320]
     },
-    "NeoTank": {
-        "Name": "NeoTank",
+    "Neotank": {
+        "Name": "Neotank",
         "AWBWId": 46,
         "MaxFuel": 99,
         "MaxAmmo": 9,
