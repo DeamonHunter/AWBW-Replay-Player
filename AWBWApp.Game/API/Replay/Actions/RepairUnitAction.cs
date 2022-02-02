@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
+using osu.Framework.Graphics;
 using osu.Framework.Logging;
+using osuTK;
 
 namespace AWBWApp.Game.API.Replay.Actions
 {
@@ -66,6 +68,12 @@ namespace AWBWApp.Game.API.Replay.Actions
             unit.HealthPoints.Value = RepairedUnitHP;
             unit.Fuel.Value = unit.UnitData.MaxFuel;
             unit.Ammo.Value = unit.UnitData.MaxAmmo;
+
+            controller.Map.PlayEffect("Effects/Supplied", 600, unit.MapPosition)
+                      .ScaleTo(new Vector2(0, 1))
+                      .ScaleTo(1, 250, Easing.OutQuint)
+                      .Delay(400).ScaleTo(new Vector2(0, 1), 150, Easing.InQuart)
+                      .Delay(125).FadeOut();
         }
 
         public void UndoAction(ReplayController controller, bool immediate)
