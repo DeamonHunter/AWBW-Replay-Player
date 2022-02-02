@@ -134,7 +134,14 @@ namespace AWBWApp.Game.Game.Logic
             foreach (var ongoingAction in currentOngoingActions)
             {
                 while (ongoingAction.MoveNext())
-                    ongoingAction.Current?.Transformable?.FinishTransforms();
+                {
+                    if (ongoingAction.Current?.Transformable != null)
+                    {
+                        ongoingAction.Current.Transformable.FinishTransforms();
+                        if (ongoingAction.Current.Transformable.LifetimeEnd != double.MaxValue)
+                            ongoingAction.Current.Transformable.Expire();
+                    }
+                }
             }
         }
 

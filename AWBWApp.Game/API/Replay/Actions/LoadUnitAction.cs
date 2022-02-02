@@ -59,6 +59,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             var transportUnit = controller.Map.GetDrawableUnit(TransportID);
 
             loadingUnit.BeingCarried.Value = true;
+            loadingUnit.IsCapturing.Value = false;
             transportUnit.Cargo.Add(loadingUnit.UnitID);
         }
 

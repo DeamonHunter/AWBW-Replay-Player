@@ -59,6 +59,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             Logger.Log("Performing Move Action.");
             var unit = controller.Map.GetDrawableUnit(Unit.ID);
+            unit.IsCapturing.Value = false;
 
             var effect = controller.Map.PlaySelectionAnimation(unit);
             if (Path.Length > 1)

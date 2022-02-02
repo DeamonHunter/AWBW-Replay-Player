@@ -80,10 +80,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             yield return ReplayWait.WaitForTransformable(capturingUnit);
 
-            //Todo: Play a capture animation
-            controller.Map.UpdateBuilding(Building, false);
-            if (capturingUnit != null)
-                capturingUnit.HasCaptured.Value = true;
+            //Todo: Capture building animation
+
+            controller.Map.UpdateBuilding(Building, false); //This will set the unit above to be capturing
         }
 
         public void UndoAction(ReplayController controller, bool immediate)

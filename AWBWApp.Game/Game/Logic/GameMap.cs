@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
@@ -119,7 +120,10 @@ namespace AWBWApp.Game.Game.Logic
 
             foreach (var awbwBuilding in replayBuildings)
             {
-                var building = buildingStorage.GetBuildingByAWBWId(awbwBuilding.Value.TerrainID);
+                if (!awbwBuilding.Value.TerrainID.HasValue)
+                    throw new Exception("Invalid building encountered: Missing terrain id.");
+
+                var building = buildingStorage.GetBuildingByAWBWId(awbwBuilding.Value.TerrainID.Value);
                 var position = awbwBuilding.Value.Position;
 
                 var drawableBuilding = new DrawableBuilding(building, GetPlayerIDFromCountryID(building.CountryID), position);
@@ -149,7 +153,7 @@ namespace AWBWApp.Game.Game.Logic
             UpdateFogOfWar(gameState.TurnData[0].ActivePlayerID, 0, false); //Todo: CO range increases
         }
 
-        private long? GetPlayerIDFromCountryID(int countryID)
+        public long? GetPlayerIDFromCountryID(int countryID)
         {
             foreach (var player in Players)
             {
@@ -320,11 +324,27 @@ namespace AWBWApp.Game.Game.Logic
             //Todo: query by position rather than iterate over everything
             foreach (var unit in units)
             {
-                if (unit.Value.MapPosition == unitPosition)
+                if (unit.Value.MapPosition == unitPosition && !unit.Value.BeingCarried.Value)
                     return unit.Value;
             }
 
-            return null;
+            throw new Exception("Unable to find unit at position: " + unitPosition);
+        }
+
+        public bool TryGetDrawableUnit(Vector2I unitPosition, out DrawableUnit unit)
+        {
+            //Todo: query by position rather than iterate over everything
+            foreach (var checkUnit in units)
+            {
+                if (checkUnit.Value.MapPosition == unitPosition && !checkUnit.Value.BeingCarried.Value)
+                {
+                    unit = checkUnit.Value;
+                    return true;
+                }
+            }
+
+            unit = null;
+            return false;
         }
 
         public IEnumerable<DrawableUnit> GetDrawableUnitsFromPlayer(int playerId)
@@ -349,30 +369,38 @@ namespace AWBWApp.Game.Game.Logic
 
             if (!buildings.TryGetValue(tilePosition, out DrawableBuilding building))
             {
-                var buildingTile = buildingStorage.GetBuildingByAWBWId(awbwBuilding.TerrainID);
+                if (!awbwBuilding.TerrainID.HasValue)
+                    throw new Exception("Tried to update a missing building. But it didn't have a terrain id.");
+
+                var buildingTile = buildingStorage.GetBuildingByAWBWId(awbwBuilding.TerrainID.Value);
                 var drawableBuilding = new DrawableBuilding(buildingTile, GetPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
                 buildings.Add(tilePosition, drawableBuilding);
                 buildingsDrawable.Add(drawableBuilding);
                 return;
             }
 
-            if ((newTurn || (awbwBuilding.Capture < 0 || awbwBuilding.TerrainID != 0)) && building.BuildingTile.AWBWId != awbwBuilding.TerrainID)
+            var comparisonTerrainId = awbwBuilding.TerrainID ?? 0;
+
+            if (comparisonTerrainId != 0 && building.BuildingTile.AWBWId != comparisonTerrainId)
             {
                 buildingsDrawable.Remove(building);
                 buildings.Remove(tilePosition);
 
-                if (awbwBuilding.TerrainID != 0)
+                if (awbwBuilding.TerrainID.HasValue && awbwBuilding.TerrainID != 0)
                 {
-                    var buildingTile = buildingStorage.GetBuildingByAWBWId(awbwBuilding.TerrainID);
+                    var buildingTile = buildingStorage.GetBuildingByAWBWId(awbwBuilding.TerrainID.Value);
                     var drawableBuilding = new DrawableBuilding(buildingTile, GetPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
                     buildings.Add(tilePosition, drawableBuilding);
                     buildingsDrawable.Add(drawableBuilding);
                 }
-                return;
             }
 
-            //Todo: Update Building
-            building.HasDoneAction.Value = false;
+            //Todo: Is this always the case
+            if (!newTurn)
+                building.HasDoneAction.Value = false;
+
+            if (TryGetDrawableUnit(awbwBuilding.Position, out var unit))
+                unit.IsCapturing.Value = awbwBuilding.Capture != 20;
         }
     }
 }

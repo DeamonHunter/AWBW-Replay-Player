@@ -118,6 +118,7 @@ namespace AWBWApp.Game.API.Replay
         {
             var building = new ReplayBuilding();
             building.ID = (int)jObject["buildings_id"];
+            building.TerrainID = (int?)jObject["terrain_id"];
             building.Capture = (int)jObject["buildings_capture"];
             building.Position = new Vector2I((int)jObject["buildings_x"], (int)jObject["buildings_y"]);
             building.Team = (string)jObject["buildings_team"];
