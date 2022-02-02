@@ -60,11 +60,11 @@ namespace AWBWApp.Game.API.Replay.Actions
             Logger.Log("Performing Move Action.");
             var unit = controller.Map.GetDrawableUnit(Unit.ID);
 
-            controller.Map.SelectionReticule.PlaySelectAnimation(unit);
+            var effect = controller.Map.PlaySelectionAnimation(unit);
             if (Path.Length > 1)
                 renderPath(Path, controller);
 
-            yield return ReplayWait.WaitForTransformable(controller.Map.SelectionReticule);
+            yield return ReplayWait.WaitForTransformable(effect);
 
             if (Path.Length > 1)
             {

@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.Game.Logic;
+using AWBWApp.Game.Game.Tile;
+using AWBWApp.Game.Game.Unit;
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.UI.Replay;
 using Newtonsoft.Json.Linq;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Logging;
 
 namespace AWBWApp.Game.API.Replay.Actions
@@ -96,13 +101,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                     yield return transformable;
             }
 
-            //Ensure that the target reticule isn't being used.
-            //Todo: Find way to instantiate multiples of these
-            yield return ReplayWait.WaitForTransformable(controller.Map.TargetReticule);
-
             //Perform Attack vs Defender
-            controller.Map.TargetReticule.PlayAttackAnimation(attackerUnit.MapPosition, defenderUnit.MapPosition, attackerUnit);
-            yield return ReplayWait.WaitForTransformable(controller.Map.TargetReticule);
+            var reticule = PlayAttackAnimation(controller, attackerUnit.MapPosition, defenderUnit.MapPosition, attackerUnit);
+            yield return ReplayWait.WaitForTransformable(reticule);
 
             attackerUnit.CanMove.Value = false;
             defenderUnit.UpdateUnit(defenderStats);
@@ -110,7 +111,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (defenderUnit.HealthPoints.Value <= 0)
             {
                 attackerUnit.UpdateUnit(Attacker);
-                controller.Map.DestroyUnit(defenderUnit.UnitID);
+                controller.Map.DeleteUnit(defenderUnit.UnitID, true);
                 yield break;
             }
 
@@ -119,16 +120,27 @@ namespace AWBWApp.Game.API.Replay.Actions
                 attackerUnit.Ammo.Value -= 1;
 
             //Perform Attack vs Attacker
-            controller.Map.TargetReticule.PlayAttackAnimation(defenderUnit.MapPosition, attackerUnit.MapPosition, defenderUnit);
-            yield return ReplayWait.WaitForTransformable(controller.Map.TargetReticule);
+            reticule = PlayAttackAnimation(controller, defenderUnit.MapPosition, attackerUnit.MapPosition, defenderUnit);
+            yield return ReplayWait.WaitForTransformable(reticule);
 
             attackerUnit.UpdateUnit(attackerStats);
 
             if (attackerUnit.HealthPoints.Value <= 0)
             {
-                controller.Map.DestroyUnit(attackerUnit.UnitID);
+                controller.Map.DeleteUnit(attackerUnit.UnitID, true);
                 controller.UpdateFogOfWar();
             }
+        }
+
+        public EffectAnimation PlayAttackAnimation(ReplayController controller, Vector2I start, Vector2I end, DrawableUnit attacker)
+        {
+            var effect = controller.Map.PlayEffect("Effects/Target", 100, start);
+            effect.Anchor = Anchor.Centre;
+            effect.Origin = Anchor.Centre;
+            effect.DelayUntilTransformsFinished().AddDelayDependingOnDifferenceBetweenEndTimes(effect, attacker)
+                  .MoveTo(GameMap.GetDrawablePositionForBottomOfTile(start) + DrawableTile.HALF_BASE_SIZE).FadeTo(0.5f).ScaleTo(0.5f)
+                  .FadeTo(1, 250, Easing.In).MoveTo(GameMap.GetDrawablePositionForBottomOfTile(end) + DrawableTile.HALF_BASE_SIZE, 400, Easing.In).ScaleTo(1, 600, Easing.OutBounce).RotateTo(180, 400).Then().Expire();
+            return effect;
         }
 
         public void UndoAction(ReplayController controller, bool immediate)

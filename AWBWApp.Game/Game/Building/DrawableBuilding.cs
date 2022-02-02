@@ -11,14 +11,14 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.Game.Building
 {
-    public class DrawableBuilding : CompositeDrawable
+    public class DrawableBuilding : CompositeDrawable, IHasMapPosition
     {
         public static readonly Vector2I BASE_SIZE = new Vector2I(16);
 
         public Bindable<bool> HasDoneAction = new Bindable<bool>();
 
         public long? OwnerID { get; private set; }
-        public Vector2I TilePosition { get; private set; }
+        public Vector2I MapPosition { get; private set; }
 
         public readonly BuildingTile BuildingTile;
 
@@ -28,7 +28,7 @@ namespace AWBWApp.Game.Game.Building
         {
             BuildingTile = buildingTile;
             OwnerID = ownerID;
-            TilePosition = tilePosition;
+            MapPosition = tilePosition;
 
             Size = BASE_SIZE;
             Position = GameMap.GetDrawablePositionForBottomOfTile(tilePosition);

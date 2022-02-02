@@ -31,9 +31,6 @@ namespace AWBWApp.Game.Game.Logic
         private Dictionary<long, DrawableUnit> units;
         private Dictionary<Vector2I, DrawableUnit> unitsByPosition;
 
-        public TargetReticule TargetReticule;
-        public SelectionReticule SelectionReticule;
-
         [Resolved]
         private TerrainTileStorage terrainTileStorage { get; set; }
 
@@ -67,9 +64,7 @@ namespace AWBWApp.Game.Game.Logic
                     AutoSizeAxes = Axes.Both
                 },
                 fogOfWarDrawable = new FogOfWarDrawable(),
-                effectAnimationController = new EffectAnimationController(),
-                SelectionReticule = new SelectionReticule(),
-                TargetReticule = new TargetReticule()
+                effectAnimationController = new EffectAnimationController()
             });
         }
 
@@ -254,15 +249,45 @@ namespace AWBWApp.Game.Game.Logic
 
         public bool TryGetDrawableBuilding(Vector2I position, out DrawableBuilding drawableBuilding) => buildings.TryGetValue(position, out drawableBuilding);
 
-        public void DestroyUnit(long unitId, bool playExplosion = true, bool immediate = false)
+        public void DeleteUnit(long unitId, bool explode)
         {
             if (!units.Remove(unitId, out DrawableUnit unit))
                 return;
 
-            if (immediate)
-                removeUnit(unit, playExplosion);
-            else
-                unit.DelayUntilTransformsFinished().Finally(x => removeUnit(x, playExplosion));
+            if (explode)
+                playExplosion(unit.UnitData.MovementType, unit.MapPosition);
+
+            unitsDrawable.Remove(unit);
+
+            if (unit.Cargo != null)
+            {
+                foreach (var cargoId in unit.Cargo)
+                {
+                    if (!units.Remove(cargoId, out DrawableUnit cargo))
+                        continue;
+
+                    unitsDrawable.Remove(cargo);
+                }
+            }
+        }
+
+        private void playExplosion(MovementType type, Vector2I unitPosition)
+        {
+            switch (type)
+            {
+                case MovementType.Air:
+                    PlayEffect("Effects/Explosion/Explosion-Air", 450, unitPosition);
+                    break;
+
+                case MovementType.Sea:
+                case MovementType.Lander:
+                    PlayEffect("Effects/Explosion/Explosion-Sea", 350, unitPosition);
+                    break;
+
+                default:
+                    PlayEffect("Effects/Explosion/Explosion-Land", 500, unitPosition);
+                    break;
+            }
         }
 
         public List<DrawableUnit> GetUnitsWithDistance(Vector2I position, int distance)
@@ -279,32 +304,16 @@ namespace AWBWApp.Game.Game.Logic
             return unitsWithRange;
         }
 
-        void removeUnit(DrawableUnit unit, bool playExplosion)
-        {
-            unitsDrawable.Remove(unit);
-            if (!playExplosion)
-                return;
-
-            switch (unit.UnitData.MovementType)
-            {
-                case MovementType.Air:
-                    PlayEffect("Effects/Explosion/Explosion-Air", 450, unit.MapPosition);
-                    break;
-
-                case MovementType.Sea:
-                case MovementType.Lander:
-                    PlayEffect("Effects/Explosion/Explosion-Sea", 350, unit.MapPosition);
-                    break;
-
-                default:
-                    PlayEffect("Effects/Explosion/Explosion-Land", 500, unit.MapPosition);
-                    break;
-            }
-
-            //Todo: Add explosion drawable
-        }
-
         public EffectAnimation PlayEffect(string animation, double duration, Vector2I mapPosition, double startDelay = 0, float rotation = 0) => effectAnimationController.PlayAnimation(animation, duration, mapPosition, startDelay, rotation);
+
+        public EffectAnimation PlaySelectionAnimation(DrawableUnit unit)
+        {
+            var effect = PlayEffect("Effects/Select", 100, unit.MapPosition);
+            effect.DelayUntilTransformsFinished().AddDelayDependingOnDifferenceBetweenEndTimes(effect, unit)
+                  .FadeTo(0.5f).ScaleTo(0.5f)
+                  .FadeTo(1, 150, Easing.In).ScaleTo(1, 300, Easing.OutBounce).Then().Expire();
+            return effect;
+        }
 
         public DrawableUnit GetDrawableUnit(Vector2I unitPosition)
         {

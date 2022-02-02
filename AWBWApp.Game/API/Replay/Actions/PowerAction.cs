@@ -131,7 +131,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                         //Todo: Play heal/damage animation
 
                         if (unit.HealthPoints.Value <= 0)
-                            controller.Map.DestroyUnit(unit.UnitID);
+                            controller.Map.DeleteUnit(unit.UnitID, true);
                     }
                 }
             }

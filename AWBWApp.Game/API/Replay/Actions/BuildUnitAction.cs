@@ -39,13 +39,14 @@ namespace AWBWApp.Game.API.Replay.Actions
                 building.HasDoneAction.Value = true;
 
             controller.UpdateFogOfWar();
+            controller.Map.PlaySelectionAnimation(unit);
             yield break;
         }
 
         public void UndoAction(ReplayController controller, bool immediate)
         {
             Logger.Log("Undoing Build Action.");
-            controller.Map.DestroyUnit(NewUnit.ID, false, immediate);
+            controller.Map.DeleteUnit(NewUnit.ID, false);
         }
     }
 }

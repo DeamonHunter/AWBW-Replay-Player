@@ -57,7 +57,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     yield return transformable;
             }
 
-            controller.Map.DestroyUnit(JoiningUnitId, false);
+            controller.Map.DeleteUnit(JoiningUnitId, false);
             var joinedUnit = controller.Map.GetDrawableUnit(JoinedUnit.ID);
             joinedUnit.UpdateUnit(JoinedUnit);
         }

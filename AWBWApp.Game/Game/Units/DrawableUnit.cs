@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Replay;
@@ -18,7 +19,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.Game.Unit
 {
-    public class DrawableUnit : CompositeDrawable
+    public class DrawableUnit : CompositeDrawable, IHasMapPosition
     {
         public static readonly Vector2I BASE_SIZE = new Vector2I(16);
 
@@ -31,7 +32,7 @@ namespace AWBWApp.Game.Game.Unit
         public BindableInt Ammo = new BindableInt();
 
         public BindableBool CanMove = new BindableBool();
-        public BindableBool HasCaptured = new BindableBool();
+        public BindableBool IsCapturing = new BindableBool();
         public BindableBool BeingCarried = new BindableBool();
 
         public BindableBool CanBeSeen = new BindableBool();
@@ -41,43 +42,12 @@ namespace AWBWApp.Game.Game.Unit
         private TextureAnimation textureAnimation;
         private TextureAnimation divedAnimation;
         private TextureSpriteText healthSpriteText;
-        private TargetReticule targetReticule;
+
+        private Sprite capturing;
 
         private string country;
 
         public HashSet<long> Cargo = new HashSet<long>();
-
-        public DrawableUnit(UnitData unitData, AWBWUnit unit)
-        {
-            UnitData = unitData;
-            Size = BASE_SIZE;
-            InternalChildren = new Drawable[]
-            {
-                textureAnimation = new TextureAnimation()
-                {
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft
-                },
-                divedAnimation = new TextureAnimation()
-                {
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft,
-                    Alpha = 0
-                },
-                healthSpriteText = new TextureSpriteText("UI/Health")
-                {
-                    Anchor = Anchor.BottomRight,
-                    Origin = Anchor.BottomRight,
-                    Font = new FontUsage(size: 1.5f)
-                }
-            };
-
-            HealthPoints.BindValueChanged(UpdateHp);
-            CanMove.BindValueChanged(updateCanMove, true);
-            Dived.BindValueChanged(x => updateAnimation());
-            BeingCarried.BindValueChanged(x => updateAnimation());
-            UpdateUnit(unit);
-        }
 
         public DrawableUnit(UnitData unitData, ReplayUnit unit, string countryCode)
         {
@@ -96,6 +66,12 @@ namespace AWBWApp.Game.Game.Unit
                     Origin = Anchor.BottomLeft,
                     Alpha = 0
                 },
+                capturing = new Sprite
+                {
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
+                    Alpha = 0
+                },
                 healthSpriteText = new TextureSpriteText("UI/Health")
                 {
                     Anchor = Anchor.BottomRight,
@@ -108,30 +84,10 @@ namespace AWBWApp.Game.Game.Unit
 
             HealthPoints.BindValueChanged(UpdateHp);
             CanMove.BindValueChanged(updateCanMove, true);
+            IsCapturing.BindValueChanged(updateCapturing);
             Dived.BindValueChanged(x => updateAnimation());
             BeingCarried.BindValueChanged(x => updateAnimation());
             UpdateUnit(unit);
-        }
-
-        public void UpdateUnit(AWBWUnit unit)
-        {
-            UnitID = unit.ID;
-            OwnerID = unit.OwnedBy;
-            country = unit.CountryCode;
-            HealthPoints.Value = unit.HitPoints;
-            Fuel.Value = unit.Fuel;
-            Ammo.Value = unit.Ammo;
-            CanMove.Value = !unit.HasMoved;
-            HasCaptured.Value = unit.HasCaptured;
-            Dived.Value = unit.UnitDived == "Y" || unit.UnitDived == "D";
-
-            Cargo.Clear();
-            if (unit.Cargo1 != null && unit.Cargo1 != "?")
-                Cargo.Add(int.Parse(unit.Cargo1));
-            if (unit.Cargo2 != null && unit.Cargo2 != "?")
-                Cargo.Add(int.Parse(unit.Cargo2));
-
-            MoveToPosition(new Vector2I(unit.X, unit.Y));
         }
 
         public void UpdateUnit(ReplayUnit unit)
@@ -149,8 +105,6 @@ namespace AWBWApp.Game.Game.Unit
 
             if (unit.TimesMoved.HasValue)
                 CanMove.Value = unit.TimesMoved.Value == 0;
-            if (unit.TimesCaptured.HasValue)
-                HasCaptured.Value = unit.TimesCaptured.Value == 0;
             if (unit.SubHasDived.HasValue)
                 Dived.Value = unit.SubHasDived.Value;
 
@@ -179,6 +133,9 @@ namespace AWBWApp.Game.Game.Unit
         [BackgroundDependencyLoader]
         private void load(NearestNeighbourTextureStore store)
         {
+            capturing.Texture = store.Get("UI/Capturing");
+            capturing.Size = capturing.Texture.Size;
+
             if (UnitData.Frames == null)
             {
                 var texture = store.Get($"{UnitData.BaseTextureByTeam[country]}-0");
@@ -301,6 +258,14 @@ namespace AWBWApp.Game.Game.Unit
             else
                 animationColour = new Color4(200, 200, 200, 255);
             textureAnimation.Colour = animationColour;
+        }
+
+        private void updateCapturing(ValueChangedEvent<bool> isCapturing)
+        {
+            if (isCapturing.NewValue)
+                capturing.ScaleTo(0.5f).ScaleTo(1, 200, Easing.OutBounce).FadeIn(100, Easing.InQuint);
+            else
+                capturing.FadeOut();
         }
     }
 }

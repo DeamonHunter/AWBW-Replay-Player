@@ -40,7 +40,7 @@ namespace AWBWApp.Game.Game.Logic
 
             //All the buildings the player owns shows its own tile.
             foreach (var drawableBuilding in gameMap.GetDrawableBuildingsForPlayer(player))
-                fogArray[drawableBuilding.TilePosition.X, drawableBuilding.TilePosition.Y] = true;
+                fogArray[drawableBuilding.MapPosition.X, drawableBuilding.MapPosition.Y] = true;
 
             foreach (var drawableUnit in gameMap.GetDrawableUnitsFromPlayer(player))
             {
