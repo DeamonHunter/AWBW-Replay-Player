@@ -46,6 +46,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         {
             AddStep("Setup", () => MoveTestTrap());
             AddStep("Move Right", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(4, 1));
         }
 
         [Test]
