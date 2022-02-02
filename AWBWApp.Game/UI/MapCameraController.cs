@@ -23,9 +23,10 @@ namespace AWBWApp.Game.UI
         public void FitMapToSpace()
         {
             var drawSize = new Vector2(DrawSize.X - MapSpace.TotalHorizontal, DrawSize.Y - MapSpace.TotalVertical);
+            InternalChild.Scale = Vector2.One;
 
-            var possibleScaleX = drawSize.X / (InternalChild.Size.X / InternalChild.Scale.X);
-            var possibleScaleY = drawSize.Y / (InternalChild.Size.Y / InternalChild.Scale.Y);
+            var possibleScaleX = drawSize.X / InternalChild.Size.X;
+            var possibleScaleY = drawSize.Y / InternalChild.Size.Y;
 
             var newScale = Math.Clamp(Math.Min(possibleScaleX, possibleScaleY) * 0.975f, MinScale, MaxScale);
             InternalChild.Scale = new Vector2(newScale);
