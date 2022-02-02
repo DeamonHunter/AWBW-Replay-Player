@@ -20,7 +20,7 @@ namespace AWBWApp.Game.UI.Replay
     {
         private Dictionary<string, DrawablePool<EffectAnimation>> pools = new Dictionary<string, DrawablePool<EffectAnimation>>();
 
-        public void PlayAnimation(string animation, double length, Vector2I position, double startDelay, float rotation)
+        public EffectAnimation PlayAnimation(string animation, double length, Vector2I position, double startDelay, float rotation)
         {
             if (!pools.TryGetValue(animation, out var pool))
             {
@@ -36,110 +36,113 @@ namespace AWBWApp.Game.UI.Replay
             });
 
             AddInternal(drawable);
+
+            return drawable;
+        }
+    }
+
+    public class AdjustablePlaybackTextureAnimation : TextureAnimation
+    {
+        private StopwatchClock clock;
+
+        public AdjustablePlaybackTextureAnimation(bool startAtCurrentTime)
+            : base(startAtCurrentTime)
+        {
+            clock = new StopwatchClock(true);
+            Clock = new FramedClock(clock);
         }
 
-        private class AdjustablePlaybackTextureAnimation : TextureAnimation
+        public void RestartAnimation(double rate)
         {
-            private StopwatchClock clock;
+            clock.Rate = rate;
+            Clock.ProcessFrame();
+            this.Restart();
+        }
+    }
 
-            public AdjustablePlaybackTextureAnimation(bool startAtCurrentTime)
-                : base(startAtCurrentTime)
-            {
-                clock = new StopwatchClock(true);
-                Clock = new FramedClock(clock);
-            }
+    public class EffectAnimation : PoolableDrawable
+    {
+        private AdjustablePlaybackTextureAnimation textureAnimation;
+        private string animationPath;
 
-            public void RestartAnimation(double rate)
+        [Resolved]
+        private NearestNeighbourTextureStore textureStore { get; set; }
+
+        public EffectAnimation()
+        {
+            Anchor = Anchor.Centre;
+            Origin = Anchor.Centre;
+
+            InternalChild = textureAnimation = new AdjustablePlaybackTextureAnimation(false)
             {
-                clock.Rate = rate;
-                Clock.ProcessFrame();
-                this.Restart();
-            }
+                Loop = false,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre
+            };
         }
 
-        private class EffectAnimation : PoolableDrawable
+        public void Setup(string path, double duration, double startDelay)
         {
-            private AdjustablePlaybackTextureAnimation textureAnimation;
-            private string animationPath;
-
-            [Resolved]
-            private NearestNeighbourTextureStore textureStore { get; set; }
-
-            public EffectAnimation()
+            if (animationPath == null)
             {
-                Anchor = Anchor.Centre;
-                Origin = Anchor.Centre;
-
-                InternalChild = textureAnimation = new AdjustablePlaybackTextureAnimation(false)
-                {
-                    Loop = false,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre
-                };
+                animationPath = path;
+                Scheduler.AddOnce(() => load(duration, startDelay));
             }
+            else
+                play(duration, startDelay);
+        }
 
-            public void Setup(string path, double duration, double startDelay)
+        private void load(double duration, double startDelay)
+        {
+            var texture = textureStore.Get($"{animationPath}-0");
+
+            if (texture == null)
             {
-                if (animationPath == null)
-                {
-                    animationPath = path;
-                    Scheduler.AddOnce(() => load(duration, startDelay));
-                }
-                else
-                    play(duration, startDelay);
-            }
-
-            private void load(double duration, double startDelay)
-            {
-                var texture = textureStore.Get($"{animationPath}-0");
-
-                if (texture == null)
-                {
-                    texture = textureStore.Get($"{animationPath}");
-                    textureAnimation.Size = texture.Size;
-                    textureAnimation.DefaultFrameLength = 100;
-                    textureAnimation.AddFrame(texture);
-                    play(duration, startDelay);
-                    return;
-                }
-
+                texture = textureStore.Get($"{animationPath}");
                 textureAnimation.Size = texture.Size;
                 textureAnimation.DefaultFrameLength = 100;
                 textureAnimation.AddFrame(texture);
-
-                int idx = 1;
-
-                while (true)
-                {
-                    texture = textureStore.Get($"{animationPath}-{idx++}");
-
-                    if (texture == null)
-                        break;
-
-                    if (texture.Size != textureAnimation.Size)
-                        throw new Exception($"Texture animation '{animationPath}' doesn't remain the same size.");
-
-                    textureAnimation.AddFrame(texture);
-                }
-
                 play(duration, startDelay);
+                return;
             }
 
-            private void play(double duration, double startDelay)
+            textureAnimation.Size = texture.Size;
+            textureAnimation.DefaultFrameLength = 100;
+            textureAnimation.AddFrame(texture);
+
+            int idx = 1;
+
+            while (true)
             {
-                if (startDelay > 0)
-                {
-                    this.FadeOut().Delay(startDelay).FadeIn().OnComplete(x =>
-                    {
-                        textureAnimation.RestartAnimation(textureAnimation.Duration / duration);
-                        LifetimeEnd = Time.Current + duration;
-                    });
-                }
-                else
+                texture = textureStore.Get($"{animationPath}-{idx++}");
+
+                if (texture == null)
+                    break;
+
+                if (texture.Size != textureAnimation.Size)
+                    throw new Exception($"Texture animation '{animationPath}' doesn't remain the same size.");
+
+                textureAnimation.AddFrame(texture);
+            }
+
+            play(duration, startDelay);
+        }
+
+        private void play(double duration, double startDelay)
+        {
+            if (startDelay > 0)
+            {
+                this.FadeOut().Delay(startDelay).FadeIn().OnComplete(x =>
                 {
                     textureAnimation.RestartAnimation(textureAnimation.Duration / duration);
                     LifetimeEnd = Time.Current + duration;
-                }
+                });
+            }
+            else
+            {
+                Alpha = 1;
+                textureAnimation.RestartAnimation(textureAnimation.Duration / duration);
+                LifetimeEnd = Time.Current + duration;
             }
         }
     }

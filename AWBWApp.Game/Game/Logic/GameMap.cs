@@ -304,10 +304,7 @@ namespace AWBWApp.Game.Game.Logic
             //Todo: Add explosion drawable
         }
 
-        public void PlayEffect(string animation, double duration, Vector2I mapPosition, double startDelay = 0, float rotation = 0)
-        {
-            effectAnimationController.PlayAnimation(animation, duration, mapPosition, startDelay, rotation);
-        }
+        public EffectAnimation PlayEffect(string animation, double duration, Vector2I mapPosition, double startDelay = 0, float rotation = 0) => effectAnimationController.PlayAnimation(animation, duration, mapPosition, startDelay, rotation);
 
         public DrawableUnit GetDrawableUnit(Vector2I unitPosition)
         {

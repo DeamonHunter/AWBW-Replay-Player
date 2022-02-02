@@ -42,6 +42,13 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         }
 
         [Test]
+        public void TestTrapped()
+        {
+            AddStep("Setup", () => MoveTestTrap());
+            AddStep("Move Right", () => ReplayController.GoToNextAction());
+        }
+
+        [Test]
         public void TestStraightDiagonal1Spaces()
         {
             AddLabel("Move Diagonal - 1 spaces");
@@ -86,9 +93,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 var previousPosition = GetPositionForIteration(i - 1, spaces);
 
                 var moveUnitAction = new MoveUnitAction();
-                moveUnitAction.Unit = new ReplayUnit { ID = movingUnit.ID, Position = movingUnit.Position };
-                moveUnitAction.Unit.Position = nextPosition;
-
+                moveUnitAction.Unit = new ReplayUnit { ID = movingUnit.ID, Position = nextPosition };
                 moveUnitAction.Path = CreatePath(previousPosition, nextPosition);
                 moveUnitAction.Distance = moveUnitAction.Path.Length;
                 moveUnitAction.Trapped = false;
@@ -140,6 +145,50 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             return path;
         }
 
+        private void MoveTestTrap()
+        {
+            var replayData = CreateBasicReplayData(2);
+
+            var turn = new TurnData();
+            turn.ReplayUnit = new Dictionary<long, ReplayUnit>();
+            turn.Buildings = new Dictionary<Vector2I, ReplayBuilding>();
+            turn.Actions = new List<IReplayAction>();
+
+            replayData.TurnData.Add(turn);
+
+            var movingUnit = CreateBasicReplayUnit(0, 0, "Recon", new Vector2I(1, 1));
+            turn.ReplayUnit.Add(movingUnit.ID, movingUnit);
+
+            var stillUnit = CreateBasicReplayUnit(1, 1, "Recon", new Vector2I(5, 1));
+            turn.ReplayUnit.Add(stillUnit.ID, stillUnit);
+
+            for (int i = 1; i < 5; i++)
+            {
+                var moveUnitAction = new MoveUnitAction();
+                moveUnitAction.Unit = new ReplayUnit { ID = movingUnit.ID, Position = new Vector2I(4, 1) };
+                moveUnitAction.Path = new[]
+                {
+                    new UnitPosition { X = 1, Y = 1, Unit_Visible = true },
+                    new UnitPosition { X = 2, Y = 1, Unit_Visible = true },
+                    new UnitPosition { X = 3, Y = 1, Unit_Visible = true },
+                    new UnitPosition { X = 4, Y = 1, Unit_Visible = true },
+                };
+                moveUnitAction.Distance = moveUnitAction.Path.Length;
+                moveUnitAction.Trapped = true;
+
+                turn.Actions.Add(moveUnitAction);
+            }
+
+            var map = CreateBasicMap(7, 3);
+            map.Ids[1 * 7 + 1] = 15;
+            map.Ids[1 * 7 + 2] = 15;
+            map.Ids[1 * 7 + 3] = 15;
+            map.Ids[1 * 7 + 4] = 15;
+            map.Ids[1 * 7 + 5] = 3;
+
+            ReplayController.LoadReplay(replayData, map);
+        }
+
         private void MoveTestCorner(int spaces)
         {
             var replayData = CreateBasicReplayData(2);
@@ -163,8 +212,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 var previousPosition = GetPositionForIteration((i - 1) * 2 + 2, spaces);
 
                 var moveUnitAction = new MoveUnitAction();
-                moveUnitAction.Unit = new ReplayUnit { ID = movingUnit.ID, Position = movingUnit.Position };
-                moveUnitAction.Unit.Position = nextPosition;
+                moveUnitAction.Unit = new ReplayUnit { ID = movingUnit.ID, Position = nextPosition };
 
                 moveUnitAction.Path = CreatePath(previousPosition, nextPosition);
                 moveUnitAction.Distance = moveUnitAction.Path.Length;
