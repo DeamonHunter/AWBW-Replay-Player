@@ -27,7 +27,7 @@ namespace AWBWApp.Game.UI
             var possibleScaleX = drawSize.X / (InternalChild.Size.X / InternalChild.Scale.X);
             var possibleScaleY = drawSize.Y / (InternalChild.Size.Y / InternalChild.Scale.Y);
 
-            var newScale = Math.Max(MinScale, Math.Min(possibleScaleX, possibleScaleY) * 0.975f);
+            var newScale = Math.Clamp(Math.Min(possibleScaleX, possibleScaleY) * 0.975f, MinScale, MaxScale);
             InternalChild.Scale = new Vector2(newScale);
             InternalChild.Position = new Vector2(MapSpace.Left, MapSpace.Top);
         }
