@@ -84,21 +84,18 @@ namespace AWBWApp.Game.UI.Replay
         public void Setup(string path, double duration, double startDelay)
         {
             if (animationPath == null)
-            {
-                animationPath = path;
-                Scheduler.AddOnce(() => load(duration, startDelay));
-            }
+                Scheduler.AddOnce(() => load(path, duration, startDelay));
             else
                 play(duration, startDelay);
         }
 
-        private void load(double duration, double startDelay)
+        private void load(string path, double duration, double startDelay)
         {
-            var texture = textureStore.Get($"{animationPath}-0");
+            var texture = textureStore.Get($"{path}-0");
 
             if (texture == null)
             {
-                texture = textureStore.Get($"{animationPath}");
+                texture = textureStore.Get($"{path}");
                 textureAnimation.Size = texture.Size;
                 textureAnimation.DefaultFrameLength = 100;
                 textureAnimation.AddFrame(texture);
@@ -114,17 +111,18 @@ namespace AWBWApp.Game.UI.Replay
 
             while (true)
             {
-                texture = textureStore.Get($"{animationPath}-{idx++}");
+                texture = textureStore.Get($"{path}-{idx++}");
 
                 if (texture == null)
                     break;
 
                 if (texture.Size != textureAnimation.Size)
-                    throw new Exception($"Texture animation '{animationPath}' doesn't remain the same size.");
+                    throw new Exception($"Texture animation '{path}' doesn't remain the same size.");
 
                 textureAnimation.AddFrame(texture);
             }
 
+            animationPath = path;
             play(duration, startDelay);
         }
 
@@ -132,17 +130,19 @@ namespace AWBWApp.Game.UI.Replay
         {
             if (startDelay > 0)
             {
-                this.FadeOut().Delay(startDelay).FadeIn().OnComplete(x =>
+                var alpha = Alpha;
+                this.FadeOut().Delay(startDelay).FadeTo(alpha).OnComplete(x =>
                 {
                     textureAnimation.RestartAnimation(textureAnimation.Duration / duration);
-                    LifetimeEnd = Time.Current + duration;
+                    if (LifetimeEnd == double.MaxValue)
+                        LifetimeEnd = Time.Current + duration;
                 });
             }
             else
             {
-                Alpha = 1;
                 textureAnimation.RestartAnimation(textureAnimation.Duration / duration);
-                LifetimeEnd = Time.Current + duration;
+                if (LifetimeEnd == double.MaxValue)
+                    LifetimeEnd = Time.Current + duration;
             }
         }
     }

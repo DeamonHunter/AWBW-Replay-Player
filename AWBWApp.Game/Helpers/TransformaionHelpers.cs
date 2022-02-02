@@ -20,6 +20,9 @@ namespace AWBWApp.Game.Helpers
             where TA : Transformable
             where TB : Transformable
         {
+            if (otherTransformable.Clock == null)
+                return transform.Delay(0);
+
             if (baseTransformable.Clock != otherTransformable.Clock)
                 throw new InvalidOperationException("Cannot support 2 different clocks.");
 
