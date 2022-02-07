@@ -45,6 +45,7 @@ namespace AWBWApp.Game.API.Replay
                 //These IDs are weird. Likely because of legacy stuff.
                 17 => "pc",
                 20 => "pl",
+                21 => "ar",
                 _ => throw new InvalidOperationException("Country ID must be between 1 and 16 inclusively.")
             };
 
