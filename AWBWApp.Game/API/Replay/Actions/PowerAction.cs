@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Logging;
 
 namespace AWBWApp.Game.API.Replay.Actions
@@ -15,10 +16,17 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         //Todo: The Power action is a big thing and will likely need a bunch of testing.
         //This is a list of CO's who have been tested.
+        //Todo: We don't get information about unit damage increases.
         private readonly HashSet<string> compatibleCOs = new HashSet<string>
         {
+            "Sonja-Y",
             "Sonja-S",
-            "Drake-S"
+            "Drake-Y",
+            "Drake-S",
+            "Jess-Y", //Missing Power Increase
+            "Jess-S", //Missing Power Increase
+            "Grimm-Y", //Missing Power Increase
+            "Grimm-S" //Missing Power Increase
         };
 
         public IReplayAction ParseJObjectIntoReplayAction(JObject jObject, ReplayData replayData, TurnData turnData)
@@ -60,34 +68,58 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (hpChange != null)
             {
-                action.HPChanges = new Dictionary<int, PowerAction.HPChange>();
+                action.PlayerWideChanges = new Dictionary<int, PowerAction.PlayerWideUnitChange>();
 
                 var hpGainEntry = jObject["hpGain"];
 
                 if (hpGainEntry is JObject hpGain)
                 {
-                    var change = new PowerAction.HPChange
+                    var change = new PowerAction.PlayerWideUnitChange
                     {
-                        ChangeAmount = (int)hpGain["hp"],
-                        FuelPercentage = (double)hpGain["units_fuel"]
+                        HPGain = (int)hpGain["hp"],
+                        FuelGainPercentage = (double)hpGain["units_fuel"]
                     };
 
                     foreach (var player in (JArray)hpGain["players"])
-                        action.HPChanges.Add((int)player, change);
+                        action.PlayerWideChanges.Add((int)player, change);
                 }
 
-                var hpLossEntry = jObject["hpGain"];
+                var hpLossEntry = jObject["hpLoss"];
 
                 if (hpLossEntry is JObject hpLoss)
                 {
-                    var change = new PowerAction.HPChange
+                    var change = new PowerAction.PlayerWideUnitChange
                     {
-                        ChangeAmount = (int)hpLoss["hp"],
-                        FuelPercentage = (double)hpLoss["units_fuel"]
+                        HPGain = (int)hpLoss["hp"],
+                        FuelGainPercentage = (double)hpLoss["units_fuel"]
                     };
 
                     foreach (var player in (JArray)hpLoss["players"])
-                        action.HPChanges.Add((int)player, change);
+                        action.PlayerWideChanges.Add((int)player, change);
+                }
+            }
+
+            var unitReplace = (JObject)jObject["unitReplace"];
+
+            if (unitReplace != null)
+            {
+                action.UnitChanges = new Dictionary<int, PowerAction.UnitChange>();
+                var activePlayerUnitReplace = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject(unitReplace, turnData.ActiveTeam, turnData.ActivePlayerID);
+
+                foreach (JObject unit in (JArray)activePlayerUnitReplace["units"])
+                {
+                    var change = new PowerAction.UnitChange();
+
+                    if (unit.TryGetValue("units_ammo", out JToken ammo))
+                        change.Ammo = (int)ammo;
+
+                    if (unit.TryGetValue("units_fuel", out JToken fuel))
+                        change.Fuel = (int)fuel;
+
+                    if (unit.TryGetValue("units_movement_points", out JToken movementPoints))
+                        change.MovementPoints = (int)movementPoints;
+
+                    action.UnitChanges.Add((int)unit["units_id"], change);
                 }
             }
 
@@ -115,7 +147,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public string ChangeToWeather;
 
-        public Dictionary<int, HPChange> HPChanges;
+        public Dictionary<int, PlayerWideUnitChange> PlayerWideChanges;
+        public Dictionary<int, UnitChange> UnitChanges;
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
@@ -136,24 +169,61 @@ namespace AWBWApp.Game.API.Replay.Actions
                 yield return ReplayWait.WaitForMilliseconds(150);
             }
 
-            if (HPChanges != null)
+            if (PlayerWideChanges != null)
             {
-                foreach (var change in HPChanges)
+                foreach (var change in PlayerWideChanges)
                 {
                     foreach (var unit in controller.Map.GetDrawableUnitsFromPlayer(change.Key))
                     {
-                        unit.HealthPoints.Value += change.Value.ChangeAmount;
-                        unit.Fuel.Value = (int)Math.Floor(unit.Fuel.Value * change.Value.FuelPercentage);
+                        if (change.Value.HPGain.HasValue)
+                            unit.HealthPoints.Value += change.Value.HPGain.Value;
+                        if (change.Value.FuelGainPercentage.HasValue)
+                            unit.Fuel.Value = (int)Math.Floor(unit.Fuel.Value * change.Value.FuelGainPercentage.Value);
 
                         //Todo: Play heal/damage animation
 
                         if (unit.HealthPoints.Value <= 0)
                             controller.Map.DeleteUnit(unit.UnitID, true);
+                        else
+                            PlayEffectForUnitChange(controller, unit.MapPosition, change.Value);
+
+                        yield return ReplayWait.WaitForMilliseconds(50);
                     }
                 }
             }
 
+            if (UnitChanges != null)
+            {
+                foreach (var change in UnitChanges)
+                {
+                    if (controller.Map.TryGetDrawableUnit(change.Key, out var unit))
+                    {
+                        if (change.Value.Ammo.HasValue)
+                            unit.Ammo.Value = change.Value.Ammo.Value;
+                        if (change.Value.Fuel.HasValue)
+                            unit.Fuel.Value = change.Value.Fuel.Value;
+
+                        if (unit.HealthPoints.Value <= 0)
+                            controller.Map.DeleteUnit(unit.UnitID, true);
+                        else
+                            PlayEffectForUnitChange(controller, unit.MapPosition, change.Value);
+                    }
+                    else
+                        throw new Exception("Unable to find unit: " + change.Key);
+
+                    yield return ReplayWait.WaitForMilliseconds(50);
+                }
+            }
+
             yield break;
+        }
+
+        private void PlayEffectForUnitChange(ReplayController controller, Vector2I position, UnitChange change)
+        {
+        }
+
+        private void PlayEffectForUnitChange(ReplayController controller, Vector2I position, PlayerWideUnitChange change)
+        {
         }
 
         public void UndoAction(ReplayController controller, bool immediate)
@@ -161,10 +231,17 @@ namespace AWBWApp.Game.API.Replay.Actions
             throw new NotImplementedException();
         }
 
-        public class HPChange
+        public class PlayerWideUnitChange
         {
-            public int ChangeAmount;
-            public double FuelPercentage;
+            public int? HPGain;
+            public double? FuelGainPercentage;
+        }
+
+        public class UnitChange
+        {
+            public int? Fuel;
+            public int? Ammo;
+            public int? MovementPoints;
         }
     }
 }
