@@ -4,15 +4,17 @@ using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.IO;
 using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Interrupts;
+using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.IO.Network;
 using osu.Framework.Logging;
-using osu.Framework.Testing;
 
 namespace AWBWApp.Game.Tests.Visual.Logic
 {
     public class TestSceneGameMap : BaseGameMapTestScene
     {
+        private const int default_game_id = 545975;
+
         [Resolved]
         private ReplayManager replayStorage { get; set; }
 
@@ -22,26 +24,63 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         private InterruptDialogueOverlay overlay;
         private CustomShoalGenerator generator;
 
+        private string replayString = default_game_id.ToString();
+
         public TestSceneGameMap()
         {
             Add(overlay = new InterruptDialogueOverlay());
         }
 
-        [SetUpSteps]
-        public void SetUpSteps()
+        [BackgroundDependencyLoader]
+        private void load()
         {
             generator = new CustomShoalGenerator(GetTileStorage(), GetBuildingStorage());
+        }
 
-            //ReplayController.LoadInitialGameState(498571);
-            Task.Run(DownloadReplayFile);
+        [Test]
+        public void TestLoadMapAndRun()
+        {
+            AddStep("Clear Replay", () => ReplayController.ClearReplay());
+            AddTextStep("Replay Number", "54975", x => replayString = x);
+            AddStep("Load Map", DownloadReplayFile);
+            AddUntilStep("Wait Until Map is loaded", () => ReplayController.HasLoadedReplay);
+            AddRepeatUntilStep("Finish replay", 3000, () => ReplayController.GoToNextAction(), () => !ReplayController.HasNextAction());
+        }
+
+        private int parseReplayString(string replay)
+        {
+            int replayId;
+            if (int.TryParse(replay, out replayId))
+                return replayId;
+
+            const string siteLink = "https://awbw.amarriner.com/2030.php?games_id=";
+
+            if (replay.StartsWith(siteLink))
+            {
+                var turnIndex = replay.IndexOf("&ndx=");
+
+                string possibleId;
+                if (turnIndex >= 0 && turnIndex > siteLink.Length)
+                    possibleId = replay.Substring(siteLink.Length, turnIndex - siteLink.Length);
+                else
+                    possibleId = replay.Substring(siteLink.Length);
+
+                if (int.TryParse(possibleId, out replayId))
+                    return replayId;
+
+                throw new Exception("Was unable to parse the replay in the website URL: " + replay);
+            }
+
+            throw new Exception("Could not parse replay id: " + replay + ".");
         }
 
         private async void DownloadReplayFile()
         {
-            Logger.Log($"Starting replay download.", level: LogLevel.Important);
-            var gameId = 524439;
+            var gameID = parseReplayString(replayString);
 
-            var replay = replayStorage.GetReplayData(gameId);
+            Logger.Log($"Starting replay download.", level: LogLevel.Important);
+
+            var replay = replayStorage.GetReplayData(gameID);
 
             if (replay == null)
             {
@@ -56,18 +95,18 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                     throw new Exception("Failed to login.");
 
                 Logger.Log($"Successfully logged in.", level: LogLevel.Important);
-                var link = "https://awbw.amarriner.com/replay_download.php?games_id=" + gameId;
+                var link = "https://awbw.amarriner.com/replay_download.php?games_id=" + gameID;
                 var webRequest = new WebRequest(link);
                 webRequest.AddHeader("Cookie", sessionId);
                 await webRequest.PerformAsync().ConfigureAwait(false);
 
                 if (webRequest.ResponseStream.Length <= 100)
-                    throw new Exception($"Unable to find the replay of game '{gameId}'. Is the session cookie correct?");
+                    throw new Exception($"Unable to find the replay of game '{gameID}'. Is the session cookie correct?");
 
-                replay = replayStorage.ParseAndStoreReplay(gameId, webRequest.ResponseStream);
+                replay = replayStorage.ParseAndStoreReplay(gameID, webRequest.ResponseStream);
             }
             else
-                Logger.Log($"Replay of id '{gameId}' existed locally.");
+                Logger.Log($"Replay of id '{gameID}' existed locally.");
 
             var terrainFile = mapStorage.Get(replay.ReplayInfo.MapId);
 
@@ -79,12 +118,12 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 await webRequest.PerformAsync().ConfigureAwait(false);
 
                 if (webRequest.ResponseStream.Length <= 100)
-                    throw new Exception($"Unable to find the replay of game '{gameId}'. Is the session cookie correct?");
+                    throw new Exception($"Unable to find the replay of game '{gameID}'. Is the session cookie correct?");
 
                 terrainFile = mapStorage.ParseAndStoreResponseHTML(replay.ReplayInfo.MapId, webRequest.GetResponseString());
             }
             else
-                Logger.Log($"Replay of id '{gameId}' existed locally.");
+                Logger.Log($"Replay of id '{gameID}' existed locally.");
 
             terrainFile = generator.CreateCustomShoalVersion(terrainFile);
 
