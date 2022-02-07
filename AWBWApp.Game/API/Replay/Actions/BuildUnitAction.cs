@@ -19,7 +19,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             var unit = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)jObject["newUnit"], turnData.ActiveTeam, turnData.ActivePlayerID);
 
-            Logger.Log("Missing Fog Parse.");
+            //Todo: Do we want to parse the fog.
+            //Logger.Log("Missing Fog Parse.");
             action.NewUnit = ReplayActionHelper.ParseJObjectIntoReplayUnit(unit);
             return action;
         }

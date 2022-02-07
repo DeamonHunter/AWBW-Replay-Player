@@ -263,12 +263,57 @@ namespace AWBWApp.Game.API.New
                         break;
                     }
 
-                    //Todo: Figure out how we will handle weather
-
                     case "weather_type":
+                    {
+                        var value = ReadString(ref text, ref textIndex);
+
+                        if (newTurn.Weather == null)
+                            newTurn.Weather = new ReplayWeather();
+                        newTurn.Weather.Name = value;
+                        break;
+                    }
+
                     case "weather_code":
+                    {
+                        var value = ReadString(ref text, ref textIndex);
+
+                        if (newTurn.Weather == null)
+                            newTurn.Weather = new ReplayWeather();
+                        newTurn.Weather.Code = value;
+                        break;
+                    }
+
+                    case "weather_start":
+                    {
+                        var value = ReadNullableInteger(ref text, ref textIndex);
+                        if (newTurn.Weather == null)
+                            newTurn.Weather = new ReplayWeather();
+                        newTurn.Weather.TurnStartID = value;
+                        break;
+                    }
+
                     case "win_condition":
+                    {
+                        //Todo: Is this always null? Is this just a holdover?
+                        var value = ReadString(ref text, ref textIndex);
+                        //Logger.Log($"Replay contained known but incomplete string parameter: {entry}");
+                        break;
+                    }
+
                     case "active":
+                    {
+                        var value = ReadString(ref text, ref textIndex);
+                        //Logger.Log($"Replay contained known but incomplete string parameter: {entry}");
+                        break;
+                    }
+
+                    case "capture_win":
+                    {
+                        var value = ReadInteger(ref text, ref textIndex);
+                        Logger.Log($"Replay contained known but incomplete int parameter: {entry}");
+                        break;
+                    }
+
                     case "comment":
                     case "type":
                     case "max_rating":
@@ -279,16 +324,8 @@ namespace AWBWApp.Game.API.New
                         break;
                     }
 
-                    case "weather_start":
-                    {
-                        var value = ReadNullableInteger(ref text, ref textIndex);
-                        Logger.Log($"Replay contained known but incomplete int? parameter: {entry}");
-                        break;
-                    }
-
                     case "boot_interval":
                     case "min_rating":
-                    case "capture_win":
                     case "aet_interval":
                     case "timers_initial":
                     case "timers_increment":
@@ -981,12 +1018,9 @@ namespace AWBWApp.Game.API.New
             {
                 case 's':
                 {
-#if DEBUG
                     if (text[index - 1] != ':')
                         throw new Exception("String was badly formatted.");
-#endif
                     var entryLength = ReadNextLength(ref text, ref index);
-#if DEBUG
                     if (text[index] != '"')
                         throw new Exception("String was badly formatted.");
                     if (text[index + entryLength + 1] != '"')

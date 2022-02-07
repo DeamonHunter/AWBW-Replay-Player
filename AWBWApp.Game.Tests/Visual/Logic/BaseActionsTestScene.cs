@@ -44,7 +44,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 Day = 0,
                 ActivePlayerID = 0,
                 Players = new AWBWReplayPlayerTurn[playerCount],
-                Weather = new Weather()
+                Weather = new ReplayWeather()
             };
         }
 

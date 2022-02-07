@@ -61,7 +61,7 @@ namespace AWBWApp.Game.API.Replay
 
         public bool Active; //Todo: "active" What is this?
 
-        public Weather Weather;
+        public ReplayWeather Weather;
 
         public AWBWReplayPlayerTurn[] Players;
         public List<IReplayAction> Actions;

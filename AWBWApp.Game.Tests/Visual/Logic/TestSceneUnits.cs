@@ -48,7 +48,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 Day = 0,
                 ActivePlayerID = TeamIDs[0],
                 ReplayUnit = new Dictionary<long, ReplayUnit>(),
-                Weather = new Weather(),
+                Weather = new ReplayWeather(),
                 Players = new AWBWReplayPlayerTurn[TeamIDs.Length]
             };
 
