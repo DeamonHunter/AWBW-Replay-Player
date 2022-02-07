@@ -14,7 +14,7 @@ namespace AWBWApp.Game.Helpers
         public bool IsComplete(double delta)
         {
             if (Transformable != null)
-                return Transformable.LatestTransformEndTime <= Transformable.Time.Current;
+                return Transformable.IsLoaded && Transformable.LatestTransformEndTime <= Transformable.Time.Current;
 
             Milliseconds -= delta;
             return Milliseconds <= 0;

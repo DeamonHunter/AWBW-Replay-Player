@@ -65,7 +65,10 @@ namespace AWBWApp.Game.Game.Logic
                     AutoSizeAxes = Axes.Both
                 },
                 fogOfWarDrawable = new FogOfWarDrawable(),
-                effectAnimationController = new EffectAnimationController()
+                effectAnimationController = new EffectAnimationController
+                {
+                    RelativeSizeAxes = Axes.Both
+                }
             });
         }
 

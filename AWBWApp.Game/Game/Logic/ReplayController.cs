@@ -5,7 +5,9 @@ using AWBWApp.Game.API.Replay.Actions;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI;
+using AWBWApp.Game.UI.Replay;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Screens;
 using osuTK;
 
@@ -15,6 +17,8 @@ namespace AWBWApp.Game.Game.Logic
     {
         public GameMap Map;
         public long GameID { get; private set; }
+
+        public bool HasLoadedReplay { get; private set; }
 
         public List<(int playerID, PowerAction action, int activeDay)> ActivePowers = new List<(int, PowerAction, int)>();
 
@@ -26,6 +30,7 @@ namespace AWBWApp.Game.Game.Logic
         private long selectedPlayer;
 
         private LoadingLayer loadingLayer;
+        private Container powerLayer;
         private MapCameraController camera;
 
         private readonly Queue<IEnumerator<ReplayWait>> currentOngoingActions = new Queue<IEnumerator<ReplayWait>>();
@@ -43,6 +48,11 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     MaxScale = 8,
                     MapSpace = new MarginPadding { Top = DrawableTile.HALF_BASE_SIZE.Y, Bottom = DrawableTile.HALF_BASE_SIZE.Y, Left = DrawableTile.HALF_BASE_SIZE.Y, Right = 200 + DrawableTile.HALF_BASE_SIZE.Y }, //Offset so the centered position would be half the bar to the right, and half a tile up. Chosen to look nice.
+                    RelativeSizeAxes = Axes.Both
+                },
+                powerLayer = new Container
+                {
+                    Position = new Vector2(-100, 0),
                     RelativeSizeAxes = Axes.Both
                 },
                 new ReplayBarWidget(this),
@@ -87,6 +97,16 @@ namespace AWBWApp.Game.Game.Logic
             }
         }
 
+        public void ClearReplay()
+        {
+            HasLoadedReplay = false;
+            loadingLayer.Show();
+
+            currentTurn = null;
+            currentTurnIndex = -1;
+            currentActionIndex = -1;
+        }
+
         public void LoadReplay(ReplayData replayData, ReplayMap map)
         {
             this.replayData = replayData;
@@ -96,10 +116,17 @@ namespace AWBWApp.Game.Game.Logic
             currentActionIndex = -1;
             ScheduleAfterChildren(() =>
             {
+                HasLoadedReplay = true;
                 camera.FitMapToSpace();
                 loadingLayer.Hide();
             });
         }
+
+        public bool HasNextTurn() => HasLoadedReplay && currentTurnIndex + 1 <= replayData.TurnData.Count;
+        public bool HasPreviousTurn() => HasLoadedReplay && currentTurnIndex > 0;
+
+        public bool HasNextAction() => HasLoadedReplay && (currentActionIndex + 1 <= currentTurn.Actions.Count || currentTurnIndex + 1 <= replayData.TurnData.Count);
+        public bool HasPreviousAction() => HasLoadedReplay && (currentTurnIndex > 0 || currentActionIndex > 0);
 
         public void GoToNextAction()
         {
@@ -201,6 +228,14 @@ namespace AWBWApp.Game.Game.Logic
         public void AddPowerAction(PowerAction activePower)
         {
             ActivePowers.Add((currentTurn.ActivePlayerID, activePower, currentTurn.Day));
+        }
+
+        public Drawable PlayPowerAnimation(string combatOfficer, string powerName, bool super)
+        {
+            var powerAnimation = new PowerDisplay(combatOfficer, powerName, super);
+            powerLayer.Add(powerAnimation);
+
+            return powerAnimation;
         }
 
         void checkPowers()

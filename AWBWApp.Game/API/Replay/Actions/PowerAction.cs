@@ -23,13 +23,22 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public IReplayAction ParseJObjectIntoReplayAction(JObject jObject, ReplayData replayData, TurnData turnData)
         {
-            var coName = (string)jObject["coName"];
+            var action = new PowerAction();
+            action.CombatOfficerName = (string)jObject["coName"];
             var coPower = (string)jObject["coPower"];
 
-            if (!compatibleCOs.Contains($"{coName}-{coPower}"))
-                throw new Exception($"Player executed an unknown power: {coName}-{coPower}");
+            if (coPower != "Y" && coPower != "S")
+                throw new Exception($"CO Power is of type {coPower} which is not a type this program was made to handle.");
 
-            var action = new PowerAction();
+            if (!compatibleCOs.Contains($"{action.CombatOfficerName}-{coPower}"))
+                throw new Exception($"Player executed an unknown power: {action.CombatOfficerName}-{coPower}");
+
+            if ((int)jObject["playerID"] != turnData.ActivePlayerID)
+                throw new Exception("Active player did not use the power. Is this supposed to be possible?");
+
+            action.IsSuperPower = coPower == "S";
+            action.PowerName = (string)jObject["powerName"];
+            action.LeftOverPower = (int)jObject["playersCOP"];
 
             var globalEffects = (JObject)jObject["global"];
 
@@ -38,7 +47,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 action.MovementRangeIncrease = (int)globalEffects["units_movement_points"];
                 action.SightRangeIncrease = (int)globalEffects["units_vision"];
 
-                if (coName == "Sonja")
+                if (action.CombatOfficerName == "Sonja")
                 {
                     //AWBW doesn't specify these values in Json. So we need to create the data ourselves.
                     action.CanSeeIntoHiddenTiles = true;
@@ -93,6 +102,12 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class PowerAction : IReplayAction
     {
+        public string CombatOfficerName;
+        public string PowerName;
+        public bool IsSuperPower;
+
+        public int LeftOverPower;
+
         public int MovementRangeIncrease;
         public int SightRangeIncrease;
         public bool CanSeeIntoHiddenTiles;
@@ -106,6 +121,8 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             //Todo: Show power off
             Logger.Log("Power Action animation not implemented");
+
+            yield return ReplayWait.WaitForTransformable(controller.PlayPowerAnimation(CombatOfficerName, PowerName, IsSuperPower));
 
             //Todo: How much should this do?
             controller.AddPowerAction(this);
