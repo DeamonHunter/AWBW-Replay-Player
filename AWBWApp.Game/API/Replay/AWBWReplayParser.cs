@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Text;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
 using Newtonsoft.Json.Linq;
@@ -1023,14 +1024,27 @@ namespace AWBWApp.Game.API.New
                     var entryLength = ReadNextLength(ref text, ref index);
                     if (text[index] != '"')
                         throw new Exception("String was badly formatted.");
-                    if (text[index + entryLength + 1] != '"')
+
+                    var byteCount = 0;
+                    int textCount = 0;
+
+                    while (byteCount < entryLength)
+                    {
+                        textCount++;
+                        byteCount += Encoding.UTF8.GetByteCount(text, index + textCount, 1);
+                        if (byteCount == entryLength)
+                            break;
+                    }
+
+                    var unicodeEntry = text.Substring(index + 1, textCount);
+                    index += textCount + 3;
+
+                    if (text[index - 2] != '"')
                         throw new Exception("String was badly formatted.");
-                    if (text[index + entryLength + 2] != ';')
+                    if (text[index - 1] != ';')
                         throw new Exception("String was badly formatted.");
-#endif
-                    var entry = text.Substring(index + 1, entryLength);
-                    index += entryLength + 3;
-                    return entry;
+
+                    return unicodeEntry;
                 }
 
                 case 'N':
