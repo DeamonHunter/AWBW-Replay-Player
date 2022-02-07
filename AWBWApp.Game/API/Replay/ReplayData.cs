@@ -28,8 +28,11 @@ namespace AWBWApp.Game.API.Replay
         //Unnessecary data on the Game
         //Todo: Remove when double checked
         public bool OfficialGame;
+        public MatchType Type;
         public string LeagueMatch;
         public bool TeamMatch;
+
+        public int? CaptureWinBuildingNumber;
 
         public int? MinimumRating;
         public int? MaximumRating;
@@ -48,9 +51,12 @@ namespace AWBWApp.Game.API.Replay
         public string StartDate;
         public string EndDate;
         //public string ActivityDate; //Todo: "activity_date" What is this?
+    }
 
-        public int CaptureWin; //Todo: "capture_win" What is this?
-        public bool Type; //Todo: "type" What is this?
+    public enum MatchType
+    {
+        League,
+        Normal
     }
 
     public class TurnData

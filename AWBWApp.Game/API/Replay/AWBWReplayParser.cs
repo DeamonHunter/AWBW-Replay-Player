@@ -8,6 +8,7 @@ using AWBWApp.Game.API.Replay.Actions;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Logging;
+using MatchType = AWBWApp.Game.API.Replay.MatchType;
 
 namespace AWBWApp.Game.API.New
 {
@@ -249,21 +250,6 @@ namespace AWBWApp.Game.API.New
                         break;
                     }
 
-                    case "activity_date":
-                    {
-                        /*
-                        var startDate = ReadString(ref text, ref textIndex);
-                        if (!firstTurn && replayData.GameData.ActivityDate != startDate)
-                            throw new Exception("Data 'ActivityDate' changed per turn when not expected.");
-                        replayData.GameData.ActivityDate = startDate;
-                        break;
-                        */
-
-                        //We likely don't care about the date things happened.
-                        ReadString(ref text, ref textIndex);
-                        break;
-                    }
-
                     case "weather_type":
                     {
                         var value = ReadString(ref text, ref textIndex);
@@ -297,37 +283,89 @@ namespace AWBWApp.Game.API.New
                     {
                         //Todo: Is this always null? Is this just a holdover?
                         var value = ReadString(ref text, ref textIndex);
-                        //Logger.Log($"Replay contained known but incomplete string parameter: {entry}");
                         break;
                     }
 
                     case "active":
                     {
+                        //Todo: Is this always "Y"? Is this just a holdover?
                         var value = ReadString(ref text, ref textIndex);
-                        //Logger.Log($"Replay contained known but incomplete string parameter: {entry}");
                         break;
                     }
 
                     case "capture_win":
                     {
                         var value = ReadInteger(ref text, ref textIndex);
-                        Logger.Log($"Replay contained known but incomplete int parameter: {entry}");
+
+                        int? trueValue;
+                        if (value >= 1000)
+                            trueValue = null;
+                        else
+                            trueValue = value + 2; //Todo: Is this always two? Or is it differing if a player has more than 2 buildings to start with.
+
+                        if (!firstTurn && replayData.ReplayInfo.CaptureWinBuildingNumber != trueValue)
+                            throw new Exception("Data 'CaptureWinBuildingNumber' changed per turn when not expected.");
+
+                        replayData.ReplayInfo.CaptureWinBuildingNumber = trueValue;
                         break;
                     }
 
                     case "comment":
+                    {
+                        //Todo: Is this always null? Is this just a holdover?
+                        //This may always be null do to comments not being displayed on finished matches?
+                        var value = ReadString(ref text, ref textIndex);
+                        break;
+                    }
+
                     case "type":
-                    case "max_rating":
-                    case "aet_date":
                     {
                         var value = ReadString(ref text, ref textIndex);
-                        Logger.Log($"Replay contained known but incomplete string parameter: {entry}");
+
+                        MatchType type;
+
+                        switch (value)
+                        {
+                            case "L":
+                                type = MatchType.League;
+                                break;
+
+                            case "N":
+                                type = MatchType.Normal;
+                                break;
+
+                            default:
+                                throw new Exception("Unknown Match Type: " + value);
+                        }
+
+                        if (!firstTurn && replayData.ReplayInfo.Type != type)
+                            throw new Exception("Data 'Type' changed per turn when not expected.");
+
+                        replayData.ReplayInfo.Type = type;
                         break;
                     }
 
                     case "boot_interval":
+                    {
+                        //Todo: Is this always -1? Is this just a holdover?
+                        var value = ReadInteger(ref text, ref textIndex);
+                        break;
+                    }
+
                     case "min_rating":
-                    case "aet_interval":
+                    {
+                        //Todo: Is this always 0? Is this just a holdover?
+                        var value = ReadInteger(ref text, ref textIndex);
+                        break;
+                    }
+
+                    case "max_rating":
+                    {
+                        //Todo: Is this always null? Is this just a holdover?
+                        var value = ReadNullableInteger(ref text, ref textIndex);
+                        break;
+                    }
+
                     case "timers_initial":
                     case "timers_increment":
                     case "timers_max_turn":
@@ -336,6 +374,34 @@ namespace AWBWApp.Game.API.New
                         Logger.Log($"Replay contained known but incomplete int parameter: {entry}");
                         break;
                     }
+
+                    #region Useless values
+
+                    case "aet_date":
+                    {
+                        //Describes the date at which the Auto End Turn would have finished the players turn.
+                        //We do not need this as we do not care when the players would have been booted.
+                        var value = ReadString(ref text, ref textIndex);
+                        break;
+                    }
+
+                    case "aet_interval":
+                    {
+                        //Describes the interval at which the Auto End Turn would have finished the players turn.
+                        //We do not need this as we do not care when the players would have been booted.
+                        var value = ReadInteger(ref text, ref textIndex);
+                        break;
+                    }
+
+                    case "activity_date":
+                    {
+                        //Describes the date at which the last activity was made during this turn.
+                        //We likely don't care about the date things happened.
+                        ReadString(ref text, ref textIndex);
+                        break;
+                    }
+
+                    #endregion
 
                     default:
                         throw new Exception($"Replay contained unknown entry: {entry}");
