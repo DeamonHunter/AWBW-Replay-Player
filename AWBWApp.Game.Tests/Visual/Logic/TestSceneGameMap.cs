@@ -42,18 +42,18 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         {
             AddStep("Clear Replay", () => ReplayController.ClearReplay());
             AddTextStep("Replay Number", "54975", x => replayString = x);
-            AddStep("Load Map", DownloadReplayFile);
+            AddStep("Load Map", () => Task.Run(DownloadReplayFile));
             AddUntilStep("Wait Until Map is loaded", () => ReplayController.HasLoadedReplay);
             AddRepeatUntilStep("Finish replay", 3000, () => ReplayController.GoToNextAction(), () => !ReplayController.HasNextAction());
         }
 
         private int parseReplayString(string replay)
         {
+            const string siteLink = "https://awbw.amarriner.com/2030.php?games_id=";
+
             int replayId;
             if (int.TryParse(replay, out replayId))
                 return replayId;
-
-            const string siteLink = "https://awbw.amarriner.com/2030.php?games_id=";
 
             if (replay.StartsWith(siteLink))
             {
@@ -89,7 +89,18 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 Schedule(() => overlay.Push(new PasswordInputInterrupt(taskCompletionSource)));
 
                 Logger.Log($"Pushed overlay", level: LogLevel.Important);
-                string sessionId = await taskCompletionSource.Task.ConfigureAwait(false);
+
+                string sessionId;
+
+                try
+                {
+                    sessionId = await taskCompletionSource.Task.ConfigureAwait(false);
+                }
+                catch (TaskCanceledException)
+                {
+                    Logger.Log("Logging in was cancelled. Need to abort download.");
+                    return;
+                }
 
                 if (sessionId == null)
                     throw new Exception("Failed to login.");

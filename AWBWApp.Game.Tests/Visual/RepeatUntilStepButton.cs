@@ -2,6 +2,8 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using osu.Framework.Graphics;
+using osuTK.Graphics;
 
 namespace osu.Framework.Testing.Drawables.Steps
 {
@@ -55,6 +57,13 @@ namespace osu.Framework.Testing.Drawables.Steps
 
             invocations = 0;
             updateText();
+        }
+
+        protected override void Success()
+        {
+            base.Success();
+            success = true;
+            Light.FadeColour(Color4.YellowGreen);
         }
 
         private void updateText() => base.Text = $@"{Text} {invocations}/{maximumInvocations}";

@@ -32,6 +32,7 @@ namespace AWBWApp.Game.Game.Logic
         private LoadingLayer loadingLayer;
         private Container powerLayer;
         private MapCameraController camera;
+        private ReplayBarWidget barWidget;
 
         private readonly Queue<IEnumerator<ReplayWait>> currentOngoingActions = new Queue<IEnumerator<ReplayWait>>();
 
@@ -55,7 +56,7 @@ namespace AWBWApp.Game.Game.Logic
                     Position = new Vector2(-100, 0),
                     RelativeSizeAxes = Axes.Both
                 },
-                new ReplayBarWidget(this),
+                barWidget = new ReplayBarWidget(this),
                 new ReplayPlayerList(players)
                 {
                     Anchor = Anchor.TopRight,
@@ -122,35 +123,42 @@ namespace AWBWApp.Game.Game.Logic
             });
         }
 
-        public bool HasNextTurn() => HasLoadedReplay && currentTurnIndex + 1 <= replayData.TurnData.Count;
+        public bool HasNextTurn() => HasLoadedReplay && currentTurnIndex + 1 < replayData.TurnData.Count;
         public bool HasPreviousTurn() => HasLoadedReplay && currentTurnIndex > 0;
 
-        public bool HasNextAction() => HasLoadedReplay && (currentActionIndex + 1 <= currentTurn.Actions.Count || currentTurnIndex + 1 <= replayData.TurnData.Count);
+        public bool HasNextAction() => HasLoadedReplay && (currentActionIndex + 1 < currentTurn.Actions.Count || currentTurnIndex + 1 < replayData.TurnData.Count);
         public bool HasPreviousAction() => HasLoadedReplay && (currentTurnIndex > 0 || currentActionIndex > 0);
 
         public void GoToNextAction()
         {
             completeAllActions();
 
-            if (currentActionIndex + 1 >= currentTurn.Actions.Count)
+            if (currentActionIndex < currentTurn.Actions.Count - 1)
             {
-                if (currentTurnIndex + 1 >= replayData.TurnData.Count)
-                    return; //Todo: Block Advancing more
+                currentActionIndex++;
+                var action = currentTurn.Actions[currentActionIndex];
 
+                if (action == null)
+                {
+                    GoToNextAction();
+                    return;
+                }
+
+                if (action is EndTurnActionBuilder)
+                {
+                    goToTurnWithIdx(currentTurnIndex + 1);
+                    return;
+                }
+
+                currentOngoingActions.Enqueue(action.PerformAction(this).GetEnumerator());
+            }
+            else if (currentTurnIndex < replayData.TurnData.Count - 1)
+            {
                 goToTurnWithIdx(currentTurnIndex + 1);
                 return;
             }
 
-            currentActionIndex++;
-            var action = currentTurn.Actions[currentActionIndex];
-
-            if (action == null)
-            {
-                GoToNextAction();
-                return;
-            }
-
-            currentOngoingActions.Enqueue(action.PerformAction(this).GetEnumerator());
+            barWidget.UpdateActions();
         }
 
         private void completeAllActions()
@@ -209,6 +217,7 @@ namespace AWBWApp.Game.Game.Logic
             checkPowers();
             loadingLayer.Show();
             currentTurn = replayData.TurnData[turnIdx];
+            barWidget.UpdateActions();
             Map.ScheduleUpdateToGameState(currentTurn);
             Schedule(() => loadingLayer.Hide());
         }
