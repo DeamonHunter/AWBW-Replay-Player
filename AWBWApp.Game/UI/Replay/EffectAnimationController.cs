@@ -41,28 +41,79 @@ namespace AWBWApp.Game.UI.Replay
         }
     }
 
-    public class AdjustablePlaybackTextureAnimation : TextureAnimation
+    public class AdjustableRateTextureAnimation : CompositeDrawable
     {
-        private StopwatchClock clock;
+        public TextureAnimation Animation { get; private set; }
 
-        public AdjustablePlaybackTextureAnimation(bool startAtCurrentTime)
-            : base(startAtCurrentTime)
+        private double rate;
+
+        public double Rate
         {
-            clock = new StopwatchClock(true);
-            Clock = new FramedClock(clock);
+            get => rate;
+            set
+            {
+                rate = value;
+                consumeClockTime();
+            }
         }
 
-        public void RestartAnimation(double rate)
+        private ManualClock manualClock = new ManualClock();
+
+        public AdjustableRateTextureAnimation(TextureAnimation animation)
         {
-            clock.Rate = rate;
-            Clock.ProcessFrame();
-            this.Restart();
+            Animation = animation;
+            Animation.Clock = new FramedClock(manualClock);
+            base.AddInternal(Animation);
+        }
+
+        public override IFrameBasedClock Clock
+        {
+            get => base.Clock;
+            set
+            {
+                base.Clock = value;
+                consumeClockTime();
+            }
+        }
+
+        public void RestartClockWithRate(double rate)
+        {
+            Rate = rate;
+            Animation.Restart();
+            consumeClockTime();
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            // always consume to zero out elapsed for update loop.
+            double elapsed = consumeClockTime();
+            manualClock.CurrentTime += elapsed;
+        }
+
+        private double lastConsumedTime;
+
+        protected override void Update()
+        {
+            base.Update();
+
+            double consumedTime = consumeClockTime();
+            if (Animation.IsPlaying)
+                manualClock.CurrentTime += consumedTime * rate;
+        }
+
+        private double consumeClockTime()
+        {
+            double elapsed = Time.Current - lastConsumedTime;
+            lastConsumedTime = Time.Current;
+            return elapsed;
         }
     }
 
     public class EffectAnimation : PoolableDrawable
     {
-        private AdjustablePlaybackTextureAnimation textureAnimation;
+        private AdjustableRateTextureAnimation clockController;
         private string animationPath;
 
         [Resolved]
@@ -73,9 +124,15 @@ namespace AWBWApp.Game.UI.Replay
             Anchor = Anchor.TopLeft;
             Origin = Anchor.Centre;
 
-            InternalChild = textureAnimation = new AdjustablePlaybackTextureAnimation(false)
+            var animation = new TextureAnimation(false)
             {
                 Loop = false,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre
+            };
+
+            InternalChild = clockController = new AdjustableRateTextureAnimation(animation)
+            {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre
             };
@@ -96,16 +153,16 @@ namespace AWBWApp.Game.UI.Replay
             if (texture == null)
             {
                 texture = textureStore.Get($"{path}");
-                textureAnimation.Size = texture.Size;
-                textureAnimation.DefaultFrameLength = 100;
-                textureAnimation.AddFrame(texture);
+                clockController.Animation.Size = texture.Size;
+                clockController.Animation.DefaultFrameLength = 100;
+                clockController.Animation.AddFrame(texture);
                 play(duration, startDelay);
                 return;
             }
 
-            textureAnimation.Size = texture.Size;
-            textureAnimation.DefaultFrameLength = 100;
-            textureAnimation.AddFrame(texture);
+            clockController.Animation.Size = texture.Size;
+            clockController.Animation.DefaultFrameLength = 100;
+            clockController.Animation.AddFrame(texture);
 
             int idx = 1;
 
@@ -116,10 +173,10 @@ namespace AWBWApp.Game.UI.Replay
                 if (texture == null)
                     break;
 
-                if (texture.Size != textureAnimation.Size)
+                if (texture.Size != clockController.Animation.Size)
                     throw new Exception($"Texture animation '{path}' doesn't remain the same size.");
 
-                textureAnimation.AddFrame(texture);
+                clockController.Animation.AddFrame(texture);
             }
 
             animationPath = path;
@@ -133,14 +190,14 @@ namespace AWBWApp.Game.UI.Replay
                 var alpha = Alpha;
                 this.FadeOut().Delay(startDelay).FadeTo(alpha).OnComplete(x =>
                 {
-                    textureAnimation.RestartAnimation(textureAnimation.Duration / duration);
+                    clockController.RestartClockWithRate(clockController.Animation.Duration / duration);
                     if (LifetimeEnd == double.MaxValue)
                         LifetimeEnd = Time.Current + duration;
                 });
             }
             else
             {
-                textureAnimation.RestartAnimation(textureAnimation.Duration / duration);
+                clockController.RestartClockWithRate(clockController.Animation.Duration / duration);
                 if (LifetimeEnd == double.MaxValue)
                     LifetimeEnd = Time.Current + duration;
             }
