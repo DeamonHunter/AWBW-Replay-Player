@@ -725,8 +725,8 @@
         },
         "Frames": [160, 160, 320, 160]
     },
-    "PipeRunner": {
-        "Name": "PipeRunner",
+    "Piperunner": {
+        "Name": "Piperunner",
         "AWBWId": 960900,
         "MaxFuel": 99,
         "MaxAmmo": 9,
