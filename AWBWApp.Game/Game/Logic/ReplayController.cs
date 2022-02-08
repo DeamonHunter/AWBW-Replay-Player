@@ -126,12 +126,46 @@ namespace AWBWApp.Game.Game.Logic
         public bool HasNextTurn() => HasLoadedReplay && currentTurnIndex + 1 < replayData.TurnData.Count;
         public bool HasPreviousTurn() => HasLoadedReplay && currentTurnIndex > 0;
 
-        public bool HasNextAction() => HasLoadedReplay && (currentActionIndex + 1 < currentTurn.Actions.Count || currentTurnIndex + 1 < replayData.TurnData.Count);
-        public bool HasPreviousAction() => HasLoadedReplay && (currentTurnIndex > 0 || currentActionIndex > 0);
+        public bool HasNextAction()
+        {
+            if (!HasLoadedReplay)
+                return false;
+
+            if (currentTurnIndex + 1 < replayData.TurnData.Count)
+                return true;
+
+            //Todo: Should this be allowed to be null?
+            if (currentTurn.Actions == null)
+                return false;
+
+            return currentActionIndex + 1 < currentTurn.Actions.Count;
+        }
+
+        public bool HasPreviousAction()
+        {
+            if (!HasLoadedReplay)
+                return false;
+
+            if (currentTurnIndex > 0)
+                return true;
+
+            //Todo: Should this be allowed to be null?
+            if (currentTurn.Actions == null)
+                return false;
+
+            return currentActionIndex > 0;
+        }
 
         public void GoToNextAction()
         {
             completeAllActions();
+
+            if (currentTurn.Actions == null)
+            {
+                //Todo: Maybe some notification to say no actions occured?
+                goToTurnWithIdx(currentTurnIndex + 1);
+                return;
+            }
 
             if (currentActionIndex < currentTurn.Actions.Count - 1)
             {
