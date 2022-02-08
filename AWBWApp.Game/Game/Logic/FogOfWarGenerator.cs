@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.Unit;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Primitives;
 
@@ -20,29 +22,39 @@ namespace AWBWApp.Game.Game.Logic
             };
         }
 
-        public void ResetFog()
+        public void ClearFog(bool makeFoggy, bool triggerChange)
         {
             var fogArray = FogOfWar.Value;
 
-            for (int x = 0; x < gameMap.MapSize.X; x++)
+            if (!makeFoggy)
             {
-                for (int y = 0; y < gameMap.MapSize.Y; y++)
-                    fogArray[x, y] = true;
+                for (int x = 0; x < gameMap.MapSize.X; x++)
+                {
+                    for (int y = 0; y < gameMap.MapSize.Y; y++)
+                        fogArray[x, y] = true;
+                }
             }
+            else
+                Array.Clear(fogArray, 0, fogArray.Length);
 
-            FogOfWar.TriggerChange();
+            if (triggerChange)
+                FogOfWar.TriggerChange();
         }
 
-        public void GenerateFogForPlayer(int player, int rangeIncrease, bool canSeeIntoHiddenTiles)
+        public void GenerateFogForPlayer(int player, int rangeIncrease, bool canSeeIntoHiddenTiles, bool resetFog = true) => generateFog(gameMap.GetDrawableBuildingsForPlayer(player), gameMap.GetDrawableUnitsFromPlayer(player), rangeIncrease, canSeeIntoHiddenTiles, resetFog);
+
+        private void generateFog(IEnumerable<DrawableBuilding> buildings, IEnumerable<DrawableUnit> units, int rangeIncrease, bool canSeeIntoHiddenTiles, bool resetFog = true)
         {
             var fogArray = FogOfWar.Value;
-            Array.Clear(fogArray, 0, fogArray.Length);
+
+            if (resetFog)
+                Array.Clear(fogArray, 0, fogArray.Length);
 
             //All the buildings the player owns shows its own tile.
-            foreach (var drawableBuilding in gameMap.GetDrawableBuildingsForPlayer(player))
+            foreach (var drawableBuilding in buildings)
                 fogArray[drawableBuilding.MapPosition.X, drawableBuilding.MapPosition.Y] = true;
 
-            foreach (var drawableUnit in gameMap.GetDrawableUnitsFromPlayer(player))
+            foreach (var drawableUnit in units)
             {
                 var visionRange = drawableUnit.UnitData.Vision;
 

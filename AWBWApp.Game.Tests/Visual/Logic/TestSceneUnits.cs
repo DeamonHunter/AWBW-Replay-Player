@@ -77,7 +77,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                     turn.ReplayUnit.Add(unit.ID, unit);
                 }
             }
-            ReplayController.Map.ScheduleUpdateToGameState(turn);
+            ReplayController.Map.ScheduleUpdateToGameState(turn, () => ReplayController.Map.ClearFog(false, true));
         }
     }
 }

@@ -73,9 +73,13 @@ namespace AWBWApp.Game.Game.Logic
             });
         }
 
-        public void ScheduleInitialGameState(ReplayData gameState, ReplayMap map)
+        public void ScheduleInitialGameState(ReplayData gameState, ReplayMap map, Action postUpdateAction)
         {
-            Schedule(() => SetToInitialGameState(gameState, map));
+            Schedule(() =>
+            {
+                SetToInitialGameState(gameState, map);
+                postUpdateAction?.Invoke();
+            });
         }
 
         void SetToInitialGameState(ReplayData gameState, ReplayMap map)
@@ -148,8 +152,6 @@ namespace AWBWApp.Game.Game.Logic
             fogOfWarDrawable.NewStart(this, fogOfWarGenerator);
 
             AutoSizeAxes = Axes.Both;
-
-            UpdateFogOfWar(gameState.TurnData[0].ActivePlayerID, 0, false); //Todo: CO range increases
             effectAnimationController.Size = new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y);
         }
 
@@ -169,9 +171,13 @@ namespace AWBWApp.Game.Game.Logic
         public static Vector2 GetDrawablePositionForTopOfTile(Vector2I tilePos) => new Vector2(tilePos.X * DrawableTile.BASE_SIZE.X, tilePos.Y * DrawableTile.BASE_SIZE.Y - 1);
         public static Vector2 GetDrawablePositionForBottomOfTile(Vector2I tilePos) => new Vector2(tilePos.X * DrawableTile.BASE_SIZE.X, (tilePos.Y + 1) * DrawableTile.BASE_SIZE.Y - 1);
 
-        public void ScheduleUpdateToGameState(TurnData gameState)
+        public void ScheduleUpdateToGameState(TurnData gameState, Action postUpdateAction)
         {
-            Schedule(() => updateToGameState(gameState));
+            Schedule(() =>
+            {
+                updateToGameState(gameState);
+                postUpdateAction?.Invoke();
+            });
         }
 
         Vector2I GetTerrainSize(Dictionary<int, Dictionary<int, AWBWTile>> tiles)
@@ -232,11 +238,10 @@ namespace AWBWApp.Game.Game.Logic
                 units.Remove(unit.Key);
                 unitsDrawable.Remove(unit.Value);
             }
-
-            UpdateFogOfWar(gameState.ActivePlayerID, 0, false); //Todo: CO Range Increases
         }
 
-        public void UpdateFogOfWar(int playerId, int rangeIncrease, bool canSeeIntoHiddenTiles) => fogOfWarGenerator.GenerateFogForPlayer(playerId, rangeIncrease, canSeeIntoHiddenTiles);
+        public void ClearFog(bool makeFoggy, bool triggerChange) => fogOfWarGenerator.ClearFog(makeFoggy, triggerChange);
+        public void UpdateFogOfWar(int playerId, int rangeIncrease, bool canSeeIntoHiddenTiles, bool resetFog = true) => fogOfWarGenerator.GenerateFogForPlayer(playerId, rangeIncrease, canSeeIntoHiddenTiles, resetFog);
 
         public DrawableUnit AddUnit(ReplayUnit unit)
         {

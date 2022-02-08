@@ -111,7 +111,7 @@ namespace AWBWApp.Game.Game.Logic
         public void LoadReplay(ReplayData replayData, ReplayMap map)
         {
             this.replayData = replayData;
-            Map.ScheduleInitialGameState(this.replayData, map);
+            Map.ScheduleInitialGameState(this.replayData, map, UpdateFogOfWar);
             currentTurn = replayData.TurnData[0];
             currentTurnIndex = 0;
             currentActionIndex = -1;
@@ -218,15 +218,30 @@ namespace AWBWApp.Game.Game.Logic
             loadingLayer.Show();
             currentTurn = replayData.TurnData[turnIdx];
             barWidget.UpdateActions();
-            Map.ScheduleUpdateToGameState(currentTurn);
+            Map.ScheduleUpdateToGameState(currentTurn, UpdateFogOfWar);
             Schedule(() => loadingLayer.Hide());
         }
 
         public void UpdateFogOfWar()
         {
-            var (playerID, action, activeDay) = ActivePowers.FirstOrDefault(x => x.playerID == currentTurn.ActivePlayerID);
+            if (!currentTurn.ActiveTeam.IsNullOrEmpty())
+            {
+                Map.ClearFog(true, false);
 
-            Map.UpdateFogOfWar(currentTurn.ActivePlayerID, action?.SightRangeIncrease ?? 0, action?.CanSeeIntoHiddenTiles ?? false);
+                foreach (var player in replayData.ReplayInfo.Players)
+                {
+                    if (player.Value.TeamName != currentTurn.ActiveTeam)
+                        continue;
+
+                    var (playerID, action, activeDay) = ActivePowers.FirstOrDefault(x => x.playerID == player.Value.ID);
+                    Map.UpdateFogOfWar(player.Value.ID, action?.SightRangeIncrease ?? 0, action?.CanSeeIntoHiddenTiles ?? false, false);
+                }
+            }
+            else
+            {
+                var (playerID, action, activeDay) = ActivePowers.FirstOrDefault(x => x.playerID == currentTurn.ActivePlayerID);
+                Map.UpdateFogOfWar(currentTurn.ActivePlayerID, action?.SightRangeIncrease ?? 0, action?.CanSeeIntoHiddenTiles ?? false);
+            }
         }
 
         public void AddPowerAction(PowerAction activePower)
