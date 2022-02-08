@@ -67,7 +67,8 @@ namespace AWBWApp.Game.Game.Logic
                 fogOfWarDrawable = new FogOfWarDrawable(),
                 effectAnimationController = new EffectAnimationController
                 {
-                    RelativeSizeAxes = Axes.Both
+                    Origin = Anchor.TopLeft,
+                    Anchor = Anchor.TopLeft
                 }
             });
         }
@@ -147,9 +148,9 @@ namespace AWBWApp.Game.Game.Logic
             fogOfWarDrawable.NewStart(this, fogOfWarGenerator);
 
             AutoSizeAxes = Axes.Both;
-            effectAnimationController.Size = gameBoardDrawable.Size;
 
             UpdateFogOfWar(gameState.TurnData[0].ActivePlayerID, 0, false); //Todo: CO range increases
+            effectAnimationController.Size = new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y);
         }
 
         public long? GetPlayerIDFromCountryID(int countryID)

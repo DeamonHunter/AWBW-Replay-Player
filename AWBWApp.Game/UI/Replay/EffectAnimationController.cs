@@ -70,7 +70,7 @@ namespace AWBWApp.Game.UI.Replay
 
         public EffectAnimation()
         {
-            Anchor = Anchor.Centre;
+            Anchor = Anchor.TopLeft;
             Origin = Anchor.Centre;
 
             InternalChild = textureAnimation = new AdjustablePlaybackTextureAnimation(false)

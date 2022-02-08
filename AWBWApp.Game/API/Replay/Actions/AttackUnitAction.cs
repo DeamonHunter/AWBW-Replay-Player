@@ -135,8 +135,6 @@ namespace AWBWApp.Game.API.Replay.Actions
         public EffectAnimation PlayAttackAnimation(ReplayController controller, Vector2I start, Vector2I end, DrawableUnit attacker)
         {
             var effect = controller.Map.PlayEffect("Effects/Target", 100, start);
-            effect.Anchor = Anchor.Centre;
-            effect.Origin = Anchor.Centre;
             effect.DelayUntilTransformsFinished().AddDelayDependingOnDifferenceBetweenEndTimes(effect, attacker)
                   .MoveTo(GameMap.GetDrawablePositionForBottomOfTile(start) + DrawableTile.HALF_BASE_SIZE).FadeTo(0.5f).ScaleTo(0.5f)
                   .FadeTo(1, 250, Easing.In).MoveTo(GameMap.GetDrawablePositionForBottomOfTile(end) + DrawableTile.HALF_BASE_SIZE, 400, Easing.In).ScaleTo(1, 600, Easing.OutBounce).RotateTo(180, 400).Then().Expire();
