@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using AWBWApp.Game.API.Replay.Actions;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -26,10 +25,7 @@ namespace AWBWApp.Game.API.Replay
             IReplayActionBuilder actionBuilder;
 
             if (!actionBuilders.TryGetValue(action, out actionBuilder))
-            {
-                return new EmptyAction();
                 throw new Exception($"Unknown replay action type: {action}\nJson String:\n{jObject.ToString(Formatting.Indented)}");
-            }
 
             return actionBuilder.ParseJObjectIntoReplayAction(jObject, replayData, turnData);
         }

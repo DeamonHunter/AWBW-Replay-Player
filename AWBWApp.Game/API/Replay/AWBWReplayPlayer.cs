@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using osuTK.Graphics;
 
 namespace AWBWApp.Game.API.Replay
@@ -10,17 +11,13 @@ namespace AWBWApp.Game.API.Replay
 
         public string TeamName;
         public int CountryId;
-        public int COId;
-        public int TurnOrderIndex;
-        public bool TakenTurn; //Todo: Figure out "turn"
 
-        public string Email;
+        public HashSet<int> COsUsedByPlayer = new HashSet<int>();
+
+        public int ReplayIndex;
+        public int TurnOrder;
+
         public string UniqueId; //Todo: Figure out "uniq_id"
-        public string EmailPress; //Todo: Figure out "emailpress"
-        public string Signature; //Todo: Figure out "signature"
-
-        public string LastRead; //Todo: Figure out "uniq_id"
-        public string LastReadBroadcasts; //Todo: Figure out "uniq_id"
 
         public string CountryCode() =>
             CountryId switch
@@ -35,17 +32,15 @@ namespace AWBWApp.Game.API.Replay
                 8 => "bd",
                 9 => "ab",
                 10 => "js",
-                11 => "ci",
-                12 => "pc",
-                13 => "tg",
-                14 => "pl",
-                15 => "ar",
-                16 => "wn",
 
                 //These IDs are weird. Likely because of legacy stuff.
+
+                16 => "ci",
                 17 => "pc",
+                19 => "tg",
                 20 => "pl",
                 21 => "ar",
+                22 => "wn",
                 _ => throw new InvalidOperationException("Country ID must be between 1 and 16 inclusively.")
             };
 
@@ -80,8 +75,27 @@ namespace AWBWApp.Game.API.Replay
     {
         public int ID; //Just to make sure things stay the same
         public int Funds;
-        public int COPower;
-        public string COPowerOn;
+
+        public int ActiveCOId;
+        public int Power;
+        public int? RequiredPowerForNormal; //This changes every time we use a power.
+        public int? RequiredPowerForSuper; //This changes every time we use a power.
+
+        public int? TagPower;
+        public int? TagRequiredPowerForNormal; //This changes every time we use a power.
+        public int? TagRequiredPowerForSuper; //This changes every time we use a power.
+
+        public ActiveCOPowers ActiveCOPowers;
         public bool Eliminated;
+    }
+
+    [Flags]
+    public enum ActiveCOPowers
+    {
+        None = 0,
+        Normal = 1 << 0,
+        Super = 1 << 1,
+        TagNormal = 1 << 2,
+        TagSuper = 1 << 3,
     }
 }

@@ -12,8 +12,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 
             //Create some basic players
 
-            replayData.ReplayInfo.Players = new AWBWReplayPlayer[playerCount];
-            replayData.ReplayInfo.PlayerIds = new Dictionary<int, int>();
+            replayData.ReplayInfo.Players = new Dictionary<int, AWBWReplayPlayer>(playerCount);
 
             for (int i = 0; i < playerCount; i++)
             {
@@ -24,15 +23,14 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                     ID = i
                 };
 
-                replayData.ReplayInfo.PlayerIds.Add(i, i);
-                replayData.ReplayInfo.Players[i] = player;
+                replayData.ReplayInfo.Players.Add(player.ID, player);
             }
 
             replayData.TurnData = new List<TurnData>();
             return replayData;
         }
 
-        protected TurnData CreateBasicTurnData(int playerCount)
+        protected TurnData CreateBasicTurnData()
         {
             return new TurnData
             {
@@ -43,7 +41,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 CoPowers = new Dictionary<int, int>(),
                 Day = 0,
                 ActivePlayerID = 0,
-                Players = new AWBWReplayPlayerTurn[playerCount],
+                Players = new Dictionary<int, AWBWReplayPlayerTurn>(),
                 Weather = new ReplayWeather()
             };
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.API.Replay
@@ -17,8 +18,7 @@ namespace AWBWApp.Game.API.Replay
         public int CreatorId;
 
         public int MapId;
-        public Dictionary<int, int> PlayerIds;
-        public AWBWReplayPlayer[] Players;
+        public Dictionary<int, AWBWReplayPlayer> Players;
 
         public int FundsPerBuilding;
         public int StartingFunds;
@@ -34,23 +34,9 @@ namespace AWBWApp.Game.API.Replay
 
         public int? CaptureWinBuildingNumber;
 
-        public int? MinimumRating;
-        public int? MaximumRating;
-
-        public int StartingTimer;
-        public int AdditionalTimerPerTurn;
-        public int MaximumTurnTime;
-
-        public string Comment;
-        public int BootInterval;
-
-        public int AETInterval; //Todo: "aet_interval" What is this?
-        public string AETDate; //Todo: "aet_date" What is this?
-
         //Unknown if this data is per turn or not
-        public string StartDate;
-        public string EndDate;
-        //public string ActivityDate; //Todo: "activity_date" What is this?
+        public DateTime StartDate;
+        public DateTime EndDate;
     }
 
     public enum MatchType
@@ -62,14 +48,14 @@ namespace AWBWApp.Game.API.Replay
     public class TurnData
     {
         public int Day;
-        public int ActivePlayerID;
+        public int ActivePlayerID = -1;
         public string ActiveTeam;
 
         public bool Active; //Todo: "active" What is this?
 
         public ReplayWeather Weather;
 
-        public AWBWReplayPlayerTurn[] Players;
+        public Dictionary<int, AWBWReplayPlayerTurn> Players;
         public List<IReplayAction> Actions;
 
         public Dictionary<int, int> CoPowers;
@@ -77,6 +63,9 @@ namespace AWBWApp.Game.API.Replay
         //Should these be ID based?
         public Dictionary<Vector2I, ReplayBuilding> Buildings;
         public Dictionary<long, ReplayUnit> ReplayUnit;
+
+        //Todo: Do we need to handle this as a special case on turn start? Replay 554175
+        public bool DrawWasAccepted;
     }
 
     public class Weather

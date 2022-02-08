@@ -222,11 +222,6 @@ namespace AWBWApp.Game.Game.Logic
             Schedule(() => loadingLayer.Hide());
         }
 
-        public string GetCountryCode(int playerId)
-        {
-            return replayData.ReplayInfo.Players[replayData.ReplayInfo.PlayerIds[playerId]].CountryCode();
-        }
-
         public void UpdateFogOfWar()
         {
             var (playerID, action, activeDay) = ActivePowers.FirstOrDefault(x => x.playerID == currentTurn.ActivePlayerID);

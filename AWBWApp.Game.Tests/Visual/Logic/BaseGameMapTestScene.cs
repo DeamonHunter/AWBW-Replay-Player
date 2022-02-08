@@ -80,7 +80,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         {
             var data = new ReplayData();
 
-            data.ReplayInfo.Players = new AWBWReplayPlayer[0];
+            data.ReplayInfo.Players = new Dictionary<int, AWBWReplayPlayer>();
             data.TurnData = new List<TurnData>
             {
                 new TurnData

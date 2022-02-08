@@ -82,12 +82,8 @@ namespace AWBWApp.Game.Game.Logic
             MapSize = map.Size;
 
             Players.Clear();
-
-            for (int i = 0; i < gameState.ReplayInfo.Players.Length; i++)
-            {
-                var player = gameState.ReplayInfo.Players[i];
-                Players.Add(player.ID, new PlayerInfo(player));
-            }
+            foreach (var player in gameState.ReplayInfo.Players)
+                Players.Add(player.Key, new PlayerInfo(player.Value));
 
             //Calculate the map size as this isn't given by the api
             //Todo: Check buildings
@@ -141,7 +137,7 @@ namespace AWBWApp.Game.Game.Logic
                 foreach (var unit in replayUnits)
                 {
                     var unitData = unitStorage.GetUnitByCode(unit.Value.UnitName);
-                    var drawableUnit = new DrawableUnit(unitData, unit.Value, gameState.ReplayInfo.Players[gameState.ReplayInfo.PlayerIds[unit.Value.PlayerID.Value]].CountryCode());
+                    var drawableUnit = new DrawableUnit(unitData, unit.Value, gameState.ReplayInfo.Players[unit.Value.PlayerID.Value].CountryCode());
                     units.Add(unit.Value.ID, drawableUnit);
                     unitsDrawable.Add(drawableUnit);
                 }

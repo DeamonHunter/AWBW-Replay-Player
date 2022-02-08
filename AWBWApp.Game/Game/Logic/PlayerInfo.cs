@@ -7,12 +7,14 @@ namespace AWBWApp.Game.Game.Logic
         public int TurnNumber;
         public int CountryID;
         public string CountryCode;
+        public string Team;
 
         public PlayerInfo(AWBWReplayPlayer player)
         {
-            TurnNumber = player.TurnOrderIndex;
+            TurnNumber = player.TurnOrder;
             CountryID = player.CountryId;
             CountryCode = player.CountryCode();
+            Team = player.TeamName;
         }
     }
 }

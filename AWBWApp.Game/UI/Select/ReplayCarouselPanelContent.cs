@@ -26,9 +26,9 @@ namespace AWBWApp.Game.UI.Select
         {
             var replayInfo = carouselReplay.ReplayInfo;
 
-            var playersDrawables = new Drawable[replayInfo.Players.Length * 2 - 1];
+            var playersDrawables = new Drawable[replayInfo.Players.Count * 2 - 1];
 
-            for (int i = 0; i < replayInfo.Players.Length; i++)
+            for (int i = 0; i < replayInfo.Players.Count; i++)
             {
                 var player = replayInfo.Players[i];
 
@@ -39,7 +39,7 @@ namespace AWBWApp.Game.UI.Select
                     Font = FontUsage.Default.With(size: 15, italics: true)
                 };
 
-                if (i == replayInfo.Players.Length - 1)
+                if (i == replayInfo.Players.Count - 1)
                     break;
 
                 playersDrawables[i * 2 + 1] = new SpriteText

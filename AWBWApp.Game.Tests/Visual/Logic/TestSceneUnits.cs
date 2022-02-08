@@ -18,12 +18,12 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         {
             UnitIds = GetUnitStorage().GetAllUnitIds();
 
-            var turnData = CreateBasicTurnData(TeamIDs.Length);
+            var turnData = CreateBasicTurnData();
             var replayData = new ReplayData
             {
                 TurnData = new List<TurnData> { turnData }
             };
-            replayData.ReplayInfo.Players = new AWBWReplayPlayer[TeamIDs.Length];
+            replayData.ReplayInfo.Players = new Dictionary<int, AWBWReplayPlayer>(TeamIDs.Length);
 
             for (int i = 0; i < TeamIDs.Length; i++)
             {
@@ -49,7 +49,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 ActivePlayerID = TeamIDs[0],
                 ReplayUnit = new Dictionary<long, ReplayUnit>(),
                 Weather = new ReplayWeather(),
-                Players = new AWBWReplayPlayerTurn[TeamIDs.Length]
+                Players = new Dictionary<int, AWBWReplayPlayerTurn>(TeamIDs.Length)
             };
 
             var players = new AWBWReplayPlayer[TeamIDs.Length];

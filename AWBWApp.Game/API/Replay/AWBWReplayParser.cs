@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
@@ -28,6 +30,8 @@ namespace AWBWApp.Game.API.New
 
         public ReplayData ParseReplay(Stream archiveStream)
         {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
             var zipArchive = new ZipArchive(archiveStream, ZipArchiveMode.Read);
 
             //As of 18/11/2021, replays contain 2 files. One is the gameID and the other has an 'a' appended to the start.
@@ -53,6 +57,8 @@ namespace AWBWApp.Game.API.New
 
             var state = ReadBaseReplayData(ref gameStateFile);
             ReadReplayActions(state, ref replayFile);
+            stopWatch.Stop();
+            Logger.Log("Replay parsing took: " + stopWatch.Elapsed);
             return state;
         }
 
@@ -86,6 +92,8 @@ namespace AWBWApp.Game.API.New
 
             if (text[textIndex++] != '{')
                 throw new Exception("Game State file does not start correctly.");
+
+            #region TurnData parsing
 
             for (int i = 0; i < entriesCount; i++)
             {
@@ -235,18 +243,44 @@ namespace AWBWApp.Game.API.New
                     case "start_date":
                     {
                         var startDate = ReadString(ref text, ref textIndex);
-                        if (!firstTurn && replayData.ReplayInfo.StartDate != startDate)
+
+                        var dateTime = DateTime.Parse(startDate);
+                        if (!firstTurn && replayData.ReplayInfo.StartDate != dateTime)
                             throw new Exception("Data 'StartDate' changed per turn when not expected.");
-                        replayData.ReplayInfo.StartDate = startDate;
+                        replayData.ReplayInfo.StartDate = dateTime;
+                        break;
+                    }
+
+                    case "activity_date":
+                    {
+                        //Describes the date at which the last activity was made during this turn.
+                        //Is useful as an effective end date when 'end_date' doesn't specify a time.
+
+                        var activityDate = ReadString(ref text, ref textIndex);
+
+                        if (activityDate != null)
+                        {
+                            var dateTime = DateTime.Parse(activityDate);
+
+                            if (dateTime > replayData.ReplayInfo.EndDate)
+                                replayData.ReplayInfo.EndDate = dateTime;
+                        }
                         break;
                     }
 
                     case "end_date":
                     {
-                        var startDate = ReadString(ref text, ref textIndex);
-                        if (!firstTurn && replayData.ReplayInfo.EndDate != startDate)
-                            throw new Exception("Data 'EndDate' changed per turn when not expected.");
-                        replayData.ReplayInfo.EndDate = startDate;
+                        //This is likely always null. But we will attempt to parse it incase.
+
+                        var endDate = ReadString(ref text, ref textIndex);
+
+                        if (endDate != null)
+                        {
+                            var dateTime = DateTime.Parse(endDate);
+
+                            if (dateTime > replayData.ReplayInfo.EndDate)
+                                replayData.ReplayInfo.EndDate = dateTime;
+                        }
                         break;
                     }
 
@@ -334,6 +368,10 @@ namespace AWBWApp.Game.API.New
                                 type = MatchType.Normal;
                                 break;
 
+                            case "A":
+                                type = MatchType.Normal;
+                                break;
+
                             default:
                                 throw new Exception("Unknown Match Type: " + value);
                         }
@@ -345,35 +383,7 @@ namespace AWBWApp.Game.API.New
                         break;
                     }
 
-                    case "boot_interval":
-                    {
-                        //Todo: Is this always -1? Is this just a holdover?
-                        var value = ReadInteger(ref text, ref textIndex);
-                        break;
-                    }
-
-                    case "min_rating":
-                    {
-                        //Todo: Is this always 0? Is this just a holdover?
-                        var value = ReadInteger(ref text, ref textIndex);
-                        break;
-                    }
-
-                    case "max_rating":
-                    {
-                        //Todo: Is this always null? Is this just a holdover?
-                        var value = ReadNullableInteger(ref text, ref textIndex);
-                        break;
-                    }
-
-                    case "timers_initial":
-                    case "timers_increment":
-                    case "timers_max_turn":
-                    {
-                        var value = ReadInteger(ref text, ref textIndex);
-                        Logger.Log($"Replay contained known but incomplete int parameter: {entry}");
-                        break;
-                    }
+                    //Todo: Do we want to display these values as part of extended match info?
 
                     #region Useless values
 
@@ -381,7 +391,7 @@ namespace AWBWApp.Game.API.New
                     {
                         //Describes the date at which the Auto End Turn would have finished the players turn.
                         //We do not need this as we do not care when the players would have been booted.
-                        var value = ReadString(ref text, ref textIndex);
+                        ReadString(ref text, ref textIndex);
                         break;
                     }
 
@@ -393,11 +403,48 @@ namespace AWBWApp.Game.API.New
                         break;
                     }
 
-                    case "activity_date":
+                    case "boot_interval":
                     {
-                        //Describes the date at which the last activity was made during this turn.
-                        //We likely don't care about the date things happened.
-                        ReadString(ref text, ref textIndex);
+                        //Todo: Is this always -1? Is this just a holdover?
+                        var value = ReadInteger(ref text, ref textIndex);
+                        break;
+                    }
+
+                    case "max_rating":
+                    {
+                        //Todo: Is this always null? Is this just a holdover?
+                        var value = ReadNullableInteger(ref text, ref textIndex);
+                        break;
+                    }
+
+                    case "min_rating":
+                    {
+                        //Todo: Is this always 0? Is this just a holdover?
+                        var value = ReadInteger(ref text, ref textIndex);
+                        break;
+                    }
+
+                    case "timers_initial":
+                    {
+                        //Describes the initial amount of time the player has per turn in seconds
+                        //Not useful for replaying the game.
+                        ReadInteger(ref text, ref textIndex);
+                        break;
+                    }
+
+                    case "timers_increment":
+                    {
+                        //Describes the extra amount of time the player has per turn in seconds
+                        //Not useful for replaying the game.
+                        ReadInteger(ref text, ref textIndex);
+                        break;
+                    }
+
+                    case "timers_max_turn":
+                    {
+                        //Describes the max amount of time a single turn can take up.
+                        //Not useful for replaying the game.
+                        ReadInteger(ref text, ref textIndex);
                         break;
                     }
 
@@ -408,10 +455,12 @@ namespace AWBWApp.Game.API.New
                 }
             }
 
-            newTurn.ActiveTeam = replayData.ReplayInfo.Players[replayData.ReplayInfo.PlayerIds[newTurn.ActivePlayerID]].TeamName;
+            #endregion
 
             if (text[textIndex++] != '}')
                 throw new Exception("Player data does not end correctly.");
+
+            newTurn.ActiveTeam = replayData.ReplayInfo.Players[newTurn.ActivePlayerID].TeamName;
         }
 
         void ReadPlayers(ref string text, ref int textIndex, ReplayData data, TurnData turnData, bool firstTurn)
@@ -423,15 +472,8 @@ namespace AWBWApp.Game.API.New
 
             var numberOfPlayers = ReadNextLength(ref text, ref textIndex);
 
-            if (firstTurn)
-            {
-                data.ReplayInfo.Players = new AWBWReplayPlayer[numberOfPlayers];
-                data.ReplayInfo.PlayerIds = new Dictionary<int, int>();
-            }
-            else if (data.ReplayInfo.Players.Length != numberOfPlayers)
-                throw new Exception("Number of players changed?");
-
-            turnData.Players = new AWBWReplayPlayerTurn[numberOfPlayers];
+            data.ReplayInfo.Players ??= new Dictionary<int, AWBWReplayPlayer>(numberOfPlayers);
+            turnData.Players = new Dictionary<int, AWBWReplayPlayerTurn>();
 
             if (text[textIndex++] != '{')
                 throw new Exception("Expected an array start for player data.");
@@ -448,16 +490,12 @@ namespace AWBWApp.Game.API.New
 
                 AWBWReplayPlayer playerData;
 
-                if (data.ReplayInfo.Players[playerIndex] == null)
-                {
-                    playerData = new AWBWReplayPlayer();
-                    data.ReplayInfo.Players[playerIndex] = playerData;
-                }
+                //This makes this slightly awkward but the benefits of using a dictionary tend to outway this awkwardness.
+                if (!firstTurn)
+                    playerData = Enumerable.First(data.ReplayInfo.Players, x => x.Value.ReplayIndex == playerIndex).Value;
                 else
-                    playerData = data.ReplayInfo.Players[playerIndex];
-
+                    playerData = new AWBWReplayPlayer { ReplayIndex = playerIndex };
                 var playerDataTurn = new AWBWReplayPlayerTurn();
-                turnData.Players[playerIndex] = playerDataTurn;
 
                 if (text[textIndex++] != '{')
                     throw new Exception("Player data does not start correctly.");
@@ -475,7 +513,6 @@ namespace AWBWApp.Game.API.New
                                 throw new Exception("Player 'id' changed per turn when not expected.");
                             playerData.ID = id;
                             playerDataTurn.ID = id;
-                            data.ReplayInfo.PlayerIds[id] = playerIndex;
                             break;
                         }
 
@@ -509,9 +546,54 @@ namespace AWBWApp.Game.API.New
                         case "co_id":
                         {
                             var id = ReadInteger(ref text, ref textIndex);
-                            if (!firstTurn && playerData.COId != id)
-                                throw new Exception("Player 'co_id' changed per turn when not expected.");
-                            playerData.COId = id;
+                            if (firstTurn)
+                                playerData.COsUsedByPlayer.Add(id);
+                            else if (!playerData.COsUsedByPlayer.Contains(id))
+                                throw new Exception("Player's COs changed mid match?");
+
+                            playerDataTurn.ActiveCOId = id;
+                            break;
+                        }
+
+                        case "tags_co_id":
+                        {
+                            var id = ReadNullableInteger(ref text, ref textIndex);
+
+                            if (id != null)
+                            {
+                                if (firstTurn)
+                                    playerData.COsUsedByPlayer.Add(id.Value);
+                                else if (!playerData.COsUsedByPlayer.Contains(id.Value))
+                                    throw new Exception("Player's COs changed mid match?");
+                            }
+                            break;
+                        }
+
+                        case "co_max_power":
+                        {
+                            var powerRequired = ReadNullableInteger(ref text, ref textIndex);
+                            playerDataTurn.RequiredPowerForNormal = powerRequired;
+                            break;
+                        }
+
+                        case "co_max_spower":
+                        {
+                            var powerRequired = ReadNullableInteger(ref text, ref textIndex);
+                            playerDataTurn.RequiredPowerForSuper = powerRequired;
+                            break;
+                        }
+
+                        case "tags_co_max_power":
+                        {
+                            var powerRequired = ReadNullableInteger(ref text, ref textIndex);
+                            playerDataTurn.TagRequiredPowerForNormal = powerRequired;
+                            break;
+                        }
+
+                        case "tags_co_max_spower":
+                        {
+                            var powerRequired = ReadNullableInteger(ref text, ref textIndex);
+                            playerDataTurn.TagRequiredPowerForSuper = powerRequired;
                             break;
                         }
 
@@ -533,71 +615,181 @@ namespace AWBWApp.Game.API.New
                         case "co_power":
                         {
                             var powerPoints = ReadInteger(ref text, ref textIndex);
-                            playerDataTurn.COPower = powerPoints;
+                            playerDataTurn.Power = powerPoints;
+                            break;
+                        }
+
+                        case "tags_co_power":
+                        {
+                            var powerPoints = ReadNullableInteger(ref text, ref textIndex);
+                            playerDataTurn.TagPower = powerPoints;
                             break;
                         }
 
                         case "co_power_on":
                         {
                             var powerActive = ReadString(ref text, ref textIndex);
-                            playerDataTurn.COPowerOn = powerActive;
+
+                            //Todo: See if this changes for Tag
+                            switch (powerActive)
+                            {
+                                case "N":
+                                    playerDataTurn.ActiveCOPowers = ActiveCOPowers.None;
+                                    break;
+
+                                case "Y":
+                                    playerDataTurn.ActiveCOPowers = ActiveCOPowers.Normal;
+                                    break;
+
+                                case "S":
+                                    playerDataTurn.ActiveCOPowers = ActiveCOPowers.Super;
+                                    break;
+
+                                default:
+                                    throw new Exception("Unknown power: " + powerActive); //Todo: Do Tag CO's trigger this.
+                            }
+
                             break;
                         }
 
                         case "order":
                         {
                             var turnIndex = ReadInteger(ref text, ref textIndex);
-                            if (!firstTurn && playerData.TurnOrderIndex != turnIndex)
+                            if (!firstTurn && playerData.TurnOrder != turnIndex)
                                 throw new Exception("Player 'order' changed per turn when not expected.");
-                            playerData.TurnOrderIndex = turnIndex;
+                            playerData.TurnOrder = turnIndex;
                             break;
                         }
 
-                        case "turn":
-                        case "email":
-                        case "last_read":
-                        case "last_read_broadcasts":
-                        case "emailpress":
-                        case "signature":
                         case "accept_draw":
-                        case "co_image":
-                        case "turn_start":
-                        case "tags_co_id":
-                        case "tags_co_power":
-                        case "tags_co_max_power":
-                        case "tags_co_max_spower":
-                        case "interface":
-                        case "uniq_id":
                         {
-                            var value = ReadString(ref text, ref textIndex);
-                            Logger.Log($"Replay contained known but incomplete string parameter: {entry}. Value was: {value}");
+                            turnData.DrawWasAccepted = ReadBool(ref text, ref textIndex);
                             break;
                         }
 
-                        case "boot_interval":
-                        case "co_max_power":
-                        case "co_max_spower":
-                        case "aet_count":
-                        case "turn_clock":
+                        #region Unneeded Values
+
+                        case "co_image":
                         {
-                            var value = ReadInteger(ref text, ref textIndex);
-                            Logger.Log($"Replay contained known but incomplete int parameter: {entry}. Value was: {value}");
+                            //Specifies the image used to show the CO.
+                            //Not really useful for us, as we keep our own images, unless AWBW starts making skins or something.
+                            ReadString(ref text, ref textIndex);
+                            break;
+                        }
+
+                        case "email":
+                        {
+                            //Specifies the email used by this player. This may always be null.
+                            //Not useful for us and is probably breaking some privacy stuff if we were to show this.
+                            var value = ReadString(ref text, ref textIndex);
+                            break;
+                        }
+
+                        case "emailpress":
+                        {
+                            //This date is likely to do with the player, and not important to the replay. This may always be null.
+                            //Not useful for us and is probably breaking some privacy stuff if we were to show this.
+                            var value = ReadString(ref text, ref textIndex);
+                            break;
+                        }
+
+                        case "last_read":
+                        {
+                            //This date is likely to do with the player, and not important to the replay.
+                            //Not useful for us and is probably breaking some privacy stuff if we were to show this.
+                            ReadString(ref text, ref textIndex);
+                            break;
+                        }
+
+                        case "last_read_broadcasts":
+                        {
+                            //This date is likely to do with the player, and not important to the replay. This may always be null.
+                            //Not useful for us and is probably breaking some privacy stuff if we were to show this.
+                            ReadString(ref text, ref textIndex);
                             break;
                         }
 
                         case "games_id":
                         {
+                            //Describes which game/replay id this player info belongs to.
+                            //Not useful in our condition as this information is redundent.
                             ReadInteger(ref text, ref textIndex);
                             break;
                         }
 
+                        case "signature":
+                        {
+                            //Specifies the signature of the player. This may always be null.
+                            var value = ReadString(ref text, ref textIndex);
+                            break;
+                        }
+
+                        case "turn":
+                        {
+                            //Unsure what this value is meant to represent. But seems to always be null.
+                            //Likely to be a leftover value and not useful
+                            //Todo: Is this always null?
+                            var value = ReadString(ref text, ref textIndex);
+                            break;
+                        }
+
+                        case "turn_start":
+                        {
+                            //Describes when the turn started
+                            //Not useful for us as we don't really care when turns begin and end.
+                            ReadString(ref text, ref textIndex);
+                            break;
+                        }
+
+                        case "turn_clock":
+                        {
+                            //Describes how much time this player had at the start of the turn.
+                            //Not useful for us as we don't really care when turns begin and end.
+                            ReadInteger(ref text, ref textIndex);
+                            break;
+                        }
+
+                        case "aet_count":
+                        {
+                            //Todo: Maybe this may show some light on how a turn ended. Like does this change per turn, or is it always the same
+                            //Likely describes how many times a player has had the turn auto ended.
+                            //Not useful as we really don't care about the turns ending like this.
+                            var value = ReadInteger(ref text, ref textIndex);
+                            break;
+                        }
+
+                        case "uniq_id":
+                        {
+                            //Likely was a different type of player id? This seems to always be null.
+                            //Not useful if its always null.
+                            var value = ReadString(ref text, ref textIndex);
+                            break;
+                        }
+
+                        case "interface":
+                        {
+                            //Likely describes which interface the player was using.
+                            //This probably doesn't matter too much?
+                            var value = ReadString(ref text, ref textIndex);
+                            break;
+                        }
+
+                        #endregion
+
                         default:
+                        {
+                            //Todo: Add a way to throw a notification but not crash entirely when not in debug
                             throw new Exception($"Replay player data contained unknown entry: {entry}");
+                        }
                     }
                 }
 
                 if (text[textIndex++] != '}')
                     throw new Exception("Player data does not end correctly.");
+
+                if (firstTurn)
+                    data.ReplayInfo.Players.Add(playerData.ID, playerData);
+                turnData.Players.Add(playerData.ID, playerDataTurn);
             }
 
             if (text[textIndex++] != '}')
@@ -1004,9 +1196,6 @@ namespace AWBWApp.Game.API.New
                 break;
             }
 
-            if (turnData == null)
-                throw new Exception("Replay actions contained an unknown turn id.");
-
             if (text.Substring(textIndex, 7) != "a:a:3:{")
                 throw new Exception("Improper action turn start. Turn Array indicator misconfigured.");
             textIndex += 7;
@@ -1031,30 +1220,52 @@ namespace AWBWApp.Game.API.New
                 throw new Exception("Expected an array declaration for unit data.");
 
             var actionCount = ReadNextLength(ref text, ref textIndex);
-            turnData.Actions = new List<IReplayAction>();
 
             if (text[textIndex++] != '{')
                 throw new Exception("Expected an array declaration for unit data.");
 
-            for (int i = 0; i < actionCount; i++)
+            if (turnData != null)
             {
-                var index = ReadInteger(ref text, ref textIndex);
-                var actionString = ReadString(ref text, ref textIndex);
+                turnData.Actions = new List<IReplayAction>();
 
-                if (actionString == "Array")
+                for (int i = 0; i < actionCount; i++)
                 {
-                    Logger.Log("Replay contained action 'Array' which is not an action.");
-                    turnData.Actions.Add(new EmptyAction());
-                    continue;
+                    var index = ReadInteger(ref text, ref textIndex);
+                    var actionString = ReadString(ref text, ref textIndex);
+
+                    if (actionString == "Array")
+                    {
+                        Logger.Log("Replay contained action 'Array' which is not an action.");
+                        turnData.Actions.Add(new EmptyAction());
+                        continue;
+                    }
+
+                    var jsonObject = JObject.Parse(actionString);
+
+                    if (index != i)
+                        throw new Exception("Out of Order actions");
+
+                    turnData.Actions.Add(actionDatabase.ParseJObjectIntoReplayAction(jsonObject, replayData, turnData));
                 }
-
-                var jsonObject = JObject.Parse(actionString);
-
-                if (index != i)
-                    throw new Exception("Out of Order actions");
-
-                turnData.Actions.Add(actionDatabase.ParseJObjectIntoReplayAction(jsonObject, replayData, turnData));
             }
+            else
+            {
+                //Tag battles with more than 2 players seem to occasionally add these for dead? players.
+                if (actionCount > 1)
+                    throw new Exception("Replay actions contained an unknown turn id.");
+
+                if (actionCount == 1)
+                {
+                    var index = ReadInteger(ref text, ref textIndex);
+                    var actionString = ReadString(ref text, ref textIndex);
+                    var jsonObject = JObject.Parse(actionString);
+                    var action = actionDatabase.ParseJObjectIntoReplayAction(jsonObject, replayData, turnData);
+
+                    if (!(action is EndTurnAction || action is TagAction))
+                        throw new Exception("Replay actions contained an unknown turn id.");
+                }
+            }
+
             if (text[textIndex++] != '}')
                 throw new Exception("Expected an array declaration for unit data.");
             if (text[textIndex++] != '}')

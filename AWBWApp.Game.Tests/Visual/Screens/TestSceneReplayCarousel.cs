@@ -62,7 +62,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
 
                     var playerCount = random.Next(2, 8);
 
-                    var players = new AWBWReplayPlayer[playerCount];
+                    var players = new Dictionary<int, AWBWReplayPlayer>();
 
                     for (int j = 0; j < playerCount; j++)
                     {
@@ -76,8 +76,8 @@ namespace AWBWApp.Game.Tests.Visual.Screens
 
                     var replayInfo = new ReplayInfo
                     {
-                        StartDate = (dateA > dateB ? dateB : dateA).ToString("d"),
-                        EndDate = (dateA > dateB ? dateA : dateB).ToString("d"),
+                        StartDate = (dateA > dateB ? dateB : dateA),
+                        EndDate = (dateA > dateB ? dateA : dateB),
                         Name = Guid.NewGuid().ToString(),
                         LeagueMatch = random.Next(2) == 1 ? "Yes" : null,
                         Players = players
