@@ -74,6 +74,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             throw new Exception("Could not parse replay id: " + replay + ".");
         }
 
+        private static string sessionId = null;
+
         private async void DownloadReplayFile()
         {
             var gameID = parseReplayString(replayString);
@@ -84,26 +86,27 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
             if (replay == null)
             {
-                Logger.Log($"Replay not Found. Requesting from AWBW.", level: LogLevel.Important);
-                var taskCompletionSource = new TaskCompletionSource<string>();
-                Schedule(() => overlay.Push(new PasswordInputInterrupt(taskCompletionSource)));
-
-                Logger.Log($"Pushed overlay", level: LogLevel.Important);
-
-                string sessionId;
-
-                try
-                {
-                    sessionId = await taskCompletionSource.Task.ConfigureAwait(false);
-                }
-                catch (TaskCanceledException)
-                {
-                    Logger.Log("Logging in was cancelled. Need to abort download.");
-                    return;
-                }
-
                 if (sessionId == null)
-                    throw new Exception("Failed to login.");
+                {
+                    Logger.Log($"Replay not Found. Requesting from AWBW.", level: LogLevel.Important);
+                    var taskCompletionSource = new TaskCompletionSource<string>();
+                    Schedule(() => overlay.Push(new PasswordInputInterrupt(taskCompletionSource)));
+
+                    Logger.Log($"Pushed overlay", level: LogLevel.Important);
+
+                    try
+                    {
+                        sessionId = await taskCompletionSource.Task.ConfigureAwait(false);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        Logger.Log("Logging in was cancelled. Need to abort download.");
+                        return;
+                    }
+
+                    if (sessionId == null)
+                        throw new Exception("Failed to login.");
+                }
 
                 Logger.Log($"Successfully logged in.", level: LogLevel.Important);
                 var link = "https://awbw.amarriner.com/replay_download.php?games_id=" + gameID;
