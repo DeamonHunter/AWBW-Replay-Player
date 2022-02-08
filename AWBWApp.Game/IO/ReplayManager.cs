@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AWBWApp.Game.API.New;
 using AWBWApp.Game.API.Replay;
 using Newtonsoft.Json;
+using osu.Framework.Logging;
 
 namespace AWBWApp.Game.IO
 {
@@ -52,8 +53,15 @@ namespace AWBWApp.Game.IO
 
                 await Task.Run(() =>
                 {
-                    ReplayData replay = GetReplayData(replayNumber);
-                    addReplay(replay);
+                    try
+                    {
+                        ReplayData replay = GetReplayData(replayNumber);
+                        addReplay(replay);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, "Failed to Parse saved file");
+                    }
                 });
             }
         }
