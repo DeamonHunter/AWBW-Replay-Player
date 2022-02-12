@@ -100,7 +100,7 @@ namespace AWBWApp.Game.UI
 
         public void UpdateActions()
         {
-            lastTurnButton.Enabled.Value = replayController.HasPreviousAction();
+            lastTurnButton.Enabled.Value = replayController.HasPreviousTurn();
             prevButton.Enabled.Value = false; //replayController.HasPreviousAction(); //Todo: Implement undoing
             nextButton.Enabled.Value = replayController.HasNextAction();
             nextTurnButton.Enabled.Value = replayController.HasNextTurn();
