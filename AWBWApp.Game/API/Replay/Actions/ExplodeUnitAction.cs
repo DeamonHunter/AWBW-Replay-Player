@@ -72,7 +72,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 {
                     if (controller.Map.TryGetDrawableUnit(tile, out var unit))
                     {
-                        if (!unit.OwnerID.HasValue || controller.Map.Players[explodingUnit.OwnerID.Value].Team == controller.Map.Players[unit.OwnerID.Value].Team)
+                        if (!unit.OwnerID.HasValue || controller.Players[explodingUnit.OwnerID.Value].Team == controller.Players[unit.OwnerID.Value].Team)
                             continue;
 
                         unit.HealthPoints.Value += (int)HPChange;
