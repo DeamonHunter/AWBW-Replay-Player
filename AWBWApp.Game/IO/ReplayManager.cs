@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using AWBWApp.Game.API;
 using AWBWApp.Game.API.New;
 using AWBWApp.Game.API.Replay;
 using Newtonsoft.Json;
@@ -13,6 +14,7 @@ namespace AWBWApp.Game.IO
     {
         private const string replay_folder = "ReplayData/Replays";
         private const string replay_storage = "ReplayData/ReplayStorage.json";
+        private const string username_storage = "ReplayData/UsernameStorage.json";
 
         public Action<ReplayInfo> ReplayAdded;
 
@@ -21,6 +23,8 @@ namespace AWBWApp.Game.IO
         public Action<ReplayInfo> ReplayRemoved;
 
         private Dictionary<int, ReplayInfo> _knownReplays = new Dictionary<int, ReplayInfo>();
+
+        private Dictionary<long, string> _playerNames = new Dictionary<long, string>();
 
         private AWBWReplayParser _parser = new AWBWReplayParser();
 
@@ -32,6 +36,9 @@ namespace AWBWApp.Game.IO
 
             if (File.Exists(replay_storage))
                 _knownReplays = JsonConvert.DeserializeObject<Dictionary<int, ReplayInfo>>(File.ReadAllText(replay_storage));
+
+            if (File.Exists(username_storage))
+                _playerNames = JsonConvert.DeserializeObject<Dictionary<long, string>>(File.ReadAllText(username_storage));
 
             Task.Run(checkAllReplays);
         }
@@ -48,21 +55,51 @@ namespace AWBWApp.Game.IO
                 if (extension != ".zip" || !int.TryParse(fileName, out int replayNumber))
                     continue;
 
-                if (_knownReplays.ContainsKey(replayNumber))
-                    continue;
-
-                await Task.Run(() =>
+                if (_knownReplays.TryGetValue(replayNumber, out var replayInfo))
                 {
-                    try
-                    {
-                        ReplayData replay = GetReplayData(replayNumber);
-                        addReplay(replay);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error(e, "Failed to Parse saved file");
-                    }
-                });
+                    await checkForUsernamesAndGetIfMissing(replayInfo);
+                    continue;
+                }
+
+                try
+                {
+                    var replay = await GetReplayData(replayNumber);
+                    addReplay(replay);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, "Failed to Parse saved file");
+                }
+            }
+
+            saveReplays();
+        }
+
+        private async Task checkForUsernamesAndGetIfMissing(ReplayInfo info)
+        {
+            foreach (var player in info.Players)
+            {
+                if (player.Value.Username != null)
+                {
+                    if (!_playerNames.ContainsKey(player.Value.UserId))
+                        _playerNames[player.Value.UserId] = player.Value.Username;
+                    continue;
+                }
+
+                if (_playerNames.TryGetValue(player.Value.UserId, out var username))
+                {
+                    player.Value.Username = username;
+                    continue;
+                }
+
+                //We do not know this player's username and need to grab it.
+                var usernameRequest = new UsernameWebRequest(player.Value.UserId);
+
+                await usernameRequest.PerformAsync().ConfigureAwait(false);
+
+                //Todo: Check how this acts if we do not have internet.
+
+                player.Value.Username = usernameRequest.Username;
             }
         }
 
@@ -80,9 +117,9 @@ namespace AWBWApp.Game.IO
             File.WriteAllText(replay_storage, contents);
         }
 
-        public ReplayData GetReplayData(ReplayInfo info) => GetReplayData(info.ID);
+        public async Task<ReplayData> GetReplayData(ReplayInfo info) => await GetReplayData(info.ID);
 
-        public ReplayData GetReplayData(int id)
+        public async Task<ReplayData> GetReplayData(int id)
         {
             var path = $"{replay_folder}/{id}.zip";
             if (!File.Exists(path))
@@ -100,6 +137,8 @@ namespace AWBWApp.Game.IO
             {
                 stream.Dispose();
             }
+
+            await checkForUsernamesAndGetIfMissing(data.ReplayInfo);
 
             return data;
         }
@@ -138,9 +177,9 @@ namespace AWBWApp.Game.IO
         protected virtual void Dispose(bool disposing)
         {
             if (!isDisposed)
-            {
-                isDisposed = true;
-            }
+                return;
+
+            isDisposed = true;
         }
 
         #endregion

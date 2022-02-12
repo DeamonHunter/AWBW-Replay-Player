@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.IO;
@@ -78,9 +79,13 @@ namespace AWBWApp.Game.UI.Select
                 return false;
 
             this.Push(replayController = new ReplayController());
-            var data = replayManager.GetReplayData(Carousel.SelectedReplayData);
-            var terrainFile = mapStorage.Get(data.ReplayInfo.MapId);
-            replayController.LoadReplay(data, terrainFile);
+            Task.Run(async () =>
+            {
+                var data = await replayManager.GetReplayData(Carousel.SelectedReplayData);
+                var terrainFile = mapStorage.Get(data.ReplayInfo.MapId);
+                replayController.LoadReplay(data, terrainFile);
+            });
+
             return true;
         }
 

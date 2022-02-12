@@ -13,7 +13,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 {
     public class TestSceneGameMap : BaseGameMapTestScene
     {
-        private const int default_game_id = 545975;
+        //private const int default_game_id = 545975;
+        private const int default_game_id = 478996; //14 player tag team
 
         [Resolved]
         private ReplayManager replayStorage { get; set; }
@@ -41,7 +42,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         public void TestLoadMapAndRun()
         {
             AddStep("Clear Replay", () => ReplayController.ClearReplay());
-            AddTextStep("Replay Number", "54975", x => replayString = x);
+            AddTextStep("Replay Number", default_game_id.ToString(), x => replayString = x);
             AddStep("Load Map", () => Task.Run(DownloadReplayFile));
             AddUntilStep("Wait Until Map is loaded", () => ReplayController.HasLoadedReplay);
             AddRepeatUntilStep("Finish replay", 3000, () => ReplayController.GoToNextAction(), () => !ReplayController.HasNextAction());
@@ -82,7 +83,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
             Logger.Log($"Starting replay download.", level: LogLevel.Important);
 
-            var replay = replayStorage.GetReplayData(gameID);
+            var replay = await replayStorage.GetReplayData(gameID);
 
             if (replay == null)
             {
