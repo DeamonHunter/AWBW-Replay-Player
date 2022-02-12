@@ -1,4 +1,5 @@
-﻿using osu.Framework.Allocation;
+﻿using AWBWApp.Game.API.Replay;
+using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
@@ -35,7 +36,7 @@ namespace AWBWApp.Game.UI.Select
                 playersDrawables[i * 2] = new SpriteText
                 {
                     Text = player.UniqueId,
-                    Colour = player.CountryColour().Lighten(0.5f),
+                    Colour = AWBWReplayPlayer.CountryColour(player.CountryId).Lighten(0.5f),
                     Font = FontUsage.Default.With(size: 15, italics: true)
                 };
 

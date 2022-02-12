@@ -266,6 +266,7 @@ namespace AWBWApp.Game.Game.Logic
 
                     player.Value.UpdateTurn(currentTurn.Players[player.Key], turnIdx, unitCount, unitValue, propertyValue);
                 }
+                playerList.SortList(currentTurn.ActivePlayerID, turnIdx);
                 barWidget.UpdateActions();
             });
         }
