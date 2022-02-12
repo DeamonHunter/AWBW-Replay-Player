@@ -64,6 +64,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/Neutral/ComTower",
         "FogOfWarTexture": "Team/Neutral/ComTower"
     },
@@ -77,6 +78,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/Neutral/Lab",
         "FogOfWarTexture": "Team/Neutral/Lab"
     },
@@ -265,6 +267,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/OrangeStar/ComTower",
         "FogOfWarTexture": "Team/OrangeStar/ComTower",
         "frames": [
@@ -284,6 +287,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/OrangeStar/Lab",
         "FogOfWarTexture": "Team/OrangeStar/Lab",
         "frames": [
@@ -407,6 +411,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/BlueMoon/ComTower",
         "FogOfWarTexture": "Team/BlueMoon/ComTower",
         "frames": [
@@ -426,6 +431,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/BlueMoon/Lab",
         "FogOfWarTexture": "Team/BlueMoon/Lab",
         "frames": [
@@ -549,6 +555,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/GreenEarth/ComTower",
         "FogOfWarTexture": "Team/GreenEarth/ComTower",
         "frames": [
@@ -568,6 +575,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/GreenEarth/Lab",
         "FogOfWarTexture": "Team/GreenEarth/Lab",
         "frames": [
@@ -685,6 +693,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/YellowComet/ComTower",
         "FogOfWarTexture": "Team/YellowComet/ComTower",
         "frames": [
@@ -703,6 +712,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/YellowComet/Lab",
         "FogOfWarTexture": "Team/YellowComet/Lab",
         "frames": [
@@ -834,6 +844,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/RedFire/ComTower",
         "FogOfWarTexture": "Team/RedFire/ComTower",
         "frames": [
@@ -853,6 +864,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/RedFire/Lab",
         "FogOfWarTexture": "Team/RedFire/Lab",
         "frames": [
@@ -976,6 +988,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/GreySky/ComTower",
         "FogOfWarTexture": "Team/GreySky/ComTower",
         "frames": [
@@ -995,6 +1008,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/GreySky/Lab",
         "FogOfWarTexture": "Team/GreySky/Lab",
         "frames": [
@@ -1118,6 +1132,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/BlackHole/ComTower",
         "FogOfWarTexture": "Team/BlackHole/ComTower",
         "frames": [
@@ -1137,6 +1152,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/BlackHole/Lab",
         "FogOfWarTexture": "Team/BlackHole/Lab",
         "frames": [
@@ -1259,6 +1275,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/BrownDesert/ComTower",
         "FogOfWarTexture": "Team/BrownDesert/ComTower",
         "frames": [
@@ -1278,6 +1295,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/BrownDesert/Lab",
         "FogOfWarTexture": "Team/BrownDesert/Lab",
         "frames": [
@@ -1401,6 +1419,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/AmberBlaze/ComTower",
         "FogOfWarTexture": "Team/AmberBlaze/ComTower",
         "frames": [
@@ -1420,6 +1439,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/AmberBlaze/Lab",
         "FogOfWarTexture": "Team/AmberBlaze/Lab",
         "frames": [
@@ -1544,6 +1564,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/JadeSun/ComTower",
         "FogOfWarTexture": "Team/JadeSun/ComTower",
         "frames": [
@@ -1563,6 +1584,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/JadeSun/Lab",
         "FogOfWarTexture": "Team/JadeSun/Lab",
         "frames": [
@@ -1705,6 +1727,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/CobaltIce/ComTower",
         "FogOfWarTexture": "Team/CobaltIce/ComTower",
         "frames": [
@@ -1724,6 +1747,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/CobaltIce/Lab",
         "FogOfWarTexture": "Team/CobaltIce/Lab",
         "frames": [
@@ -1845,6 +1869,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/PinkCosmos/ComTower",
         "FogOfWarTexture": "Team/PinkCosmos/ComTower",
         "frames": [
@@ -1864,6 +1889,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/PinkCosmos/Lab",
         "FogOfWarTexture": "Team/PinkCosmos/Lab",
         "frames": [
@@ -1987,6 +2013,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/TealGalaxy/ComTower",
         "FogOfWarTexture": "Team/TealGalaxy/ComTower",
         "frames": [
@@ -2006,6 +2033,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/TealGalaxy/Lab",
         "FogOfWarTexture": "Team/TealGalaxy/Lab",
         "frames": [
@@ -2129,6 +2157,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/PurpleLightning/ComTower",
         "FogOfWarTexture": "Team/PurpleLightning/ComTower",
         "frames": [
@@ -2148,6 +2177,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/PurpleLightning/Lab",
         "FogOfWarTexture": "Team/PurpleLightning/Lab",
         "frames": [
@@ -2272,6 +2302,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/AcidRain/ComTower",
         "FogOfWarTexture": "Team/AcidRain/ComTower",
         "frames": [
@@ -2291,6 +2322,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/AcidRain/Lab",
         "FogOfWarTexture": "Team/AcidRain/Lab",
         "frames": [
@@ -2407,6 +2439,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/WhiteNova/ComTower",
         "FogOfWarTexture": "Team/WhiteNova/ComTower",
         "frames": [
@@ -2425,6 +2458,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "GivesMoneyWhenCaptured": false,
         "BaseTexture": "Team/WhiteNova/Lab",
         "FogOfWarTexture": "Team/WhiteNova/Lab",
         "frames": [

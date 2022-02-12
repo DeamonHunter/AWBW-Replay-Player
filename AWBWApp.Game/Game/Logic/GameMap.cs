@@ -46,7 +46,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private EffectAnimationController effectAnimationController;
 
-        public Dictionary<int, PlayerInfo> Players { get; private set; } = new Dictionary<int, PlayerInfo>();
+        private Dictionary<int, PlayerInfo> players;
 
         public GameMap()
         {
@@ -73,22 +73,18 @@ namespace AWBWApp.Game.Game.Logic
             });
         }
 
-        public void ScheduleInitialGameState(ReplayData gameState, ReplayMap map, Action postUpdateAction)
+        public void ScheduleInitialGameState(ReplayData gameState, ReplayMap map, Dictionary<int, PlayerInfo> players)
         {
+            this.players = players;
             Schedule(() =>
             {
                 SetToInitialGameState(gameState, map);
-                postUpdateAction?.Invoke();
             });
         }
 
         void SetToInitialGameState(ReplayData gameState, ReplayMap map)
         {
             MapSize = map.Size;
-
-            Players.Clear();
-            foreach (var player in gameState.ReplayInfo.Players)
-                Players.Add(player.Key, new PlayerInfo(player.Value));
 
             //Calculate the map size as this isn't given by the api
             //Todo: Check buildings
@@ -130,7 +126,7 @@ namespace AWBWApp.Game.Game.Logic
                 var building = buildingStorage.GetBuildingByAWBWId(awbwBuilding.Value.TerrainID.Value);
                 var position = awbwBuilding.Value.Position;
 
-                var drawableBuilding = new DrawableBuilding(building, GetPlayerIDFromCountryID(building.CountryID), position);
+                var drawableBuilding = new DrawableBuilding(building, getPlayerIDFromCountryID(building.CountryID), position);
                 buildings.Add(position, drawableBuilding);
                 buildingsDrawable.Add(drawableBuilding);
             }
@@ -153,19 +149,6 @@ namespace AWBWApp.Game.Game.Logic
 
             AutoSizeAxes = Axes.Both;
             effectAnimationController.Size = new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y);
-        }
-
-        public long? GetPlayerIDFromCountryID(int countryID)
-        {
-            foreach (var player in Players)
-            {
-                if (player.Value.CountryID != countryID)
-                    continue;
-
-                return player.Key;
-            }
-
-            return null;
         }
 
         public static Vector2 GetDrawablePositionForTopOfTile(Vector2I tilePos) => new Vector2(tilePos.X * DrawableTile.BASE_SIZE.X, tilePos.Y * DrawableTile.BASE_SIZE.Y - 1);
@@ -227,7 +210,7 @@ namespace AWBWApp.Game.Game.Logic
                 else
                 {
                     var unitData = unitStorage.GetUnitByCode(unit.Value.UnitName);
-                    var drawableUnit = new DrawableUnit(unitData, unit.Value, Players[unit.Value.PlayerID.Value].CountryCode);
+                    var drawableUnit = new DrawableUnit(unitData, unit.Value, players[unit.Value.PlayerID.Value].CountryCode.Value);
                     units.Add(unit.Value.ID, drawableUnit);
                     unitsDrawable.Add(drawableUnit);
                 }
@@ -246,7 +229,7 @@ namespace AWBWApp.Game.Game.Logic
         public DrawableUnit AddUnit(ReplayUnit unit)
         {
             var unitData = unitStorage.GetUnitByCode(unit.UnitName);
-            var drawableUnit = new DrawableUnit(unitData, unit, Players[unit.PlayerID.Value].CountryCode);
+            var drawableUnit = new DrawableUnit(unitData, unit, players[unit.PlayerID.Value].CountryCode.Value);
             units.Add(unit.ID, drawableUnit);
             Schedule(() => unitsDrawable.Add(drawableUnit));
             return drawableUnit;
@@ -378,7 +361,7 @@ namespace AWBWApp.Game.Game.Logic
                     throw new Exception("Tried to update a missing building. But it didn't have a terrain id.");
 
                 var buildingTile = buildingStorage.GetBuildingByAWBWId(awbwBuilding.TerrainID.Value);
-                var drawableBuilding = new DrawableBuilding(buildingTile, GetPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
+                var drawableBuilding = new DrawableBuilding(buildingTile, getPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
                 buildings.Add(tilePosition, drawableBuilding);
                 buildingsDrawable.Add(drawableBuilding);
                 return;
@@ -394,7 +377,7 @@ namespace AWBWApp.Game.Game.Logic
                 if (awbwBuilding.TerrainID.HasValue && awbwBuilding.TerrainID != 0)
                 {
                     var buildingTile = buildingStorage.GetBuildingByAWBWId(awbwBuilding.TerrainID.Value);
-                    var drawableBuilding = new DrawableBuilding(buildingTile, GetPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
+                    var drawableBuilding = new DrawableBuilding(buildingTile, getPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
                     buildings.Add(tilePosition, drawableBuilding);
                     buildingsDrawable.Add(drawableBuilding);
                 }
@@ -407,5 +390,7 @@ namespace AWBWApp.Game.Game.Logic
             if (TryGetDrawableUnit(awbwBuilding.Position, out var unit))
                 unit.IsCapturing.Value = awbwBuilding.Capture != 20;
         }
+
+        private long? getPlayerIDFromCountryID(int countryID) => players.FirstOrDefault(x => x.Value.CountryID.Value == countryID).Key;
     }
 }

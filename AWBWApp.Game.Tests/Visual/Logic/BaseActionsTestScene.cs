@@ -30,8 +30,20 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             return replayData;
         }
 
-        protected TurnData CreateBasicTurnData()
+        protected TurnData CreateBasicTurnData(ReplayData data)
         {
+            var players = new Dictionary<int, AWBWReplayPlayerTurn>();
+
+            foreach (var player in data.ReplayInfo.Players)
+            {
+                var playerData = new AWBWReplayPlayerTurn
+                {
+                    ActiveCOID = player.Value.CountryId
+                };
+
+                players.Add(player.Key, playerData);
+            }
+
             return new TurnData
             {
                 Active = true,
@@ -41,7 +53,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 CoPowers = new Dictionary<int, int>(),
                 Day = 0,
                 ActivePlayerID = 0,
-                Players = new Dictionary<int, AWBWReplayPlayerTurn>(),
+                Players = players,
                 Weather = new ReplayWeather()
             };
         }
@@ -72,7 +84,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 TimesCaptured = 0,
                 TimesFired = 0,
 
-                SubHasDived = false,
+                SubHasDived = "false",
                 SecondWeapon = null,
 
                 BeingCarried = false,

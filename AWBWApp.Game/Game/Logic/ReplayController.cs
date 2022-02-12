@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
@@ -33,15 +34,14 @@ namespace AWBWApp.Game.Game.Logic
         private Container powerLayer;
         private MapCameraController camera;
         private ReplayBarWidget barWidget;
+        private ReplayPlayerList playerList;
+
+        public Dictionary<int, PlayerInfo> Players { get; private set; } = new Dictionary<int, PlayerInfo>();
 
         private readonly Queue<IEnumerator<ReplayWait>> currentOngoingActions = new Queue<IEnumerator<ReplayWait>>();
 
         public ReplayController()
         {
-            var players = new List<ReplayPlayer>();
-            for (int i = 0; i < 8; i++)
-                players.Add(new ReplayPlayer());
-
             Map = new GameMap();
             AddRangeInternal(new Drawable[]
             {
@@ -57,12 +57,12 @@ namespace AWBWApp.Game.Game.Logic
                     RelativeSizeAxes = Axes.Both
                 },
                 barWidget = new ReplayBarWidget(this),
-                new ReplayPlayerList(players)
+                playerList = new ReplayPlayerList
                 {
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
                     RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(200, 1)
+                    Size = new Vector2(225, 1)
                 },
                 loadingLayer = new LoadingLayer(true)
             });
@@ -111,13 +111,18 @@ namespace AWBWApp.Game.Game.Logic
         public void LoadReplay(ReplayData replayData, ReplayMap map)
         {
             this.replayData = replayData;
-            Map.ScheduleInitialGameState(this.replayData, map, UpdateFogOfWar);
-            currentTurn = replayData.TurnData[0];
-            currentTurnIndex = 0;
-            currentActionIndex = -1;
+
+            Players.Clear();
+            foreach (var player in replayData.ReplayInfo.Players)
+                Players.Add(player.Key, new PlayerInfo(player.Value));
+
+            Map.ScheduleInitialGameState(this.replayData, map, Players);
+            goToTurnWithIdx(0);
             ScheduleAfterChildren(() =>
             {
                 HasLoadedReplay = true;
+                playerList.UpdateList(Players);
+                barWidget.UpdateActions();
                 camera.FitMapToSpace();
                 loadingLayer.Hide();
             });
@@ -232,28 +237,37 @@ namespace AWBWApp.Game.Game.Logic
             currentActionIndex = -1;
             currentTurnIndex = turnIdx;
 
-            /*
-            if (turns.Count > turnIdx)
-            {
-                var turn = turns[turnIdx];
-
-                if (turn != null)
-                {
-                    currentTurnIndex = turnIdx;
-                    currentActionIndex = -1;
-                    currentTurn = turn;
-                    Map.ScheduleUpdateToGameState(turn.GameState);
-                    return;
-                }
-            }
-            */
-
             checkPowers();
-            loadingLayer.Show();
             currentTurn = replayData.TurnData[turnIdx];
-            barWidget.UpdateActions();
+
             Map.ScheduleUpdateToGameState(currentTurn, UpdateFogOfWar);
-            Schedule(() => loadingLayer.Hide());
+            ScheduleAfterChildren(() =>
+            {
+                foreach (var player in Players)
+                {
+                    var unitValue = 0;
+                    var unitCount = 0;
+
+                    foreach (var unit in Map.GetDrawableUnitsFromPlayer(player.Key))
+                    {
+                        unitCount++;
+                        unitValue += (int)Math.Floor((unit.HealthPoints.Value / 10.0) * unit.UnitData.Cost);
+                    }
+
+                    var propertyValue = 0;
+
+                    foreach (var building in Map.GetDrawableBuildingsForPlayer(player.Key))
+                    {
+                        if (!building.BuildingTile.GivesMoneyWhenCaptured)
+                            continue;
+
+                        propertyValue += replayData.ReplayInfo.FundsPerBuilding;
+                    }
+
+                    player.Value.UpdateTurn(currentTurn.Players[player.Key], turnIdx, unitCount, unitValue, propertyValue);
+                }
+                barWidget.UpdateActions();
+            });
         }
 
         public void UpdateFogOfWar()

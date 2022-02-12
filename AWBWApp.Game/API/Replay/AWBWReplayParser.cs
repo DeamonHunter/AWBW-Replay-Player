@@ -551,7 +551,7 @@ namespace AWBWApp.Game.API.New
                             else if (!playerData.COsUsedByPlayer.Contains(id))
                                 throw new Exception("Player's COs changed mid match?");
 
-                            playerDataTurn.ActiveCOId = id;
+                            playerDataTurn.ActiveCOID = id;
                             break;
                         }
 
@@ -565,6 +565,8 @@ namespace AWBWApp.Game.API.New
                                     playerData.COsUsedByPlayer.Add(id.Value);
                                 else if (!playerData.COsUsedByPlayer.Contains(id.Value))
                                     throw new Exception("Player's COs changed mid match?");
+
+                                playerDataTurn.TagCOID = id;
                             }
                             break;
                         }
@@ -609,6 +611,9 @@ namespace AWBWApp.Game.API.New
                         {
                             var eliminated = ReadBool(ref text, ref textIndex);
                             playerDataTurn.Eliminated = eliminated;
+                            if (playerDataTurn.Eliminated && playerData.EliminatedOn == null)
+                                playerData.EliminatedOn = data.TurnData.Count - 1;
+
                             break;
                         }
 
@@ -655,9 +660,9 @@ namespace AWBWApp.Game.API.New
                         case "order":
                         {
                             var turnIndex = ReadInteger(ref text, ref textIndex);
-                            if (!firstTurn && playerData.TurnOrder != turnIndex)
+                            if (!firstTurn && playerData.RoundOrder != turnIndex)
                                 throw new Exception("Player 'order' changed per turn when not expected.");
-                            playerData.TurnOrder = turnIndex;
+                            playerData.RoundOrder = turnIndex;
                             break;
                         }
 

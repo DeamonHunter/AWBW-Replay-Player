@@ -19,6 +19,9 @@ namespace AWBWApp.Game.Game.Building
         public int SightDistanceIncrease { get; set; }
 
         [JsonProperty]
+        public bool GivesMoneyWhenCaptured { get; set; } = true;
+
+        [JsonProperty]
         public int LimitFogOfWarSightDistance { get; set; } = -1;
 
         [JsonProperty]

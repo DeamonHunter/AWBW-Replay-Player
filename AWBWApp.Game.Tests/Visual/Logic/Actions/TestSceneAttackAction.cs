@@ -56,7 +56,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         {
             var replayData = CreateBasicReplayData(2);
 
-            var turn = CreateBasicTurnData();
+            var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
 
             var attackerUnit = CreateBasicReplayUnit(0, 0, "Artillery", new Vector2I(2, 2));
@@ -103,7 +103,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         {
             var replayData = CreateBasicReplayData(2);
 
-            var turn = new TurnData();
+            var turn = CreateBasicTurnData(replayData);
             turn.ReplayUnit = new Dictionary<long, ReplayUnit>();
             turn.Buildings = new Dictionary<Vector2I, ReplayBuilding>();
             turn.Actions = new List<IReplayAction>();
