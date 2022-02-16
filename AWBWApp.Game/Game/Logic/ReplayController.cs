@@ -117,14 +117,17 @@ namespace AWBWApp.Game.Game.Logic
                 Players.Add(player.Key, new PlayerInfo(player.Value));
 
             Map.ScheduleInitialGameState(this.replayData, map, Players);
-            goToTurnWithIdx(0);
             ScheduleAfterChildren(() =>
             {
-                HasLoadedReplay = true;
-                playerList.UpdateList(Players);
-                barWidget.UpdateActions();
-                camera.FitMapToSpace();
-                loadingLayer.Hide();
+                goToTurnWithIdx(0);
+                ScheduleAfterChildren(() =>
+                {
+                    HasLoadedReplay = true;
+                    playerList.UpdateList(Players);
+                    barWidget.UpdateActions();
+                    camera.FitMapToSpace();
+                    loadingLayer.Hide();
+                });
             });
         }
 
