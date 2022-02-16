@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.UI;
 using NUnit.Framework;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 
@@ -12,6 +14,9 @@ namespace AWBWApp.Game.Tests.Visual.Screens
     public class TestScenePlayerDisplay : AWBWAppTestScene
     {
         private PlayerInfo playerInfo;
+
+        [Resolved]
+        private COStorage coStorage { get; set; }
 
         [Test]
         public void TestCreateReplayPlayer()
@@ -78,7 +83,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                 replayPlayerTurn.TagRequiredPowerForSuper = 720000;
             }
 
-            playerInfo.UpdateTurn(replayPlayerTurn, 0, 0, 0, 0);
+            playerInfo.UpdateTurn(replayPlayerTurn, coStorage, 0, 0, 0, 0);
 
             Child = new Container()
             {
@@ -115,12 +120,12 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                 Eliminated = playerInfo.Eliminated.Value,
                 Funds = playerInfo.Funds.Value,
 
-                ActiveCOID = playerInfo.ActiveCO.Value.ID ?? 1,
+                ActiveCOID = playerInfo.ActiveCO.Value.CO?.AWBWId ?? 1,
                 Power = playerInfo.ActiveCO.Value.Power ?? 0,
                 RequiredPowerForNormal = playerInfo.ActiveCO.Value.PowerRequiredForNormal,
                 RequiredPowerForSuper = playerInfo.ActiveCO.Value.PowerRequiredForSuper,
 
-                TagCOID = playerInfo.TagCO.Value.ID,
+                TagCOID = playerInfo.TagCO.Value.CO?.AWBWId,
                 TagPower = playerInfo.TagCO.Value.Power,
                 TagRequiredPowerForNormal = playerInfo.TagCO.Value.PowerRequiredForNormal,
                 TagRequiredPowerForSuper = playerInfo.TagCO.Value.PowerRequiredForSuper
@@ -150,7 +155,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
             var unitValue = playerInfo.UnitCount.Value + (gainUnitValue ?? 0);
             var propertyValue = playerInfo.UnitCount.Value + (gainPropertyValue ?? 0);
 
-            playerInfo.UpdateTurn(replayPlayerTurn, 0, unitCount, unitValue, propertyValue);
+            playerInfo.UpdateTurn(replayPlayerTurn, coStorage, 0, unitCount, unitValue, propertyValue);
         }
     }
 }

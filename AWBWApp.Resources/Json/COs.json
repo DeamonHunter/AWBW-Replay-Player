@@ -1,0 +1,702 @@
+{
+    "Andy": {
+        "Name": "Andy",
+        "AWBWID": 1,
+        "DayToDay": {},
+        "NormalPower": {
+            "PowerStars": 3
+            //Additional Effects: Heal all units by 2hp
+        },
+        "SuperPower": {
+            "PowerStars": 6,
+            "PowerIncreases": [{
+                "AffectedUnits": [ "all" ],
+                "PowerIncrease": 0.1
+            }]
+            //Additional Effects: Heal all units by 5hp and increase movement by 1.
+        }
+    },
+    "Hachi": {
+        "Name": "Hachi",
+        "AWBWID": 17,
+        "DayToDay": {
+            "UnitPriceMultiplier": 0.9
+        },
+        "NormalPower": {
+            "PowerStars": 3,
+            "UnitPriceMultiplier": 0.5
+        },
+        "SuperPower": {
+            "PowerStars": 5,
+            "UnitPriceMultiplier": 0.5
+            //Additional Effects: Buildings can deploy Infantry/Mechs
+        }
+    },
+    "Jake": {
+        "Name": "Jake",
+        "AWBWID": 22,
+        "DayToDay": {
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.1,
+                    "ConditionalTerrain": "Plain"
+                }
+            ]
+        },
+        "NormalPower": {
+            "PowerStars": 3,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.1,
+                    "ConditionalTerrain": "Plain"
+                },
+                {
+                    "AffectedUnits": [ "Artillery", "Rocket", "Missile" ],
+                    "RangeIncrease": 1
+                }
+            ]
+        },
+        "SuperPower": {
+            "PowerStars": 6,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.3,
+                    "ConditionalTerrain": "Plain"
+                },
+                {
+                    "AffectedUnits": [ "Artillery", "Rocket", "Missile" ],
+                    "RangeIncrease": 1
+                }
+                //Additional Effects: Vehicles get +2 Movement
+            ]}
+    },
+    "Max": {
+        "Name": "Max",
+        "AWBWID": 7,
+        "DayToDay": {
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neo Tank", "Recon", "Stealth", "Sub", "Tank"],
+                    "PowerIncrease": 0.2
+                },
+                {
+                    "AffectedUnits": [ "Artillery", "Battleship", "Carrier", "Missile", "Piperunner", "Missile" ],
+                    "PowerIncrease": -0.1,
+                    "RangeIncrease": -1
+                }
+            ]
+        },
+        "NormalPower": {
+            "PowerStars": 3,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neo Tank", "Recon", "Stealth", "Sub", "Tank"],
+                    "PowerIncrease": 0.1
+                }
+                //Additional Effects: Directs get +1 Movement
+            ]
+        },
+        "SuperPower": {
+            "PowerStars": 6,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neo Tank", "Recon", "Stealth", "Sub", "Tank"],
+                    "PowerIncrease": 0.3
+                }
+                //Additional Effects: Directs get +2 Movement
+            ]
+        }
+    },
+    "Nell": {
+        "Name": "Nell",
+        "AWBWID": 24,
+        "DayToDay": {
+            "LuckRange": { "x": 0, "y": 19 }
+        },
+        "NormalPower": {
+            "PowerStars": 3,
+            "LuckRange": { "x": 0, "y": 59 }
+        },
+        "SuperPower": {
+            "PowerStars": 6,
+            "LuckRange": { "x": 0, "y": 99 }
+        }
+    },
+    "Rachel": {
+        "Name": "Rachel",
+        "AWBWID": 28,
+        "DayToDay": {
+            //Additional Effects: Units will repair +1 more HP.
+        },
+        "NormalPower": {
+            "PowerStars": 3,
+            "LuckRange": {
+                "x": 0,
+                "y": 39
+            }},
+        "SuperPower": {
+            "PowerStars": 6
+            //Additional Effects: Fires 3 Missiles
+        }
+    },
+    "Sami": {
+        "Name": "Sami",
+        "AWBWID": 8,
+        "DayToDay": {
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "Infantry", "Mech"],
+                    "PowerIncrease": 0.3
+                },
+                {
+                    "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neo Tank", "Recon", "Stealth", "Sub", "Tank"],
+                    "PowerIncrease": -0.1
+                }
+                //Additional Effects: Directs get +1 Movement
+            ]
+        },
+        "NormalPower": {
+            "PowerStars": 3,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "Infantry", "Mech"],
+                    "PowerIncrease": 0.2
+                }
+            ]
+        },
+        "SuperPower": {
+            "PowerStars": 8,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "Infantry", "Mech"],
+                    "PowerIncrease": 0.4
+                }
+            ]
+        }
+    },
+    "Colin": {
+        "Name": "Colin",
+        "AWBWID": 15,
+        "DayToDay": {
+            "UnitPriceMultiplier": 0.8,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all"],
+                    "PowerIncrease": -0.1
+                }
+            ]
+        },
+        "NormalPower": {
+            "PowerStars": 2
+            //Additional Effect: Money *= 1.5
+        },
+        "SuperPower": {
+            "PowerStars": 6
+            //Todo: Needs special handling: PowerIncrease = (3 * Funds / 1000)%
+        }
+    },
+    "Grit": {
+        "Name": "Grit",
+        "AWBWID": 2,
+        "DayToDay": {
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "Artillery", "Battleship", "Carrier", "Missile", "Piperunner", "Rocket" ],
+                    "PowerIncrease": 0.2,
+                    "RangeIncrease": 1
+                },
+                {
+                    "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neo Tank", "Recon", "Stealth", "Sub", "Tank"],
+                    "PowerIncrease": -0.2
+                }
+            ]
+        },
+        "NormalPower": {
+            "PowerStars": 3,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "Artillery", "Battleship", "Carrier", "Missile", "Piperunner", "Rocket" ],
+                    "PowerIncrease": 0.2,
+                    "RangeIncrease": 1
+                }
+            ]
+        },
+        "SuperPower": {
+            "PowerStars": 6,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "Artillery", "Battleship", "Carrier", "Missile", "Piperunner", "Rocket" ],
+                    "PowerIncrease": 0.2,
+                    "RangeIncrease": 2
+                }
+            ]
+        }
+    },
+    "Olaf": {
+        "Name": "Olaf",
+        "AWBWID": 9,
+        "DayToDay": {
+            //Todo: Handle uneffected by snow
+        },
+        "NormalPower": {
+            "PowerStars": 3
+            //Additional Effects: Changes weather to snow
+        },
+        "SuperPower": {
+            "PowerStars": 7
+            //Additional Effects: Changes weather to snow, Damages all units for 2HP (But doesn't kill)
+        }
+    },
+    "Sasha": {
+        "Name": "Sasha",
+        "AWBWID": 19,
+        "DayToDay": {
+            "PropertyFundIncrease": 100
+        },
+        "NormalPower": {
+            "PowerStars": 2
+            //Additional Effects: Reduces all enemy Power Bars by 10% per 5000 funds
+        },
+        "SuperPower": {
+            "PowerStars": 6
+            //Additional Effects: Recieves (Damage * 0.5) * UnitPrice on damaging enemies
+        }
+    },
+    "Drake": {
+        "Name": "Drake",
+        "AWBWID": 5,
+        "DayToDay": {
+            //Todo: Handle uneffected by snow
+            //Todo: Higher Rain chance in random weather
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "Battleship", "Black Boat", "Carrier", "Cruiser", "Lander", "Sub" ],
+                    "DefenseIncrease": 0.25
+                    //Additional effect: Movement Increase +1
+                },
+                {
+                    "AffectedUnits": [ "B-Copter", "Bomber", "Fighter", "Stealth", "T-Copter" ],
+                    "PowerIncrease": -0.2
+                }
+            ]
+        },
+        "NormalPower": {
+            "PowerStars": 4
+            //Additional effect: Damage all units for 1 hp and halve fuel.
+        },
+        "SuperPower": {
+            "PowerStars": 7
+            //Additional effect: Damage all units for 1 hp and halve fuel. Changes weather to Rain.
+        }
+    },
+    "Eagle": {
+        "Name": "Eagle",
+        "AWBWID": 10,
+        "DayToDay": {
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "B-Copter", "Bomber", "Fighter", "Stealth", "T-Copter" ],
+                    "PowerIncrease": 0.15,
+                    "DefenseIncrease": 0.1
+                    //Additional effect: Fuel Cost per day -2
+                },
+                {
+                    "AffectedUnits": [ "Battleship", "Black Boat", "Carrier", "Cruiser", "Lander", "Sub" ],
+                    "PowerIncrease": -0.3
+                }
+            ]
+        },
+        "NormalPower": {
+            "PowerStars": 3,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "B-Copter", "Bomber", "Fighter", "Stealth", "T-Copter" ],
+                    "PowerIncrease": 0.05,
+                    "DefenseIncrease": 0.1
+                }
+            ]
+        },
+        "SuperPower": {
+            "PowerStars": 9,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "B-Copter", "Bomber", "Fighter", "Stealth", "T-Copter" ],
+                    "PowerIncrease": 0.05,
+                    "DefenseIncrease": 0.1
+                }
+            ]
+            //Additional Effect: Units get to move again
+        }
+    },
+    "Javier": {
+        "Name": "Javier",
+        "AWBWID": 27,
+        "DayToDay": {
+            //Todo: Conditional Effects: +20% defense against indirects, +10% defense per tower
+        },
+        "NormalPower": {
+            "PowerStars": 3
+            //Todo: Conditional Effects: +40% defense against indirects, +10% additional attack per tower, +10% additional defense per tower
+        },
+        "SuperPower": {
+            "PowerStars": 6
+            //Todo: Conditional Effects: +60% defense against indirects, +20% additional attack per tower, +20% additional defense per tower
+        }
+    },
+    "Jess": {
+        "Name": "Jess",
+        "AWBWID": 14,
+        "DayToDay": {
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "Anti-Air", "Artillery", "Md.Tank", "Mega Tank", "Missile", "Neo Tank", "Piperunner", "Recon", "Rocket", "Tank" ],
+                    "PowerIncrease": 0.1
+                },
+                {
+                    "AffectedUnits": [ "B-Copter", "Battleship", "Bomber", "Carrier", "Cruiser", "Fighter", "Infantry", "Mech", "Lander", "Stealth", "Sub" ],
+                    "PowerIncrease": -0.1
+                }
+            ]
+        },
+        "NormalPower": {
+            "PowerStars": 3,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "Anti-Air", "Artillery", "Md.Tank", "Mega Tank", "Missile", "Neo Tank", "Piperunner", "Recon", "Rocket", "Tank" ],
+                    "PowerIncrease": 0.1
+                }
+                //Additional Effect: Vehicles gain +1 movement, All units get Resupplied
+            ]
+        },
+        "SuperPower": {
+            "PowerStars": 6,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "Anti-Air", "Artillery", "Md.Tank", "Mega Tank", "Missile", "Neo Tank", "Piperunner", "Recon", "Rocket", "Tank" ],
+                    "PowerIncrease": 0.3
+                }
+                //Additional Effect: Vehicles gain +2 movement, All units get Resupplied
+            ]
+        }
+    },
+    "Grimm": {
+        "Name": "Grimm",
+        "AWBWID": 20,
+        "DayToDay": {
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.3,
+                    "DefenseIncrease": -0.2
+                }
+            ]
+        },
+        "NormalPower": {
+            "PowerStars": 3,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.2
+                }
+            ]
+        },
+        "SuperPower": {
+            "PowerStars": 6,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.5
+                }
+            ]
+        }
+    },
+    "Kanbei": {
+        "Name": "Kanbei",
+        "AWBWID": 3,
+        "DayToDay": {
+            "UnitPriceMultiplier": 1.2,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.3,
+                    "DefenseIncrease": 0.3
+                }
+            ]
+        },
+        "NormalPower": {
+            "PowerStars": 4,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.1
+                }
+            ]
+        },
+        "SuperPower": {
+            "PowerStars": 7,
+            "CounterAttackPower": 1.5,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.1,
+                    "DefenseIncrease": 0.2
+                    //Todo: Counter Attack damage *= 1.5
+                }
+            ]
+        }
+    },
+    "Sensei": {
+        "Name": "Sensei",
+        "AWBWID": 13,
+        "DayToDay": {
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "B-Copter" ],
+                    "PowerIncrease": 0.5
+                },
+                {
+                    "AffectedUnits": [ "Infantry", "Mech" ],
+                    "PowerIncrease": 0.4
+                },
+                {
+                    "AffectedUnits": [ "Anti-Air", "Artillery", "Battleship", "Carrier", "Cruiser", "Md.Tank", "Mega Tank", "Missile", "Neo Tank", "Piperunner", "Recon", "Missile", "Sub", "Tank" ],
+                    "PowerIncrease": -0.1
+                }
+                //Additional Effect: T-Copter, Lander, Transport gain +1 movement
+            ]
+        },
+        "NormalPower": {
+            "PowerStars": 2,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "B-Copter" ],
+                    "PowerIncrease": 0.15
+                }
+            ]
+            //Additional Effect: Infantry spawned on every unoccupied city
+        },
+        "SuperPower": {
+            "PowerStars": 6,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "B-Copter" ],
+                    "PowerIncrease": 0.15
+                }
+            ]
+            //Additional Effect: Mechs spawned on every unoccupied city
+        }
+    },
+    "Sonja": {
+        "Name": "Sonja",
+        "AWBWID": 18,
+        "DayToDay": {
+            "HiddenHP": true,
+            "CounterAttackPower": 1.5,
+            "LuckRange": { "x": -9, "y": 9 }
+            //Todo: Counter Attack damage *= 1.5
+            //Additional Features: Sight Range +1
+        },
+        "NormalPower": {
+            "PowerStars": 3,
+            "SeeIntoHiddenTiles": true
+            //Additional Features: Sight Range +1
+        },
+        "SuperPower": {
+            "PowerStars": 5,
+            "AttackFirst": true,
+            "SeeIntoHiddenTiles": true
+            //Additional Features: Sight Range +2
+        }
+    },
+    "Adder": {
+        "Name": "Adder",
+        "AWBWID": 11,
+        "DayToDay": {},
+        "NormalPower": {
+            "PowerStars": 2
+            //Additional Effect: Units get +1 movement
+        },
+        "SuperPower": {
+            "PowerStars": 5
+            //Additional Effect: Units get +2 movement
+        }
+    },
+    "Flak": {
+        "Name": "Flak",
+        "AWBWID": 25,
+        "DayToDay": {
+            "LuckRange": { "x": -9, "y": 24 }
+        },
+        "NormalPower": {
+            "PowerStars": 3,
+            "LuckRange": { "x": -19, "y": 49 }
+        },
+        "SuperPower": {
+            "PowerStars": 6,
+            "LuckRange": { "x": -39, "y": 89 }
+        }
+    },
+    "Hawke": {
+        "Name": "Hawke",
+        "AWBWID": 12,
+        "DayToDay": {
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.1
+                }
+            ]
+        },
+        "NormalPower": {
+            "PowerStars": 5
+            //All units +1 hp, All enemy units -1 hp (cannot kill)
+        },
+        "SuperPower": {
+            "PowerStars": 9
+            //All units +2 hp, All enemy units -2 hp (cannot kill)
+        }
+    },
+    "Jugger": {
+        "Name": "Jugger",
+        "AWBWID": 26,
+        "DayToDay": {
+            "LuckRange": { "x": -14, "y": 29 }
+        },
+        "NormalPower": {
+            "PowerStars": 3,
+            "LuckRange": { "x": -24, "y": 54 }
+        },
+        "SuperPower": {
+            "PowerStars": 7,
+            "LuckRange": { "x": -44, "y": 94 }
+        }
+    },
+    "Kindle": {
+        "Name": "Kindle",
+        "AWBWID": 23,
+        "DayToDay": {
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.4,
+                    "ConditionalTerrain": "Building"
+                }
+            ]
+        },
+        "NormalPower": {
+            "PowerStars": 3,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.4,
+                    "ConditionalTerrain": "Building"
+                }
+            ]
+            //Additional effect -3HP to all units on Buildings
+        },
+        "SuperPower": {
+            "PowerStars": 6,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.9,
+                    "ConditionalTerrain": "Building"
+                }
+            ]
+            //Additional effect +3% attack for all units
+        }
+    },
+    "Koal": {
+        "Name": "Koal",
+        "AWBWID": 21,
+        "DayToDay": {
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.1,
+                    "ConditionalTerrain": "Road"
+                }
+            ]
+        },
+        "NormalPower": {
+            "PowerStars": 3,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.1,
+                    "ConditionalTerrain": "Road"
+                }
+            ]
+            //Additional effect: +1 Movement to All units
+        },
+        "SuperPower": {
+            "PowerStars": 5,
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.2,
+                    "ConditionalTerrain": "Road"
+                }
+            ]
+            //Additional effect: +2 Movement to All units
+        }
+    },
+    "Lash": {
+        "Name": "Lash",
+        "AWBWID": 16,
+        "DayToDay": {
+            //Todo: +10% attack for every terrain +10% defense
+        },
+        "NormalPower": {
+            "PowerStars": 4
+            //Todo: Movement cost decrease
+        },
+        "SuperPower": {
+            "PowerStars": 7
+            //Todo: Movement cost decrease
+            //Todo: Double Terrain Defense
+        }
+    },
+    "Sturm": {
+        "Name": "Sturm",
+        "AWBWID": 29,
+        "DayToDay": {
+            //Todo: Movement cost decrease
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": -0.2,
+                    "DefenseIncrease": 0.2
+                }
+            ]
+        },
+        "NormalPower": {
+            "PowerStars": 6
+            //Additional Effect: Fire Missile dealing 4 damage.
+        },
+        "SuperPower": {
+            "PowerStars": 10
+            //Additional Effect: Fire Missile dealing 8 damage.
+        }
+    },
+    "Von Bolt": {
+        "Name": "Von Bolt",
+        "AWBWID": 30,
+        "DayToDay": {
+            "PowerIncreases": [
+                {
+                    "AffectedUnits": [ "all" ],
+                    "PowerIncrease": 0.1,
+                    "DefenseIncrease": 0.1
+                }
+            ]
+        },
+        "SuperPower": {
+            "PowerStars": 10
+            //Additional Effect: Fire Missile dealing 3 damage and stunning enemies caught in it
+        }
+    }
+}

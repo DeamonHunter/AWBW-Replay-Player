@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AWBWApp.Game.Game.Logic;
 using Newtonsoft.Json;
 
@@ -28,11 +29,18 @@ namespace AWBWApp.Game.Game.Tile
         public TerrainType TerrainType { get; set; }
     }
 
+    [Flags]
     public enum TerrainType
     {
-        None,
-        Land,
-        Sea,
-        Shoal
+        None = 0,
+        Plain = 1 << 0,
+        Road = 1 << 1,
+        Mountain = 1 << 2,
+        Forest = 1 << 3,
+        River = 1 << 4,
+        Building = 1 << 5,
+        Sea = 1 << 6,
+        Shoal = 1 << 7,
+        Land = Plain | Road | Building | Mountain | Forest | River
     }
 }

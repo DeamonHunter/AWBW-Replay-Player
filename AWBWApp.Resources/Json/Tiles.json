@@ -9,7 +9,7 @@
             "Tire": 2,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Plain",
         "BaseTexture": "Plain",
         "FogOfWarTexture": "Plain"
     },
@@ -22,7 +22,7 @@
             "HeavyInf": 1,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Mountain",
         "BaseTexture": "Mountain",
         "FogOfWarTexture": "Mountain"
     },
@@ -37,7 +37,7 @@
             "Tire": 3,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Forest",
         "BaseTexture": "Wood",
         "FogOfWarTexture": "Wood"
     },
@@ -51,7 +51,7 @@
             "Tire": 3,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "River",
         "BaseTexture": "River/H",
         "FogOfWarTexture": "River/H"
     },
@@ -65,7 +65,7 @@
             "Tire": 3,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "River",
         "BaseTexture": "River/V",
         "FogOfWarTexture": "River/V"
     },
@@ -79,7 +79,7 @@
             "Tire": 3,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "River",
         "BaseTexture": "River/C",
         "FogOfWarTexture": "River/C"
     },
@@ -93,7 +93,7 @@
             "Tire": 3,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "River",
         "BaseTexture": "River/ES",
         "FogOfWarTexture": "River/ES"
     },
@@ -107,7 +107,7 @@
             "Tire": 3,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "River",
         "BaseTexture": "River/SW",
         "FogOfWarTexture": "River/SW"
     },
@@ -121,7 +121,7 @@
             "Tire": 3,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "River",
         "BaseTexture": "River/WN",
         "FogOfWarTexture": "River/WN"
     },
@@ -135,7 +135,7 @@
             "Tire": 3,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "River",
         "BaseTexture": "River/NE",
         "FogOfWarTexture": "River/NE"
     },
@@ -149,7 +149,7 @@
             "Tire": 3,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "River",
         "BaseTexture": "River/ESW",
         "FogOfWarTexture": "River/ESW"
     },
@@ -163,7 +163,7 @@
             "Tire": 3,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "River",
         "BaseTexture": "River/SWN",
         "FogOfWarTexture": "River/SWN"
     },
@@ -177,6 +177,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "TerrainType": "River",
         "BaseTexture": "River/WNE",
         "FogOfWarTexture": "River/WNE"
     },
@@ -190,7 +191,7 @@
             "Tire": 3,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "River",
         "BaseTexture": "River/NES",
         "FogOfWarTexture": "River/NES"
     },
@@ -204,7 +205,7 @@
             "Tire": 1,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Road",
         "BaseTexture": "Road/H",
         "FogOfWarTexture": "Road/H"
     },
@@ -218,7 +219,7 @@
             "Tire": 1,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Road",
         "BaseTexture": "Road/V",
         "FogOfWarTexture": "Road/V"
     },
@@ -232,7 +233,7 @@
             "Tire": 1,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Road",
         "BaseTexture": "Road/C",
         "FogOfWarTexture": "Road/C"
     },
@@ -246,7 +247,7 @@
             "Tire": 1,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Road",
         "BaseTexture": "Road/ES",
         "FogOfWarTexture": "Road/ES"
     },
@@ -260,7 +261,7 @@
             "Tire": 1,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Road",
         "BaseTexture": "Road/SW",
         "FogOfWarTexture": "Road/SW"
     },
@@ -274,7 +275,7 @@
             "Tire": 1,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Road",
         "BaseTexture": "Road/WN",
         "FogOfWarTexture": "Road/WN"
     },
@@ -288,7 +289,7 @@
             "Tire": 1,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Road",
         "BaseTexture": "Road/NE",
         "FogOfWarTexture": "Road/NE"
     },
@@ -302,7 +303,7 @@
             "Tire": 1,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Road",
         "BaseTexture": "Road/ESW",
         "FogOfWarTexture": "Road/ESW"
     },
@@ -316,7 +317,7 @@
             "Tire": 1,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Road",
         "BaseTexture": "Road/SWN",
         "FogOfWarTexture": "Road/SWN"
     },
@@ -330,7 +331,7 @@
             "Tire": 1,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Road",
         "BaseTexture": "Road/WNE",
         "FogOfWarTexture": "Road/WNE"
     },
@@ -344,7 +345,7 @@
             "Tire": 1,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Road",
         "BaseTexture": "Road/NES",
         "FogOfWarTexture": "Road/NES"
     },
@@ -358,7 +359,7 @@
             "Tire": 1,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Road",
         "BaseTexture": "Road/HBridge",
         "FogOfWarTexture": "Road/HBridge"
     },
@@ -372,7 +373,7 @@
             "Tire": 1,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Road",
         "BaseTexture": "Road/VBridge",
         "FogOfWarTexture": "Road/VBridge"
     },
@@ -467,7 +468,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Building",
         "BaseTexture": "Pipe/V",
         "FogOfWarTexture": "Pipe/V"
     },
@@ -477,7 +478,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Building",
         "BaseTexture": "Pipe/H",
         "FogOfWarTexture": "Pipe/H"
     },
@@ -487,7 +488,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Building",
         "BaseTexture": "Pipe/NE",
         "FogOfWarTexture": "Pipe/NE"
     },
@@ -497,7 +498,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Building",
         "BaseTexture": "Pipe/ES",
         "FogOfWarTexture": "Pipe/ES"
     },
@@ -507,7 +508,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Building",
         "BaseTexture": "Pipe/SW",
         "FogOfWarTexture": "Pipe/SW"
     },
@@ -517,7 +518,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Building",
         "BaseTexture": "Pipe/WN",
         "FogOfWarTexture": "Pipe/WN"
     },
@@ -527,7 +528,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Building",
         "BaseTexture": "Pipe/NEnd",
         "FogOfWarTexture": "Pipe/NEnd"
     },
@@ -537,7 +538,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Building",
         "BaseTexture": "Pipe/EEnd",
         "FogOfWarTexture": "Pipe/EEnd"
     },
@@ -547,7 +548,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Building",
         "BaseTexture": "Pipe/SEnd",
         "FogOfWarTexture": "Pipe/SEnd"
     },
@@ -557,9 +558,22 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Building",
         "BaseTexture": "Pipe/WEnd",
         "FogOfWarTexture": "Pipe/WEnd"
+    },
+    "Missile Silo Empty": {
+        "AWBWID": 112,
+        "BaseDefence": 3,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "BaseTexture": "Team/Neutral/SiloEmpty-0",
+        "FogOfWarTexture": "Team/Neutral/SiloEmpty-0"
     },
     "HPipe Rubble": {
         "AWBWID": 115,
@@ -571,7 +585,7 @@
             "Tire": 2,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Plain",
         "BaseTexture": "Team/Neutral/HRubble-0",
         "FogOfWarTexture": "Team/Neutral/HRubble-0"
     },
@@ -585,12 +599,12 @@
             "Tire": 2,
             "Air": 1
         },
-        "TerrainType": "Land",
+        "TerrainType": "Plain",
         "BaseTexture": "Team/Neutral/VRubble-0",
         "FogOfWarTexture": "Team/Neutral/VRubble-0"
     },
 
-    //Custom Shoal Tiles
+    //Custom Sea Tiles
     "Sea-N-E-S-W": {
         "AWBWID": 1000,
         "BaseDefence": 0,
@@ -1143,6 +1157,8 @@
         "BaseTexture": "Sea/SW",
         "FogOfWarTexture": "Sea/SW"
     },
+
+    //Custom Shoal Tiles
     "Shoal-N-E-S-W": {
         "AWBWID": 1046,
         "BaseDefence": 0,

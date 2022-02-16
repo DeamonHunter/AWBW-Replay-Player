@@ -1,4 +1,5 @@
 using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
@@ -31,6 +32,7 @@ namespace AWBWApp.Game
         private TerrainTileStorage terrainTileStorage;
         private BuildingStorage buildingStorage;
         private UnitStorage unitStorage;
+        private COStorage coStorage;
 
         protected AWBWAppGameBase()
         {
@@ -74,6 +76,11 @@ namespace AWBWApp.Game
             unitStorage = new UnitStorage();
             unitStorage.LoadStream(unitsJson);
             dependencies.Cache(unitStorage);
+
+            var cosJson = fileStorage.GetStream("Json/COs");
+            coStorage = new COStorage();
+            coStorage.LoadStream(cosJson);
+            dependencies.Cache(coStorage);
         }
 
         protected override UserInputManager CreateUserInputManager() => new AWBWAppUserInputManager();

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
@@ -20,6 +21,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         private BuildingStorage buildingStorage = new BuildingStorage();
         [Cached]
         private UnitStorage unitStorage = new UnitStorage();
+        [Cached]
+        private COStorage coStorage = new COStorage();
 
         protected ReplayController ReplayController;
 
@@ -46,6 +49,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             buildingStorage.LoadStream(buildingsJson);
             var unitsJson = storage.GetStream("Json/Units");
             unitStorage.LoadStream(unitsJson);
+            var cosJson = storage.GetStream("Json/COs");
+            coStorage.LoadStream(cosJson);
         }
 
         protected TerrainTileStorage GetTileStorage()
@@ -61,6 +66,11 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         protected UnitStorage GetUnitStorage()
         {
             return unitStorage;
+        }
+
+        protected COStorage GetCOStorage()
+        {
+            return coStorage;
         }
 
         public ReplayMap CreateBasicMap(int x, int y)
