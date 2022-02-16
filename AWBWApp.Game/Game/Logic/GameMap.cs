@@ -296,14 +296,13 @@ namespace AWBWApp.Game.Game.Logic
             return unitsWithRange;
         }
 
-        public EffectAnimation PlayEffect(string animation, double duration, Vector2I mapPosition, double startDelay = 0, float rotation = 0) => effectAnimationController.PlayAnimation(animation, duration, mapPosition, startDelay, rotation);
+        public EffectAnimation PlayEffect(string animation, double duration, Vector2I mapPosition, double startDelay = 0, Action<EffectAnimation> onLoaded = null) => effectAnimationController.PlayAnimation(animation, duration, mapPosition, startDelay, onLoaded);
 
         public EffectAnimation PlaySelectionAnimation(DrawableUnit unit)
         {
-            var effect = PlayEffect("Effects/Select", 100, unit.MapPosition);
-            effect.DelayUntilTransformsFinished().AddDelayDependingOnDifferenceBetweenEndTimes(effect, unit)
-                  .FadeTo(0.5f).ScaleTo(0.5f)
-                  .FadeTo(1, 150, Easing.In).ScaleTo(1, 300, Easing.OutBounce).Then().Expire();
+            var effect = PlayEffect("Effects/Select", 100, unit.MapPosition, 0,
+                x => x.FadeTo(0.5f).ScaleTo(0.5f)
+                      .FadeTo(1, 150, Easing.In).ScaleTo(1, 300, Easing.OutBounce).Then().Expire());
             return effect;
         }
 

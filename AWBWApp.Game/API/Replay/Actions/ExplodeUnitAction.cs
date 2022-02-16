@@ -63,8 +63,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             //Todo: Bigger explosion?
             controller.Map.DeleteUnit(ExplodedUnitId, false);
-            var effect = controller.Map.PlayEffect("Effects/Explosion/Explosion-Land", 500, explodingUnit.MapPosition + new Vector2I(0, -1));
-            effect.ScaleTo(3);
+            controller.Map.PlayEffect("Effects/Explosion/Explosion-Land", 500, explodingUnit.MapPosition + new Vector2I(0, -1), 0, x => x.ScaleTo(3));
 
             for (int i = 1; i <= 3; i++)
             {

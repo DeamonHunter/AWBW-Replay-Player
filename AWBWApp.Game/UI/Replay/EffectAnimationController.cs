@@ -10,6 +10,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Pooling;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Timing;
+using osuTK;
 
 namespace AWBWApp.Game.UI.Replay
 {
@@ -20,7 +21,7 @@ namespace AWBWApp.Game.UI.Replay
     {
         private Dictionary<string, DrawablePool<EffectAnimation>> pools = new Dictionary<string, DrawablePool<EffectAnimation>>();
 
-        public EffectAnimation PlayAnimation(string animation, double length, Vector2I position, double startDelay, float rotation)
+        public EffectAnimation PlayAnimation(string animation, double length, Vector2I position, double startDelay, Action<EffectAnimation> onLoaded)
         {
             if (!pools.TryGetValue(animation, out var pool))
             {
@@ -30,9 +31,11 @@ namespace AWBWApp.Game.UI.Replay
 
             var drawable = pool.Get(x =>
             {
-                x.Setup(animation, length, startDelay);
-                x.Rotation = rotation;
                 x.Position = GameMap.GetDrawablePositionForBottomOfTile(position) + DrawableTile.HALF_BASE_SIZE;
+                x.Scale = Vector2.One;
+                x.Alpha = 1;
+                x.Rotation = 0;
+                x.Setup(animation, length, startDelay, onLoaded);
             });
 
             AddInternal(drawable);
@@ -116,6 +119,8 @@ namespace AWBWApp.Game.UI.Replay
         private AdjustableRateTextureAnimation clockController;
         private string animationPath;
 
+        private Action<EffectAnimation> onLoaded;
+
         [Resolved]
         private NearestNeighbourTextureStore textureStore { get; set; }
 
@@ -138,8 +143,10 @@ namespace AWBWApp.Game.UI.Replay
             };
         }
 
-        public void Setup(string path, double duration, double startDelay)
+        public void Setup(string path, double duration, double startDelay, Action<EffectAnimation> onLoaded)
         {
+            this.onLoaded = onLoaded;
+
             if (animationPath == null)
                 Scheduler.AddOnce(() => load(path, duration, startDelay));
             else
@@ -191,15 +198,15 @@ namespace AWBWApp.Game.UI.Replay
                 this.FadeOut().Delay(startDelay).FadeTo(alpha).OnComplete(x =>
                 {
                     clockController.RestartClockWithRate(clockController.Animation.Duration / duration);
-                    if (LifetimeEnd == double.MaxValue)
-                        LifetimeEnd = Time.Current + duration;
+                    this.Delay(duration).Expire();
+                    onLoaded?.Invoke(this);
                 });
             }
             else
             {
                 clockController.RestartClockWithRate(clockController.Animation.Duration / duration);
-                if (LifetimeEnd == double.MaxValue)
-                    LifetimeEnd = Time.Current + duration;
+                this.Delay(duration).Expire();
+                onLoaded?.Invoke(this);
             }
         }
     }

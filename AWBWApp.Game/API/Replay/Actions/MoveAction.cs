@@ -80,7 +80,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             controller.UpdateFogOfWar();
 
             if (Trapped)
-                controller.Map.PlayEffect("Effects/TrapMarker", 650, Unit.Position.Value).DelayUntilTransformsFinished().ScaleTo(new Vector2(1, 0)).ScaleTo(new Vector2(1, 1), 250, Easing.OutBounce);
+                controller.Map.PlayEffect("Effects/TrapMarker", 650, Unit.Position.Value, 0, x => x.ScaleTo(new Vector2(1, 0)).ScaleTo(new Vector2(1, 1), 250, Easing.OutBounce));
         }
 
         private void renderPath(UnitPosition[] path, ReplayController controller)
@@ -138,9 +138,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         private void createArrowPiece(ReplayController controller, string type, Vector2I position, int delay, float rotation)
         {
-            controller.Map.PlayEffect(type, 250, position, delay, rotation)
-                      .Delay(delay) //Ensure that the effect has appeared first
-                      .ScaleTo(0.8f).ScaleTo(1f, 75, Easing.OutQuint);
+            controller.Map.PlayEffect(type, 250, position, delay, x =>
+            {
+                x.RotateTo(rotation).ScaleTo(0.8f).ScaleTo(1f, 75, Easing.OutQuint);
+            });
         }
 
         public void UndoAction(ReplayController controller, bool immediate)
