@@ -87,37 +87,45 @@ namespace AWBWApp.Game.UI.Interrupts
 
         private async void attemptLogin()
         {
-            Logger.Log($"Attempting to login to awbw.");
-            var loginRequest = new WebRequest("https://awbw.amarriner.com/logincheck.php");
-            loginRequest.Method = HttpMethod.Post;
-            loginRequest.AddParameter("username", usernameInput.Text);
-            loginRequest.AddParameter("password", passwordInput.Text);
-
-            await loginRequest.PerformAsync().ConfigureAwait(false);
-
-            if (loginRequest.Aborted)
-                throw new Exception();
-
-            var cookieValues = loginRequest.ResponseHeaders.GetValues("Set-Cookie");
-
-            string sessionID = null;
-
-            foreach (var cookie in cookieValues)
+            try
             {
-                if (!cookie.StartsWith("PHPSESSID"))
-                    continue;
+                Logger.Log($"Attempting to login to awbw.");
+                var loginRequest = new WebRequest("https://awbw.amarriner.com/logincheck.php");
+                loginRequest.Method = HttpMethod.Post;
+                loginRequest.AddParameter("username", usernameInput.Text);
+                loginRequest.AddParameter("password", passwordInput.Text);
 
-                var index = cookie.IndexOf(';');
-                if (index == -1)
-                    throw new Exception("Invalid Cookie");
+                await loginRequest.PerformAsync().ConfigureAwait(false);
 
-                sessionID = cookie.Substring(0, index);
+                if (loginRequest.Aborted)
+                    throw new Exception();
+
+                var cookieValues = loginRequest.ResponseHeaders.GetValues("Set-Cookie");
+
+                string sessionID = null;
+
+                foreach (var cookie in cookieValues)
+                {
+                    if (!cookie.StartsWith("PHPSESSID"))
+                        continue;
+
+                    var index = cookie.IndexOf(';');
+                    if (index == -1)
+                        throw new Exception("Invalid Cookie");
+
+                    sessionID = cookie.Substring(0, index);
+                }
+
+                if (sessionID != null)
+                    sessionIdCallback.TrySetResult(sessionID);
+                else
+                    sessionIdCallback.TrySetCanceled();
             }
-
-            if (sessionID != null)
-                sessionIdCallback.TrySetResult(sessionID);
-            else
+            catch (Exception e)
+            {
+                Logger.Log(e.Message, level: LogLevel.Error);
                 sessionIdCallback.TrySetCanceled();
+            }
 
             ActionInvoked();
             Schedule(Hide);
