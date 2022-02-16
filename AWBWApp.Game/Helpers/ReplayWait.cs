@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Graphics;
+using osu.Framework.Graphics.Pooling;
 
 namespace AWBWApp.Game.Helpers
 {
@@ -14,7 +15,12 @@ namespace AWBWApp.Game.Helpers
         public bool IsComplete(double delta)
         {
             if (Transformable != null)
+            {
+                if (Transformable is PoolableDrawable poolable)
+                    return Transformable.IsLoaded && Transformable.LifetimeEnd <= Transformable.Time.Current;
+
                 return Transformable.IsLoaded && Transformable.LatestTransformEndTime <= Transformable.Time.Current;
+            }
 
             Milliseconds -= delta;
             return Milliseconds <= 0;
