@@ -68,7 +68,7 @@ namespace AWBWApp.Game.IO
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(e, "Failed to Parse saved file");
+                    Logger.Error(e, "Failed to Parse saved file: " + replayNumber);
                 }
             }
 
@@ -105,7 +105,7 @@ namespace AWBWApp.Game.IO
 
         private void addReplay(ReplayData data)
         {
-            _knownReplays.Add(data.ReplayInfo.ID, data.ReplayInfo);
+            _knownReplays[data.ReplayInfo.ID] = data.ReplayInfo;
             saveReplays();
 
             ReplayAdded?.Invoke(data.ReplayInfo);
@@ -143,17 +143,22 @@ namespace AWBWApp.Game.IO
             return data;
         }
 
-        public ReplayData ParseAndStoreReplay(int id, Stream stream)
+        public async Task<ReplayData> ParseAndStoreReplay(int id, Stream stream)
         {
-            var path = $"{replay_folder}/{id}.zip";
-            using (var fileStream = File.OpenWrite(path))
-                stream.CopyTo(fileStream);
-
             ReplayData data;
 
             try
             {
                 data = _parser.ParseReplay(stream);
+
+                //Store only after parsing it. So we don't save a bad replay
+                var path = $"{replay_folder}/{id}.zip";
+
+                using (var fileStream = File.OpenWrite(path))
+                {
+                    stream.Seek(0, SeekOrigin.Begin);
+                    stream.CopyTo(fileStream);
+                }
             }
             finally
             {
@@ -161,6 +166,8 @@ namespace AWBWApp.Game.IO
             }
 
             addReplay(data);
+
+            await checkForUsernamesAndGetIfMissing(data.ReplayInfo);
 
             return data;
         }

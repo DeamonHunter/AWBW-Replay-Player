@@ -118,7 +118,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 if (webRequest.ResponseStream.Length <= 100)
                     throw new Exception($"Unable to find the replay of game '{gameID}'. Is the session cookie correct?");
 
-                replay = replayStorage.ParseAndStoreReplay(gameID, webRequest.ResponseStream);
+                replay = await replayStorage.ParseAndStoreReplay(gameID, webRequest.ResponseStream);
             }
             else
                 Logger.Log($"Replay of id '{gameID}' existed locally.");
