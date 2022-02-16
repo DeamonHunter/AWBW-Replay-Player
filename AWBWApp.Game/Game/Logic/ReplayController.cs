@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
+using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Replay;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Screens;
@@ -20,6 +22,9 @@ namespace AWBWApp.Game.Game.Logic
         public long GameID { get; private set; }
 
         public bool HasLoadedReplay { get; private set; }
+
+        [Resolved]
+        public COStorage COStorage { get; private set; }
 
         public List<(int playerID, PowerAction action, int activeDay)> ActivePowers = new List<(int, PowerAction, int)>();
 
@@ -37,6 +42,7 @@ namespace AWBWApp.Game.Game.Logic
         private ReplayPlayerList playerList;
 
         public Dictionary<int, PlayerInfo> Players { get; private set; } = new Dictionary<int, PlayerInfo>();
+        public PlayerInfo ActivePlayer => currentTurn != null ? Players[currentTurn.ActivePlayerID] : null;
 
         private readonly Queue<IEnumerator<ReplayWait>> currentOngoingActions = new Queue<IEnumerator<ReplayWait>>();
 
@@ -267,7 +273,7 @@ namespace AWBWApp.Game.Game.Logic
                         propertyValue += replayData.ReplayInfo.FundsPerBuilding;
                     }
 
-                    player.Value.UpdateTurn(currentTurn.Players[player.Key], turnIdx, unitCount, unitValue, propertyValue);
+                    player.Value.UpdateTurn(currentTurn.Players[player.Key], COStorage, turnIdx, unitCount, unitValue, propertyValue);
                 }
                 playerList.SortList(currentTurn.ActivePlayerID, turnIdx);
                 barWidget.UpdateActions();
@@ -286,13 +292,13 @@ namespace AWBWApp.Game.Game.Logic
                         continue;
 
                     var (playerID, action, activeDay) = ActivePowers.FirstOrDefault(x => x.playerID == player.Value.ID);
-                    Map.UpdateFogOfWar(player.Value.ID, action?.SightRangeIncrease ?? 0, action?.CanSeeIntoHiddenTiles ?? false, false);
+                    Map.UpdateFogOfWar(player.Value.ID, action?.SightRangeIncrease ?? 0, action?.COPower.SeeIntoHiddenTiles ?? false, false);
                 }
             }
             else
             {
                 var (playerID, action, activeDay) = ActivePowers.FirstOrDefault(x => x.playerID == currentTurn.ActivePlayerID);
-                Map.UpdateFogOfWar(currentTurn.ActivePlayerID, action?.SightRangeIncrease ?? 0, action?.CanSeeIntoHiddenTiles ?? false);
+                Map.UpdateFogOfWar(currentTurn.ActivePlayerID, action?.SightRangeIncrease ?? 0, action?.COPower.SeeIntoHiddenTiles ?? false);
             }
         }
 

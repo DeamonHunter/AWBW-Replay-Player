@@ -89,7 +89,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             var (_, attackerPower, _) = controller.ActivePowers.FirstOrDefault(x => x.playerID == attackerUnit.OwnerID.Value);
             var (_, defenderPower, _) = controller.ActivePowers.FirstOrDefault(x => x.playerID == defenderUnit.OwnerID.Value);
 
-            if ((defenderPower?.ReverseAttackOrder ?? false) && !(attackerPower?.ReverseAttackOrder ?? false))
+            if ((defenderPower?.COPower.AttackFirst ?? false) && !(attackerPower?.COPower.AttackFirst ?? false))
             {
                 (attackerUnit, defenderUnit) = (defenderUnit, attackerUnit);
                 (attackerStats, defenderStats) = (defenderStats, attackerStats);

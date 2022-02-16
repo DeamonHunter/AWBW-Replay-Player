@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Replay;
@@ -127,11 +128,11 @@ namespace AWBWApp.Game.UI
             private Sprite unitValueCoin;
             private TableContainer tableContainer;
 
-            private string coName;
+            private COData co;
             private Sprite coSprite;
             private PowerProgress coProgress;
 
-            private string tagCOName;
+            private COData tagCO;
             private Sprite tagCOSprite;
             private PowerProgress tagProgress;
 
@@ -185,7 +186,7 @@ namespace AWBWApp.Game.UI
                     }
                 };
 
-                if (info.TagCO.Value.Name != null)
+                if (info.TagCO.Value.CO != null)
                     adjustContentForTagCO(info);
 
                 info.Eliminated.BindValueChanged(OnEliminationChange, true);
@@ -381,31 +382,34 @@ namespace AWBWApp.Game.UI
                     return;
                 }
 
-                if (wasTagCO && !coUpdated.NewValue.ID.HasValue)
+                if (wasTagCO && coUpdated.NewValue.CO == null)
                     return;
 
-                if ((wasTagCO ? tagCOName : coName) == null)
+                var currentCO = wasTagCO ? tagCO : co;
+                var otherCO = wasTagCO ? co : tagCO;
+
+                if ((wasTagCO ? tagCO : co) == null)
                 {
                     if (wasTagCO)
                     {
-                        tagCOSprite.Texture = textureStore.Get($"CO/{coUpdated.NewValue.Name}-Small");
-                        tagCOName = coUpdated.NewValue.Name;
+                        tagCOSprite.Texture = textureStore.Get($"CO/{coUpdated.NewValue.CO.Name}-Small");
+                        tagCO = coUpdated.NewValue.CO;
                     }
                     else
                     {
-                        coSprite.Texture = textureStore.Get($"CO/{coUpdated.NewValue.Name}-Small");
-                        coName = coUpdated.NewValue.Name;
+                        coSprite.Texture = textureStore.Get($"CO/{coUpdated.NewValue.CO.Name}-Small");
+                        co = coUpdated.NewValue.CO;
                     }
                 }
 
                 //See if we need to swap active and tag co's
-                if ((wasTagCO ? tagCOName : coName) != coUpdated.NewValue.Name)
+                if ((wasTagCO ? tagCO : co) != coUpdated.NewValue.CO)
                 {
-                    var other = wasTagCO ? coName : tagCOName;
-                    if (other != coUpdated.NewValue.Name)
+                    var other = wasTagCO ? co : tagCO;
+                    if (other != coUpdated.NewValue.CO)
                         throw new Exception("Player managed to change CO's during a match without tagging?");
 
-                    (coName, tagCOName) = (tagCOName, coName);
+                    (co, tagCO) = (tagCO, co);
                     (coSprite, tagCOSprite) = (tagCOSprite, coSprite);
                     (coProgress, tagProgress) = (tagProgress, coProgress);
 

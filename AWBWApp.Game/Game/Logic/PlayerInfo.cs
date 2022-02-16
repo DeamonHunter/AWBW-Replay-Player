@@ -1,5 +1,5 @@
-﻿using System;
-using AWBWApp.Game.API.Replay;
+﻿using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.Game.COs;
 using osu.Framework.Bindables;
 
 namespace AWBWApp.Game.Game.Logic
@@ -39,7 +39,7 @@ namespace AWBWApp.Game.Game.Logic
             EliminatedOn = player.EliminatedOn;
         }
 
-        public void UpdateTurn(AWBWReplayPlayerTurn turn, int turnNumber, int unitCount, int unitValue, int propertyValue)
+        public void UpdateTurn(AWBWReplayPlayerTurn turn, COStorage coStorage, int turnNumber, int unitCount, int unitValue, int propertyValue)
         {
             Eliminated.Value = EliminatedOn.HasValue && turnNumber >= EliminatedOn;
 
@@ -50,8 +50,7 @@ namespace AWBWApp.Game.Game.Logic
 
             ActiveCO.Value = new COInfo
             {
-                ID = turn.ActiveCOID,
-                Name = GetCOName(turn.ActiveCOID),
+                CO = coStorage.GetCOByAWBWId(turn.ActiveCOID),
                 Power = turn.Power,
                 PowerRequiredForNormal = turn.RequiredPowerForNormal,
                 PowerRequiredForSuper = turn.RequiredPowerForSuper
@@ -59,44 +58,52 @@ namespace AWBWApp.Game.Game.Logic
 
             TagCO.Value = new COInfo
             {
-                ID = turn.TagCOID,
-                Name = turn.TagCOID.HasValue ? GetCOName(turn.TagCOID.Value) : null,
+                CO = turn.TagCOID.HasValue ? coStorage.GetCOByAWBWId(turn.TagCOID.Value) : null,
                 Power = turn.TagPower,
                 PowerRequiredForNormal = turn.TagRequiredPowerForNormal,
                 PowerRequiredForSuper = turn.TagRequiredPowerForSuper
             };
         }
-
+        /*
         private static string GetCOName(int id) =>
             id switch
             {
                 1 => "Andy",
+                2 => "Grit",
                 3 => "Kanbei",
                 5 => "Drake",
                 7 => "Max",
                 8 => "Sami",
+                9 => "Olaf",
                 10 => "Eagle",
+                11 => "Adder",
                 12 => "Hawke",
+                13 => "Sensei",
                 14 => "Jess",
                 15 => "Colin",
                 16 => "Lash",
                 17 => "Hachi",
                 18 => "Sonja",
                 19 => "Sasha",
+                20 => "Grimm",
+                21 => "Koal",
                 22 => "Jake",
                 23 => "Kindle",
                 24 => "Nell",
+                25 => "Flak",
+                26 => "Jugger",
                 27 => "Javier",
                 28 => "Rachel",
                 29 => "Sturm",
+                30 => "Von Bolt",
                 _ => throw new Exception("Unknown CO ID: " + id)
             };
+        */
     }
 
     public struct COInfo
     {
-        public int? ID;
-        public string Name;
+        public COData CO;
         public int? Power;
         public int? PowerRequiredForNormal;
         public int? PowerRequiredForSuper;

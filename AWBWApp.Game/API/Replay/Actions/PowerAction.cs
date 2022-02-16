@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.UI.Replay;
 using Newtonsoft.Json.Linq;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Logging;
 
@@ -23,10 +26,18 @@ namespace AWBWApp.Game.API.Replay.Actions
             "Sonja-S",
             "Drake-Y",
             "Drake-S",
-            "Jess-Y", //Missing Power Increase
-            "Jess-S", //Missing Power Increase
-            "Grimm-Y", //Missing Power Increase
-            "Grimm-S" //Missing Power Increase
+            "Jess-Y",
+            "Jess-S",
+            "Grimm-Y",
+            "Grimm-S",
+            "Kanbei-Y",
+            "Kanbei-S",
+            "Rachel-Y",
+            "Rachel-S",
+            "Max-Y",
+            "Max-S",
+            "Sturm-Y",
+            "Sturm-S"
         };
 
         public IReplayAction ParseJObjectIntoReplayAction(JObject jObject, ReplayData replayData, TurnData turnData)
@@ -39,7 +50,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                 throw new Exception($"CO Power is of type {coPower} which is not a type this program was made to handle.");
 
             if (!compatibleCOs.Contains($"{action.CombatOfficerName}-{coPower}"))
-                throw new Exception($"Player executed an unknown power: {action.CombatOfficerName}-{coPower}");
+                //throw new Exception($"Player executed an unknown power: {action.CombatOfficerName}-{coPower}");
+                return new EmptyAction();
 
             if ((int)jObject["playerID"] != turnData.ActivePlayerID)
                 throw new Exception("Active player did not use the power. Is this supposed to be possible?");
@@ -54,14 +66,6 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 action.MovementRangeIncrease = (int)globalEffects["units_movement_points"];
                 action.SightRangeIncrease = (int)globalEffects["units_vision"];
-
-                if (action.CombatOfficerName == "Sonja")
-                {
-                    //AWBW doesn't specify these values in Json. So we need to create the data ourselves.
-                    action.CanSeeIntoHiddenTiles = true;
-                    if (coPower == "S")
-                        action.ReverseAttackOrder = true;
-                }
             }
 
             var hpChange = (JObject)jObject["hpChange"];
@@ -110,17 +114,45 @@ namespace AWBWApp.Game.API.Replay.Actions
                 {
                     var change = new PowerAction.UnitChange();
 
-                    if (unit.TryGetValue("units_ammo", out JToken ammo))
-                        change.Ammo = (int)ammo;
+                    foreach (var pair in unit)
+                    {
+                        switch (pair.Key)
+                        {
+                            case "units_ammo":
+                                change.Ammo = (int)pair.Value;
+                                break;
 
-                    if (unit.TryGetValue("units_fuel", out JToken fuel))
-                        change.Fuel = (int)fuel;
+                            case "units_fuel":
+                                change.Fuel = (int)pair.Value;
+                                break;
 
-                    if (unit.TryGetValue("units_movement_points", out JToken movementPoints))
-                        change.MovementPoints = (int)movementPoints;
+                            case "units_hit_points":
+                                change.HitPoints = (int)pair.Value;
+                                break;
+
+                            case "units_movement_points":
+                                change.MovementPoints = (int)pair.Value;
+                                break;
+
+                            case "units_id":
+                                break;
+
+                            default:
+                                throw new Exception("Unknown Unit Change: " + pair.Key);
+                        }
+                    }
 
                     action.UnitChanges.Add((int)unit["units_id"], change);
                 }
+            }
+
+            var missileCoords = (JArray)jObject["missileCoords"];
+
+            if (missileCoords != null)
+            {
+                action.MissileCoords = new List<Vector2I>();
+                foreach (JObject coord in missileCoords)
+                    action.MissileCoords.Add(new Vector2I((int)coord["x"], (int)coord["y"]));
             }
 
             var weatherChange = (JObject)jObject["weather"];
@@ -137,21 +169,23 @@ namespace AWBWApp.Game.API.Replay.Actions
         public string CombatOfficerName;
         public string PowerName;
         public bool IsSuperPower;
-
         public int LeftOverPower;
 
-        public int MovementRangeIncrease;
+        public COPower COPower;
         public int SightRangeIncrease;
-        public bool CanSeeIntoHiddenTiles;
-        public bool ReverseAttackOrder;
+        public int MovementRangeIncrease;
 
         public string ChangeToWeather;
 
         public Dictionary<int, PlayerWideUnitChange> PlayerWideChanges;
         public Dictionary<int, UnitChange> UnitChanges;
+        public List<Vector2I> MissileCoords;
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
+            var co = controller.COStorage.GetCOByName(CombatOfficerName);
+            COPower = IsSuperPower ? co.SuperPower : co.NormalPower;
+
             //Todo: Show power off
             Logger.Log("Power Action animation not implemented");
 
@@ -163,10 +197,42 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (ChangeToWeather.IsNullOrEmpty())
                 Logger.Log("Weather Change not Implemented.");
 
-            if (SightRangeIncrease != 0 || CanSeeIntoHiddenTiles)
+            if (SightRangeIncrease != 0 || COPower.SeeIntoHiddenTiles)
             {
                 controller.UpdateFogOfWar();
                 yield return ReplayWait.WaitForMilliseconds(150);
+            }
+
+            var coValue = controller.ActivePlayer.ActiveCO.Value;
+            coValue.Power = LeftOverPower;
+            if (co.NormalPower != null)
+                coValue.PowerRequiredForNormal += 18000 * co.NormalPower.PowerStars;
+            if (co.SuperPower != null)
+                coValue.PowerRequiredForSuper += 18000 * co.SuperPower.PowerStars;
+            controller.ActivePlayer.ActiveCO.Value = coValue;
+
+            if (MissileCoords != null)
+            {
+                var waitForEffects = new List<EffectAnimation>();
+
+                for (int i = 0; i < MissileCoords.Count; i++)
+                {
+                    var coord = MissileCoords[i];
+                    var target = controller.Map.PlayEffect("Effects/Target", 1500, coord, i * 250, x =>
+                    {
+                        x.ScaleTo(10).ScaleTo(1, 1000, Easing.In)
+                         .FadeTo(1, 500)
+                         .RotateTo(0).RotateTo(90 * 4, 1200, Easing.Out).Then().Expire();
+                    });
+
+                    waitForEffects.Add(target);
+
+                    var explosion = controller.Map.PlayEffect("Effects/Explosion/Explosion-Land", 500, coord + new Vector2I(0, -1), 1350 + i * 250, x => x.ScaleTo(3));
+                    waitForEffects.Add(explosion);
+                }
+
+                foreach (var effect in waitForEffects)
+                    yield return ReplayWait.WaitForTransformable(effect);
             }
 
             if (PlayerWideChanges != null)
@@ -202,6 +268,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                             unit.Ammo.Value = change.Value.Ammo.Value;
                         if (change.Value.Fuel.HasValue)
                             unit.Fuel.Value = change.Value.Fuel.Value;
+                        if (change.Value.HitPoints.HasValue)
+                            unit.HealthPoints.Value = change.Value.HitPoints.Value;
 
                         if (unit.HealthPoints.Value <= 0)
                             controller.Map.DeleteUnit(unit.UnitID, true);
@@ -242,6 +310,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             public int? Fuel;
             public int? Ammo;
             public int? MovementPoints;
+            public int? HitPoints;
         }
     }
 }
