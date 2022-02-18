@@ -22,22 +22,34 @@ namespace AWBWApp.Game.API.Replay.Actions
         //Todo: We don't get information about unit damage increases.
         private readonly HashSet<string> compatibleCOs = new HashSet<string>
         {
-            "Sonja-Y",
-            "Sonja-S",
-            "Drake-Y",
-            "Drake-S",
-            "Jess-Y",
-            "Jess-S",
-            "Grimm-Y",
-            "Grimm-S",
-            "Kanbei-Y",
-            "Kanbei-S",
-            "Rachel-Y",
-            "Rachel-S",
-            "Max-Y",
-            "Max-S",
-            "Sturm-Y",
-            "Sturm-S"
+            "Andy-Y", "Andy-S",
+            "Hachi-Y", "Hachi-S",
+            "Jake-Y", "Jake-S",
+            "Max-Y", "Max-S",
+            "Nell-Y", "Nell-S",
+            "Rachel-Y", "Rachel-S",
+            "Sami-Y", "Sami-S",
+            "Colin-Y",
+            "Grit-Y", "Grit-S",
+            "Olaf-Y", "Olaf-S",
+            "Sasha-Y", "Sasha-S",
+            "Drake-Y", "Drake-S",
+            "Eagle-Y", "Eagle-S",
+            //TODO: Javier
+            "Jess-Y", "Jess-S",
+            "Grimm-Y", "Grimm-S",
+            "Kanbei-Y", "Kanbei-S",
+            "Sensei-Y", "Sensei-S",
+            "Sonja-Y", "Sonja-S",
+            "Adder-Y", "Adder-S",
+            "Flak-Y", "Flak-S",
+            "Hawke-Y", "Hawke-S",
+            "Jugger-Y", "Jugger-S",
+            "Kindle-Y", "Kindle-S",
+            "Koal-Y", "Koal-S",
+            "Lash-Y", "Lash-S",
+            "Sturm-Y", "Sturm-S",
+            //Todo: Von Bolt
         };
 
         public IReplayAction ParseJObjectIntoReplayAction(JObject jObject, ReplayData replayData, TurnData turnData)
@@ -50,8 +62,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 throw new Exception($"CO Power is of type {coPower} which is not a type this program was made to handle.");
 
             if (!compatibleCOs.Contains($"{action.CombatOfficerName}-{coPower}"))
-                //throw new Exception($"Player executed an unknown power: {action.CombatOfficerName}-{coPower}");
-                return new EmptyAction();
+                throw new Exception($"Player executed an unknown power: {action.CombatOfficerName}-{coPower}");
 
             if ((int)jObject["playerID"] != turnData.ActivePlayerID)
                 throw new Exception("Active player did not use the power. Is this supposed to be possible?");
@@ -64,8 +75,22 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (globalEffects != null)
             {
-                action.MovementRangeIncrease = (int)globalEffects["units_movement_points"];
-                action.SightRangeIncrease = (int)globalEffects["units_vision"];
+                foreach (var entry in globalEffects)
+                {
+                    switch (entry.Key)
+                    {
+                        case "units_movement_points":
+                            action.MovementRangeIncrease = (int)entry.Value;
+                            break;
+
+                        case "units_vision":
+                            action.SightRangeIncrease = (int)entry.Value;
+                            break;
+
+                        default:
+                            throw new Exception("Unknown global entry: " + entry.Key);
+                    }
+                }
             }
 
             var hpChange = (JObject)jObject["hpChange"];
@@ -78,11 +103,27 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                 if (hpGainEntry is JObject hpGain)
                 {
-                    var change = new PowerAction.PlayerWideUnitChange
+                    var change = new PowerAction.PlayerWideUnitChange();
+
+                    foreach (var entry in hpGain)
                     {
-                        HPGain = (int)hpGain["hp"],
-                        FuelGainPercentage = (double)hpGain["units_fuel"]
-                    };
+                        switch (entry.Key)
+                        {
+                            case "hp":
+                                change.HPGain = (int)entry.Value;
+                                break;
+
+                            case "units_fuel":
+                                change.FuelGainPercentage = (double)entry.Value;
+                                break;
+
+                            case "players":
+                                break;
+
+                            default:
+                                throw new Exception("Unknown hpGain entry: " + entry.Key);
+                        }
+                    }
 
                     foreach (var player in (JArray)hpGain["players"])
                         action.PlayerWideChanges.Add((int)player, change);
@@ -92,11 +133,27 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                 if (hpLossEntry is JObject hpLoss)
                 {
-                    var change = new PowerAction.PlayerWideUnitChange
+                    var change = new PowerAction.PlayerWideUnitChange();
+
+                    foreach (var entry in hpLoss)
                     {
-                        HPGain = (int)hpLoss["hp"],
-                        FuelGainPercentage = (double)hpLoss["units_fuel"]
-                    };
+                        switch (entry.Key)
+                        {
+                            case "hp":
+                                change.HPGain = (int)entry.Value;
+                                break;
+
+                            case "units_fuel":
+                                change.FuelGainPercentage = (double)entry.Value;
+                                break;
+
+                            case "players":
+                                break;
+
+                            default:
+                                throw new Exception("Unknown hpLoss entry: " + entry.Key);
+                        }
+                    }
 
                     foreach (var player in (JArray)hpLoss["players"])
                         action.PlayerWideChanges.Add((int)player, change);
@@ -107,42 +164,138 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (unitReplace != null)
             {
-                action.UnitChanges = new Dictionary<int, PowerAction.UnitChange>();
                 var activePlayerUnitReplace = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject(unitReplace, turnData.ActiveTeam, turnData.ActivePlayerID);
 
-                foreach (JObject unit in (JArray)activePlayerUnitReplace["units"])
+                //Occasionally this will be { "units": null }
+                var unitReplaces = activePlayerUnitReplace["units"];
+
+                if (unitReplaces.Type != JTokenType.Null)
                 {
-                    var change = new PowerAction.UnitChange();
+                    action.UnitChanges = new Dictionary<int, PowerAction.UnitChange>();
 
-                    foreach (var pair in unit)
+                    foreach (JObject unit in (JArray)unitReplaces)
                     {
-                        switch (pair.Key)
+                        var change = new PowerAction.UnitChange();
+
+                        foreach (var entry in unit)
                         {
-                            case "units_ammo":
-                                change.Ammo = (int)pair.Value;
+                            switch (entry.Key)
+                            {
+                                case "units_ammo":
+                                    change.Ammo = (int)entry.Value;
+                                    break;
+
+                                case "units_fuel":
+                                    change.Fuel = (int)entry.Value;
+                                    break;
+
+                                case "units_hit_points":
+                                    change.HitPoints = (int)entry.Value;
+                                    break;
+
+                                case "units_movement_points":
+                                    change.MovementPoints = (int)entry.Value;
+                                    break;
+
+                                case "units_long_range":
+                                    change.Range = (int)entry.Value;
+                                    break;
+
+                                case "units_moved":
+                                    change.UnitsMoved = (int)entry.Value;
+                                    break;
+
+                                case "units_id":
+                                    break;
+
+                                default:
+                                    throw new Exception("Unknown Unit Change: " + entry.Key);
+                            }
+                        }
+
+                        action.UnitChanges.Add((int)unit["units_id"], change);
+                    }
+                }
+            }
+
+            var playerReplace = (JObject)jObject["playerReplace"];
+
+            if (playerReplace != null)
+            {
+                var details = ReplayActionHelper.GetPlayerSpecificDataFromJObject(playerReplace, turnData.ActiveTeam, turnData.ActivePlayerID);
+                action.PlayerChanges = new Dictionary<int, PowerAction.PlayerChange>();
+
+                foreach (var player in (JObject)details)
+                {
+                    var change = new PowerAction.PlayerChange();
+
+                    foreach (var entry in (JObject)player.Value)
+                    {
+                        switch (entry.Key)
+                        {
+                            case "players_funds":
+                                change.Money = (int)entry.Value;
                                 break;
 
-                            case "units_fuel":
-                                change.Fuel = (int)pair.Value;
+                            case "players_co_power":
+                                change.COPower = (int)entry.Value;
                                 break;
 
-                            case "units_hit_points":
-                                change.HitPoints = (int)pair.Value;
-                                break;
-
-                            case "units_movement_points":
-                                change.MovementPoints = (int)pair.Value;
-                                break;
-
-                            case "units_id":
+                            case "tags_co_power":
+                                change.COPower = (int)entry.Value;
                                 break;
 
                             default:
-                                throw new Exception("Unknown Unit Change: " + pair.Key);
+                                throw new Exception("Unknown PLayer Change: " + entry.Key);
                         }
                     }
 
-                    action.UnitChanges.Add((int)unit["units_id"], change);
+                    action.PlayerChanges.Add(int.Parse(player.Key), change);
+                }
+            }
+
+            var unitAdd = (JObject)jObject["unitAdd"];
+
+            if (unitAdd != null)
+            {
+                var details = ReplayActionHelper.GetPlayerSpecificDataFromJObject(unitAdd, turnData.ActiveTeam, turnData.ActivePlayerID);
+
+                var playerId = (int)details["playerId"];
+                if (playerId != turnData.ActivePlayerID)
+                    throw new Exception("Adding units for a non-active player?");
+
+                action.CreatedUnits = new List<PowerAction.CreateUnit>();
+
+                var unitName = (string)details["unitName"];
+
+                foreach (var unit in (JArray)details["units"])
+                {
+                    var newUnit = new PowerAction.CreateUnit();
+                    newUnit.UnitName = unitName;
+                    newUnit.HP = 9; //Hardcoded as it is not passed to us.
+
+                    foreach (var entry in (JObject)unit)
+                    {
+                        switch (entry.Key)
+                        {
+                            case "units_id":
+                                newUnit.UnitID = (int)entry.Value;
+                                break;
+
+                            case "units_x":
+                                newUnit.Position.X = (int)entry.Value;
+                                break;
+
+                            case "units_y":
+                                newUnit.Position.Y = (int)entry.Value;
+                                break;
+
+                            default:
+                                throw new Exception("Unknown AddUnits entry: " + newUnit);
+                        }
+                    }
+
+                    action.CreatedUnits.Add(newUnit);
                 }
             }
 
@@ -177,8 +330,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public string ChangeToWeather;
 
+        public Dictionary<int, PlayerChange> PlayerChanges;
         public Dictionary<int, PlayerWideUnitChange> PlayerWideChanges;
         public Dictionary<int, UnitChange> UnitChanges;
+        public List<CreateUnit> CreatedUnits;
         public List<Vector2I> MissileCoords;
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -235,6 +390,31 @@ namespace AWBWApp.Game.API.Replay.Actions
                     yield return ReplayWait.WaitForTransformable(effect);
             }
 
+            if (PlayerChanges != null)
+            {
+                foreach (var change in PlayerChanges)
+                {
+                    var player = controller.Players[change.Key];
+
+                    if (change.Value.Money.HasValue)
+                        player.Funds.Value = change.Value.Money.Value;
+
+                    if (change.Value.COPower.HasValue)
+                    {
+                        var activeCO = player.ActiveCO.Value;
+                        activeCO.Power = change.Value.COPower;
+                        player.ActiveCO.Value = activeCO;
+                    }
+
+                    if (change.Value.TagCOPower.HasValue)
+                    {
+                        var activeCO = player.TagCO.Value;
+                        activeCO.Power = change.Value.COPower;
+                        player.TagCO.Value = activeCO;
+                    }
+                }
+            }
+
             if (PlayerWideChanges != null)
             {
                 foreach (var change in PlayerWideChanges)
@@ -270,7 +450,13 @@ namespace AWBWApp.Game.API.Replay.Actions
                             unit.Fuel.Value = change.Value.Fuel.Value;
                         if (change.Value.HitPoints.HasValue)
                             unit.HealthPoints.Value = change.Value.HitPoints.Value;
+                        if (change.Value.UnitsMoved.HasValue)
+                            unit.CanMove.Value = change.Value.UnitsMoved.Value <= 0;
 
+                        if (change.Value.MovementPoints.HasValue)
+                            Logger.Log("Unit Movement Change not implemented yet.");
+                        if (change.Value.Range.HasValue)
+                            Logger.Log("Unit Range Change not implemented yet.");
                         if (unit.HealthPoints.Value <= 0)
                             controller.Map.DeleteUnit(unit.UnitID, true);
                         else
@@ -279,6 +465,36 @@ namespace AWBWApp.Game.API.Replay.Actions
                     else
                         throw new Exception("Unable to find unit: " + change.Key);
 
+                    yield return ReplayWait.WaitForMilliseconds(50);
+                }
+            }
+
+            if (CreatedUnits != null)
+            {
+                foreach (var unit in CreatedUnits)
+                {
+                    var unitData = controller.Map.GetUnitDataForUnitName(unit.UnitName);
+                    var newUnit = new ReplayUnit
+                    {
+                        ID = unit.UnitID,
+                        PlayerID = (int)controller.ActivePlayer.ID,
+                        UnitName = unit.UnitName,
+                        Position = unit.Position,
+                        HitPoints = unit.HP,
+                        Ammo = unitData.MaxAmmo,
+                        BeingCarried = false,
+                        Cost = unitData.Cost,
+                        Fuel = unitData.MaxFuel,
+                        FuelPerTurn = unitData.FuelUsagePerTurn,
+                        MovementPoints = unitData.MovementRange,
+                        Vision = unitData.Vision,
+                        Range = unitData.AttackRange,
+                        TimesMoved = 0,
+                        MovementType = unitData.MovementType.ToString()
+                    };
+
+                    var drawable = controller.Map.AddUnit(newUnit);
+                    controller.Map.PlaySelectionAnimation(drawable);
                     yield return ReplayWait.WaitForMilliseconds(50);
                 }
             }
@@ -299,6 +515,21 @@ namespace AWBWApp.Game.API.Replay.Actions
             throw new NotImplementedException();
         }
 
+        public class PlayerChange
+        {
+            public int? Money;
+            public int? COPower;
+            public int? TagCOPower;
+        }
+
+        public class CreateUnit
+        {
+            public string UnitName;
+            public int UnitID;
+            public int HP;
+            public Vector2I Position;
+        }
+
         public class PlayerWideUnitChange
         {
             public int? HPGain;
@@ -311,6 +542,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             public int? Ammo;
             public int? MovementPoints;
             public int? HitPoints;
+            public int? Range;
+            public int? UnitsMoved;
         }
     }
 }

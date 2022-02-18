@@ -391,5 +391,7 @@ namespace AWBWApp.Game.Game.Logic
         }
 
         private long? getPlayerIDFromCountryID(int countryID) => players.FirstOrDefault(x => x.Value.CountryID.Value == countryID).Key;
+
+        public UnitData GetUnitDataForUnitName(string unitName) => unitStorage.GetUnitByCode(unitName);
     }
 }
