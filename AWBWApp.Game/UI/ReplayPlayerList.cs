@@ -385,9 +385,6 @@ namespace AWBWApp.Game.UI
                 if (wasTagCO && coUpdated.NewValue.CO == null)
                     return;
 
-                var currentCO = wasTagCO ? tagCO : co;
-                var otherCO = wasTagCO ? co : tagCO;
-
                 if ((wasTagCO ? tagCO : co) == null)
                 {
                     if (wasTagCO)

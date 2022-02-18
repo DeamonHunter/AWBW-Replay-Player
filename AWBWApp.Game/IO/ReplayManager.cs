@@ -78,6 +78,8 @@ namespace AWBWApp.Game.IO
 
         private async Task checkForUsernamesAndGetIfMissing(ReplayInfo info)
         {
+            bool savePlayers = false;
+
             foreach (var player in info.Players)
             {
                 if (player.Value.Username != null)
@@ -86,6 +88,8 @@ namespace AWBWApp.Game.IO
                         _playerNames[player.Value.UserId] = player.Value.Username;
                     continue;
                 }
+
+                savePlayers = true;
 
                 if (_playerNames.TryGetValue(player.Value.UserId, out var username))
                 {
@@ -102,6 +106,9 @@ namespace AWBWApp.Game.IO
 
                 player.Value.Username = usernameRequest.Username;
             }
+
+            if (savePlayers)
+                saveReplays();
         }
 
         private void addReplay(ReplayData data)
@@ -116,6 +123,9 @@ namespace AWBWApp.Game.IO
         {
             var contents = JsonConvert.SerializeObject(_knownReplays, Formatting.Indented);
             File.WriteAllText(replay_storage, contents);
+
+            contents = JsonConvert.SerializeObject(_playerNames, Formatting.Indented);
+            File.WriteAllText(username_storage, contents);
         }
 
         public async Task<ReplayData> GetReplayData(ReplayInfo info) => await GetReplayData(info.ID);

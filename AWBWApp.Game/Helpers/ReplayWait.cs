@@ -16,7 +16,7 @@ namespace AWBWApp.Game.Helpers
         {
             if (Transformable != null)
             {
-                if (Transformable is PoolableDrawable poolable)
+                if (Transformable is PoolableDrawable)
                     return Transformable.IsLoaded && Transformable.LifetimeEnd <= Transformable.Time.Current;
 
                 return Transformable.IsLoaded && Transformable.LatestTransformEndTime <= Transformable.Time.Current;
