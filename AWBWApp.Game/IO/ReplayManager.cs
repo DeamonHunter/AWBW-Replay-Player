@@ -28,7 +28,7 @@ namespace AWBWApp.Game.IO
 
         private AWBWReplayParser _parser = new AWBWReplayParser();
 
-        public ReplayManager()
+        public ReplayManager(bool checkForNewReplays = true)
         {
             //Ensure that the replay directory always exists before getting it.
             if (!Directory.Exists(replay_folder))
@@ -40,7 +40,8 @@ namespace AWBWApp.Game.IO
             if (File.Exists(username_storage))
                 _playerNames = JsonConvert.DeserializeObject<Dictionary<long, string>>(File.ReadAllText(username_storage));
 
-            Task.Run(checkAllReplays);
+            if (checkForNewReplays)
+                Task.Run(checkAllReplays);
         }
 
         public IEnumerable<ReplayInfo> GetAllKnownReplays() => _knownReplays.Values;
@@ -132,6 +133,10 @@ namespace AWBWApp.Game.IO
             try
             {
                 data = _parser.ParseReplay(stream);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to parse replay with id: " + id, e);
             }
             finally
             {
