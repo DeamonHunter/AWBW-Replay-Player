@@ -85,7 +85,7 @@ namespace AWBWApp.Game.API.New
                 throw new Exception("Game State file does not start correctly.");
             textIndex += turn_start_text.Length;
 
-            var entriesCount = ReadNextLength(ref text, ref textIndex);
+            var entriesCount = readNextLength(ref text, ref textIndex);
 
             var newTurn = new TurnData();
             replayData.TurnData.Add(newTurn);
@@ -97,7 +97,7 @@ namespace AWBWApp.Game.API.New
 
             for (int i = 0; i < entriesCount; i++)
             {
-                var entry = ReadString(ref text, ref textIndex);
+                var entry = readString(ref text, ref textIndex);
 
                 switch (entry)
                 {
@@ -130,7 +130,7 @@ namespace AWBWApp.Game.API.New
 
                     case "name":
                     {
-                        var name = ReadString(ref text, ref textIndex);
+                        var name = readString(ref text, ref textIndex);
                         if (!firstTurn && replayData.ReplayInfo.Name != name)
                             throw new Exception("Data 'Name' changed per turn when not expected.");
                         replayData.ReplayInfo.Name = name;
@@ -139,7 +139,7 @@ namespace AWBWApp.Game.API.New
 
                     case "password":
                     {
-                        var password = ReadString(ref text, ref textIndex);
+                        var password = readString(ref text, ref textIndex);
                         if (!firstTurn && replayData.ReplayInfo.Password != password)
                             throw new Exception("Data 'Password' changed per turn when not expected.");
                         replayData.ReplayInfo.Password = password;
@@ -211,7 +211,7 @@ namespace AWBWApp.Game.API.New
 
                     case "league":
                     {
-                        var leagueMatch = ReadString(ref text, ref textIndex);
+                        var leagueMatch = readString(ref text, ref textIndex);
                         if (!firstTurn && replayData.ReplayInfo.LeagueMatch != leagueMatch)
                             throw new Exception("Data 'LeagueMatch' changed per turn when not expected.");
                         replayData.ReplayInfo.LeagueMatch = leagueMatch;
@@ -242,7 +242,7 @@ namespace AWBWApp.Game.API.New
 
                     case "start_date":
                     {
-                        var startDate = ReadString(ref text, ref textIndex);
+                        var startDate = readString(ref text, ref textIndex);
 
                         var dateTime = DateTime.Parse(startDate);
                         if (!firstTurn && replayData.ReplayInfo.StartDate != dateTime)
@@ -256,7 +256,7 @@ namespace AWBWApp.Game.API.New
                         //Describes the date at which the last activity was made during this turn.
                         //Is useful as an effective end date when 'end_date' doesn't specify a time.
 
-                        var activityDate = ReadString(ref text, ref textIndex);
+                        var activityDate = readString(ref text, ref textIndex);
 
                         if (activityDate != null)
                         {
@@ -272,7 +272,7 @@ namespace AWBWApp.Game.API.New
                     {
                         //This is likely always null. But we will attempt to parse it incase.
 
-                        var endDate = ReadString(ref text, ref textIndex);
+                        var endDate = readString(ref text, ref textIndex);
 
                         if (endDate != null)
                         {
@@ -286,7 +286,7 @@ namespace AWBWApp.Game.API.New
 
                     case "weather_type":
                     {
-                        var value = ReadString(ref text, ref textIndex);
+                        var value = readString(ref text, ref textIndex);
 
                         if (newTurn.Weather == null)
                             newTurn.Weather = new ReplayWeather();
@@ -296,7 +296,7 @@ namespace AWBWApp.Game.API.New
 
                     case "weather_code":
                     {
-                        var value = ReadString(ref text, ref textIndex);
+                        var value = readString(ref text, ref textIndex);
 
                         if (newTurn.Weather == null)
                             newTurn.Weather = new ReplayWeather();
@@ -316,14 +316,14 @@ namespace AWBWApp.Game.API.New
                     case "win_condition":
                     {
                         //Todo: Is this always null? Is this just a holdover?
-                        var value = ReadString(ref text, ref textIndex);
+                        var value = readString(ref text, ref textIndex);
                         break;
                     }
 
                     case "active":
                     {
                         //Todo: Is this always "Y"? Is this just a holdover?
-                        var value = ReadString(ref text, ref textIndex);
+                        var value = readString(ref text, ref textIndex);
                         break;
                     }
 
@@ -348,13 +348,13 @@ namespace AWBWApp.Game.API.New
                     {
                         //Todo: Is this always null? Is this just a holdover?
                         //This may always be null do to comments not being displayed on finished matches?
-                        var value = ReadString(ref text, ref textIndex);
+                        var value = readString(ref text, ref textIndex);
                         break;
                     }
 
                     case "type":
                     {
-                        var value = ReadString(ref text, ref textIndex);
+                        var value = readString(ref text, ref textIndex);
 
                         MatchType type;
 
@@ -391,7 +391,7 @@ namespace AWBWApp.Game.API.New
                     {
                         //Describes the date at which the Auto End Turn would have finished the players turn.
                         //We do not need this as we do not care when the players would have been booted.
-                        ReadString(ref text, ref textIndex);
+                        readString(ref text, ref textIndex);
                         break;
                     }
 
@@ -470,7 +470,7 @@ namespace AWBWApp.Game.API.New
             if (text[textIndex++] != ':')
                 throw new Exception("Expected an array declaration for player data.");
 
-            var numberOfPlayers = ReadNextLength(ref text, ref textIndex);
+            var numberOfPlayers = readNextLength(ref text, ref textIndex);
 
             data.ReplayInfo.Players ??= new Dictionary<int, AWBWReplayPlayer>(numberOfPlayers);
             turnData.Players = new Dictionary<int, AWBWReplayPlayerTurn>();
@@ -486,7 +486,7 @@ namespace AWBWApp.Game.API.New
                     throw new Exception("Player data does not start correctly.");
                 textIndex += player_start_text.Length;
 
-                var paramerterCount = ReadNextLength(ref text, ref textIndex);
+                var paramerterCount = readNextLength(ref text, ref textIndex);
 
                 AWBWReplayPlayer playerData;
 
@@ -502,7 +502,7 @@ namespace AWBWApp.Game.API.New
 
                 for (int j = 0; j < paramerterCount; j++)
                 {
-                    var entry = ReadString(ref text, ref textIndex);
+                    var entry = readString(ref text, ref textIndex);
 
                     switch (entry)
                     {
@@ -527,7 +527,7 @@ namespace AWBWApp.Game.API.New
 
                         case "team":
                         {
-                            var teamName = ReadString(ref text, ref textIndex);
+                            var teamName = readString(ref text, ref textIndex);
                             if (!firstTurn && playerData.TeamName != teamName)
                                 throw new Exception("Player 'teamName' changed per turn when not expected.");
                             playerData.TeamName = teamName;
@@ -633,7 +633,7 @@ namespace AWBWApp.Game.API.New
 
                         case "co_power_on":
                         {
-                            var powerActive = ReadString(ref text, ref textIndex);
+                            var powerActive = readString(ref text, ref textIndex);
 
                             //Todo: See if this changes for Tag
                             switch (powerActive)
@@ -678,7 +678,7 @@ namespace AWBWApp.Game.API.New
                         {
                             //Specifies the image used to show the CO.
                             //Not really useful for us, as we keep our own images, unless AWBW starts making skins or something.
-                            ReadString(ref text, ref textIndex);
+                            readString(ref text, ref textIndex);
                             break;
                         }
 
@@ -686,7 +686,7 @@ namespace AWBWApp.Game.API.New
                         {
                             //Specifies the email used by this player. This may always be null.
                             //Not useful for us and is probably breaking some privacy stuff if we were to show this.
-                            var value = ReadString(ref text, ref textIndex);
+                            var value = readString(ref text, ref textIndex);
                             break;
                         }
 
@@ -694,7 +694,7 @@ namespace AWBWApp.Game.API.New
                         {
                             //This date is likely to do with the player, and not important to the replay. This may always be null.
                             //Not useful for us and is probably breaking some privacy stuff if we were to show this.
-                            var value = ReadString(ref text, ref textIndex);
+                            var value = readString(ref text, ref textIndex);
                             break;
                         }
 
@@ -702,7 +702,7 @@ namespace AWBWApp.Game.API.New
                         {
                             //This date is likely to do with the player, and not important to the replay.
                             //Not useful for us and is probably breaking some privacy stuff if we were to show this.
-                            ReadString(ref text, ref textIndex);
+                            readString(ref text, ref textIndex);
                             break;
                         }
 
@@ -710,7 +710,7 @@ namespace AWBWApp.Game.API.New
                         {
                             //This date is likely to do with the player, and not important to the replay. This may always be null.
                             //Not useful for us and is probably breaking some privacy stuff if we were to show this.
-                            ReadString(ref text, ref textIndex);
+                            readString(ref text, ref textIndex);
                             break;
                         }
 
@@ -725,7 +725,7 @@ namespace AWBWApp.Game.API.New
                         case "signature":
                         {
                             //Specifies the signature of the player. This may always be null.
-                            var value = ReadString(ref text, ref textIndex);
+                            var value = readString(ref text, ref textIndex);
                             break;
                         }
 
@@ -734,7 +734,7 @@ namespace AWBWApp.Game.API.New
                             //Unsure what this value is meant to represent. But seems to always be null.
                             //Likely to be a leftover value and not useful
                             //Todo: Is this always null?
-                            var value = ReadString(ref text, ref textIndex);
+                            var value = readString(ref text, ref textIndex);
                             break;
                         }
 
@@ -742,7 +742,7 @@ namespace AWBWApp.Game.API.New
                         {
                             //Describes when the turn started
                             //Not useful for us as we don't really care when turns begin and end.
-                            ReadString(ref text, ref textIndex);
+                            readString(ref text, ref textIndex);
                             break;
                         }
 
@@ -767,7 +767,7 @@ namespace AWBWApp.Game.API.New
                         {
                             //Likely was a different type of player id? This seems to always be null.
                             //Not useful if its always null.
-                            var value = ReadString(ref text, ref textIndex);
+                            var value = readString(ref text, ref textIndex);
                             break;
                         }
 
@@ -775,7 +775,7 @@ namespace AWBWApp.Game.API.New
                         {
                             //Likely describes which interface the player was using.
                             //This probably doesn't matter too much?
-                            var value = ReadString(ref text, ref textIndex);
+                            var value = readString(ref text, ref textIndex);
                             break;
                         }
 
@@ -808,7 +808,7 @@ namespace AWBWApp.Game.API.New
             if (text[textIndex++] != ':')
                 throw new Exception("Expected an array declaration for building data.");
 
-            var numberOfBuildings = ReadNextLength(ref text, ref textIndex);
+            var numberOfBuildings = readNextLength(ref text, ref textIndex);
 
             data.Buildings = new Dictionary<Vector2I, ReplayBuilding>();
             if (text[textIndex++] != '{')
@@ -821,7 +821,7 @@ namespace AWBWApp.Game.API.New
                     throw new Exception("Building data does not start correctly.");
                 textIndex += building_start_text.Length;
 
-                var parameterCount = ReadNextLength(ref text, ref textIndex);
+                var parameterCount = readNextLength(ref text, ref textIndex);
 
                 if (text[textIndex++] != '{')
                     throw new Exception("Building data does not start correctly.");
@@ -830,7 +830,7 @@ namespace AWBWApp.Game.API.New
 
                 for (int j = 0; j < parameterCount; j++)
                 {
-                    var entry = ReadString(ref text, ref textIndex);
+                    var entry = readString(ref text, ref textIndex);
 
                     switch (entry)
                     {
@@ -886,7 +886,7 @@ namespace AWBWApp.Game.API.New
                         case "last_updated":
                         {
                             //Unneeded data containing the time at which the building was last updated.
-                            ReadString(ref text, ref textIndex);
+                            readString(ref text, ref textIndex);
                             break;
                         }
 
@@ -910,7 +910,7 @@ namespace AWBWApp.Game.API.New
             if (text[textIndex++] != ':')
                 throw new Exception("Expected an array declaration for unit data.");
 
-            var numberOfUnits = ReadNextLength(ref text, ref textIndex);
+            var numberOfUnits = readNextLength(ref text, ref textIndex);
 
             data.ReplayUnit = new Dictionary<long, ReplayUnit>();
             if (text[textIndex++] != '{')
@@ -923,7 +923,7 @@ namespace AWBWApp.Game.API.New
                     throw new Exception("Unit data does not start correctly.");
                 textIndex += units_start_text.Length;
 
-                var parameterCount = ReadNextLength(ref text, ref textIndex);
+                var parameterCount = readNextLength(ref text, ref textIndex);
 
                 if (text[textIndex++] != '{')
                     throw new Exception("Unit data does not start correctly.");
@@ -932,7 +932,7 @@ namespace AWBWApp.Game.API.New
 
                 for (int j = 0; j < parameterCount; j++)
                 {
-                    var entry = ReadString(ref text, ref textIndex);
+                    var entry = readString(ref text, ref textIndex);
 
                     switch (entry)
                     {
@@ -952,7 +952,7 @@ namespace AWBWApp.Game.API.New
 
                         case "name":
                         {
-                            var name = ReadString(ref text, ref textIndex);
+                            var name = readString(ref text, ref textIndex);
                             unit.UnitName = name;
                             break;
                         }
@@ -987,7 +987,7 @@ namespace AWBWApp.Game.API.New
 
                         case "sub_dive":
                         {
-                            var dived = ReadBool(ref text, ref textIndex);
+                            var dived = readString(ref text, ref textIndex);
                             unit.SubHasDived = dived;
                             break;
                         }
@@ -1033,7 +1033,7 @@ namespace AWBWApp.Game.API.New
 
                         case "movement_type":
                         {
-                            var type = ReadString(ref text, ref textIndex);
+                            var type = readString(ref text, ref textIndex);
                             unit.MovementType = type;
                             break;
                         }
@@ -1125,7 +1125,7 @@ namespace AWBWApp.Game.API.New
                         case "symbol":
                         {
                             //We do not need this value, this is basically a secondary code for a unit. (Alongside Unit name)
-                            ReadString(ref text, ref textIndex);
+                            readString(ref text, ref textIndex);
                             break;
                         }
 
@@ -1224,7 +1224,7 @@ namespace AWBWApp.Game.API.New
             if (text[textIndex++] != ':')
                 throw new Exception("Expected an array declaration for unit data.");
 
-            var actionCount = ReadNextLength(ref text, ref textIndex);
+            var actionCount = readNextLength(ref text, ref textIndex);
 
             if (text[textIndex++] != '{')
                 throw new Exception("Expected an array declaration for unit data.");
@@ -1236,7 +1236,7 @@ namespace AWBWApp.Game.API.New
                 for (int i = 0; i < actionCount; i++)
                 {
                     var index = ReadInteger(ref text, ref textIndex);
-                    var actionString = ReadString(ref text, ref textIndex);
+                    var actionString = readString(ref text, ref textIndex);
 
                     if (actionString == "Array")
                     {
@@ -1262,7 +1262,7 @@ namespace AWBWApp.Game.API.New
                 if (actionCount == 1)
                 {
                     var index = ReadInteger(ref text, ref textIndex);
-                    var actionString = ReadString(ref text, ref textIndex);
+                    var actionString = readString(ref text, ref textIndex);
                     var jsonObject = JObject.Parse(actionString);
                     var action = actionDatabase.ParseJObjectIntoReplayAction(jsonObject, replayData, turnData);
 
@@ -1278,7 +1278,7 @@ namespace AWBWApp.Game.API.New
         }
 
         //Todo: Read long maybe?
-        int ReadNextLength(ref string text, ref int index)
+        private int readNextLength(ref string text, ref int index)
         {
             var startIndex = index;
 
@@ -1288,11 +1288,10 @@ namespace AWBWApp.Game.API.New
                 if (character == ':')
                     break;
             }
-            var number = text.Substring(startIndex, index - startIndex - 1);
-            return int.Parse(number);
+            return int.Parse(text[startIndex..(index - 1)]);
         }
 
-        string ReadString(ref string text, ref int index)
+        private string readString(ref string text, ref int index)
         {
             var type = text[index];
             index += 2;
@@ -1303,30 +1302,36 @@ namespace AWBWApp.Game.API.New
                 {
                     if (text[index - 1] != ':')
                         throw new Exception("String was badly formatted.");
-                    var entryLength = ReadNextLength(ref text, ref index);
+                    var entryLength = readNextLength(ref text, ref index);
                     if (text[index] != '"')
                         throw new Exception("String was badly formatted.");
 
-                    var byteCount = 0;
-                    int textCount = 0;
+                    var textEntry = text[(index + 1)..(index + entryLength + 1)];
 
-                    while (byteCount < entryLength)
+                    if (Encoding.UTF8.GetByteCount(textEntry) != entryLength)
                     {
-                        textCount++;
-                        byteCount += Encoding.UTF8.GetByteCount(text, index + textCount, 1);
-                        if (byteCount == entryLength)
-                            break;
+                        var textCount = 0;
+                        var byteCount = 0;
+
+                        while (byteCount < entryLength)
+                        {
+                            textCount++;
+                            byteCount += Encoding.UTF8.GetByteCount(text, index + textCount, 1);
+                            if (byteCount == entryLength)
+                                break;
+                        }
+
+                        textEntry = text[(index + 1)..(index + textCount + 1)];
                     }
 
-                    var unicodeEntry = text.Substring(index + 1, textCount);
-                    index += textCount + 3;
+                    index += textEntry.Length + 3;
 
                     if (text[index - 2] != '"')
                         throw new Exception("String was badly formatted.");
                     if (text[index - 1] != ';')
                         throw new Exception("String was badly formatted.");
 
-                    return unicodeEntry;
+                    return textEntry;
                 }
 
                 case 'N':
@@ -1405,7 +1410,7 @@ namespace AWBWApp.Game.API.New
 
         bool ReadBool(ref string text, ref int index)
         {
-            var stringData = ReadString(ref text, ref index);
+            var stringData = readString(ref text, ref index);
 
             if (stringData == null)
                 throw new Exception("Unable to handle null bool."); //Is this possible?
