@@ -16,7 +16,7 @@ namespace AWBWApp.Game.Tests.Visual
             game = new AWBWAppGame();
             game.SetHost(host);
 
-            Add(game);
+            AddGame(game);
         }
     }
 }
