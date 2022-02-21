@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Tile;
@@ -161,24 +160,6 @@ namespace AWBWApp.Game.Game.Logic
                 updateToGameState(gameState);
                 postUpdateAction?.Invoke();
             });
-        }
-
-        Vector2I GetTerrainSize(Dictionary<int, Dictionary<int, AWBWTile>> tiles)
-        {
-            var mapSize = new Vector2I();
-
-            foreach (var column in tiles)
-            {
-                if (mapSize.X < column.Key + 1)
-                    mapSize.X = column.Key + 1;
-
-                foreach (var tile in column.Value)
-                {
-                    if (mapSize.Y < tile.Key + 1)
-                        mapSize.Y = tile.Key + 1;
-                }
-            }
-            return mapSize;
         }
 
         //Todo: Save this data

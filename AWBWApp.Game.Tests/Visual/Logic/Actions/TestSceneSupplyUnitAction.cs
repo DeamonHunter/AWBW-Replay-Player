@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
 using NUnit.Framework;

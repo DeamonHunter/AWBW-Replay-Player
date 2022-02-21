@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Logic;
@@ -94,8 +93,6 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
             for (int x = 0; x < xSize; x++)
             {
-                var row = new Dictionary<int, AWBWTile>();
-
                 for (int y = 0; y < ySize; y++)
                 {
                     var id = x * ySize + y + 1; //+1 to skip id 0
