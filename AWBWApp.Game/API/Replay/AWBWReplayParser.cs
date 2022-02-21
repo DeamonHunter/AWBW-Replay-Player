@@ -472,7 +472,7 @@ namespace AWBWApp.Game.API.New
 
             var numberOfPlayers = readNextLength(ref text, ref textIndex);
 
-            data.ReplayInfo.Players ??= new Dictionary<int, AWBWReplayPlayer>(numberOfPlayers);
+            data.ReplayInfo.Players ??= new Dictionary<int, ReplayUser>(numberOfPlayers);
             turnData.Players = new Dictionary<int, AWBWReplayPlayerTurn>();
 
             if (text[textIndex++] != '{')
@@ -488,13 +488,13 @@ namespace AWBWApp.Game.API.New
 
                 var paramerterCount = readNextLength(ref text, ref textIndex);
 
-                AWBWReplayPlayer playerData;
+                ReplayUser playerData;
 
                 //This makes this slightly awkward but the benefits of using a dictionary tend to outway this awkwardness.
                 if (!firstTurn)
                     playerData = Enumerable.First(data.ReplayInfo.Players, x => x.Value.ReplayIndex == playerIndex).Value;
                 else
-                    playerData = new AWBWReplayPlayer { ReplayIndex = playerIndex };
+                    playerData = new ReplayUser { ReplayIndex = playerIndex };
                 var playerDataTurn = new AWBWReplayPlayerTurn();
 
                 if (text[textIndex++] != '{')

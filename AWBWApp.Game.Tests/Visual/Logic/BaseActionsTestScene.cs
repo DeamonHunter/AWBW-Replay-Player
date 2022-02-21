@@ -12,11 +12,11 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 
             //Create some basic players
 
-            replayData.ReplayInfo.Players = new Dictionary<int, AWBWReplayPlayer>(playerCount);
+            replayData.ReplayInfo.Players = new Dictionary<int, ReplayUser>(playerCount);
 
             for (int i = 0; i < playerCount; i++)
             {
-                var player = new AWBWReplayPlayer
+                var player = new ReplayUser
                 {
                     CountryId = i + 1,
                     UserId = i,

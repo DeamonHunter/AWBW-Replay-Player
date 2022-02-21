@@ -4,7 +4,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.API.Replay
 {
-    public class AWBWReplayPlayer
+    public class ReplayUser
     {
         public int ID;
         public int UserId;

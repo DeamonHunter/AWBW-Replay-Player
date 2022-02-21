@@ -48,7 +48,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
 
         private void reset(bool addTeam, bool addTag)
         {
-            var replayPlayer = new AWBWReplayPlayer
+            var replayPlayer = new ReplayUser
             {
                 ID = 0,
                 UserId = 0,

@@ -206,7 +206,7 @@ namespace AWBWApp.Game.UI
                         new Box()
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Colour = AWBWReplayPlayer.CountryColour(info.CountryID.Value).Darken(0.1f),
+                            Colour = ReplayUser.CountryColour(info.CountryID.Value).Darken(0.1f),
                         }
                     }
                 };

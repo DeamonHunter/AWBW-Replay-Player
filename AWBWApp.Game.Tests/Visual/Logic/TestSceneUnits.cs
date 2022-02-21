@@ -19,11 +19,11 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             UnitIds = GetUnitStorage().GetAllUnitIds();
 
             var replayData = CreateBasicReplayData(0);
-            replayData.ReplayInfo.Players = new Dictionary<int, AWBWReplayPlayer>(TeamIDs.Length);
+            replayData.ReplayInfo.Players = new Dictionary<int, ReplayUser>(TeamIDs.Length);
 
             for (int i = 0; i < TeamIDs.Length; i++)
             {
-                replayData.ReplayInfo.Players[i] = new AWBWReplayPlayer
+                replayData.ReplayInfo.Players[i] = new ReplayUser
                 {
                     ID = TeamIDs[i],
                     CountryId = TeamIDs[i]
@@ -49,14 +49,14 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 Players = new Dictionary<int, AWBWReplayPlayerTurn>(TeamIDs.Length)
             };
 
-            var players = new AWBWReplayPlayer[TeamIDs.Length];
+            var players = new ReplayUser[TeamIDs.Length];
             var playersIndex = new Dictionary<int, int>();
 
             for (int i = 0; i < TeamIDs.Length; i++)
             {
                 var id = TeamIDs[i];
 
-                players[i] = new AWBWReplayPlayer
+                players[i] = new ReplayUser
                 {
                     ID = id,
                     CountryId = id

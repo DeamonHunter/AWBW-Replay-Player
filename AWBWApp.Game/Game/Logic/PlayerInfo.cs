@@ -25,7 +25,7 @@ namespace AWBWApp.Game.Game.Logic
         public BindableInt UnitValue = new BindableInt();
         public BindableInt PropertyValue = new BindableInt();
 
-        public PlayerInfo(AWBWReplayPlayer player)
+        public PlayerInfo(ReplayUser player)
         {
             ID = player.ID;
             Username = player.Username;

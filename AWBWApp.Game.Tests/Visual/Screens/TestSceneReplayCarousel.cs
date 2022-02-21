@@ -62,11 +62,11 @@ namespace AWBWApp.Game.Tests.Visual.Screens
 
                     var playerCount = random.Next(2, 8);
 
-                    var players = new Dictionary<int, AWBWReplayPlayer>();
+                    var players = new Dictionary<int, ReplayUser>();
 
                     for (int j = 0; j < playerCount; j++)
                     {
-                        players[j] = new AWBWReplayPlayer()
+                        players[j] = new ReplayUser()
                         {
                             ID = j,
                             CountryId = j + 1,

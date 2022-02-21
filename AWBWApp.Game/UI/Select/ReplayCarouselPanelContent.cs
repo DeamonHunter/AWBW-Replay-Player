@@ -36,7 +36,7 @@ namespace AWBWApp.Game.UI.Select
                 playersDrawables[i * 2] = new SpriteText
                 {
                     Text = player.UniqueId,
-                    Colour = AWBWReplayPlayer.CountryColour(player.CountryId).Lighten(0.5f),
+                    Colour = ReplayUser.CountryColour(player.CountryId).Lighten(0.5f),
                     Font = FontUsage.Default.With(size: 15, italics: true)
                 };
 

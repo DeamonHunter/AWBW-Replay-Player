@@ -18,7 +18,7 @@ namespace AWBWApp.Game.API.Replay
         public int CreatorId;
 
         public int MapId;
-        public Dictionary<int, AWBWReplayPlayer> Players;
+        public Dictionary<int, ReplayUser> Players;
 
         public int FundsPerBuilding;
         public int StartingFunds;
