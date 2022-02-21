@@ -147,23 +147,6 @@ namespace AWBWApp.Game.API.Replay
             return building;
         }
 
-        public static ReplayAttackCOPChange ParseJObjectIntoAttackCOPChange(JObject jObject)
-        {
-            var copChange = new ReplayAttackCOPChange();
-
-            var attacker = (JObject)jObject["attacker"];
-            copChange.AttackingPlayerId = (long)attacker["playerId"];
-            copChange.AttackingPlayerCOPChange = (long?)attacker["copValue"];
-            copChange.AttackingPlayerTagChange = (long?)attacker["tagValue"];
-
-            var defender = (JObject)jObject["defender"];
-            copChange.DefendingPlayerId = (long)defender["playerId"];
-            copChange.DefendingPlayerCOPChange = (long?)defender["copValue"];
-            copChange.DefendingPlayerTagChange = (long?)defender["tagValue"];
-
-            return copChange;
-        }
-
         public static bool ParseReplayBool(string boolean)
         {
             if (boolean == "Y" || boolean == "y")

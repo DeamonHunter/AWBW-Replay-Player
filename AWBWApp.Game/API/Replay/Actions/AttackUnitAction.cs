@@ -59,7 +59,35 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             action.Defender = ReplayActionHelper.ParseJObjectIntoReplayUnit((JObject)combatInfo["defender"]);
 
-            action.COPChanges = ReplayActionHelper.ParseJObjectIntoAttackCOPChange((JObject)attackData["copValues"]);
+            var copValues = (JObject)attackData["copValues"];
+
+            if (copValues != null)
+            {
+                action.PowerChanges = new List<AttackUnitAction.COPowerChange>();
+
+                foreach (var player in copValues)
+                {
+                    var powerChange = new AttackUnitAction.COPowerChange();
+                    powerChange.PlayerID = (int)player.Value["playerId"];
+                    powerChange.PowerChange = (int)player.Value["copValue"];
+                    powerChange.TagPowerChange = (int?)player.Value["tagValue"];
+                    action.PowerChanges.Add(powerChange);
+                }
+            }
+
+            var gainedFunds = (JObject)combatInfo["gainedFunds"];
+
+            if (gainedFunds != null)
+            {
+                action.GainedFunds = new List<(int, int)>();
+
+                foreach (var player in gainedFunds)
+                {
+                    if (player.Value.Type == JTokenType.Null)
+                        continue;
+                    action.GainedFunds.Add((int.Parse(player.Key), (int)player.Value));
+                }
+            }
 
             return action;
         }
@@ -69,8 +97,8 @@ namespace AWBWApp.Game.API.Replay.Actions
     {
         public ReplayUnit Attacker { get; set; }
         public ReplayUnit Defender { get; set; }
-        public ReplayAttackCOPChange COPChanges { get; set; }
-        public long? GainedFunds { get; set; }
+        public List<COPowerChange> PowerChanges { get; set; }
+        public List<(int playerID, int funds)> GainedFunds { get; set; }
 
         public MoveUnitAction MoveUnit;
 
@@ -89,7 +117,9 @@ namespace AWBWApp.Game.API.Replay.Actions
             var (_, attackerPower, _) = controller.ActivePowers.FirstOrDefault(x => x.playerID == attackerUnit.OwnerID.Value);
             var (_, defenderPower, _) = controller.ActivePowers.FirstOrDefault(x => x.playerID == defenderUnit.OwnerID.Value);
 
-            if ((defenderPower?.COPower.AttackFirst ?? false) && !(attackerPower?.COPower.AttackFirst ?? false))
+            var swapAttackOrder = (defenderPower?.COPower.AttackFirst ?? false) && !(attackerPower?.COPower.AttackFirst ?? false);
+
+            if (swapAttackOrder)
             {
                 (attackerUnit, defenderUnit) = (defenderUnit, attackerUnit);
                 (attackerStats, defenderStats) = (defenderStats, attackerStats);
@@ -112,6 +142,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 attackerUnit.UpdateUnit(Attacker);
                 controller.Map.DeleteUnit(defenderUnit.UnitID, true);
+                afterAttackChanges(controller);
                 yield break;
             }
 
@@ -129,6 +160,33 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 controller.Map.DeleteUnit(attackerUnit.UnitID, true);
                 controller.UpdateFogOfWar();
+            }
+
+            afterAttackChanges(controller);
+        }
+
+        private void afterAttackChanges(ReplayController controller)
+        {
+            if (GainedFunds != null)
+            {
+                foreach (var player in GainedFunds)
+                    controller.Players[player.playerID].Funds.Value += player.funds;
+            }
+
+            foreach (var player in PowerChanges)
+            {
+                var playerData = controller.Players[player.PlayerID];
+
+                var coPower = playerData.ActiveCO.Value;
+                coPower.Power += player.PowerChange;
+                playerData.ActiveCO.Value = coPower;
+
+                if (player.TagPowerChange.HasValue)
+                {
+                    var tagPower = playerData.TagCO.Value;
+                    tagPower.Power += player.TagPowerChange;
+                    playerData.TagCO.Value = tagPower;
+                }
             }
         }
 
@@ -149,6 +207,13 @@ namespace AWBWApp.Game.API.Replay.Actions
             Logger.Log("Undoing Capture Action.");
             throw new NotImplementedException("Undo Action for Capture Building is not complete");
             //controller.Map.DestroyUnit(NewUnit.ID, false, immediate);
+        }
+
+        public class COPowerChange
+        {
+            public int PlayerID;
+            public int PowerChange;
+            public int? TagPowerChange;
         }
     }
 }
