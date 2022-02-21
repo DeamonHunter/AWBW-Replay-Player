@@ -178,13 +178,13 @@ namespace AWBWApp.Game.API.Replay.Actions
                 var playerData = controller.Players[player.PlayerID];
 
                 var coPower = playerData.ActiveCO.Value;
-                coPower.Power += player.PowerChange;
+                coPower.Power = player.PowerChange;
                 playerData.ActiveCO.Value = coPower;
 
                 if (player.TagPowerChange.HasValue)
                 {
                     var tagPower = playerData.TagCO.Value;
-                    tagPower.Power += player.TagPowerChange;
+                    tagPower.Power = player.TagPowerChange;
                     playerData.TagCO.Value = tagPower;
                 }
             }
