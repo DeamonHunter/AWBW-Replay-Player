@@ -41,7 +41,7 @@ namespace AWBWApp.Game.Tests.Visual
                 });
             });
 
-        //Todo: This is somewhat awkward but I can't be arsed trying to PR to get this open.
+        //TODO: Requires opening a PR or dialogue about possibly adding this as an option so I can add my own step types.
         protected bool GetIsSetup()
         {
             var type = GetType().BaseType;

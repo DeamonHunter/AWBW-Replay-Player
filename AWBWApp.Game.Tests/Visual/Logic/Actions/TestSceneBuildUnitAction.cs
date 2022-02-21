@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using AWBWApp.Game.API.Replay;
-using AWBWApp.Game.API.Replay.Actions;
+﻿using AWBWApp.Game.API.Replay.Actions;
 using NUnit.Framework;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 {
-    //Todo: Add trapping
     [TestFixture]
     public class TestSceneBuildUnitAction : BaseActionsTestScene
     {
@@ -22,11 +19,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         {
             var replayData = CreateBasicReplayData(2);
 
-            var turn = new TurnData();
-            turn.ReplayUnit = new Dictionary<long, ReplayUnit>();
-            turn.Buildings = new Dictionary<Vector2I, ReplayBuilding>();
-            turn.Actions = new List<IReplayAction>();
-
+            var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
 
             var building = CreateBasicReplayBuilding(0, new Vector2I(2, 2), 39);

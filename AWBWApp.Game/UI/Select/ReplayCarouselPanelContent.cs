@@ -29,26 +29,28 @@ namespace AWBWApp.Game.UI.Select
 
             var playersDrawables = new Drawable[replayInfo.Players.Count * 2 - 1];
 
-            for (int i = 0; i < replayInfo.Players.Count; i++)
-            {
-                var player = replayInfo.Players[i];
+            var index = 0;
 
-                playersDrawables[i * 2] = new SpriteText
+            foreach (var player in replayInfo.Players)
+            {
+                playersDrawables[index * 2] = new SpriteText
                 {
-                    Text = player.Username ?? "[Unknown Username: " + player.UserId + "]",
-                    Colour = Color4Extensions.FromHex(countryStorage.GetCountryByAWBWID(player.CountryId).Colours["replayList"]).Lighten(0.5f), //Todo: Fix config
+                    Text = player.Value.Username ?? "[Unknown Username: " + player.Value.UserId + "]",
+                    Colour = Color4Extensions.FromHex(countryStorage.GetCountryByAWBWID(player.Value.CountryId).Colours["replayList"]).Lighten(0.5f), //Todo: Fix config
                     Font = FontUsage.Default.With(size: 15, italics: true)
                 };
 
-                if (i == replayInfo.Players.Count - 1)
-                    break;
+                if (index == replayInfo.Players.Count - 1)
+                    continue;
 
-                playersDrawables[i * 2 + 1] = new SpriteText
+                playersDrawables[index * 2 + 1] = new SpriteText
                 {
                     Text = ", ",
                     Font = FontUsage.Default.With(size: 15),
                     Shadow = true
                 };
+
+                index++;
             }
 
             InternalChildren = new Drawable[]

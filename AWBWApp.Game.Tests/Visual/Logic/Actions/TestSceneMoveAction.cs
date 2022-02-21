@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
 using NUnit.Framework;
@@ -7,7 +6,6 @@ using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 {
-    //Todo: Add trapping
     [TestFixture]
     public class TestSceneMoveAction : BaseActionsTestScene
     {
@@ -73,12 +71,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         private void MoveTestBasic(int spaces)
         {
             var replayData = CreateBasicReplayData(2);
-
-            var turn = new TurnData();
-            turn.ReplayUnit = new Dictionary<long, ReplayUnit>();
-            turn.Buildings = new Dictionary<Vector2I, ReplayBuilding>();
-            turn.Actions = new List<IReplayAction>();
-
+            var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
 
             var mapSize = spaces + 1;
@@ -148,12 +141,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         private void MoveTestTrap()
         {
             var replayData = CreateBasicReplayData(2);
-
-            var turn = new TurnData();
-            turn.ReplayUnit = new Dictionary<long, ReplayUnit>();
-            turn.Buildings = new Dictionary<Vector2I, ReplayBuilding>();
-            turn.Actions = new List<IReplayAction>();
-
+            var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
 
             var movingUnit = CreateBasicReplayUnit(0, 0, "Recon", new Vector2I(1, 1));
@@ -192,12 +180,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         private void MoveTestCorner(int spaces)
         {
             var replayData = CreateBasicReplayData(2);
-
-            var turn = new TurnData();
-            turn.ReplayUnit = new Dictionary<long, ReplayUnit>();
-            turn.Buildings = new Dictionary<Vector2I, ReplayBuilding>();
-            turn.Actions = new List<IReplayAction>();
-
+            var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
 
             var mapSize = spaces + 1;

@@ -38,7 +38,9 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             {
                 var playerData = new AWBWReplayPlayerTurn
                 {
-                    ActiveCOID = player.Value.CountryId
+                    ActiveCOID = player.Value.CountryId == 4 || player.Value.CountryId == 6 ? 17 : player.Value.CountryId, //Skip over 4/6 as those are not valid
+                    RequiredPowerForNormal = 90000,
+                    RequiredPowerForSuper = 180000
                 };
 
                 players.Add(player.Key, playerData);

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace AWBWApp.Game.Game.Country
@@ -32,6 +33,11 @@ namespace AWBWApp.Game.Game.Country
         public CountryData GetCountryByCode(string name)
         {
             return countriesByCode[name];
+        }
+
+        public List<int> GetAllCountryIDs()
+        {
+            return countriesByAWBWID.Keys.ToList();
         }
     }
 }

@@ -68,6 +68,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             defendingLand.Ammo = 0;
             attackAction.Attacker = new ReplayUnit { ID = attackerUnit.ID, Ammo = attackerUnit.Ammo - 1, HitPoints = 10 };
             attackAction.Defender = new ReplayUnit { ID = defendingLand.ID, Ammo = 0, HitPoints = 0 };
+            attackAction.PowerChanges = new List<AttackUnitAction.COPowerChange>();
 
             turn.ReplayUnit.Add(defendingLand.ID, defendingLand);
             turn.Actions.Add(attackAction);
@@ -78,6 +79,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             defendingSea.Ammo = 0;
             attackAction.Attacker = new ReplayUnit { ID = attackerUnit.ID, Ammo = attackerUnit.Ammo - 1, HitPoints = 10 };
             attackAction.Defender = new ReplayUnit { ID = defendingSea.ID, Ammo = 0, HitPoints = 0 };
+            attackAction.PowerChanges = new List<AttackUnitAction.COPowerChange>();
 
             turn.ReplayUnit.Add(defendingSea.ID, defendingSea);
             turn.Actions.Add(attackAction);
@@ -88,6 +90,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             defendingAir.Ammo = 0;
             attackAction.Attacker = new ReplayUnit { ID = attackerUnit.ID, Ammo = attackerUnit.Ammo - 1, HitPoints = 10 };
             attackAction.Defender = new ReplayUnit { ID = defendingAir.ID, Ammo = 0, HitPoints = 0 };
+            attackAction.PowerChanges = new List<AttackUnitAction.COPowerChange>();
 
             turn.ReplayUnit.Add(defendingAir.ID, defendingAir);
             turn.Actions.Add(attackAction);
@@ -151,6 +154,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 var attackAction = new AttackUnitAction();
                 attackAction.Attacker = new ReplayUnit { ID = attackerUnit.ID, Ammo = attackerUnit.Ammo - 1, HitPoints = 9 };
                 attackAction.Defender = new ReplayUnit { ID = defenderUnit.ID, Ammo = 0, HitPoints = 10 - ((i + 1) * 2) };
+                attackAction.PowerChanges = new List<AttackUnitAction.COPowerChange>();
 
                 turn.Actions.Add(attackAction);
             }
@@ -162,11 +166,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         {
             var replayData = CreateBasicReplayData(2);
 
-            var turn = new TurnData();
-            turn.ReplayUnit = new Dictionary<long, ReplayUnit>();
-            turn.Buildings = new Dictionary<Vector2I, ReplayBuilding>();
-            turn.Actions = new List<IReplayAction>();
-
+            var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
 
             var mapSize = 5;
@@ -200,6 +200,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             };
             attackAction.Attacker = new ReplayUnit { ID = attackerUnit.ID, Ammo = 0, HitPoints = 9 };
             attackAction.Defender = new ReplayUnit { ID = defenderUnit.ID, Ammo = 0, HitPoints = 8 };
+            attackAction.PowerChanges = new List<AttackUnitAction.COPowerChange>();
 
             turn.Actions.Add(attackAction);
 

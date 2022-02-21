@@ -10,71 +10,54 @@ namespace AWBWApp.Game.Tests.Visual.Logic
     [TestFixture]
     public class TestSceneUnits : BaseActionsTestScene
     {
-        private int[] TeamIDs = new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }; //Todo: Update with actual ids 
         private List<int> UnitIds;
+
+        private ReplayData baseData;
 
         [SetUpSteps]
         public void SetUpSteps()
         {
             UnitIds = GetUnitStorage().GetAllUnitIds();
 
-            var replayData = CreateBasicReplayData(0);
-            replayData.ReplayInfo.Players = new Dictionary<int, ReplayUser>(TeamIDs.Length);
+            var countryIDs = GetCountryStorage().GetAllCountryIDs();
 
-            for (int i = 0; i < TeamIDs.Length; i++)
+            baseData = CreateBasicReplayData(0);
+            baseData.ReplayInfo.Players = new Dictionary<int, ReplayUser>(countryIDs.Count);
+
+            for (int i = 0; i < countryIDs.Count; i++)
             {
-                replayData.ReplayInfo.Players[i] = new ReplayUser
+                var countryID = countryIDs[i];
+                baseData.ReplayInfo.Players[countryID] = new ReplayUser
                 {
-                    ID = TeamIDs[i],
-                    CountryId = TeamIDs[i]
+                    ID = countryID,
+                    UserId = countryID,
+                    CountryId = countryID
                 };
             }
-            replayData.TurnData.Add(CreateBasicTurnData(replayData));
-            ReplayController.LoadReplay(replayData, CreateBasicMap(UnitIds.Count, TeamIDs.Length));
+            baseData.TurnData.Add(CreateBasicTurnData(baseData));
+            ReplayController.LoadReplay(baseData, CreateBasicMap(UnitIds.Count, countryIDs.Count));
         }
 
         [Test]
         public void TestDisplayAllUnits()
         {
-            var turn = new TurnData
-            {
-                Actions = new List<IReplayAction>(),
-                Active = false,
-                Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
-                CoPowers = new Dictionary<int, int>(),
-                Day = 0,
-                ActivePlayerID = TeamIDs[0],
-                ReplayUnit = new Dictionary<long, ReplayUnit>(),
-                Weather = new ReplayWeather(),
-                Players = new Dictionary<int, AWBWReplayPlayerTurn>(TeamIDs.Length)
-            };
+            var countryIDs = GetCountryStorage().GetAllCountryIDs();
 
-            var players = new ReplayUser[TeamIDs.Length];
-            var playersIndex = new Dictionary<int, int>();
-
-            for (int i = 0; i < TeamIDs.Length; i++)
-            {
-                var id = TeamIDs[i];
-
-                players[i] = new ReplayUser
-                {
-                    ID = id,
-                    CountryId = id
-                };
-                playersIndex.Add(id, i);
-            }
+            var turn = CreateBasicTurnData(baseData);
 
             var unitStorage = GetUnitStorage();
 
             for (int x = 0; x < UnitIds.Count; x++)
             {
-                for (int y = 0; y < TeamIDs.Length; y++)
+                for (int y = 0; y < countryIDs.Count; y++)
                 {
-                    var unit = CreateBasicReplayUnit(x * TeamIDs.Length + y, TeamIDs[y], unitStorage.GetUnitByAWBWId(UnitIds[x]).Name, new Vector2I(x, y));
+                    var unit = CreateBasicReplayUnit(x * countryIDs.Count + y, countryIDs[y], unitStorage.GetUnitByAWBWId(UnitIds[x]).Name, new Vector2I(x, y));
                     turn.ReplayUnit.Add(unit.ID, unit);
                 }
             }
-            ReplayController.Map.ScheduleUpdateToGameState(turn, () => ReplayController.Map.ClearFog(false, true));
+
+            //Todo: Fix scheduling issues
+            ScheduleAfterChildren(() => ReplayController.Map.ScheduleUpdateToGameState(turn, () => ReplayController.Map.ClearFog(false, true)));
         }
     }
 }

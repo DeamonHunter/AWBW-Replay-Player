@@ -26,12 +26,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         private void supplyTest()
         {
             var replayData = CreateBasicReplayData(2);
-
-            var turn = new TurnData();
-            turn.ReplayUnit = new Dictionary<long, ReplayUnit>();
-            turn.Buildings = new Dictionary<Vector2I, ReplayBuilding>();
-            turn.Actions = new List<IReplayAction>();
-
+            var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
 
             var blackBoat = CreateBasicReplayUnit(0, 1, "APC", new Vector2I(2, 2));
@@ -60,12 +55,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         private void supplyTestWithMove()
         {
             var replayData = CreateBasicReplayData(2);
-
-            var turn = new TurnData();
-            turn.ReplayUnit = new Dictionary<long, ReplayUnit>();
-            turn.Buildings = new Dictionary<Vector2I, ReplayBuilding>();
-            turn.Actions = new List<IReplayAction>();
-
+            var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
 
             var blackBoat = CreateBasicReplayUnit(0, 1, "APC", new Vector2I(2, 3));
