@@ -97,7 +97,7 @@ namespace AWBWApp.Game.API.New
 
             for (int i = 0; i < entriesCount; i++)
             {
-                var entry = readString(ref text, ref textIndex);
+                var entry = readStringWithoutUnicode(ref text, ref textIndex);
 
                 switch (entry)
                 {
@@ -502,7 +502,7 @@ namespace AWBWApp.Game.API.New
 
                 for (int j = 0; j < paramerterCount; j++)
                 {
-                    var entry = readString(ref text, ref textIndex);
+                    var entry = readStringWithoutUnicode(ref text, ref textIndex);
 
                     switch (entry)
                     {
@@ -830,7 +830,7 @@ namespace AWBWApp.Game.API.New
 
                 for (int j = 0; j < parameterCount; j++)
                 {
-                    var entry = readString(ref text, ref textIndex);
+                    var entry = readStringWithoutUnicode(ref text, ref textIndex);
 
                     switch (entry)
                     {
@@ -932,7 +932,7 @@ namespace AWBWApp.Game.API.New
 
                 for (int j = 0; j < parameterCount; j++)
                 {
-                    var entry = readString(ref text, ref textIndex);
+                    var entry = readStringWithoutUnicode(ref text, ref textIndex);
 
                     switch (entry)
                     {
@@ -1291,6 +1291,7 @@ namespace AWBWApp.Game.API.New
             return int.Parse(text[startIndex..(index - 1)]);
         }
 
+        //Todo: May fail if a unicode character appears near end of file.
         private string readString(ref string text, ref int index)
         {
             var type = text[index];
@@ -1308,22 +1309,55 @@ namespace AWBWApp.Game.API.New
 
                     var textEntry = text[(index + 1)..(index + entryLength + 1)];
 
-                    if (Encoding.UTF8.GetByteCount(textEntry) != entryLength)
+                    var byteCount = Encoding.UTF8.GetByteCount(textEntry);
+
+                    if (byteCount != entryLength)
                     {
                         var textCount = 0;
-                        var byteCount = 0;
 
-                        while (byteCount < entryLength)
+                        while (byteCount > entryLength)
                         {
                             textCount++;
-                            byteCount += Encoding.UTF8.GetByteCount(text, index + textCount, 1);
-                            if (byteCount == entryLength)
-                                break;
+                            byteCount -= Encoding.UTF8.GetByteCount(textEntry, entryLength - textCount, 1);
                         }
 
-                        textEntry = text[(index + 1)..(index + textCount + 1)];
+                        textEntry = textEntry[0..^textCount];
                     }
 
+                    index += textEntry.Length + 3;
+
+                    if (text[index - 2] != '"')
+                        throw new Exception("String was badly formatted.");
+                    if (text[index - 1] != ';')
+                        throw new Exception("String was badly formatted.");
+
+                    return textEntry;
+                }
+
+                case 'N':
+                    return null;
+
+                default:
+                    throw new Exception("Unknown string kind: " + type);
+            }
+        }
+
+        private string readStringWithoutUnicode(ref string text, ref int index)
+        {
+            var type = text[index];
+            index += 2;
+
+            switch (type)
+            {
+                case 's':
+                {
+                    if (text[index - 1] != ':')
+                        throw new Exception("String was badly formatted.");
+                    var entryLength = readNextLength(ref text, ref index);
+                    if (text[index] != '"')
+                        throw new Exception("String was badly formatted.");
+
+                    var textEntry = text[(index + 1)..(index + entryLength + 1)];
                     index += textEntry.Length + 3;
 
                     if (text[index - 2] != '"')
