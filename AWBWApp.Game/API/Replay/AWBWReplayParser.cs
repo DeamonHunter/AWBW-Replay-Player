@@ -988,7 +988,7 @@ namespace AWBWApp.Game.API.New
                         case "sub_dive":
                         {
                             var dived = readString(ref text, ref textIndex);
-                            unit.SubHasDived = dived;
+                            unit.SubHasDived = ReplayActionHelper.ParseSubHasDived(dived);
                             break;
                         }
 

@@ -84,7 +84,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 TimesCaptured = 0,
                 TimesFired = 0,
 
-                SubHasDived = "false",
+                SubHasDived = false,
                 SecondWeapon = null,
 
                 BeingCarried = false,

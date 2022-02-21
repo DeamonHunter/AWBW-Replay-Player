@@ -47,7 +47,7 @@ namespace AWBWApp.Game.API.Replay
                 unit.FuelPerTurn = (int)fuelPerTurn;
 
             if (jObject.TryGetValue("units_sub_dive", out JToken subDived))
-                unit.SubHasDived = ParseReplayBool((string)subDived);
+                unit.SubHasDived = ParseSubHasDived((string)subDived);
 
             if (jObject.TryGetValue("units_ammo", out JToken ammo))
                 unit.Ammo = (int)ammo;
@@ -112,6 +112,27 @@ namespace AWBWApp.Game.API.Replay
             }
 
             return unit;
+        }
+
+        public static bool ParseSubHasDived(string dived)
+        {
+            switch (dived)
+            {
+                case "y":
+                case "Y":
+                case "D":
+                case "d":
+                    return true;
+
+                case "n":
+                case "N":
+                case "r":
+                case "R":
+                    return false;
+
+                default:
+                    throw new Exception("Unknown Sub has Dived: " + dived);
+            }
         }
 
         public static ReplayBuilding ParseJObjectIntoReplayBuilding(JObject jObject)
