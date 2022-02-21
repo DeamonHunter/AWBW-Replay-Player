@@ -27,12 +27,12 @@ namespace AWBWApp.Game.API.Replay.Actions
                     throw new Exception("Capture action was expecting a movement action.");
             }
 
-            var attackData = (JObject)jObject["Load"];
-            if (attackData == null)
-                throw new Exception("Capture Replay Action did not contain information about Capture.");
+            var loadData = (JObject)jObject["Load"];
+            if (loadData == null)
+                throw new Exception("Load Replay Action did not contain information about Load.");
 
-            action.LoadedId = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)attackData["loaded"], turnData.ActiveTeam, turnData.ActivePlayerID);
-            action.TransportID = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)attackData["transport"], turnData.ActiveTeam, turnData.ActivePlayerID);
+            action.LoadedId = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)loadData["loaded"], turnData.ActiveTeam, turnData.ActivePlayerID);
+            action.TransportID = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)loadData["transport"], turnData.ActiveTeam, turnData.ActivePlayerID);
             return action;
         }
     }

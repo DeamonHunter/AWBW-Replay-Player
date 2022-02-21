@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
@@ -26,7 +27,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (eventName == "NextTurn")
                 return new EndTurnAction(); //Todo: Is there anything special to this end turn action?
 
-            return action;
+            throw new NotImplementedException("Tag actions, that aren't end turn actions, are not implemented.");
         }
     }
 
