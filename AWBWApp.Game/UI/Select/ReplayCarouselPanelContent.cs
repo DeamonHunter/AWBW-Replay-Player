@@ -1,4 +1,4 @@
-﻿using AWBWApp.Game.API.Replay;
+﻿using AWBWApp.Game.Game.Country;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
@@ -23,7 +23,7 @@ namespace AWBWApp.Game.UI.Select
         }
 
         [BackgroundDependencyLoader]
-        private void load()
+        private void load(CountryStorage countryStorage)
         {
             var replayInfo = carouselReplay.ReplayInfo;
 
@@ -35,8 +35,8 @@ namespace AWBWApp.Game.UI.Select
 
                 playersDrawables[i * 2] = new SpriteText
                 {
-                    Text = player.UniqueId,
-                    Colour = ReplayUser.CountryColour(player.CountryId).Lighten(0.5f),
+                    Text = player.Username ?? "[Unknown Username: " + player.UserId + "]",
+                    Colour = Color4Extensions.FromHex(countryStorage.GetCountryByAWBWID(player.CountryId).Colours["replayList"]).Lighten(0.5f), //Todo: Fix config
                     Font = FontUsage.Default.With(size: 15, italics: true)
                 };
 

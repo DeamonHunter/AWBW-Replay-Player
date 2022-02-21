@@ -2,6 +2,7 @@
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.COs;
+using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
@@ -23,6 +24,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         private UnitStorage unitStorage = new UnitStorage();
         [Cached]
         private COStorage coStorage = new COStorage();
+        [Cached]
+        private CountryStorage countryStorage = new CountryStorage();
 
         protected ReplayController ReplayController;
 
@@ -51,6 +54,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             unitStorage.LoadStream(unitsJson);
             var cosJson = storage.GetStream("Json/COs");
             coStorage.LoadStream(cosJson);
+            var countriesJson = storage.GetStream("Json/Countries");
+            countryStorage.LoadStream(countriesJson);
         }
 
         protected TerrainTileStorage GetTileStorage()
@@ -71,6 +76,11 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         protected COStorage GetCOStorage()
         {
             return coStorage;
+        }
+
+        protected CountryStorage GetCountryStorage()
+        {
+            return countryStorage;
         }
 
         public ReplayMap CreateBasicMap(int x, int y)

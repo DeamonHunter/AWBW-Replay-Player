@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Unit;
 using AWBWApp.Game.Game.Units;
@@ -39,6 +40,9 @@ namespace AWBWApp.Game.Game.Logic
 
         [Resolved]
         private UnitStorage unitStorage { get; set; }
+
+        [Resolved]
+        private CountryStorage countryStorage { get; set; }
 
         private FogOfWarDrawable fogOfWarDrawable;
         private FogOfWarGenerator fogOfWarGenerator;
@@ -137,7 +141,8 @@ namespace AWBWApp.Game.Game.Logic
                 foreach (var unit in replayUnits)
                 {
                     var unitData = unitStorage.GetUnitByCode(unit.Value.UnitName);
-                    var drawableUnit = new DrawableUnit(unitData, unit.Value, gameState.ReplayInfo.Players[unit.Value.PlayerID.Value].CountryCode());
+                    var country = countryStorage.GetCountryByAWBWID(gameState.ReplayInfo.Players[unit.Value.PlayerID.Value].CountryId);
+                    var drawableUnit = new DrawableUnit(unitData, unit.Value, country);
                     units.Add(unit.Value.ID, drawableUnit);
                     unitsDrawable.Add(drawableUnit);
                 }
@@ -191,7 +196,7 @@ namespace AWBWApp.Game.Game.Logic
                 else
                 {
                     var unitData = unitStorage.GetUnitByCode(unit.Value.UnitName);
-                    var drawableUnit = new DrawableUnit(unitData, unit.Value, players[unit.Value.PlayerID.Value].CountryCode.Value);
+                    var drawableUnit = new DrawableUnit(unitData, unit.Value, players[unit.Value.PlayerID.Value].Country.Value);
                     units.Add(unit.Value.ID, drawableUnit);
                     unitsDrawable.Add(drawableUnit);
                 }
@@ -210,7 +215,7 @@ namespace AWBWApp.Game.Game.Logic
         public DrawableUnit AddUnit(ReplayUnit unit)
         {
             var unitData = unitStorage.GetUnitByCode(unit.UnitName);
-            var drawableUnit = new DrawableUnit(unitData, unit, players[unit.PlayerID.Value].CountryCode.Value);
+            var drawableUnit = new DrawableUnit(unitData, unit, players[unit.PlayerID.Value].Country.Value);
             units.Add(unit.ID, drawableUnit);
             Schedule(() => unitsDrawable.Add(drawableUnit));
             return drawableUnit;
@@ -371,7 +376,7 @@ namespace AWBWApp.Game.Game.Logic
                 unit.IsCapturing.Value = awbwBuilding.Capture != 20;
         }
 
-        private long? getPlayerIDFromCountryID(int countryID) => players.FirstOrDefault(x => x.Value.CountryID.Value == countryID).Key;
+        private long? getPlayerIDFromCountryID(int countryID) => players.FirstOrDefault(x => x.Value.Country.Value.AWBWID == countryID).Key;
 
         public UnitData GetUnitDataForUnitName(string unitName) => unitStorage.GetUnitByCode(unitName);
     }

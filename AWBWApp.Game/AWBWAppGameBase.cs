@@ -1,5 +1,6 @@
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.COs;
+using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
@@ -33,6 +34,7 @@ namespace AWBWApp.Game
         private BuildingStorage buildingStorage;
         private UnitStorage unitStorage;
         private COStorage coStorage;
+        private CountryStorage countryStorage;
 
         protected AWBWAppGameBase()
         {
@@ -81,6 +83,11 @@ namespace AWBWApp.Game
             coStorage = new COStorage();
             coStorage.LoadStream(cosJson);
             dependencies.Cache(coStorage);
+
+            var countriesJson = fileStorage.GetStream("Json/Countries");
+            countryStorage = new CountryStorage();
+            countryStorage.LoadStream(countriesJson);
+            dependencies.Cache(countryStorage);
         }
 
         protected override UserInputManager CreateUserInputManager() => new AWBWAppUserInputManager();

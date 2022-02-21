@@ -1,0 +1,178 @@
+{
+    "Orange Star" : {
+        "AWBWID": 1,
+        "code": "os",
+        "name": "Orange Star",
+        "faceDirection": "Right",
+        "path": "Team/OrangeStar",
+        "colours": {
+            "playerList": "#f00009",
+            "replayList": "#f00009"
+        }
+    },
+    "Blue Moon": {
+        "AWBWID": 2,
+        "code": "bm",
+        "name": "Blue Moon",
+        "path": "Team/BlueMoon",
+        "faceDirection": "Left",
+        "colours": {
+            "playerList": "#0098f8",
+            "replayList": "#0098f8"
+        }
+    },
+    "Green Earth": {
+        "AWBWID": 3,
+        "code": "ge",
+        "name": "Green Earth",
+        "path": "Team/GreenEarth",
+        "faceDirection": "Right",
+        "colours": {
+            "playerList": "#00c010",
+            "replayList": "#00c010"
+        }
+    },
+    "Yellow Comet": {
+        "AWBWID": 4,
+        "code": "yc",
+        "name": "Yellow Comet",
+        "path": "Team/YellowComet",
+        "faceDirection": "Left",
+        "colours": {
+            "playerList": "#d08000",
+            "replayList": "#d08000"
+        }
+    },
+    "Black Hole": {
+        "AWBWID": 5,
+        "code": "bh",
+        "name": "Black Hole",
+        "path": "Team/BlackHole",
+        "faceDirection": "Left",
+        "colours": {
+            "playerList": "#653ba5",
+            "replayList": "#653ba5"
+        }
+    },
+    "Red Fire": {
+        "AWBWID": 6,
+        "code": "rf",
+        "name": "Red Fire",
+        "path": "Team/RedFire",
+        "faceDirection": "Left",
+        "colours": {
+            "playerList": "#c1463d",
+            "replayList": "#c1463d"
+        }
+    },
+    "Grey Sky": {
+        "AWBWID": 7,
+        "code": "gs",
+        "name": "Grey Sky",
+        "path": "Team/GreySky",
+        "faceDirection": "Right",
+        "colours": {
+            "playerList": "#5d5d5d",
+            "replayList": "#5d5d5d"
+        }
+    },
+    "Brown Desert": {
+        "AWBWID": 8,
+        "code": "bd",
+        "name": "Grey Sky",
+        "path": "Team/BrownDesert",
+        "faceDirection": "Right",
+        "colours": {
+            "playerList": "#bc8248",
+            "replayList": "#bc8248"
+        }
+    },
+    "Amber Blaze": {
+        "AWBWID": 9,
+        "code": "ab",
+        "name": "Amber Blaze",
+        "path": "Team/AmberBlaze",
+        "faceDirection": "Left",
+        "colours": {
+            "playerList": "#e78716",
+            "replayList": "#e78716"
+        }
+    },
+    "JadeSun": {
+        "AWBWID": 10,
+        "code": "js",
+        "name": "Jade Sun",
+        "path": "Team/JadeSun",
+        "faceDirection": "Right",
+        "colours": {
+            "playerList": "#85927b",
+            "replayList": "#85927b"
+        }
+    },
+    "Cobalt Ice": {
+        "AWBWID": 16,
+        "code": "ci",
+        "name": "Cobalt Ice",
+        "path": "Team/CobaltIce",
+        "faceDirection": "Right",
+        "colours": {
+            "playerList": "#2342ba",
+            "replayList": "#2342ba"
+        }
+    },
+    "Pink Cosmos": {
+        "AWBWID": 17,
+        "code": "pc",
+        "name": "Pink Cosmos",
+        "path": "Team/PinkCosmos",
+        "faceDirection": "Left",
+        "colours": {
+            "playerList": "#ff33cc",
+            "replayList": "#ff33cc"
+        }
+    },
+    "Teal Galaxy": {
+        "AWBWID": 19,
+        "code": "tg",
+        "name": "Teal Galaxy",
+        "path": "Team/TealGalaxy",
+        "faceDirection": "Left",
+        "colours": {
+            "playerList": "#1ba298",
+            "replayList": "#1ba298"
+        }
+    },
+    "Purple Lightning": {
+        "AWBWID": 20,
+        "code": "pl",
+        "name": "Purple Lightning",
+        "path": "Team/PurpleLightning",
+        "faceDirection": "Right",
+        "colours": {
+            "playerList": "#cc00ff",
+            "replayList": "#cc00ff"
+        }
+    },
+    "Acid Rain": {
+        "AWBWID": 21,
+        "code": "ar",
+        "name": "Acid Rain",
+        "path": "Team/AcidRain",
+        "faceDirection": "Left",
+        "colours": {
+            "playerList": "#52690c",
+            "replayList": "#52690c"
+        }
+    },
+    "White Nova": {
+        "AWBWID": 22,
+        "code": "wn",
+        "name": "White Nova",
+        "path": "Team/WhiteNova",
+        "faceDirection": "Right",
+        "colours": {
+            "playerList": "#e2ae93",
+            "replayList": "#e2ae93"
+        }
+    },
+}

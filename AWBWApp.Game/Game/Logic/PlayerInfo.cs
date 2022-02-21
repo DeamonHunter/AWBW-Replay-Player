@@ -1,5 +1,6 @@
 ﻿using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.COs;
+using AWBWApp.Game.Game.Country;
 using osu.Framework.Bindables;
 
 namespace AWBWApp.Game.Game.Logic
@@ -12,9 +13,7 @@ namespace AWBWApp.Game.Game.Logic
         public string Team { get; }
         public int? EliminatedOn { get; }
 
-        public BindableInt CountryID = new BindableInt();
-        public Bindable<string> CountryCode = new Bindable<string>();
-        public Bindable<string> CountryPath = new Bindable<string>();
+        public Bindable<CountryData> Country = new Bindable<CountryData>();
 
         public BindableBool Eliminated = new BindableBool();
         public Bindable<COInfo> ActiveCO = new Bindable<COInfo>();
@@ -25,16 +24,14 @@ namespace AWBWApp.Game.Game.Logic
         public BindableInt UnitValue = new BindableInt();
         public BindableInt PropertyValue = new BindableInt();
 
-        public PlayerInfo(ReplayUser player)
+        public PlayerInfo(ReplayUser player, CountryData country)
         {
             ID = player.ID;
             Username = player.Username;
             Team = player.TeamName;
             RoundOrder = player.RoundOrder;
 
-            CountryID.Value = player.CountryId;
-            CountryCode.Value = player.CountryCode();
-            CountryPath.Value = player.CountryPathName();
+            Country.Value = country;
 
             EliminatedOn = player.EliminatedOn;
         }
@@ -64,41 +61,6 @@ namespace AWBWApp.Game.Game.Logic
                 PowerRequiredForSuper = turn.TagRequiredPowerForSuper
             };
         }
-        /*
-        private static string GetCOName(int id) =>
-            id switch
-            {
-                1 => "Andy",
-                2 => "Grit",
-                3 => "Kanbei",
-                5 => "Drake",
-                7 => "Max",
-                8 => "Sami",
-                9 => "Olaf",
-                10 => "Eagle",
-                11 => "Adder",
-                12 => "Hawke",
-                13 => "Sensei",
-                14 => "Jess",
-                15 => "Colin",
-                16 => "Lash",
-                17 => "Hachi",
-                18 => "Sonja",
-                19 => "Sasha",
-                20 => "Grimm",
-                21 => "Koal",
-                22 => "Jake",
-                23 => "Kindle",
-                24 => "Nell",
-                25 => "Flak",
-                26 => "Jugger",
-                27 => "Javier",
-                28 => "Rachel",
-                29 => "Sturm",
-                30 => "Von Bolt",
-                _ => throw new Exception("Unknown CO ID: " + id)
-            };
-        */
     }
 
     public struct COInfo

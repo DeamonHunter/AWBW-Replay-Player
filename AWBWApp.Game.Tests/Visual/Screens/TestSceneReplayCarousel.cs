@@ -70,7 +70,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                         {
                             ID = j,
                             CountryId = j + 1,
-                            UniqueId = Guid.NewGuid().ToString()
+                            Username = Guid.NewGuid().ToString()
                         };
                     }
 

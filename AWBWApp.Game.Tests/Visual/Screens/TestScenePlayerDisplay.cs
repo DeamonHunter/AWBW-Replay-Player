@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.COs;
+using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.UI;
 using NUnit.Framework;
@@ -17,6 +18,9 @@ namespace AWBWApp.Game.Tests.Visual.Screens
 
         [Resolved]
         private COStorage coStorage { get; set; }
+
+        [Resolved]
+        private CountryStorage countryStorage { get; set; }
 
         [Test]
         public void TestCreateReplayPlayer()
@@ -62,7 +66,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
             if (addTag)
                 replayPlayer.COsUsedByPlayer.Add(3);
 
-            playerInfo = new PlayerInfo(replayPlayer);
+            playerInfo = new PlayerInfo(replayPlayer, countryStorage.GetCountryByAWBWID(1));
 
             var replayPlayerTurn = new AWBWReplayPlayerTurn
             {

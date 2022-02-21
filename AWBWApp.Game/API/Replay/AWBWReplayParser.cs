@@ -765,9 +765,8 @@ namespace AWBWApp.Game.API.New
 
                         case "uniq_id":
                         {
-                            //Likely was a different type of player id? This seems to always be null.
-                            //Not useful if its always null.
-                            var value = readString(ref text, ref textIndex);
+                            //Likely was a different type of player id? This seems to be null in 90% of cases and unsure of the rest of the cases.
+                            readString(ref text, ref textIndex);
                             break;
                         }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
@@ -206,7 +205,7 @@ namespace AWBWApp.Game.UI
                         new Box()
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Colour = ReplayUser.CountryColour(info.CountryID.Value).Darken(0.1f),
+                            Colour = Color4Extensions.FromHex(info.Country.Value.Colours["playerList"]).Darken(0.1f), //Todo: Fix config values
                         }
                     }
                 };
@@ -299,8 +298,8 @@ namespace AWBWApp.Game.UI
                                 Direction = FillDirection.Vertical,
                                 Children = new Drawable[]
                                 {
-                                    new ReplayPlayerInfo($"Team/{info.CountryPath.Value}/Infantry-0", info.UnitCount),
-                                    unitValue = new ReplayPlayerInfo($"Team/{info.CountryPath.Value}/Infantry-0", info.UnitValue)
+                                    new ReplayPlayerInfo($"{info.Country.Value.Path}/Infantry-0", info.UnitCount),
+                                    unitValue = new ReplayPlayerInfo($"{info.Country.Value.Path}/Infantry-0", info.UnitValue)
                                     {
                                         Position = new Vector2(0, 19),
                                     }

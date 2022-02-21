@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
@@ -44,11 +45,11 @@ namespace AWBWApp.Game.Game.Unit
 
         private Sprite capturing;
 
-        private string country;
+        private CountryData country;
 
         public HashSet<long> Cargo = new HashSet<long>();
 
-        public DrawableUnit(UnitData unitData, ReplayUnit unit, string countryCode)
+        public DrawableUnit(UnitData unitData, ReplayUnit unit, CountryData country)
         {
             UnitData = unitData;
             Size = BASE_SIZE;
@@ -79,7 +80,7 @@ namespace AWBWApp.Game.Game.Unit
                 }
             };
 
-            country = countryCode;
+            this.country = country;
 
             HealthPoints.BindValueChanged(UpdateHp);
             CanMove.BindValueChanged(updateCanMove, true);
@@ -137,13 +138,13 @@ namespace AWBWApp.Game.Game.Unit
 
             if (UnitData.Frames == null)
             {
-                var texture = store.Get($"{UnitData.BaseTextureByTeam[country]}-0");
+                var texture = store.Get($"{UnitData.BaseTextureByTeam[country.Code]}-0");
                 textureAnimation.Size = texture.Size;
                 textureAnimation.AddFrame(texture);
 
                 if (UnitData.DivedTextureByTeam != null)
                 {
-                    texture = store.Get($"{UnitData.DivedTextureByTeam[country]}-0");
+                    texture = store.Get($"{UnitData.DivedTextureByTeam[country.Code]}-0");
                     divedAnimation.Size = texture.Size;
                     divedAnimation.AddFrame(texture);
                 }
@@ -152,7 +153,7 @@ namespace AWBWApp.Game.Game.Unit
 
             for (var i = 0; i < UnitData.Frames.Length; i++)
             {
-                var texture = store.Get($"{UnitData.BaseTextureByTeam[country]}-{i}");
+                var texture = store.Get($"{UnitData.BaseTextureByTeam[country.Code]}-{i}");
                 if (texture == null)
                     throw new Exception("Improperly configured UnitData. Animation count wrong.");
                 if (i == 0)
@@ -165,7 +166,7 @@ namespace AWBWApp.Game.Game.Unit
             {
                 for (var i = 0; i < UnitData.Frames.Length; i++)
                 {
-                    var texture = store.Get($"{UnitData.DivedTextureByTeam[country]}-{i}");
+                    var texture = store.Get($"{UnitData.DivedTextureByTeam[country.Code]}-{i}");
                     if (texture == null)
                         throw new Exception("Improperly configured UnitData. Animation count wrong.");
                     if (i == 0)

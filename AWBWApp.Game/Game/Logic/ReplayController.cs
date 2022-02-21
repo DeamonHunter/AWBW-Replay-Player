@@ -4,6 +4,7 @@ using System.Linq;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
 using AWBWApp.Game.Game.COs;
+using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI;
@@ -25,6 +26,9 @@ namespace AWBWApp.Game.Game.Logic
 
         [Resolved]
         public COStorage COStorage { get; private set; }
+
+        [Resolved]
+        private CountryStorage countryStorage { get; set; }
 
         public List<(int playerID, PowerAction action, int activeDay)> ActivePowers = new List<(int, PowerAction, int)>();
 
@@ -120,7 +124,7 @@ namespace AWBWApp.Game.Game.Logic
 
             Players.Clear();
             foreach (var player in replayData.ReplayInfo.Players)
-                Players.Add(player.Key, new PlayerInfo(player.Value));
+                Players.Add(player.Key, new PlayerInfo(player.Value, countryStorage.GetCountryByAWBWID(player.Value.CountryId)));
 
             Map.ScheduleInitialGameState(this.replayData, map, Players);
             ScheduleAfterChildren(() =>
