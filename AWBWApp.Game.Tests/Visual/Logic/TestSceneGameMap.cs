@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AWBWApp.Game.API;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.IO;
+using AWBWApp.Game.Tests.Replays;
 using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Interrupts;
 using NUnit.Framework;
@@ -21,6 +23,9 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
         [Resolved]
         private MapFileStorage mapStorage { get; set; }
+
+        [Resolved]
+        private AWBWSessionHandler sessionHandler { get; set; }
 
         private InterruptDialogueOverlay overlay;
         private CustomShoalGenerator generator;
@@ -46,6 +51,12 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             AddStep("Load Map", () => Task.Run(DownloadReplayFile));
             AddUntilStep("Wait Until Map is loaded", () => ReplayController.HasLoadedReplay);
             AddRepeatUntilStep("Finish replay", 3000, () => ReplayController.GoToNextAction(), () => !ReplayController.HasNextAction());
+
+            AddStep("Parse All Maps", () =>
+            {
+                var tester = new TestReplayParsing();
+                Task.Run(tester.TestParsingAllReplays);
+            });
         }
 
         private int parseReplayString(string replay)
@@ -75,8 +86,6 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             throw new Exception("Could not parse replay id: " + replay + ".");
         }
 
-        private static string sessionId = null;
-
         private async void DownloadReplayFile()
         {
             var gameID = parseReplayString(replayString);
@@ -87,32 +96,29 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
             if (replay == null)
             {
-                if (sessionId == null)
+                if (!sessionHandler.LoggedIn)
                 {
                     Logger.Log($"Replay not Found. Requesting from AWBW.", level: LogLevel.Important);
-                    var taskCompletionSource = new TaskCompletionSource<string>();
-                    Schedule(() => overlay.Push(new PasswordInputInterrupt(taskCompletionSource)));
+                    var taskCompletionSource = new TaskCompletionSource<bool>();
+                    Schedule(() => overlay.Push(new LoginInterrupt(taskCompletionSource)));
 
                     Logger.Log($"Pushed overlay", level: LogLevel.Important);
 
                     try
                     {
-                        sessionId = await taskCompletionSource.Task.ConfigureAwait(false);
+                        await taskCompletionSource.Task.ConfigureAwait(false); //We do not care about the value provided back.
                     }
                     catch (TaskCanceledException)
                     {
                         Logger.Log("Logging in was cancelled. Need to abort download.");
                         return;
                     }
-
-                    if (sessionId == null)
-                        throw new Exception("Failed to login.");
                 }
 
                 Logger.Log($"Successfully logged in.", level: LogLevel.Important);
                 var link = "https://awbw.amarriner.com/replay_download.php?games_id=" + gameID;
                 var webRequest = new WebRequest(link);
-                webRequest.AddHeader("Cookie", sessionId);
+                webRequest.AddHeader("Cookie", sessionHandler.SessionID);
                 await webRequest.PerformAsync().ConfigureAwait(false);
 
                 if (webRequest.ResponseStream.Length <= 100)

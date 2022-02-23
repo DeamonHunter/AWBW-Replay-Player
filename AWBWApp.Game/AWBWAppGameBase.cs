@@ -1,3 +1,4 @@
+using AWBWApp.Game.API;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Country;
@@ -35,6 +36,8 @@ namespace AWBWApp.Game
         private UnitStorage unitStorage;
         private COStorage coStorage;
         private CountryStorage countryStorage;
+
+        private AWBWSessionHandler sessionHandler;
 
         protected AWBWAppGameBase()
         {
@@ -88,6 +91,9 @@ namespace AWBWApp.Game
             countryStorage = new CountryStorage();
             countryStorage.LoadStream(countriesJson);
             dependencies.Cache(countryStorage);
+
+            sessionHandler = new AWBWSessionHandler();
+            dependencies.Cache(sessionHandler);
         }
 
         protected override UserInputManager CreateUserInputManager() => new AWBWAppUserInputManager();

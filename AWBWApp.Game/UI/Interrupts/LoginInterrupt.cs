@@ -1,27 +1,36 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading.Tasks;
+using AWBWApp.Game.API;
+using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
-using osu.Framework.IO.Network;
 using osu.Framework.Logging;
 using osuTK;
+using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Interrupts
 {
-    public class PasswordInputInterrupt : BaseInterrupt
+    public class LoginInterrupt : BaseInterrupt
     {
         private TextBox usernameInput;
         private TextBox passwordInput;
 
+        private SpriteText errorText;
+
         private Button acceptButton;
         private Button cancelButton;
 
-        private readonly TaskCompletionSource<string> sessionIdCallback;
+        private LoadingLayer blockingLayer;
 
-        public PasswordInputInterrupt(TaskCompletionSource<string> sessionIdCallback)
+        [Resolved]
+        private AWBWSessionHandler sessionHandler { get; set; }
+
+        private readonly TaskCompletionSource<bool> sessionIdCallback;
+
+        public LoginInterrupt(TaskCompletionSource<bool> sessionIdCallback)
         {
             this.sessionIdCallback = sessionIdCallback;
 
@@ -53,6 +62,14 @@ namespace AWBWApp.Game.UI.Interrupts
                         Height = 40,
                         TabbableContentContainer = this
                     },
+                    errorText = new SpriteText()
+                    {
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        RelativeSizeAxes = Axes.X,
+                        Width = 0.95f,
+                        Colour = Color4.Red
+                    },
                     new Container
                     {
                         RelativeSizeAxes = Axes.X,
@@ -78,6 +95,11 @@ namespace AWBWApp.Game.UI.Interrupts
                     }
                 }
             );
+
+            Add(blockingLayer = new LoadingLayer(true)
+            {
+                RelativeSizeAxes = Axes.Both
+            });
         }
 
         private void scheduleLogin()
@@ -89,46 +111,42 @@ namespace AWBWApp.Game.UI.Interrupts
         {
             try
             {
-                Logger.Log($"Attempting to login to awbw.");
-                var loginRequest = new WebRequest("https://awbw.amarriner.com/logincheck.php");
-                loginRequest.Method = HttpMethod.Post;
-                loginRequest.AddParameter("username", usernameInput.Text);
-                loginRequest.AddParameter("password", passwordInput.Text);
+                blockingLayer.Show();
+                Logger.Log("Attempting to login to awbw.");
 
-                await loginRequest.PerformAsync().ConfigureAwait(false);
-
-                if (loginRequest.Aborted)
-                    throw new Exception();
-
-                var cookieValues = loginRequest.ResponseHeaders.GetValues("Set-Cookie");
-
-                string sessionID = null;
-
-                foreach (var cookie in cookieValues)
+                try
                 {
-                    if (!cookie.StartsWith("PHPSESSID"))
-                        continue;
+                    var success = await sessionHandler.AttemptLogin(usernameInput.Text, passwordInput.Text);
 
-                    var index = cookie.IndexOf(';');
-                    if (index == -1)
-                        throw new Exception("Invalid Cookie");
-
-                    sessionID = cookie.Substring(0, index);
+                    if (!success)
+                    {
+                        failed(sessionHandler.LoginError);
+                        return;
+                    }
+                }
+                catch (TaskCanceledException e)
+                {
+                    failed(sessionHandler.LoginError);
+                    return;
                 }
 
-                if (sessionID != null)
-                    sessionIdCallback.TrySetResult(sessionID);
-                else
-                    sessionIdCallback.TrySetCanceled();
+                sessionIdCallback.TrySetResult(true);
+                ActionInvoked();
+                Schedule(Hide);
             }
             catch (Exception e)
             {
+                failed("Unknown error has occured while logging in.");
                 Logger.Log(e.Message, level: LogLevel.Error);
-                sessionIdCallback.TrySetCanceled();
+                return;
             }
+        }
 
-            ActionInvoked();
-            Schedule(Hide);
+        private void failed(string reason)
+        {
+            Logger.Log("Failed to login: " + errorText, level: LogLevel.Important);
+            errorText.Text = reason;
+            blockingLayer.Hide();
         }
 
         private void cancel()

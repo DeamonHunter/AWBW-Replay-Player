@@ -39,9 +39,9 @@ namespace AWBWApp.Game.Tests.Visual.Screens
         [Test]
         public void TestPasswordPopup()
         {
-            PasswordInputInterrupt firstDialogue = null;
+            LoginInterrupt firstDialogue = null;
 
-            AddStep("Dialogue #1", () => overlay.Push(firstDialogue = new PasswordInputInterrupt(new TaskCompletionSource<string>())));
+            AddStep("Dialogue #1", () => overlay.Push(firstDialogue = new LoginInterrupt(new TaskCompletionSource<bool>())));
             AddAssert("Dialogue #1 displayed", () => overlay.CurrentInterrupt == firstDialogue);
         }
 

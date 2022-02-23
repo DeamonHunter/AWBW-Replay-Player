@@ -164,6 +164,10 @@ namespace AWBWApp.Game.UI.Interrupts
                 CancelAction?.Invoke();
 
             content.FadeOut(Exit_Duration, Easing.InSine);
+            this.MoveToX(0).MoveToX(buttonsEnterSpacing.X, Enter_Duration, Easing.OutQuint);
+
+            interactablesContainer.TransformSpacingTo(buttonsEnterSpacing, Enter_Duration, Easing.OutQuint);
+            interactablesContainer.MoveToX(buttonsEnterSpacing.X, Enter_Duration, Easing.OutQuint);
         }
 
         protected void ActionInvoked()
