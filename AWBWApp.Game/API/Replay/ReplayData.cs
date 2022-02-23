@@ -67,8 +67,4 @@ namespace AWBWApp.Game.API.Replay
         //Todo: Do we need to handle this as a special case on turn start? Replay 554175
         public bool DrawWasAccepted;
     }
-
-    public class Weather
-    {
-    }
 }

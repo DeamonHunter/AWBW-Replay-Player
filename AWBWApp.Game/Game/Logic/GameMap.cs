@@ -22,6 +22,8 @@ namespace AWBWApp.Game.Game.Logic
     {
         public Vector2I MapSize { get; private set; }
 
+        public Weather CurrentWeather { get; private set; }
+
         private Container<DrawableTile> gameBoardDrawable;
         private DrawableTile[,] gameBoard;
 
@@ -206,6 +208,18 @@ namespace AWBWApp.Game.Game.Logic
             {
                 units.Remove(unit.Key);
                 unitsDrawable.Remove(unit.Value);
+            }
+
+            var weather = Enum.Parse<Weather>(gameState.Weather.Code);
+
+            if (weather != CurrentWeather)
+            {
+                CurrentWeather = weather;
+                foreach (var tile in gameBoard)
+                    tile.ChangeWeather(weather);
+
+                foreach (var building in buildings)
+                    building.Value.ChangeWeather(weather);
             }
         }
 

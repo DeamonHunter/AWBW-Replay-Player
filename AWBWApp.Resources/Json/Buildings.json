@@ -9,8 +9,11 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/Neutral/City",
-        "FogOfWarTexture": "Team/Neutral/City"
+        "Textures": {
+            "Clear": "Team/Neutral/City",
+            "Rain": "Team/Neutral/City_Rain",
+            "Snow": "Team/Neutral/City_Snow"
+        }
     },
     "Neutral Base": {
         "AWBWID": 35,
@@ -23,8 +26,11 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/Neutral/Base",
-        "FogOfWarTexture": "Team/Neutral/Base"
+        "Textures": {
+            "Clear": "Team/Neutral/Base",
+            "Rain": "Team/Neutral/Base_Rain",
+            "Snow": "Team/Neutral/Base_Snow"
+        }
     },
     "Neutral Airport": {
         "AWBWID": 36,
@@ -36,8 +42,11 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/Neutral/Airport",
-        "FogOfWarTexture": "Team/Neutral/Airport"
+        "Textures": {
+            "Clear": "Team/Neutral/Airport",
+            "Rain": "Team/Neutral/Airport_Rain",
+            "Snow": "Team/Neutral/Airport_Snow"
+        }
     },
     "Neutral Port": {
         "AWBWID": 37,
@@ -51,8 +60,11 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/Neutral/Port",
-        "FogOfWarTexture": "Team/Neutral/Port"
+        "Textures": {
+            "Clear": "Team/Neutral/Port",
+            "Rain": "Team/Neutral/Port_Rain",
+            "Snow": "Team/Neutral/Port_Snow"
+        }
     },
     "Neutral Com Tower": {
         "AWBWID": 133,
@@ -65,8 +77,11 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/Neutral/ComTower",
-        "FogOfWarTexture": "Team/Neutral/ComTower"
+        "Textures": {
+            "Clear": "Team/Neutral/ComTower",
+            "Rain": "Team/Neutral/ComTower_Rain",
+            "Snow": "Team/Neutral/ComTower_Snow"
+        }
     },
     "Neutral Lab": {
         "AWBWID": 145,
@@ -79,8 +94,11 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/Neutral/Lab",
-        "FogOfWarTexture": "Team/Neutral/Lab"
+        "Textures": {
+            "Clear": "Team/Neutral/Lab",
+            "Rain": "Team/Neutral/Lab_Rain",
+            "Snow": "Team/Neutral/Lab_Snow"
+        }
     },
     "Missile Silo": {
         "AWBWID": 111,
@@ -92,8 +110,11 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/Neutral/Silo",
-        "FogOfWarTexture": "Team/Neutral/Silo"
+        "Textures": {
+            "Clear": "Team/Neutral/Silo",
+            "Rain": "Team/Neutral/Silo_Rain",
+            "Snow": "Team/Neutral/Silo_Snow"
+        }
     },
     "Missile Silo Empty": {
         "AWBWID": 112,
@@ -105,8 +126,11 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/Neutral/SiloEmpty",
-        "FogOfWarTexture": "Team/Neutral/SiloEmpty"
+        "Textures": {
+            "Clear": "Team/Neutral/SiloEmpty",
+            "Rain": "Team/Neutral/SiloEmpty_Rain",
+            "Snow": "Team/Neutral/SiloEmpty_Snow"
+        }
     },
     "Horizontal Pipe Seam": {
         "AWBWID": 113,
@@ -114,8 +138,11 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
-        "BaseTexture": "Team/Neutral/HSeam",
-        "FogOfWarTexture": "Team/Neutral/HSeam"
+        "Textures": {
+            "Clear": "Team/Neutral/HSeam",
+            "Rain": "Team/Neutral/HSeam_Rain",
+            "Snow": "Team/Neutral/HSeam_Snow"
+        }
     },
     "Vertical Pipe Seam": {
         "AWBWID": 114,
@@ -123,8 +150,11 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
-        "BaseTexture": "Team/Neutral/VSeam",
-        "FogOfWarTexture": "Team/Neutral/VSeam"
+        "Textures": {
+            "Clear": "Team/Neutral/VSeam",
+            "Rain": "Team/Neutral/VSeam_Rain",
+            "Snow": "Team/Neutral/VSeam_Snow"
+        }
     },
     "HPipe Rubble": {
         "AWBWID": 115,
@@ -136,8 +166,11 @@
             "Tire": 2,
             "Air": 1
         },
-        "BaseTexture": "Team/Neutral/HRubble",
-        "FogOfWarTexture": "Team/Neutral/HRubble"
+        "Textures": {
+            "Clear": "Team/Neutral/HRubble",
+            "Rain": "Team/Neutral/HRubble_Rain",
+            "Snow": "Team/Neutral/HRubble_Snow"
+        }
     },
     "VPipe Rubble": {
         "AWBWID": 116,
@@ -149,8 +182,11 @@
             "Tire": 2,
             "Air": 1
         },
-        "BaseTexture": "Team/Neutral/VRubble",
-        "FogOfWarTexture": "Team/Neutral/VRubble"
+        "Textures": {
+            "Clear": "Team/Neutral/VRubble",
+            "Rain": "Team/Neutral/VRubble_Rain",
+            "Snow": "Team/Neutral/VRubble_Snow"
+        }
     },
     /*
     Orange Star
@@ -166,13 +202,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/OrangeStar/Airport",
-        "FogOfWarTexture": "Team/OrangeStar/Airport",
         "frames": [
             300,
             1200,
             100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/OrangeStar/Airport",
+            "Rain": "Team/OrangeStar/Airport_Rain",
+            "Snow": "Team/OrangeStar/Airport_Snow"
+        }
     },
     "Orange Star Base": {
         "AWBWID": 39,
@@ -186,8 +225,6 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/OrangeStar/Base",
-        "FogOfWarTexture": "Team/OrangeStar/Base",
         "frames": [
             300,
             100,
@@ -195,7 +232,12 @@
             400,
             300,
             100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/OrangeStar/Base",
+            "Rain": "Team/OrangeStar/Base_Rain",
+            "Snow": "Team/OrangeStar/Base_Snow"
+        }
     },
     "Orange Star City": {
         "AWBWID": 38,
@@ -208,13 +250,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/OrangeStar/City",
-        "FogOfWarTexture": "Team/OrangeStar/City",
         "frames": [
             300,
             1200,
             100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/OrangeStar/City",
+            "Rain": "Team/OrangeStar/City_Rain",
+            "Snow": "Team/OrangeStar/City_Snow"
+        }
     },
     "Orange Star HQ": {
         "AWBWID": 42,
@@ -227,13 +272,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/OrangeStar/HQ",
-        "FogOfWarTexture": "Team/OrangeStar/HQ",
         "frames": [
             300,
             1200,
             100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/OrangeStar/HQ",
+            "Rain": "Team/OrangeStar/HQ_Rain",
+            "Snow": "Team/OrangeStar/HQ_Snow"
+        }
     },
     "Orange Star Port": {
         "AWBWID": 41,
@@ -248,13 +296,16 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/OrangeStar/Port",
-        "FogOfWarTexture": "Team/OrangeStar/Port",
         "frames": [
             300,
             1200,
             100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/OrangeStar/Port",
+            "Rain": "Team/OrangeStar/Port_Rain",
+            "Snow": "Team/OrangeStar/Port_Snow"
+        }
     },
     "Orange Star Com Tower": {
         "AWBWID": 134,
@@ -268,13 +319,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/OrangeStar/ComTower",
-        "FogOfWarTexture": "Team/OrangeStar/ComTower",
         "frames": [
             300,
             1200,
             100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/OrangeStar/ComTower",
+            "Rain": "Team/OrangeStar/ComTower_Rain",
+            "Snow": "Team/OrangeStar/ComTower_Snow"
+        }
     },
     "Orange Star Lab": {
         "AWBWID": 146,
@@ -288,13 +342,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/OrangeStar/Lab",
-        "FogOfWarTexture": "Team/OrangeStar/Lab",
         "frames": [
             300,
             1200,
             100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/OrangeStar/Lab",
+            "Rain": "Team/OrangeStar/Lab_Rain",
+            "Snow": "Team/OrangeStar/Lab_Snow"
+        }
     },
     /*
     Blue Moon
@@ -310,13 +367,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/BlueMoon/Airport",
-        "FogOfWarTexture": "Team/BlueMoon/Airport",
         "frames": [
             200,
             1200,
             200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BlueMoon/Airport",
+            "Rain": "Team/BlueMoon/Airport_Rain",
+            "Snow": "Team/BlueMoon/Airport_Snow"
+        }
     },
     "Blue Moon Base": {
         "AWBWID": 44,
@@ -330,8 +390,6 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/BlueMoon/Base",
-        "FogOfWarTexture": "Team/BlueMoon/Base",
         "frames": [
             200,
             200,
@@ -339,7 +397,12 @@
             400,
             200,
             200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BlueMoon/Base",
+            "Rain": "Team/BlueMoon/Base_Rain",
+            "Snow": "Team/BlueMoon/Base_Snow"
+        }
     },
     "Blue Moon City": {
         "AWBWID": 43,
@@ -352,13 +415,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/BlueMoon/City",
-        "FogOfWarTexture": "Team/BlueMoon/City",
         "frames": [
             200,
             1200,
             200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BlueMoon/City",
+            "Rain": "Team/BlueMoon/City_Rain",
+            "Snow": "Team/BlueMoon/City_Snow"
+        }
     },
     "Blue Moon HQ": {
         "AWBWID": 47,
@@ -371,13 +437,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/BlueMoon/HQ",
-        "FogOfWarTexture": "Team/BlueMoon/HQ",
         "frames": [
             200,
             1200,
             200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BlueMoon/HQ",
+            "Rain": "Team/BlueMoon/HQ_Rain",
+            "Snow": "Team/BlueMoon/HQ_Snow"
+        }
     },
     "Blue Moon Port": {
         "AWBWID": 46,
@@ -392,13 +461,16 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/BlueMoon/Port",
-        "FogOfWarTexture": "Team/BlueMoon/Port",
         "frames": [
             200,
             1200,
             200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BlueMoon/Port",
+            "Rain": "Team/BlueMoon/Port_Rain",
+            "Snow": "Team/BlueMoon/Port_Snow"
+        }
     },
     "Blue Moon Com Tower": {
         "AWBWID": 129,
@@ -412,13 +484,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/BlueMoon/ComTower",
-        "FogOfWarTexture": "Team/BlueMoon/ComTower",
         "frames": [
             200,
             1200,
             200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BlueMoon/ComTower",
+            "Rain": "Team/BlueMoon/ComTower_Rain",
+            "Snow": "Team/BlueMoon/ComTower_Snow"
+        }
     },
     "Blue Moon Lab": {
         "AWBWID": 140,
@@ -432,13 +507,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/BlueMoon/Lab",
-        "FogOfWarTexture": "Team/BlueMoon/Lab",
         "frames": [
             200,
             1200,
             200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BlueMoon/Lab",
+            "Rain": "Team/BlueMoon/Lab_Rain",
+            "Snow": "Team/BlueMoon/Lab_Snow"
+        }
     },
     /*
     Green Earth
@@ -454,13 +532,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/GreenEarth/Airport",
-        "FogOfWarTexture": "Team/GreenEarth/Airport",
         "frames": [
             100,
             1200,
             300
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/GreenEarth/Airport",
+            "Rain": "Team/GreenEarth/Airport_Rain",
+            "Snow": "Team/GreenEarth/Airport_Snow"
+        }
     },
     "Green Earth Base": {
         "AWBWID": 49,
@@ -474,8 +555,6 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/GreenEarth/Base",
-        "FogOfWarTexture": "Team/GreenEarth/Base",
         "frames": [
             100,
             300,
@@ -483,7 +562,12 @@
             400,
             100,
             300
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/GreenEarth/Base",
+            "Rain": "Team/GreenEarth/Base_Rain",
+            "Snow": "Team/GreenEarth/Base_Snow"
+        }
     },
     "Green Earth City": {
         "AWBWID": 48,
@@ -496,13 +580,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/GreenEarth/City",
-        "FogOfWarTexture": "Team/GreenEarth/City",
         "frames": [
             100,
             1200,
             300
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/GreenEarth/City",
+            "Rain": "Team/GreenEarth/City_Rain",
+            "Snow": "Team/GreenEarth/City_Snow"
+        }
     },
     "Green Earth HQ": {
         "AWBWID": 52,
@@ -515,13 +602,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/GreenEarth/HQ",
-        "FogOfWarTexture": "Team/GreenEarth/HQ",
         "frames": [
             100,
             1200,
             300
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/GreenEarth/HQ",
+            "Rain": "Team/GreenEarth/HQ_Rain",
+            "Snow": "Team/GreenEarth/HQ_Snow"
+        }
     },
     "Green Earth Port": {
         "AWBWID": 51,
@@ -536,13 +626,16 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/GreenEarth/Port",
-        "FogOfWarTexture": "Team/GreenEarth/Port",
         "frames": [
             100,
             1200,
             300
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/GreenEarth/Port",
+            "Rain": "Team/GreenEarth/Port_Rain",
+            "Snow": "Team/GreenEarth/Port_Snow"
+        }
     },
     "Green Earth Com Tower": {
         "AWBWID": 131,
@@ -556,13 +649,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/GreenEarth/ComTower",
-        "FogOfWarTexture": "Team/GreenEarth/ComTower",
         "frames": [
             100,
             1200,
             300
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/GreenEarth/ComTower",
+            "Rain": "Team/GreenEarth/ComTower_Rain",
+            "Snow": "Team/GreenEarth/ComTower_Snow"
+        }
     },
     "Green Earth Lab": {
         "AWBWID": 142,
@@ -576,13 +672,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/GreenEarth/Lab",
-        "FogOfWarTexture": "Team/GreenEarth/Lab",
         "frames": [
             100,
             1200,
             300
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/GreenEarth/Lab",
+            "Rain": "Team/GreenEarth/Lab_Rain",
+            "Snow": "Team/GreenEarth/Lab_Snow"
+        }
     },
     /*
     Yellow Comet
@@ -598,12 +697,15 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/YellowComet/Airport",
-        "FogOfWarTexture": "Team/YellowComet/Airport",
         "frames": [
             1200,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/YellowComet/Airport",
+            "Rain": "Team/YellowComet/Airport_Rain",
+            "Snow": "Team/YellowComet/Airport_Snow"
+        }
     },
     "Yellow Comet Base": {
         "AWBWID": 54,
@@ -617,14 +719,17 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/YellowComet/Base",
-        "FogOfWarTexture": "Team/YellowComet/Base",
         "frames": [
             400,
             400,
             400,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/YellowComet/Base",
+            "Rain": "Team/YellowComet/Base_Rain",
+            "Snow": "Team/YellowComet/Base_Snow"
+        }
     },
     "Yellow Comet City": {
         "AWBWID": 53,
@@ -637,12 +742,15 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/YellowComet/City",
-        "FogOfWarTexture": "Team/YellowComet/City",
         "frames": [
             1200,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/YellowComet/City",
+            "Rain": "Team/YellowComet/City_Rain",
+            "Snow": "Team/YellowComet/City_Snow"
+        }
     },
     "Yellow Comet HQ": {
         "AWBWID": 57,
@@ -655,12 +763,15 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/YellowComet/HQ",
-        "FogOfWarTexture": "Team/YellowComet/HQ",
         "frames": [
             1200,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/YellowComet/HQ",
+            "Rain": "Team/YellowComet/HQ_Rain",
+            "Snow": "Team/YellowComet/HQ_Snow"
+        }
     },
     "Yellow Comet Port": {
         "AWBWID": 56,
@@ -675,12 +786,15 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/YellowComet/Port",
-        "FogOfWarTexture": "Team/YellowComet/Port",
         "frames": [
             1200,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/YellowComet/Port",
+            "Rain": "Team/YellowComet/Port_Rain",
+            "Snow": "Team/YellowComet/Port_Snow"
+        }
     },
     "Yellow Comet Com Tower": {
         "AWBWID": 136,
@@ -694,12 +808,15 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/YellowComet/ComTower",
-        "FogOfWarTexture": "Team/YellowComet/ComTower",
         "frames": [
             1200,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/YellowComet/ComTower",
+            "Rain": "Team/YellowComet/ComTower_Rain",
+            "Snow": "Team/YellowComet/ComTower_Snow"
+        }
     },
     "Yellow Comet Lab": {
         "AWBWID": 148,
@@ -713,12 +830,15 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/YellowComet/Lab",
-        "FogOfWarTexture": "Team/YellowComet/Lab",
         "frames": [
             1200,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/YellowComet/Lab",
+            "Rain": "Team/YellowComet/Lab_Rain",
+            "Snow": "Team/YellowComet/Lab_Snow"
+        }
     },
     /*
     Red Fire
@@ -734,13 +854,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/RedFire/Airport",
-        "FogOfWarTexture": "Team/RedFire/Airport",
         "frames": [
             1000,
             400,
             200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/RedFire/Airport",
+            "Rain": "Team/RedFire/Airport_Rain",
+            "Snow": "Team/RedFire/Airport_Snow"
+        }
     },
     "Red Fire Base": {
         "AWBWID": 82,
@@ -754,8 +877,6 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/RedFire/Base",
-        "FogOfWarTexture": "Team/RedFire/Base",
         "frames": [
             400,
             400,
@@ -763,7 +884,12 @@
             200,
             200,
             200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/RedFire/Base",
+            "Rain": "Team/RedFire/Base_Rain",
+            "Snow": "Team/RedFire/Base_Snow"
+        }
     },
     "Red Fire City": {
         "AWBWID": 81,
@@ -776,13 +902,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/RedFire/City",
-        "FogOfWarTexture": "Team/RedFire/City",
         "frames": [
             1000,
             400,
             200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/RedFire/City",
+            "Rain": "Team/RedFire/City_Rain",
+            "Snow": "Team/RedFire/City_Snow"
+        }
     },
     "Red Fire HQ": {
         "AWBWID": 85,
@@ -795,8 +924,6 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/RedFire/HQ",
-        "FogOfWarTexture": "Team/RedFire/HQ",
         "frames": [
             600,
             400,
@@ -810,7 +937,12 @@
             600,
             400,
             200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/RedFire/HQ",
+            "Rain": "Team/RedFire/HQ_Rain",
+            "Snow": "Team/RedFire/HQ_Snow"
+        }
     },
     "Red Fire Port": {
         "AWBWID": 84,
@@ -825,13 +957,16 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/RedFire/Port",
-        "FogOfWarTexture": "Team/RedFire/Port",
         "frames": [
             1000,
             400,
             200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/RedFire/Port",
+            "Rain": "Team/RedFire/Port_Rain",
+            "Snow": "Team/RedFire/Port_Snow"
+        }
     },
     "Red Fire Com Tower": {
         "AWBWID": 135,
@@ -845,13 +980,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/RedFire/ComTower",
-        "FogOfWarTexture": "Team/RedFire/ComTower",
         "frames": [
             1000,
             400,
             200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/RedFire/ComTower",
+            "Rain": "Team/RedFire/ComTower_Rain",
+            "Snow": "Team/RedFire/ComTower_Snow"
+        }
     },
     "Red Fire Lab": {
         "AWBWID": 147,
@@ -865,13 +1003,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/RedFire/Lab",
-        "FogOfWarTexture": "Team/RedFire/Lab",
         "frames": [
             1000,
             400,
             200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/RedFire/Lab",
+            "Rain": "Team/RedFire/Lab_Rain",
+            "Snow": "Team/RedFire/Lab_Snow"
+        }
     },
     /*
     Grey Sky
@@ -887,13 +1028,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/GreySky/Airport",
-        "FogOfWarTexture": "Team/GreySky/Airport",
         "frames": [
             900,
             400,
             300
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/GreySky/Airport",
+            "Rain": "Team/GreySky/Airport_Rain",
+            "Snow": "Team/GreySky/Airport_Snow"
+        }
     },
     "Grey Sky Base": {
         "AWBWID": 87,
@@ -907,8 +1051,6 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/GreySky/Base",
-        "FogOfWarTexture": "Team/GreySky/Base",
         "frames": [
             400,
             400,
@@ -916,7 +1058,12 @@
             300,
             100,
             300
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/GreySky/Base",
+            "Rain": "Team/GreySky/Base_Rain",
+            "Snow": "Team/GreySky/Base_Snow"
+        }
     },
     "Grey Sky City": {
         "AWBWID": 86,
@@ -929,13 +1076,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/GreySky/City",
-        "FogOfWarTexture": "Team/GreySky/City",
         "frames": [
             900,
             400,
             300
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/GreySky/City",
+            "Rain": "Team/GreySky/City_Rain",
+            "Snow": "Team/GreySky/City_Snow"
+        }
     },
     "Grey Sky HQ": {
         "AWBWID": 90,
@@ -948,13 +1098,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/GreySky/HQ",
-        "FogOfWarTexture": "Team/GreySky/HQ",
         "frames": [
             900,
             400,
             300
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/GreySky/HQ",
+            "Rain": "Team/GreySky/HQ_Rain",
+            "Snow": "Team/GreySky/HQ_Snow"
+        }
     },
     "Grey Sky Port": {
         "AWBWID": 89,
@@ -969,13 +1122,16 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/GreySky/Port",
-        "FogOfWarTexture": "Team/GreySky/Port",
         "frames": [
             900,
             400,
             300
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/GreySky/Port",
+            "Rain": "Team/GreySky/Port_Rain",
+            "Snow": "Team/GreySky/Port_Snow"
+        }
     },
     "Grey Sky Com Tower": {
         "AWBWID": 137,
@@ -989,13 +1145,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/GreySky/ComTower",
-        "FogOfWarTexture": "Team/GreySky/ComTower",
         "frames": [
             900,
             400,
             300
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/GreySky/ComTower",
+            "Rain": "Team/GreySky/ComTower_Rain",
+            "Snow": "Team/GreySky/ComTower_Snow"
+        }
     },
     "Grey Sky Lab": {
         "AWBWID": 143,
@@ -1009,13 +1168,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/GreySky/Lab",
-        "FogOfWarTexture": "Team/GreySky/Lab",
         "frames": [
             900,
             400,
             300
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/GreySky/Lab",
+            "Rain": "Team/GreySky/Lab_Rain",
+            "Snow": "Team/GreySky/Lab_Snow"
+        }
     },
     /*
     Black Hole
@@ -1031,13 +1193,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/BlackHole/Airport",
-        "FogOfWarTexture": "Team/BlackHole/Airport",
         "frames": [
             1100,
             400,
             100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BlackHole/Airport",
+            "Rain": "Team/BlackHole/Airport_Rain",
+            "Snow": "Team/BlackHole/Airport_Snow"
+        }
     },
     "Black Hole Base": {
         "AWBWID": 92,
@@ -1051,8 +1216,6 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/BlackHole/Base",
-        "FogOfWarTexture": "Team/BlackHole/Base",
         "frames": [
             400,
             400,
@@ -1060,7 +1223,12 @@
             100,
             300,
             100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BlackHole/Base",
+            "Rain": "Team/BlackHole/Base_Rain",
+            "Snow": "Team/BlackHole/Base_Snow"
+        }
     },
     "Black Hole City": {
         "AWBWID": 91,
@@ -1073,13 +1241,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/BlackHole/City",
-        "FogOfWarTexture": "Team/BlackHole/City",
         "frames": [
             1100,
             400,
             100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BlackHole/City",
+            "Rain": "Team/BlackHole/City_Rain",
+            "Snow": "Team/BlackHole/City_Snow"
+        }
     },
     "Black Hole HQ": {
         "AWBWID": 95,
@@ -1092,13 +1263,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/BlackHole/HQ",
-        "FogOfWarTexture": "Team/BlackHole/HQ",
         "frames": [
             1100,
             400,
             100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BlackHole/HQ",
+            "Rain": "Team/BlackHole/HQ_Rain",
+            "Snow": "Team/BlackHole/HQ_Snow"
+        }
     },
     "Black Hole Port": {
         "AWBWID": 94,
@@ -1113,13 +1287,16 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/BlackHole/Port",
-        "FogOfWarTexture": "Team/BlackHole/Port",
         "frames": [
             1100,
             400,
             100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BlackHole/Port",
+            "Rain": "Team/BlackHole/Port_Rain",
+            "Snow": "Team/BlackHole/Port_Snow"
+        }
     },
     "Black Hole Com Tower": {
         "AWBWID": 128,
@@ -1133,13 +1310,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/BlackHole/ComTower",
-        "FogOfWarTexture": "Team/BlackHole/ComTower",
         "frames": [
             1100,
             400,
             100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BlackHole/ComTower",
+            "Rain": "Team/BlackHole/ComTower_Rain",
+            "Snow": "Team/BlackHole/ComTower_Snow"
+        }
     },
     "Black Hole Lab": {
         "AWBWID": 139,
@@ -1153,13 +1333,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/BlackHole/Lab",
-        "FogOfWarTexture": "Team/BlackHole/Lab",
         "frames": [
             1100,
             400,
             100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BlackHole/Lab",
+            "Rain": "Team/BlackHole/Lab_Rain",
+            "Snow": "Team/BlackHole/Lab_Snow"
+        }
     },
     /*
     Brown Desert
@@ -1175,13 +1358,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/BrownDesert/Airport",
-        "FogOfWarTexture": "Team/BrownDesert/Airport",
         "frames": [
             800,
             400,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BrownDesert/Airport",
+            "Rain": "Team/BrownDesert/Airport_Rain",
+            "Snow": "Team/BrownDesert/Airport_Snow"
+        }
     },
     "Brown Desert Base": {
         "AWBWID": 97,
@@ -1195,14 +1381,17 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/BrownDesert/Base",
-        "FogOfWarTexture": "Team/BrownDesert/Base",
         "frames": [
             400,
             400,
             400,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BrownDesert/Base",
+            "Rain": "Team/BrownDesert/Base_Rain",
+            "Snow": "Team/BrownDesert/Base_Snow"
+        }
     },
     "Brown Desert City": {
         "AWBWID": 96,
@@ -1215,13 +1404,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/BrownDesert/City",
-        "FogOfWarTexture": "Team/BrownDesert/City",
         "frames": [
             800,
             400,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BrownDesert/City",
+            "Rain": "Team/BrownDesert/City_Rain",
+            "Snow": "Team/BrownDesert/City_Snow"
+        }
     },
     "Brown Desert HQ": {
         "AWBWID": 100,
@@ -1234,14 +1426,17 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/BrownDesert/HQ",
-        "FogOfWarTexture": "Team/BrownDesert/HQ",
         "frames": [
             800,
             200,
             200,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BrownDesert/HQ",
+            "Rain": "Team/BrownDesert/HQ_Rain",
+            "Snow": "Team/BrownDesert/HQ_Snow"
+        }
     },
     "Brown Desert Port": {
         "AWBWID": 99,
@@ -1256,13 +1451,16 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/BrownDesert/Port",
-        "FogOfWarTexture": "Team/BrownDesert/Port",
         "frames": [
             800,
             400,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BrownDesert/Port",
+            "Rain": "Team/BrownDesert/Port_Rain",
+            "Snow": "Team/BrownDesert/Port_Snow"
+        }
     },
     "Brown Desert Com Tower": {
         "AWBWID": 130,
@@ -1276,13 +1474,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/BrownDesert/ComTower",
-        "FogOfWarTexture": "Team/BrownDesert/ComTower",
         "frames": [
             800,
             400,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BrownDesert/ComTower",
+            "Rain": "Team/BrownDesert/ComTower_Rain",
+            "Snow": "Team/BrownDesert/ComTower_Snow"
+        }
     },
     "Brown Desert Lab": {
         "AWBWID": 141,
@@ -1296,13 +1497,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/BrownDesert/Lab",
-        "FogOfWarTexture": "Team/BrownDesert/Lab",
         "frames": [
             800,
             400,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/BrownDesert/Lab",
+            "Rain": "Team/BrownDesert/Lab_Rain",
+            "Snow": "Team/BrownDesert/Lab_Snow"
+        }
     },
     /*
     Amber Blaze
@@ -1318,13 +1522,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/AmberBlaze/Airport",
-        "FogOfWarTexture": "Team/AmberBlaze/Airport",
         "frames": [
             700,
             400,
             500
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/AmberBlaze/Airport",
+            "Rain": "Team/AmberBlaze/Airport_Rain",
+            "Snow": "Team/AmberBlaze/Airport_Snow"
+        }
     },
     "Amber Blaze Base": {
         "AWBWID": 118,
@@ -1338,8 +1545,6 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/AmberBlaze/Base",
-        "FogOfWarTexture": "Team/AmberBlaze/Base",
         "frames": [
             400,
             300,
@@ -1347,7 +1552,12 @@
             300,
             100,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/AmberBlaze/Base",
+            "Rain": "Team/AmberBlaze/Base_Rain",
+            "Snow": "Team/AmberBlaze/Base_Snow"
+        }
     },
     "Amber Blaze City": {
         "AWBWID": 119,
@@ -1360,13 +1570,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/AmberBlaze/City",
-        "FogOfWarTexture": "Team/AmberBlaze/City",
         "frames": [
             700,
             400,
             500
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/AmberBlaze/City",
+            "Rain": "Team/AmberBlaze/City_Rain",
+            "Snow": "Team/AmberBlaze/City_Snow"
+        }
     },
     "Amber Blaze HQ": {
         "AWBWID": 120,
@@ -1379,13 +1592,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/AmberBlaze/HQ",
-        "FogOfWarTexture": "Team/AmberBlaze/HQ",
         "frames": [
             700,
             400,
             500
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/AmberBlaze/HQ",
+            "Rain": "Team/AmberBlaze/HQ_Rain",
+            "Snow": "Team/AmberBlaze/HQ_Snow"
+        }
     },
     "Amber Blaze Port": {
         "AWBWID": 121,
@@ -1400,13 +1616,16 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/AmberBlaze/Port",
-        "FogOfWarTexture": "Team/AmberBlaze/Port",
         "frames": [
             700,
             400,
             500
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/AmberBlaze/Port",
+            "Rain": "Team/AmberBlaze/Port_Rain",
+            "Snow": "Team/AmberBlaze/Port_Snow"
+        }
     },
     "Amber Blaze Com Tower": {
         "AWBWID": 127,
@@ -1420,13 +1639,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/AmberBlaze/ComTower",
-        "FogOfWarTexture": "Team/AmberBlaze/ComTower",
         "frames": [
             700,
             400,
             500
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/AmberBlaze/ComTower",
+            "Rain": "Team/AmberBlaze/ComTower_Rain",
+            "Snow": "Team/AmberBlaze/ComTower_Snow"
+        }
     },
     "Amber Blaze Lab": {
         "AWBWID": 138,
@@ -1440,13 +1662,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/AmberBlaze/Lab",
-        "FogOfWarTexture": "Team/AmberBlaze/Lab",
         "frames": [
             700,
             400,
             500
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/AmberBlaze/Lab",
+            "Rain": "Team/AmberBlaze/Lab_Rain",
+            "Snow": "Team/AmberBlaze/Lab_Snow"
+        }
     },
     /*
     Jade Sun
@@ -1462,13 +1687,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/JadeSun/Airport",
-        "FogOfWarTexture": "Team/JadeSun/Airport",
         "frames": [
             600,
             400,
             600
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/JadeSun/Airport",
+            "Rain": "Team/JadeSun/Airport_Rain",
+            "Snow": "Team/JadeSun/Airport_Snow"
+        }
     },
     "Jade Sun Base": {
         "AWBWID": 123,
@@ -1482,8 +1710,6 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/JadeSun/Base",
-        "FogOfWarTexture": "Team/JadeSun/Base",
         "frames": [
             400,
             200,
@@ -1491,7 +1717,12 @@
             200,
             200,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/JadeSun/Base",
+            "Rain": "Team/JadeSun/Base_Rain",
+            "Snow": "Team/JadeSun/Base_Snow"
+        }
     },
     "Jade Sun City": {
         "AWBWID": 124,
@@ -1504,13 +1735,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/JadeSun/City",
-        "FogOfWarTexture": "Team/JadeSun/City",
         "frames": [
             600,
             400,
             600
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/JadeSun/City",
+            "Rain": "Team/JadeSun/City_Rain",
+            "Snow": "Team/JadeSun/City_Snow"
+        }
     },
     "Jade Sun HQ": {
         "AWBWID": 125,
@@ -1523,14 +1757,17 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/JadeSun/HQ",
-        "FogOfWarTexture": "Team/JadeSun/HQ",
         "frames": [
             600,
             200,
             200,
             600
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/JadeSun/HQ",
+            "Rain": "Team/JadeSun/HQ_Rain",
+            "Snow": "Team/JadeSun/HQ_Snow"
+        }
     },
     "Jade Sun Port": {
         "AWBWID": 126,
@@ -1545,13 +1782,16 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/JadeSun/Port",
-        "FogOfWarTexture": "Team/JadeSun/Port",
         "frames": [
             600,
             400,
             600
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/JadeSun/Port",
+            "Rain": "Team/JadeSun/Port_Rain",
+            "Snow": "Team/JadeSun/Port_Snow"
+        }
     },
     "Jade Sun Com Tower": {
         "AWBWID": 132,
@@ -1565,13 +1805,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/JadeSun/ComTower",
-        "FogOfWarTexture": "Team/JadeSun/ComTower",
         "frames": [
             600,
             400,
             600
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/JadeSun/ComTower",
+            "Rain": "Team/JadeSun/ComTower_Rain",
+            "Snow": "Team/JadeSun/ComTower_Snow"
+        }
     },
     "Jade Sun Lab": {
         "AWBWID": 144,
@@ -1585,13 +1828,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/JadeSun/Lab",
-        "FogOfWarTexture": "Team/JadeSun/Lab",
         "frames": [
             600,
             400,
             600
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/JadeSun/Lab",
+            "Rain": "Team/JadeSun/Lab_Rain",
+            "Snow": "Team/JadeSun/Lab_Snow"
+        }
     },
     /*
     Cobalt Ice
@@ -1607,13 +1853,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/CobaltIce/Airport",
-        "FogOfWarTexture": "Team/CobaltIce/Airport",
         "frames": [
             500,
             400,
             700
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/CobaltIce/Airport",
+            "Rain": "Team/CobaltIce/Airport_Rain",
+            "Snow": "Team/CobaltIce/Airport_Snow"
+        }
     },
     "Cobalt Ice Base": {
         "AWBWID": 150,
@@ -1627,8 +1876,6 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/CobaltIce/Base",
-        "FogOfWarTexture": "Team/CobaltIce/Base",
         "frames": [
             400,
             100,
@@ -1636,7 +1883,12 @@
             100,
             300,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/CobaltIce/Base",
+            "Rain": "Team/CobaltIce/Base_Rain",
+            "Snow": "Team/CobaltIce/Base_Snow"
+        }
     },
     "Cobalt Ice City": {
         "AWBWID": 151,
@@ -1649,13 +1901,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/CobaltIce/City",
-        "FogOfWarTexture": "Team/CobaltIce/City",
         "frames": [
             500,
             400,
             700
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/CobaltIce/City",
+            "Rain": "Team/CobaltIce/City_Rain",
+            "Snow": "Team/CobaltIce/City_Snow"
+        }
     },
     "Cobalt Ice HQ": {
         "AWBWID": 153,
@@ -1668,8 +1923,6 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/CobaltIce/HQ",
-        "FogOfWarTexture": "Team/CobaltIce/HQ",
         "frames": [
             500,
             20,
@@ -1693,7 +1946,12 @@
             20,
             20,
             700
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/CobaltIce/HQ",
+            "Rain": "Team/CobaltIce/HQ_Rain",
+            "Snow": "Team/CobaltIce/HQ_Snow"
+        }
     },
     "Cobalt Ice Port": {
         "AWBWID": 155,
@@ -1708,13 +1966,16 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/CobaltIce/Port",
-        "FogOfWarTexture": "Team/CobaltIce/Port",
         "frames": [
             500,
             400,
             700
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/CobaltIce/Port",
+            "Rain": "Team/CobaltIce/Port_Rain",
+            "Snow": "Team/CobaltIce/Port_Snow"
+        }
     },
     "Cobalt Ice Com Tower": {
         "AWBWID": 152,
@@ -1728,13 +1989,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/CobaltIce/ComTower",
-        "FogOfWarTexture": "Team/CobaltIce/ComTower",
         "frames": [
             500,
             400,
             700
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/CobaltIce/ComTower",
+            "Rain": "Team/CobaltIce/ComTower_Rain",
+            "Snow": "Team/CobaltIce/ComTower_Snow"
+        }
     },
     "Cobalt Ice Lab": {
         "AWBWID": 154,
@@ -1748,13 +2012,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/CobaltIce/Lab",
-        "FogOfWarTexture": "Team/CobaltIce/Lab",
         "frames": [
             500,
             400,
             700
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/CobaltIce/Lab",
+            "Rain": "Team/CobaltIce/Lab_Rain",
+            "Snow": "Team/CobaltIce/Lab_Snow"
+        }
     },
     /*
     Pink Cosmos
@@ -1770,13 +2037,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/PinkCosmos/Airport",
-        "FogOfWarTexture": "Team/PinkCosmos/Airport",
         "frames": [
             400,
             400,
             800
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/PinkCosmos/Airport",
+            "Rain": "Team/PinkCosmos/Airport_Rain",
+            "Snow": "Team/PinkCosmos/Airport_Snow"
+        }
     },
     "Pink Cosmos Base": {
         "AWBWID": 157,
@@ -1790,14 +2060,17 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/PinkCosmos/Base",
-        "FogOfWarTexture": "Team/PinkCosmos/Base",
         "frames": [
             400,
             400,
             400,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/PinkCosmos/Base",
+            "Rain": "Team/PinkCosmos/Base_Rain",
+            "Snow": "Team/PinkCosmos/Base_Snow"
+        }
     },
     "Pink Cosmos City": {
         "AWBWID": 158,
@@ -1810,13 +2083,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/PinkCosmos/City",
-        "FogOfWarTexture": "Team/PinkCosmos/City",
         "frames": [
             400,
             400,
             800
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/PinkCosmos/City",
+            "Rain": "Team/PinkCosmos/City_Rain",
+            "Snow": "Team/PinkCosmos/City_Snow"
+        }
     },
     "Pink Cosmos HQ": {
         "AWBWID": 160,
@@ -1829,13 +2105,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/PinkCosmos/HQ",
-        "FogOfWarTexture": "Team/PinkCosmos/HQ",
         "frames": [
             400,
             400,
             800
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/PinkCosmos/HQ",
+            "Rain": "Team/PinkCosmos/HQ_Rain",
+            "Snow": "Team/PinkCosmos/HQ_Snow"
+        }
     },
     "Pink Cosmos Port": {
         "AWBWID": 162,
@@ -1850,13 +2129,16 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/PinkCosmos/Port",
-        "FogOfWarTexture": "Team/PinkCosmos/Port",
         "frames": [
             400,
             400,
             800
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/PinkCosmos/Port",
+            "Rain": "Team/PinkCosmos/Port_Rain",
+            "Snow": "Team/PinkCosmos/Port_Snow"
+        }
     },
     "Pink Cosmos Com Tower": {
         "AWBWID": 159,
@@ -1870,13 +2152,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/PinkCosmos/ComTower",
-        "FogOfWarTexture": "Team/PinkCosmos/ComTower",
         "frames": [
             400,
             400,
             800
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/PinkCosmos/ComTower",
+            "Rain": "Team/PinkCosmos/ComTower_Rain",
+            "Snow": "Team/PinkCosmos/ComTower_Snow"
+        }
     },
     "Pink Cosmos Lab": {
         "AWBWID": 161,
@@ -1890,13 +2175,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/PinkCosmos/Lab",
-        "FogOfWarTexture": "Team/PinkCosmos/Lab",
         "frames": [
             400,
             400,
             800
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/PinkCosmos/Lab",
+            "Rain": "Team/PinkCosmos/Lab_Rain",
+            "Snow": "Team/PinkCosmos/Lab_Snow"
+        }
     },
     /*
     Teal Galaxy
@@ -1912,13 +2200,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/TealGalaxy/Airport",
-        "FogOfWarTexture": "Team/TealGalaxy/Airport",
         "frames": [
             300,
             400,
             900
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/TealGalaxy/Airport",
+            "Rain": "Team/TealGalaxy/Airport_Rain",
+            "Snow": "Team/TealGalaxy/Airport_Snow"
+        }
     },
     "Teal Galaxy Base": {
         "AWBWID": 164,
@@ -1932,8 +2223,6 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/TealGalaxy/Base",
-        "FogOfWarTexture": "Team/TealGalaxy/Base",
         "frames": [
             300,
             100,
@@ -1941,7 +2230,12 @@
             100,
             400,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/TealGalaxy/Base",
+            "Rain": "Team/TealGalaxy/Base_Rain",
+            "Snow": "Team/TealGalaxy/Base_Snow"
+        }
     },
     "Teal Galaxy City": {
         "AWBWID": 165,
@@ -1954,13 +2248,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/TealGalaxy/City",
-        "FogOfWarTexture": "Team/TealGalaxy/City",
         "frames": [
             300,
             400,
             900
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/TealGalaxy/City",
+            "Rain": "Team/TealGalaxy/City_Rain",
+            "Snow": "Team/TealGalaxy/City_Snow"
+        }
     },
     "Teal Galaxy HQ": {
         "AWBWID": 167,
@@ -1973,13 +2270,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/TealGalaxy/HQ",
-        "FogOfWarTexture": "Team/TealGalaxy/HQ",
         "frames": [
             300,
             400,
             900
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/TealGalaxy/HQ",
+            "Rain": "Team/TealGalaxy/HQ_Rain",
+            "Snow": "Team/TealGalaxy/HQ_Snow"
+        }
     },
     "Teal Galaxy Port": {
         "AWBWID": 169,
@@ -1994,13 +2294,16 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/TealGalaxy/Port",
-        "FogOfWarTexture": "Team/TealGalaxy/Port",
         "frames": [
             300,
             400,
             900
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/TealGalaxy/Port",
+            "Rain": "Team/TealGalaxy/Port_Rain",
+            "Snow": "Team/TealGalaxy/Port_Snow"
+        }
     },
     "Teal Galaxy Com Tower": {
         "AWBWID": 166,
@@ -2014,13 +2317,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/TealGalaxy/ComTower",
-        "FogOfWarTexture": "Team/TealGalaxy/ComTower",
         "frames": [
             300,
             400,
             900
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/TealGalaxy/ComTower",
+            "Rain": "Team/TealGalaxy/ComTower_Rain",
+            "Snow": "Team/TealGalaxy/ComTower_Snow"
+        }
     },
     "Teal Galaxy Lab": {
         "AWBWID": 168,
@@ -2034,13 +2340,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/TealGalaxy/Lab",
-        "FogOfWarTexture": "Team/TealGalaxy/Lab",
         "frames": [
             300,
             400,
             900
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/TealGalaxy/Lab",
+            "Rain": "Team/TealGalaxy/Lab_Rain",
+            "Snow": "Team/TealGalaxy/Lab_Snow"
+        }
     },
     /*
     Purple Lightning
@@ -2056,13 +2365,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/PurpleLightning/Airport",
-        "FogOfWarTexture": "Team/PurpleLightning/Airport",
         "frames": [
             200,
             400,
             1000
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/PurpleLightning/Airport",
+            "Rain": "Team/PurpleLightning/Airport_Rain",
+            "Snow": "Team/PurpleLightning/Airport_Snow"
+        }
     },
     "Purple Lightning Base": {
         "AWBWID": 171,
@@ -2076,8 +2388,6 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/PurpleLightning/Base",
-        "FogOfWarTexture": "Team/PurpleLightning/Base",
         "frames": [
             200,
             200,
@@ -2085,7 +2395,12 @@
             200,
             400,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/PurpleLightning/Base",
+            "Rain": "Team/PurpleLightning/Base_Rain",
+            "Snow": "Team/PurpleLightning/Base_Snow"
+        }
     },
     "Purple Lightning City": {
         "AWBWID": 172,
@@ -2098,13 +2413,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/PurpleLightning/City",
-        "FogOfWarTexture": "Team/PurpleLightning/City",
         "frames": [
             200,
             400,
             1000
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/PurpleLightning/City",
+            "Rain": "Team/PurpleLightning/City_Rain",
+            "Snow": "Team/PurpleLightning/City_Snow"
+        }
     },
     "Purple Lightning HQ": {
         "AWBWID": 174,
@@ -2117,13 +2435,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/PurpleLightning/HQ",
-        "FogOfWarTexture": "Team/PurpleLightning/HQ",
         "frames": [
             200,
             400,
             1000
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/PurpleLightning/HQ",
+            "Rain": "Team/PurpleLightning/HQ_Rain",
+            "Snow": "Team/PurpleLightning/HQ_Snow"
+        }
     },
     "Purple Lightning Port": {
         "AWBWID": 176,
@@ -2138,13 +2459,16 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/PurpleLightning/Port",
-        "FogOfWarTexture": "Team/PurpleLightning/Port",
         "frames": [
             200,
             400,
             1000
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/PurpleLightning/Port",
+            "Rain": "Team/PurpleLightning/Port_Rain",
+            "Snow": "Team/PurpleLightning/Port_Snow"
+        }
     },
     "Purple Lightning Com Tower": {
         "AWBWID": 173,
@@ -2158,13 +2482,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/PurpleLightning/ComTower",
-        "FogOfWarTexture": "Team/PurpleLightning/ComTower",
         "frames": [
             200,
             400,
             1000
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/PurpleLightning/ComTower",
+            "Rain": "Team/PurpleLightning/ComTower_Rain",
+            "Snow": "Team/PurpleLightning/ComTower_Snow"
+        }
     },
     "Purple Lightning Lab": {
         "AWBWID": 175,
@@ -2178,13 +2505,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/PurpleLightning/Lab",
-        "FogOfWarTexture": "Team/PurpleLightning/Lab",
         "frames": [
             200,
             400,
             1000
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/PurpleLightning/Lab",
+            "Rain": "Team/PurpleLightning/Lab_Rain",
+            "Snow": "Team/PurpleLightning/Lab_Snow"
+        }
     },
     /*
     Acid Rain
@@ -2200,13 +2530,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/AcidRain/Airport",
-        "FogOfWarTexture": "Team/AcidRain/Airport",
         "frames": [
             100,
             400,
             1100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/AcidRain/Airport",
+            "Rain": "Team/AcidRain/Airport_Rain",
+            "Snow": "Team/AcidRain/Airport_Snow"
+        }
     },
     "Acid Rain Base": {
         "AWBWID": 182,
@@ -2220,8 +2553,6 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/AcidRain/Base",
-        "FogOfWarTexture": "Team/AcidRain/Base",
         "frames": [
             100,
             300,
@@ -2229,7 +2560,12 @@
             300,
             400,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/AcidRain/Base",
+            "Rain": "Team/AcidRain/Base_Rain",
+            "Snow": "Team/AcidRain/Base_Snow"
+        }
     },
     "Acid Rain City": {
         "AWBWID": 183,
@@ -2242,13 +2578,16 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/AcidRain/City",
-        "FogOfWarTexture": "Team/AcidRain/City",
         "frames": [
             100,
             400,
             1100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/AcidRain/City",
+            "Rain": "Team/AcidRain/City_Rain",
+            "Snow": "Team/AcidRain/City_Snow"
+        }
     },
     "Acid Rain HQ": {
         "AWBWID": 185,
@@ -2261,14 +2600,17 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/AcidRain/HQ",
-        "FogOfWarTexture": "Team/AcidRain/HQ",
         "frames": [
             100,
             200,
             200,
             1100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/AcidRain/HQ",
+            "Rain": "Team/AcidRain/HQ_Rain",
+            "Snow": "Team/AcidRain/HQ_Snow"
+        }
     },
     "Acid Rain Port": {
         "AWBWID": 187,
@@ -2283,13 +2625,16 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/AcidRain/Port",
-        "FogOfWarTexture": "Team/AcidRain/Port",
         "frames": [
             100,
             400,
             1100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/AcidRain/Port",
+            "Rain": "Team/AcidRain/Port_Rain",
+            "Snow": "Team/AcidRain/Port_Snow"
+        }
     },
     "Acid Rain Com Tower": {
         "AWBWID": 184,
@@ -2303,13 +2648,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/AcidRain/ComTower",
-        "FogOfWarTexture": "Team/AcidRain/ComTower",
         "frames": [
             100,
             400,
             1100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/AcidRain/ComTower",
+            "Rain": "Team/AcidRain/ComTower_Rain",
+            "Snow": "Team/AcidRain/ComTower_Snow"
+        }
     },
     "Acid Rain Lab": {
         "AWBWID": 186,
@@ -2323,13 +2671,16 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/AcidRain/Lab",
-        "FogOfWarTexture": "Team/AcidRain/Lab",
         "frames": [
             100,
             400,
             1100
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/AcidRain/Lab",
+            "Rain": "Team/AcidRain/Lab_Rain",
+            "Snow": "Team/AcidRain/Lab_Snow"
+        }
     },
     /*
     White Nova
@@ -2344,12 +2695,15 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/WhiteNova/Airport",
-        "FogOfWarTexture": "Team/WhiteNova/Airport",
         "frames": [
             400,
             1200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/WhiteNova/Airport",
+            "Rain": "Team/WhiteNova/Airport_Rain",
+            "Snow": "Team/WhiteNova/Airport_Snow"
+        }
     },
     "White Nova Base": {
         "AWBWID": 189,
@@ -2363,14 +2717,17 @@
             "Air": 1,
             "Pipe": 1
         },
-        "BaseTexture": "Team/WhiteNova/Base",
-        "FogOfWarTexture": "Team/WhiteNova/Base",
         "frames": [
             400,
             400,
             400,
             400
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/WhiteNova/Base",
+            "Rain": "Team/WhiteNova/Base_Rain",
+            "Snow": "Team/WhiteNova/Base_Snow"
+        }
     },
     "White Nova City": {
         "AWBWID": 190,
@@ -2383,12 +2740,15 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/WhiteNova/City",
-        "FogOfWarTexture": "Team/WhiteNova/City",
         "frames": [
             400,
             1200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/WhiteNova/City",
+            "Rain": "Team/WhiteNova/City_Rain",
+            "Snow": "Team/WhiteNova/City_Snow"
+        }
     },
     "White Nova HQ": {
         "AWBWID": 192,
@@ -2401,12 +2761,15 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/WhiteNova/HQ",
-        "FogOfWarTexture": "Team/WhiteNova/HQ",
         "frames": [
             400,
             1200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/WhiteNova/HQ",
+            "Rain": "Team/WhiteNova/HQ_Rain",
+            "Snow": "Team/WhiteNova/HQ_Snow"
+        }
     },
     "White Nova Port": {
         "AWBWID": 194,
@@ -2421,12 +2784,15 @@
             "Sea": 1,
             "Lander": 1
         },
-        "BaseTexture": "Team/WhiteNova/Port",
-        "FogOfWarTexture": "Team/WhiteNova/Port",
         "frames": [
             400,
             1200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/WhiteNova/Port",
+            "Rain": "Team/WhiteNova/Port_Rain",
+            "Snow": "Team/WhiteNova/Port_Snow"
+        }
     },
     "White Nova Com Tower": {
         "AWBWID": 191,
@@ -2440,12 +2806,15 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/WhiteNova/ComTower",
-        "FogOfWarTexture": "Team/WhiteNova/ComTower",
         "frames": [
             400,
             1200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/WhiteNova/ComTower",
+            "Rain": "Team/WhiteNova/ComTower_Rain",
+            "Snow": "Team/WhiteNova/ComTower_Snow"
+        }
     },
     "White Nova Lab": {
         "AWBWID": 193,
@@ -2459,11 +2828,14 @@
             "Air": 1
         },
         "GivesMoneyWhenCaptured": false,
-        "BaseTexture": "Team/WhiteNova/Lab",
-        "FogOfWarTexture": "Team/WhiteNova/Lab",
         "frames": [
             400,
             1200
-        ]
+        ],
+        "Textures": {
+            "Clear": "Team/WhiteNova/Lab",
+            "Rain": "Team/WhiteNova/Lab_Rain",
+            "Snow": "Team/WhiteNova/Lab_Snow"
+        }
     }
 }

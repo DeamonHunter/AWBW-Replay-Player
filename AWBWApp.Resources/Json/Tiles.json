@@ -10,8 +10,11 @@
             "Air": 1
         },
         "TerrainType": "Plain",
-        "BaseTexture": "Plain",
-        "FogOfWarTexture": "Plain"
+        "Textures": {
+            "Clear": "Plain",
+            "Rain": "Plain_Rain",
+            "Snow": "Plain_Snow"
+        }
     },
     "Mountain": {
         "AWBWID": 2,
@@ -23,8 +26,11 @@
             "Air": 1
         },
         "TerrainType": "Mountain",
-        "BaseTexture": "Mountain",
-        "FogOfWarTexture": "Mountain"
+        "Textures": {
+            "Clear": "Mountain",
+            "Rain": "Mountain_Rain",
+            "Snow": "Mountain_Snow"
+        }
     },
     "Wood": {
         "AWBWID": 3,
@@ -38,8 +44,11 @@
             "Air": 1
         },
         "TerrainType": "Forest",
-        "BaseTexture": "Wood",
-        "FogOfWarTexture": "Wood"
+        "Textures": {
+            "Clear": "Wood",
+            "Rain": "Wood_Rain",
+            "Snow": "Wood_Snow"
+        }
     },
     "HRiver": {
         "AWBWID": 4,
@@ -52,8 +61,11 @@
             "Air": 1
         },
         "TerrainType": "River",
-        "BaseTexture": "River/H",
-        "FogOfWarTexture": "River/H"
+        "Textures": {
+            "Clear": "River/H",
+            "Rain": "River/H_Rain",
+            "Snow": "River/H_Snow"
+        }
     },
     "VRiver": {
         "AWBWID": 5,
@@ -66,8 +78,11 @@
             "Air": 1
         },
         "TerrainType": "River",
-        "BaseTexture": "River/V",
-        "FogOfWarTexture": "River/V"
+        "Textures": {
+            "Clear": "River/V",
+            "Rain": "River/V_Rain",
+            "Snow": "River/V_Snow"
+        }
     },
     "CRiver": {
         "AWBWID": 6,
@@ -80,8 +95,11 @@
             "Air": 1
         },
         "TerrainType": "River",
-        "BaseTexture": "River/C",
-        "FogOfWarTexture": "River/C"
+        "Textures": {
+            "Clear": "River/C",
+            "Rain": "River/C_Rain",
+            "Snow": "River/C_Snow"
+        }
     },
     "ESRiver": {
         "AWBWID": 7,
@@ -94,8 +112,11 @@
             "Air": 1
         },
         "TerrainType": "River",
-        "BaseTexture": "River/ES",
-        "FogOfWarTexture": "River/ES"
+        "Textures": {
+            "Clear": "River/ES",
+            "Rain": "River/ES_Rain",
+            "Snow": "River/ES_Snow"
+        }
     },
     "SWRiver": {
         "AWBWID": 8,
@@ -108,8 +129,11 @@
             "Air": 1
         },
         "TerrainType": "River",
-        "BaseTexture": "River/SW",
-        "FogOfWarTexture": "River/SW"
+        "Textures": {
+            "Clear": "River/SW",
+            "Rain": "River/SW_Rain",
+            "Snow": "River/SW_Snow"
+        }
     },
     "WNRiver": {
         "AWBWID": 9,
@@ -122,8 +146,11 @@
             "Air": 1
         },
         "TerrainType": "River",
-        "BaseTexture": "River/WN",
-        "FogOfWarTexture": "River/WN"
+        "Textures": {
+            "Clear": "River/WN",
+            "Rain": "River/WN_Rain",
+            "Snow": "River/WN_Snow"
+        }
     },
     "NERiver": {
         "AWBWID": 10,
@@ -136,8 +163,11 @@
             "Air": 1
         },
         "TerrainType": "River",
-        "BaseTexture": "River/NE",
-        "FogOfWarTexture": "River/NE"
+        "Textures": {
+            "Clear": "River/NE",
+            "Rain": "River/NE_Rain",
+            "Snow": "River/NE_Snow"
+        }
     },
     "ESWRiver": {
         "AWBWID": 11,
@@ -150,8 +180,11 @@
             "Air": 1
         },
         "TerrainType": "River",
-        "BaseTexture": "River/ESW",
-        "FogOfWarTexture": "River/ESW"
+        "Textures": {
+            "Clear": "River/ESW",
+            "Rain": "River/ESW_Rain",
+            "Snow": "River/ESW_Snow"
+        }
     },
     "SWNRiver": {
         "AWBWID": 12,
@@ -164,8 +197,11 @@
             "Air": 1
         },
         "TerrainType": "River",
-        "BaseTexture": "River/SWN",
-        "FogOfWarTexture": "River/SWN"
+        "Textures": {
+            "Clear": "River/SWN",
+            "Rain": "River/SWN_Rain",
+            "Snow": "River/SWN_Snow"
+        }
     },
     "WNERiver": {
         "AWBWID": 13,
@@ -178,8 +214,11 @@
             "Air": 1
         },
         "TerrainType": "River",
-        "BaseTexture": "River/WNE",
-        "FogOfWarTexture": "River/WNE"
+        "Textures": {
+            "Clear": "River/WNE",
+            "Rain": "River/WNE_Rain",
+            "Snow": "River/WNE_Snow"
+        }
     },
     "NESRiver": {
         "AWBWID": 14,
@@ -192,8 +231,11 @@
             "Air": 1
         },
         "TerrainType": "River",
-        "BaseTexture": "River/NES",
-        "FogOfWarTexture": "River/NES"
+        "Textures": {
+            "Clear": "River/NES",
+            "Rain": "River/NES_Rain",
+            "Snow": "River/NES_Snow"
+        }
     },
     "HRoad": {
         "AWBWID": 15,
@@ -206,8 +248,11 @@
             "Air": 1
         },
         "TerrainType": "Road",
-        "BaseTexture": "Road/H",
-        "FogOfWarTexture": "Road/H"
+        "Textures": {
+            "Clear": "Road/H",
+            "Rain": "Road/H_Rain",
+            "Snow": "Road/H_Snow"
+        }
     },
     "VRoad": {
         "AWBWID": 16,
@@ -220,8 +265,11 @@
             "Air": 1
         },
         "TerrainType": "Road",
-        "BaseTexture": "Road/V",
-        "FogOfWarTexture": "Road/V"
+        "Textures": {
+            "Clear": "Road/V",
+            "Rain": "Road/V_Rain",
+            "Snow": "Road/V_Snow"
+        }
     },
     "CRoad": {
         "AWBWID": 17,
@@ -234,8 +282,11 @@
             "Air": 1
         },
         "TerrainType": "Road",
-        "BaseTexture": "Road/C",
-        "FogOfWarTexture": "Road/C"
+        "Textures": {
+            "Clear": "Road/C",
+            "Rain": "Road/C_Rain",
+            "Snow": "Road/C_Snow"
+        }
     },
     "ESRoad": {
         "AWBWID": 18,
@@ -248,8 +299,11 @@
             "Air": 1
         },
         "TerrainType": "Road",
-        "BaseTexture": "Road/ES",
-        "FogOfWarTexture": "Road/ES"
+        "Textures": {
+            "Clear": "Road/ES",
+            "Rain": "Road/ES_Rain",
+            "Snow": "Road/ES_Snow"
+        }
     },
     "SWRoad": {
         "AWBWID": 19,
@@ -262,8 +316,11 @@
             "Air": 1
         },
         "TerrainType": "Road",
-        "BaseTexture": "Road/SW",
-        "FogOfWarTexture": "Road/SW"
+        "Textures": {
+            "Clear": "Road/SW",
+            "Rain": "Road/SW_Rain",
+            "Snow": "Road/SW_Snow"
+        }
     },
     "WNRoad": {
         "AWBWID": 20,
@@ -276,8 +333,11 @@
             "Air": 1
         },
         "TerrainType": "Road",
-        "BaseTexture": "Road/WN",
-        "FogOfWarTexture": "Road/WN"
+        "Textures": {
+            "Clear": "Road/WN",
+            "Rain": "Road/WN_Rain",
+            "Snow": "Road/WN_Snow"
+        }
     },
     "NERoad": {
         "AWBWID": 21,
@@ -290,8 +350,11 @@
             "Air": 1
         },
         "TerrainType": "Road",
-        "BaseTexture": "Road/NE",
-        "FogOfWarTexture": "Road/NE"
+        "Textures": {
+            "Clear": "Road/NE",
+            "Rain": "Road/NE_Rain",
+            "Snow": "Road/NE_Snow"
+        }
     },
     "ESWRoad": {
         "AWBWID": 22,
@@ -304,8 +367,11 @@
             "Air": 1
         },
         "TerrainType": "Road",
-        "BaseTexture": "Road/ESW",
-        "FogOfWarTexture": "Road/ESW"
+        "Textures": {
+            "Clear": "Road/ESW",
+            "Rain": "Road/ESW_Rain",
+            "Snow": "Road/ESW_Snow"
+        }
     },
     "SWNRoad": {
         "AWBWID": 23,
@@ -318,8 +384,11 @@
             "Air": 1
         },
         "TerrainType": "Road",
-        "BaseTexture": "Road/SWN",
-        "FogOfWarTexture": "Road/SWN"
+        "Textures": {
+            "Clear": "Road/SWN",
+            "Rain": "Road/SWN_Rain",
+            "Snow": "Road/SWN_Snow"
+        }
     },
     "WNERoad": {
         "AWBWID": 24,
@@ -332,8 +401,11 @@
             "Air": 1
         },
         "TerrainType": "Road",
-        "BaseTexture": "Road/WNE",
-        "FogOfWarTexture": "Road/WNE"
+        "Textures": {
+            "Clear": "Road/WNE",
+            "Rain": "Road/WNE_Rain",
+            "Snow": "Road/WNE_Snow"
+        }
     },
     "NESRoad": {
         "AWBWID": 25,
@@ -346,8 +418,11 @@
             "Air": 1
         },
         "TerrainType": "Road",
-        "BaseTexture": "Road/NES",
-        "FogOfWarTexture": "Road/NES"
+        "Textures": {
+            "Clear": "Road/NES",
+            "Rain": "Road/NES_Rain",
+            "Snow": "Road/NES_Snow"
+        }
     },
     "HBridge": {
         "AWBWID": 26,
@@ -360,8 +435,11 @@
             "Air": 1
         },
         "TerrainType": "Road",
-        "BaseTexture": "Road/HBridge",
-        "FogOfWarTexture": "Road/HBridge"
+        "Textures": {
+            "Clear": "Road/HBridge",
+            "Rain": "Road/HBridge_Rain",
+            "Snow": "Road/HBridge_Snow"
+        }
     },
     "VBridge": {
         "AWBWID": 27,
@@ -374,8 +452,11 @@
             "Air": 1
         },
         "TerrainType": "Road",
-        "BaseTexture": "Road/VBridge",
-        "FogOfWarTexture": "Road/VBridge"
+        "Textures": {
+            "Clear": "Road/VBridge",
+            "Rain": "Road/VBridge_Rain",
+            "Snow": "Road/VBridge_Snow"
+        }
     },
     "Sea": {
         "AWBWID": 28,
@@ -386,8 +467,11 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/Sea",
-        "FogOfWarTexture": "Sea/Sea"
+        "Textures": {
+            "Clear": "Sea/Sea",
+            "Rain": "Sea/Sea_Rain",
+            "Snow": "Sea/Sea_Snow"
+        }
     },
     "Shoal-N": {
         "AWBWID": 29,
@@ -401,8 +485,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/N",
-        "FogOfWarTexture": "Shoal/N"
+        "Textures": {
+            "Clear": "Shoal/N"
+        }
     },
     "Shoal-S": {
         "AWBWID": 30,
@@ -416,8 +501,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/S",
-        "FogOfWarTexture": "Shoal/S"
+        "Textures": {
+            "Clear": "Shoal/S"
+        }
     },
     "Shoal-E": {
         "AWBWID": 31,
@@ -431,8 +517,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/E",
-        "FogOfWarTexture": "Shoal/E"
+        "Textures": {
+            "Clear": "Shoal/E"
+        }
     },
     "Shoal-W": {
         "AWBWID": 32,
@@ -446,8 +533,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/W",
-        "FogOfWarTexture": "Shoal/W"
+        "Textures": {
+            "Clear": "Shoal/W"
+        }
     },
     "Reef": {
         "AWBWID": 33,
@@ -459,8 +547,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Reef",
-        "FogOfWarTexture": "Reef"
+        "Textures": {
+            "Clear": "Reef"
+        }
     },
     "VPipe": {
         "AWBWID": 101,
@@ -469,8 +558,11 @@
             "Pipe": 1
         },
         "TerrainType": "Building",
-        "BaseTexture": "Pipe/V",
-        "FogOfWarTexture": "Pipe/V"
+        "Textures": {
+            "Clear": "Pipe/V",
+            "Rain": "Pipe/V_Rain",
+            "Snow": "Pipe/V_Snow"
+        }
     },
     "HPipe": {
         "AWBWID": 102,
@@ -479,8 +571,11 @@
             "Pipe": 1
         },
         "TerrainType": "Building",
-        "BaseTexture": "Pipe/H",
-        "FogOfWarTexture": "Pipe/H"
+        "Textures": {
+            "Clear": "Pipe/H",
+            "Rain": "Pipe/H_Rain",
+            "Snow": "Pipe/H_Snow"
+        }
     },
     "NEPipe": {
         "AWBWID": 103,
@@ -489,8 +584,11 @@
             "Pipe": 1
         },
         "TerrainType": "Building",
-        "BaseTexture": "Pipe/NE",
-        "FogOfWarTexture": "Pipe/NE"
+        "Textures": {
+            "Clear": "Pipe/NE",
+            "Rain": "Pipe/NE_Rain",
+            "Snow": "Pipe/NE_Snow"
+        }
     },
     "ESPipe": {
         "AWBWID": 104,
@@ -499,8 +597,11 @@
             "Pipe": 1
         },
         "TerrainType": "Building",
-        "BaseTexture": "Pipe/ES",
-        "FogOfWarTexture": "Pipe/ES"
+        "Textures": {
+            "Clear": "Pipe/ES",
+            "Rain": "Pipe/ES_Rain",
+            "Snow": "Pipe/ES_Snow"
+        }
     },
     "SWPipe": {
         "AWBWID": 105,
@@ -509,8 +610,11 @@
             "Pipe": 1
         },
         "TerrainType": "Building",
-        "BaseTexture": "Pipe/SW",
-        "FogOfWarTexture": "Pipe/SW"
+        "Textures": {
+            "Clear": "Pipe/SW",
+            "Rain": "Pipe/SW_Rain",
+            "Snow": "Pipe/SW_Snow"
+        }
     },
     "WNPipe": {
         "AWBWID": 106,
@@ -519,8 +623,11 @@
             "Pipe": 1
         },
         "TerrainType": "Building",
-        "BaseTexture": "Pipe/WN",
-        "FogOfWarTexture": "Pipe/WN"
+        "Textures": {
+            "Clear": "Pipe/WN",
+            "Rain": "Pipe/WN_Rain",
+            "Snow": "Pipe/WN_Snow"
+        }
     },
     "NPipe End": {
         "AWBWID": 107,
@@ -529,8 +636,11 @@
             "Pipe": 1
         },
         "TerrainType": "Building",
-        "BaseTexture": "Pipe/NEnd",
-        "FogOfWarTexture": "Pipe/NEnd"
+        "Textures": {
+            "Clear": "Pipe/NEnd",
+            "Rain": "Pipe/NEnd_Rain",
+            "Snow": "Pipe/NEnd_Snow"
+        }
     },
     "EPipe End": {
         "AWBWID": 108,
@@ -539,8 +649,11 @@
             "Pipe": 1
         },
         "TerrainType": "Building",
-        "BaseTexture": "Pipe/EEnd",
-        "FogOfWarTexture": "Pipe/EEnd"
+        "Textures": {
+            "Clear": "Pipe/EEnd",
+            "Rain": "Pipe/EEnd_Rain",
+            "Snow": "Pipe/EEnd_Snow"
+        }
     },
     "SPipe End": {
         "AWBWID": 109,
@@ -549,8 +662,11 @@
             "Pipe": 1
         },
         "TerrainType": "Building",
-        "BaseTexture": "Pipe/SEnd",
-        "FogOfWarTexture": "Pipe/SEnd"
+        "Textures": {
+            "Clear": "Pipe/SEnd",
+            "Rain": "Pipe/SEnd_Rain",
+            "Snow": "Pipe/SEnd_Snow"
+        }
     },
     "WPipe End": {
         "AWBWID": 110,
@@ -559,8 +675,11 @@
             "Pipe": 1
         },
         "TerrainType": "Building",
-        "BaseTexture": "Pipe/WEnd",
-        "FogOfWarTexture": "Pipe/WEnd"
+        "Textures": {
+            "Clear": "Pipe/WEnd",
+            "Rain": "Pipe/WEnd_Rain",
+            "Snow": "Pipe/WEnd_Snow"
+        }
     },
     "Missile Silo Empty": {
         "AWBWID": 112,
@@ -572,8 +691,11 @@
             "Tire": 1,
             "Air": 1
         },
-        "BaseTexture": "Team/Neutral/SiloEmpty-0",
-        "FogOfWarTexture": "Team/Neutral/SiloEmpty-0"
+        "Textures": {
+            "Clear": "Team/Neutral/SiloEmpty-0",
+            "Rain": "Team/Neutral/SiloEmpty_Rain-0",
+            "Snow": "Team/Neutral/SiloEmpty_Snow-0"
+        }
     },
     "HPipe Rubble": {
         "AWBWID": 115,
@@ -586,8 +708,11 @@
             "Air": 1
         },
         "TerrainType": "Plain",
-        "BaseTexture": "Team/Neutral/HRubble-0",
-        "FogOfWarTexture": "Team/Neutral/HRubble-0"
+        "Textures": {
+            "Clear": "Team/Neutral/HRubble-0",
+            "Rain": "Team/Neutral/HRubble_Rain-0",
+            "Snow": "Team/Neutral/HRubble_Snow-0"
+        }
     },
     "VPipe Rubble": {
         "AWBWID": 116,
@@ -600,8 +725,11 @@
             "Air": 1
         },
         "TerrainType": "Plain",
-        "BaseTexture": "Team/Neutral/VRubble-0",
-        "FogOfWarTexture": "Team/Neutral/VRubble-0"
+        "Textures": {
+            "Clear": "Team/Neutral/VRubble-0",
+            "Rain": "Team/Neutral/VRubble_Rain-0",
+            "Snow": "Team/Neutral/VRubble_Snow-0"
+        }
     },
 
     //Custom Sea Tiles
@@ -614,8 +742,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/N-E-S-W",
-        "FogOfWarTexture": "Sea/N-E-S-W"
+        "Textures": {
+            "Clear": "Sea/N-E-S-W"
+        }
     },
     "Sea-E-S-W": {
         "AWBWID": 1001,
@@ -626,8 +755,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/E-S-W",
-        "FogOfWarTexture": "Sea/E-S-W"
+        "Textures": {
+            "Clear": "Sea/E-S-W"
+        }
     },
     "Sea-N-S-W": {
         "AWBWID": 1002,
@@ -638,8 +768,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/N-S-W",
-        "FogOfWarTexture": "Sea/N-S-W"
+        "Textures": {
+            "Clear": "Sea/N-S-W"
+        }
     },
     "Sea-N-E-W": {
         "AWBWID": 1003,
@@ -650,8 +781,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/N-E-W",
-        "FogOfWarTexture": "Sea/N-E-W"
+        "Textures": {
+            "Clear": "Sea/N-E-W"
+        }
     },
     "Sea-N-E-S": {
         "AWBWID": 1004,
@@ -662,8 +794,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/N-E-S",
-        "FogOfWarTexture": "Sea/N-E-S"
+        "Textures": {
+            "Clear": "Sea/N-E-S"
+        }
     },
     "Sea-N-S": {
         "AWBWID": 1005,
@@ -674,8 +807,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/N-S",
-        "FogOfWarTexture": "Sea/N-S"
+        "Textures": {
+            "Clear": "Sea/N-S"
+        }
     },
     "Sea-E-W": {
         "AWBWID": 1006,
@@ -686,8 +820,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/E-W",
-        "FogOfWarTexture": "Sea/E-W"
+        "Textures": {
+            "Clear": "Sea/E-W"
+        }
     },
     "Sea-N-E-SW": {
         "AWBWID": 1007,
@@ -698,8 +833,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/N-E-SW",
-        "FogOfWarTexture": "Sea/N-E-SW"
+        "Textures": {
+            "Clear": "Sea/N-E-SW"
+        }
     },
     "Sea-N-E": {
         "AWBWID": 1008,
@@ -710,8 +846,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/N-E",
-        "FogOfWarTexture": "Sea/N-E"
+        "Textures": {
+            "Clear": "Sea/N-E"
+        }
     },
     "Sea-E-S-NW": {
         "AWBWID": 1009,
@@ -722,8 +859,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/E-S-NW",
-        "FogOfWarTexture": "Sea/E-S-NW"
+        "Textures": {
+            "Clear": "Sea/E-S-NW"
+        }
     },
     "Sea-E-S": {
         "AWBWID": 1010,
@@ -734,8 +872,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/E-S",
-        "FogOfWarTexture": "Sea/E-S"
+        "Textures": {
+            "Clear": "Sea/E-S"
+        }
     },
     "Sea-S-W-NE": {
         "AWBWID": 1011,
@@ -746,8 +885,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/S-W-NE",
-        "FogOfWarTexture": "Sea/S-W-NE"
+        "Textures": {
+            "Clear": "Sea/S-W-NE"
+        }
     },
     "Sea-S-W": {
         "AWBWID": 1012,
@@ -758,8 +898,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/S-W",
-        "FogOfWarTexture": "Sea/S-W"
+        "Textures": {
+            "Clear": "Sea/S-W"
+        }
     },
     "Sea-N-W-SE": {
         "AWBWID": 1013,
@@ -770,8 +911,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/N-W-SE",
-        "FogOfWarTexture": "Sea/N-W-SE"
+        "Textures": {
+            "Clear": "Sea/N-W-SE"
+        }
     },
     "Sea-N-W": {
         "AWBWID": 1014,
@@ -782,8 +924,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/N-W",
-        "FogOfWarTexture": "Sea/N-W"
+        "Textures": {
+            "Clear": "Sea/N-W"
+        }
     },
     "Sea-N-SE-SW": {
         "AWBWID": 1015,
@@ -794,8 +937,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/N-SE-SW",
-        "FogOfWarTexture": "Sea/N-SE-SW"
+        "Textures": {
+            "Clear": "Sea/N-SE-SW"
+        }
     },
     "Sea-N-SE": {
         "AWBWID": 1016,
@@ -806,8 +950,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/N-SE",
-        "FogOfWarTexture": "Sea/N-SE"
+        "Textures": {
+            "Clear": "Sea/N-SE"
+        }
     },
     "Sea-N-SW": {
         "AWBWID": 1017,
@@ -818,8 +963,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/N-SW",
-        "FogOfWarTexture": "Sea/N-SW"
+        "Textures": {
+            "Clear": "Sea/N-SW"
+        }
     },
     "Sea-N": {
         "AWBWID": 1018,
@@ -830,8 +976,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/N",
-        "FogOfWarTexture": "Sea/N"
+        "Textures": {
+            "Clear": "Sea/N"
+        }
     },
     "Sea-E-NW-SW": {
         "AWBWID": 1019,
@@ -842,8 +989,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/E-NW-SW",
-        "FogOfWarTexture": "Sea/E-NW-SW"
+        "Textures": {
+            "Clear": "Sea/E-NW-SW"
+        }
     },
     "Sea-E-NW": {
         "AWBWID": 1020,
@@ -854,8 +1002,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/E-NW",
-        "FogOfWarTexture": "Sea/E-NW"
+        "Textures": {
+            "Clear": "Sea/E-NW"
+        }
     },
     "Sea-E-SW": {
         "AWBWID": 1021,
@@ -866,8 +1015,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/E-SW",
-        "FogOfWarTexture": "Sea/E-SW"
+        "Textures": {
+            "Clear": "Sea/E-SW"
+        }
     },
     "Sea-E": {
         "AWBWID": 1022,
@@ -878,8 +1028,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/E",
-        "FogOfWarTexture": "Sea/E"
+        "Textures": {
+            "Clear": "Sea/E"
+        }
     },
     "Sea-S-NW-NE": {
         "AWBWID": 1023,
@@ -890,8 +1041,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/S-NW-NE",
-        "FogOfWarTexture": "Sea/S-NW-NE"
+        "Textures": {
+            "Clear": "Sea/S-NW-NE"
+        }
     },
     "Sea-S-NW": {
         "AWBWID": 1024,
@@ -902,8 +1054,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/S-NW",
-        "FogOfWarTexture": "Sea/S-NW"
+        "Textures": {
+            "Clear": "Sea/S-NW"
+        }
     },
     "Sea-S-NE": {
         "AWBWID": 1025,
@@ -914,8 +1067,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/S-NE",
-        "FogOfWarTexture": "Sea/S-NE"
+        "Textures": {
+            "Clear": "Sea/S-NE"
+        }
     },
     "Sea-S": {
         "AWBWID": 1026,
@@ -926,8 +1080,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/S",
-        "FogOfWarTexture": "Sea/S"
+        "Textures": {
+            "Clear": "Sea/S"
+        }
     },
     "Sea-W-NE-SE": {
         "AWBWID": 1027,
@@ -938,8 +1093,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/W-NE-SE",
-        "FogOfWarTexture": "Sea/W-NE-SE"
+        "Textures": {
+            "Clear": "Sea/W-NE-SE"
+        }
     },
     "Sea-W-NE": {
         "AWBWID": 1028,
@@ -950,8 +1106,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/W-NE",
-        "FogOfWarTexture": "Sea/W-NE"
+        "Textures": {
+            "Clear": "Sea/W-NE"
+        }
     },
     "Sea-W-SE": {
         "AWBWID": 1029,
@@ -962,8 +1119,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/W-SE",
-        "FogOfWarTexture": "Sea/W-SE"
+        "Textures": {
+            "Clear": "Sea/W-SE"
+        }
     },
     "Sea-W": {
         "AWBWID": 1030,
@@ -974,8 +1132,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/W",
-        "FogOfWarTexture": "Sea/W"
+        "Textures": {
+            "Clear": "Sea/W"
+        }
     },
     "Sea-NW-NE-SE-SW": {
         "AWBWID": 1031,
@@ -986,8 +1145,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/NW-NE-SE-SW",
-        "FogOfWarTexture": "Sea/NW-NE-SE-SW"
+        "Textures": {
+            "Clear": "Sea/NW-NE-SE-SW"
+        }
     },
     "Sea-NE-SE-SW": {
         "AWBWID": 1032,
@@ -998,8 +1158,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/NE-SE-SW",
-        "FogOfWarTexture": "Sea/NE-SE-SW"
+        "Textures": {
+            "Clear": "Sea/NE-SE-SW"
+        }
     },
     "Sea-NW-SE-SW": {
         "AWBWID": 1033,
@@ -1010,8 +1171,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/NW-SE-SW",
-        "FogOfWarTexture": "Sea/NW-SE-SW"
+        "Textures": {
+            "Clear": "Sea/NW-SE-SW"
+        }
     },
     "Sea-NW-NE-SW": {
         "AWBWID": 1034,
@@ -1022,8 +1184,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/NW-NE-SW",
-        "FogOfWarTexture": "Sea/NW-NE-SW"
+        "Textures": {
+            "Clear": "Sea/NW-NE-SW"
+        }
     },
     "Sea-NW-NE-SE": {
         "AWBWID": 1035,
@@ -1034,8 +1197,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/NW-NE-SE",
-        "FogOfWarTexture": "Sea/NW-NE-SE"
+        "Textures": {
+            "Clear": "Sea/NW-NE-SE"
+        }
     },
     "Sea-SE-SW": {
         "AWBWID": 1036,
@@ -1046,8 +1210,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/SE-SW",
-        "FogOfWarTexture": "Sea/SE-SW"
+        "Textures": {
+            "Clear": "Sea/SE-SW"
+        }
     },
     "Sea-NW-SW": {
         "AWBWID": 1037,
@@ -1058,8 +1223,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/NW-SW",
-        "FogOfWarTexture": "Sea/NW-SW"
+        "Textures": {
+            "Clear": "Sea/NW-SW"
+        }
     },
     "Sea-NW-NE": {
         "AWBWID": 1038,
@@ -1070,8 +1236,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/NW-NE",
-        "FogOfWarTexture": "Sea/NW-NE"
+        "Textures": {
+            "Clear": "Sea/NW-NE"
+        }
     },
     "Sea-NE-SE": {
         "AWBWID": 1039,
@@ -1082,8 +1249,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/NE-SE",
-        "FogOfWarTexture": "Sea/NE-SE"
+        "Textures": {
+            "Clear": "Sea/NE-SE"
+        }
     },
     "Sea-NW-SE": {
         "AWBWID": 1040,
@@ -1094,8 +1262,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/NW-SE",
-        "FogOfWarTexture": "Sea/NW-SE"
+        "Textures": {
+            "Clear": "Sea/NW-SE"
+        }
     },
     "Sea-NE-SW": {
         "AWBWID": 1041,
@@ -1106,8 +1275,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/NE-SW",
-        "FogOfWarTexture": "Sea/NE-SW"
+        "Textures": {
+            "Clear": "Sea/NE-SW"
+        }
     },
     "Sea-NW": {
         "AWBWID": 1042,
@@ -1118,8 +1288,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/NW",
-        "FogOfWarTexture": "Sea/NW"
+        "Textures": {
+            "Clear": "Sea/NW"
+        }
     },
     "Sea-NE": {
         "AWBWID": 1043,
@@ -1130,8 +1301,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/NE",
-        "FogOfWarTexture": "Sea/NE"
+        "Textures": {
+            "Clear": "Sea/NE"
+        }
     },
     "Sea-SE": {
         "AWBWID": 1044,
@@ -1142,8 +1314,9 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/SE",
-        "FogOfWarTexture": "Sea/SE"
+        "Textures": {
+            "Clear": "Sea/SE"
+        }
     },
     "Sea-SW": {
         "AWBWID": 1045,
@@ -1154,11 +1327,10 @@
             "Air": 1
         },
         "TerrainType": "Sea",
-        "BaseTexture": "Sea/SW",
-        "FogOfWarTexture": "Sea/SW"
+        "Textures": {
+            "Clear": "Sea/SW"
+        }
     },
-
-    //Custom Shoal Tiles
     "Shoal-N-E-S-W": {
         "AWBWID": 1046,
         "BaseDefence": 0,
@@ -1171,8 +1343,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/N-E-S-W",
-        "FogOfWarTexture": "Shoal/N-E-S-W"
+        "Textures": {
+            "Clear": "Shoal/N-E-S-W"
+        }
     },
     "Shoal": {
         "AWBWID": 1047,
@@ -1186,8 +1359,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/Shoal",
-        "FogOfWarTexture": "Shoal/Shoal"
+        "Textures": {
+            "Clear": "Shoal/Shoal"
+        }
     },
     "Shoal-E-S-W": {
         "AWBWID": 1048,
@@ -1201,8 +1375,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/E-S-W",
-        "FogOfWarTexture": "Shoal/E-S-W"
+        "Textures": {
+            "Clear": "Shoal/E-S-W"
+        }
     },
     "Shoal-N-S-W": {
         "AWBWID": 1049,
@@ -1216,8 +1391,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/N-S-W",
-        "FogOfWarTexture": "Shoal/N-S-W"
+        "Textures": {
+            "Clear": "Shoal/N-S-W"
+        }
     },
     "Shoal-N-E-S": {
         "AWBWID": 1050,
@@ -1231,8 +1407,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/N-E-S",
-        "FogOfWarTexture": "Shoal/N-E-S"
+        "Textures": {
+            "Clear": "Shoal/N-E-S"
+        }
     },
     "Shoal-N-E-W": {
         "AWBWID": 1051,
@@ -1246,8 +1423,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/N-E-W",
-        "FogOfWarTexture": "Shoal/N-E-W"
+        "Textures": {
+            "Clear": "Shoal/N-E-W"
+        }
     },
     "Shoal-N-S": {
         "AWBWID": 1052,
@@ -1261,8 +1439,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/N-S",
-        "FogOfWarTexture": "Shoal/N-S"
+        "Textures": {
+            "Clear": "Shoal/N-S"
+        }
     },
     "Shoal-E-W": {
         "AWBWID": 1053,
@@ -1276,8 +1455,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/E-W",
-        "FogOfWarTexture": "Shoal/E-W"
+        "Textures": {
+            "Clear": "Shoal/E-W"
+        }
     },
     "Shoal-N-E": {
         "AWBWID": 1054,
@@ -1291,8 +1471,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/N-E",
-        "FogOfWarTexture": "Shoal/N-E"
+        "Textures": {
+            "Clear": "Shoal/N-E"
+        }
     },
     "Shoal-E-S": {
         "AWBWID": 1055,
@@ -1306,8 +1487,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/E-S",
-        "FogOfWarTexture": "Shoal/E-S"
+        "Textures": {
+            "Clear": "Shoal/E-S"
+        }
     },
     "Shoal-S-W": {
         "AWBWID": 1056,
@@ -1321,8 +1503,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/S-W",
-        "FogOfWarTexture": "Shoal/S-W"
+        "Textures": {
+            "Clear": "Shoal/S-W"
+        }
     },
     "Shoal-N-W": {
         "AWBWID": 1057,
@@ -1336,8 +1519,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/N-W",
-        "FogOfWarTexture": "Shoal/N-W"
+        "Textures": {
+            "Clear": "Shoal/N-W"
+        }
     },
     "Shoal-MN": {
         "AWBWID": 1058,
@@ -1351,8 +1535,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/MN",
-        "FogOfWarTexture": "Shoal/MN"
+        "Textures": {
+            "Clear": "Shoal/MN"
+        }
     },
     "Shoal-ME": {
         "AWBWID": 1059,
@@ -1366,8 +1551,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/ME",
-        "FogOfWarTexture": "Shoal/ME"
+        "Textures": {
+            "Clear": "Shoal/ME"
+        }
     },
     "Shoal-MS": {
         "AWBWID": 1060,
@@ -1381,8 +1567,9 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/MS",
-        "FogOfWarTexture": "Shoal/MS"
+        "Textures": {
+            "Clear": "Shoal/MS"
+        }
     },
     "Shoal-MW": {
         "AWBWID": 1061,
@@ -1396,7 +1583,8 @@
             "Lander": 1
         },
         "TerrainType": "Shoal",
-        "BaseTexture": "Shoal/MW",
-        "FogOfWarTexture": "Shoal/MW"
+        "Textures": {
+            "Clear": "Shoal/MW"
+        }
     }
 }

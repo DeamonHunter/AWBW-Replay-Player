@@ -1,4 +1,7 @@
-﻿using AWBWApp.Game.Helpers;
+﻿using System;
+using System.Collections.Generic;
+using AWBWApp.Game.Game.Logic;
+using AWBWApp.Game.Helpers;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -17,8 +20,7 @@ namespace AWBWApp.Game.Game.Tile
 
         private Sprite texture;
 
-        private Texture baseTexture;
-        private Texture fogOfWarTexture;
+        private Dictionary<Weather, Texture> texturesByWeather;
 
         public DrawableTile(TerrainTile terrainTile)
         {
@@ -35,10 +37,31 @@ namespace AWBWApp.Game.Game.Tile
         [BackgroundDependencyLoader]
         private void load(NearestNeighbourTextureStore store)
         {
-            baseTexture = store.Get(TerrainTile.BaseTexture);
+            texturesByWeather = new Dictionary<Weather, Texture>();
 
-            texture.Texture = baseTexture;
-            texture.Size = baseTexture.Size;
+            foreach (var texturePair in TerrainTile.Textures)
+            {
+                var texture = store.Get(texturePair.Value);
+                if (texture == null)
+                    throw new Exception("Unable to find texture: " + texturePair.Value);
+
+                texturesByWeather.Add(texturePair.Key, texture);
+            }
+
+            ChangeWeather(Weather.Clear);
+        }
+
+        public void ChangeWeather(Weather weather)
+        {
+            if (!texturesByWeather.TryGetValue(weather, out var weatherTexture))
+                weatherTexture = texturesByWeather[Weather.Clear];
+
+            texture.Texture = weatherTexture;
+            texture.Size = weatherTexture.Size;
+        }
+
+        public void UpdateFog(bool foggy)
+        {
         }
     }
 }

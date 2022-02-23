@@ -28,10 +28,7 @@ namespace AWBWApp.Game.Game.Building
         public Dictionary<MovementType, int> MovementCostsPerType { get; set; }
 
         [JsonProperty]
-        public string BaseTexture { get; set; }
-
-        [JsonProperty]
-        public string FogOfWarTexture { get; set; }
+        public Dictionary<Weather, string> Textures { get; set; }
 
         [JsonProperty]
         public double[] Frames { get; set; }

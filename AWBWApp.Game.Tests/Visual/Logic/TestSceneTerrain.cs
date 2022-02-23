@@ -40,6 +40,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
             AddLabel("Building Test");
             AddStep("Render All IDs", () => RenderMapWithAllIDs(16, 16));
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
 
             AddLabel("Shoals Test");
             AddStep("Map: Sea Test", () => LoadMapFromFile("Json/Maps/SeaTest"));
@@ -51,13 +53,13 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
         public void RenderBasicMap(int xSize, int ySize)
         {
-            var replayData = CreateEmptyReplay();
+            var replayData = createEmptyReplayWithWeatherChanges();
             ReplayController.LoadReplay(replayData, CreateBasicMap(xSize, ySize));
         }
 
         public void RenderRandomMap(int xSize, int ySize)
         {
-            var replayData = CreateEmptyReplay();
+            var replayData = createEmptyReplayWithWeatherChanges();
             var gameMap = new ReplayMap();
             gameMap.Size = new Vector2I(xSize, ySize);
             gameMap.Ids = new short[xSize * ySize];
@@ -112,14 +114,27 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                         };
 
                         turn.Buildings.Add(new Vector2I(x, y), replayBuilding);
-                        gameMap.Ids[x * ySize + y] = grass_terrain_id;
+                        gameMap.Ids[y * xSize + x] = grass_terrain_id;
                     }
                     else if (tileStorage.TryGetTileByAWBWId(id, out TerrainTile tile))
-                        gameMap.Ids[x * ySize + y] = (short)tile.AWBWId;
+                        gameMap.Ids[y * xSize + x] = (short)tile.AWBWId;
                     else
                         throw new Exception($"Unknown AWBWID: {id}");
                 }
             }
+
+            replay.TurnData.Add(new TurnData
+            {
+                ReplayUnit = turn.ReplayUnit,
+                Buildings = turn.Buildings,
+                Weather = new ReplayWeather { Code = "Rain" }
+            });
+            replay.TurnData.Add(new TurnData
+            {
+                ReplayUnit = turn.ReplayUnit,
+                Buildings = turn.Buildings,
+                Weather = new ReplayWeather { Code = "Snow" }
+            });
 
             ReplayController.LoadReplay(replay, gameMap);
         }
@@ -153,6 +168,25 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             var shoal = generator.CreateCustomShoalVersion(gameMap);
 
             ReplayController.LoadReplay(replay, shoal);
+        }
+
+        private ReplayData createEmptyReplayWithWeatherChanges()
+        {
+            var replay = CreateEmptyReplay();
+            replay.TurnData.Add(new TurnData
+            {
+                ReplayUnit = new Dictionary<long, ReplayUnit>(),
+                Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
+                Weather = new ReplayWeather { Code = "Rain" }
+            });
+            replay.TurnData.Add(new TurnData
+            {
+                ReplayUnit = new Dictionary<long, ReplayUnit>(),
+                Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
+                Weather = new ReplayWeather { Code = "Snow" }
+            });
+
+            return replay;
         }
     }
 }

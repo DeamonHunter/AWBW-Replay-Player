@@ -107,6 +107,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 {
                     ReplayUnit = new Dictionary<long, ReplayUnit>(),
                     Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
+                    Weather = new ReplayWeather { Code = "Clear" }
                 }
             };
 
