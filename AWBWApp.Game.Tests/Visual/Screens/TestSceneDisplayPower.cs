@@ -89,8 +89,8 @@ namespace AWBWApp.Game.Tests.Visual.Screens
             AddStep("Show Lash (Normal)", () => Child = powerDisplay = new PowerDisplay("Lash", "Terrain Tactics", false));
             AddStep("Show Lash (Super)", () => Child = powerDisplay = new PowerDisplay("Lash", "Prime Tactics", true));
 
-            //AddStep("Show Sturm (Normal)", () => Child = powerDisplay = new PowerDisplay("Sturm", "Meteor Strike", false));
-            //AddStep("Show Sturm (Super)", () => Child = powerDisplay = new PowerDisplay("Sturm", "Meteor Strike II", true));
+            AddStep("Show Sturm (Normal)", () => Child = powerDisplay = new PowerDisplay("Sturm", "Meteor Strike", false));
+            AddStep("Show Sturm (Super)", () => Child = powerDisplay = new PowerDisplay("Sturm", "Meteor Strike II", true));
 
             AddStep("Show Von Bolt (Super)", () => Child = powerDisplay = new PowerDisplay("Von Bolt", "Ex Machina", true));
         }
