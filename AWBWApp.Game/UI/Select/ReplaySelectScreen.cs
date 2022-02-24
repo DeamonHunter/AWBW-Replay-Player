@@ -82,7 +82,7 @@ namespace AWBWApp.Game.UI.Select
             Task.Run(async () =>
             {
                 var data = await replayManager.GetReplayData(Carousel.SelectedReplayData);
-                var terrainFile = mapStorage.Get(data.ReplayInfo.MapId);
+                var terrainFile = await mapStorage.GetOrDownloadMap(data.ReplayInfo.MapId);
                 replayController.LoadReplay(data, terrainFile);
             });
 

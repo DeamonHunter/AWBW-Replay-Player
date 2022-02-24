@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AWBWApp.Game.API.Replay;
 using Newtonsoft.Json;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.IO.Network;
 using osu.Framework.IO.Stores;
 using osu.Framework.Logging;
 
@@ -35,11 +36,28 @@ namespace AWBWApp.Game.IO
             }
         }
 
-        public ReplayMap Get(int terrainId) => Get(terrainId.ToString());
+        public ReplayMap Get(int mapID) => Get(mapID.ToString());
 
         public Task<ReplayMap> GetAsync(string name, CancellationToken token)
         {
             throw new System.NotImplementedException(); //Todo: Is there gonna be a case where we don't check this?
+        }
+
+        public async Task<ReplayMap> GetOrDownloadMap(int mapID)
+        {
+            var map = Get(mapID.ToString());
+
+            if (map != null)
+                return map;
+
+            var link = "https://awbw.amarriner.com/text_map.php?maps_id=" + mapID;
+            var webRequest = new WebRequest(link);
+            await webRequest.PerformAsync().ConfigureAwait(false);
+
+            if (webRequest.ResponseStream.Length <= 100)
+                throw new Exception($"Unable to find the map with ID '{mapID}'. Is the session cookie correct?");
+
+            return ParseAndStoreResponseHTML(mapID, webRequest.GetResponseString());
         }
 
         public IEnumerable<string> GetAvailableResources() => Directory.GetFiles(terrain_folder);
