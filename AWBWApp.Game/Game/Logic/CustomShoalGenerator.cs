@@ -151,21 +151,21 @@ namespace AWBWApp.Game.Game.Logic
 
                         foreach (var outCome in seaOutComes)
                         {
-                            if (outCome.Item1.NorthWest != TerrainType.None && nearby.NorthWest != TerrainType.None && outCome.Item1.NorthWest != nearby.NorthWest)
+                            if (outCome.Item1.NorthWest != TerrainType.None && nearby.NorthWest != TerrainType.None && (outCome.Item1.NorthWest & nearby.NorthWest) == 0)
                                 continue;
-                            if (outCome.Item1.North != TerrainType.None && nearby.North != TerrainType.None && outCome.Item1.North != nearby.North)
+                            if (outCome.Item1.North != TerrainType.None && nearby.North != TerrainType.None && (outCome.Item1.North & nearby.North) == 0)
                                 continue;
-                            if (outCome.Item1.NorthEast != TerrainType.None && nearby.NorthEast != TerrainType.None && outCome.Item1.NorthEast != nearby.NorthEast)
+                            if (outCome.Item1.NorthEast != TerrainType.None && nearby.NorthEast != TerrainType.None && (outCome.Item1.NorthEast & nearby.NorthEast) == 0)
                                 continue;
-                            if (outCome.Item1.East != TerrainType.None && nearby.East != TerrainType.None && outCome.Item1.East != nearby.East)
+                            if (outCome.Item1.East != TerrainType.None && nearby.East != TerrainType.None && (outCome.Item1.East & nearby.East) == 0)
                                 continue;
-                            if (outCome.Item1.SouthEast != TerrainType.None && nearby.SouthEast != TerrainType.None && outCome.Item1.SouthEast != nearby.SouthEast)
+                            if (outCome.Item1.SouthEast != TerrainType.None && nearby.SouthEast != TerrainType.None && (outCome.Item1.SouthEast & nearby.SouthEast) == 0)
                                 continue;
-                            if (outCome.Item1.South != TerrainType.None && nearby.South != TerrainType.None && outCome.Item1.South != nearby.South)
+                            if (outCome.Item1.South != TerrainType.None && nearby.South != TerrainType.None && (outCome.Item1.South & nearby.South) == 0)
                                 continue;
-                            if (outCome.Item1.SouthWest != TerrainType.None && nearby.SouthWest != TerrainType.None && outCome.Item1.SouthWest != nearby.SouthWest)
+                            if (outCome.Item1.SouthWest != TerrainType.None && nearby.SouthWest != TerrainType.None && (outCome.Item1.SouthWest & nearby.SouthWest) == 0)
                                 continue;
-                            if (outCome.Item1.West != TerrainType.None && nearby.West != TerrainType.None && outCome.Item1.West != nearby.West)
+                            if (outCome.Item1.West != TerrainType.None && nearby.West != TerrainType.None && (outCome.Item1.West & nearby.West) == 0)
                                 continue;
 
                             id = tileStorage.GetTileByCode(outCome.Item2).AWBWId;
@@ -190,21 +190,21 @@ namespace AWBWApp.Game.Game.Logic
 
                         foreach (var outCome in shoalOutComes)
                         {
-                            if (outCome.Item1.NorthWest != TerrainType.None && nearby.NorthWest != TerrainType.None && outCome.Item1.NorthWest != nearby.NorthWest)
+                            if (outCome.Item1.NorthWest != TerrainType.None && nearby.NorthWest != TerrainType.None && (outCome.Item1.NorthWest & nearby.NorthWest) == 0)
                                 continue;
-                            if (outCome.Item1.North != TerrainType.None && nearby.North != TerrainType.None && outCome.Item1.North != nearby.North)
+                            if (outCome.Item1.North != TerrainType.None && nearby.North != TerrainType.None && (outCome.Item1.North & nearby.North) == 0)
                                 continue;
-                            if (outCome.Item1.NorthEast != TerrainType.None && nearby.NorthEast != TerrainType.None && outCome.Item1.NorthEast != nearby.NorthEast)
+                            if (outCome.Item1.NorthEast != TerrainType.None && nearby.NorthEast != TerrainType.None && (outCome.Item1.NorthEast & nearby.NorthEast) == 0)
                                 continue;
-                            if (outCome.Item1.East != TerrainType.None && nearby.East != TerrainType.None && outCome.Item1.East != nearby.East)
+                            if (outCome.Item1.East != TerrainType.None && nearby.East != TerrainType.None && (outCome.Item1.East & nearby.East) == 0)
                                 continue;
-                            if (outCome.Item1.SouthEast != TerrainType.None && nearby.SouthEast != TerrainType.None && outCome.Item1.SouthEast != nearby.SouthEast)
+                            if (outCome.Item1.SouthEast != TerrainType.None && nearby.SouthEast != TerrainType.None && (outCome.Item1.SouthEast & nearby.SouthEast) == 0)
                                 continue;
-                            if (outCome.Item1.South != TerrainType.None && nearby.South != TerrainType.None && outCome.Item1.South != nearby.South)
+                            if (outCome.Item1.South != TerrainType.None && nearby.South != TerrainType.None && (outCome.Item1.South & nearby.South) == 0)
                                 continue;
-                            if (outCome.Item1.SouthWest != TerrainType.None && nearby.SouthWest != TerrainType.None && outCome.Item1.SouthWest != nearby.SouthWest)
+                            if (outCome.Item1.SouthWest != TerrainType.None && nearby.SouthWest != TerrainType.None && (outCome.Item1.SouthWest & nearby.SouthWest) == 0)
                                 continue;
-                            if (outCome.Item1.West != TerrainType.None && nearby.West != TerrainType.None && outCome.Item1.West != nearby.West)
+                            if (outCome.Item1.West != TerrainType.None && nearby.West != TerrainType.None && (outCome.Item1.West & nearby.West) == 0)
                                 continue;
 
                             id = tileStorage.GetTileByCode(outCome.Item2).AWBWId;

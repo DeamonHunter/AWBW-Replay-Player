@@ -46,6 +46,8 @@ namespace AWBWApp.Game.Game.Logic
         [Resolved]
         private CountryStorage countryStorage { get; set; }
 
+        private CustomShoalGenerator shoalGenerator { get; set; }
+
         private FogOfWarDrawable fogOfWarDrawable;
         private FogOfWarGenerator fogOfWarGenerator;
 
@@ -89,6 +91,11 @@ namespace AWBWApp.Game.Game.Logic
 
         void SetToInitialGameState(ReplayData gameState, ReplayMap map)
         {
+            if (shoalGenerator == null)
+                shoalGenerator = new CustomShoalGenerator(terrainTileStorage, buildingStorage);
+
+            map = shoalGenerator.CreateCustomShoalVersion(map);
+
             MapSize = map.Size;
 
             //Calculate the map size as this isn't given by the api
@@ -216,7 +223,11 @@ namespace AWBWApp.Game.Game.Logic
             {
                 CurrentWeather = weather;
                 foreach (var tile in gameBoard)
+                {
+                    if (tile == null)
+                        continue;
                     tile.ChangeWeather(weather);
+                }
 
                 foreach (var building in buildings)
                     building.Value.ChangeWeather(weather);
