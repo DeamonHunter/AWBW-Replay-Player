@@ -36,7 +36,9 @@ namespace AWBWApp.Game.UI
 
             //Todo: Does this cause problems if the drawable is scaled?
             var drawSize = DrawSize - new Vector2(Padding.Left + Padding.Right, Padding.Bottom + Padding.Top);
-            if (prevDrawSize == drawSize && prevChildSize == childDrawable.Size)
+            var childSize = childDrawable.Size;
+
+            if (prevDrawSize == drawSize && prevChildSize == childSize)
                 return;
 
             if (drawSize.X > 0 && drawSize.Y > 0)
@@ -46,15 +48,15 @@ namespace AWBWApp.Game.UI
                 switch (ShrinkAxes)
                 {
                     case Axes.Both:
-                        scale = Math.Min(drawSize.X / childDrawable.Size.X, drawSize.Y / childDrawable.Size.Y);
+                        scale = Math.Min(drawSize.X / childSize.X, drawSize.Y / childSize.Y);
                         break;
 
                     case Axes.X:
-                        scale = drawSize.X / childDrawable.Size.X;
+                        scale = drawSize.X / childSize.X;
                         break;
 
                     case Axes.Y:
-                        scale = drawSize.Y / childDrawable.Size.X;
+                        scale = drawSize.Y / childSize.X;
                         break;
 
                     default:
@@ -68,7 +70,7 @@ namespace AWBWApp.Game.UI
                 childDrawable.Scale = Vector2.One;
 
             prevDrawSize = drawSize;
-            prevChildSize = childDrawable.Size;
+            prevChildSize = childSize;
         }
     }
 }
