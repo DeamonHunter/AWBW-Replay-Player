@@ -11,7 +11,7 @@ namespace AWBWApp.Game.UI.Select
         public CarouselReplay(ReplayInfo info)
         {
             ReplayInfo = info;
-            State.Value = CarouselItemState.Collapsed;
+            State.Value = CarouselItemState.NotSelected;
         }
 
         public override DrawableCarouselItem GetDrawableForItem() => null;
