@@ -11,12 +11,13 @@ namespace AWBWApp.Game.API.Replay
         public static JToken GetPlayerSpecificDataFromJObject(JObject jObject, string teamName, int playerId)
         {
             JToken data;
-            if (jObject.ContainsKey("global"))
-                data = jObject["global"];
+            var playerString = playerId.ToString();
+            if (jObject.ContainsKey(playerString))
+                data = jObject[playerString];
             else if (teamName != null && jObject.ContainsKey(teamName))
                 data = jObject[teamName];
             else
-                data = jObject[playerId];
+                data = jObject["global"];
 
             Debug.Assert(data != null);
 
