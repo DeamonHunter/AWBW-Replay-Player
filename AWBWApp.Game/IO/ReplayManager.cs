@@ -158,6 +158,32 @@ namespace AWBWApp.Game.IO
             return data;
         }
 
+        public async Task<ReplayData> ParseAndStoreReplay(string path)
+        {
+            ReplayData data;
+
+            try
+            {
+                using (var readFileStream = new FileStream(path, FileMode.Open))
+                    data = _parser.ParseReplay(readFileStream);
+            }
+            catch (Exception e)
+            {
+                throw new AggregateException("Failed to parse replay with path: " + path, e);
+            }
+
+            //Store only after parsing it. So we don't save a bad replay
+            var newPath = $"{replay_folder}/{data.ReplayInfo.ID}.zip";
+
+            File.Move(path, newPath);
+
+            await checkForUsernamesAndGetIfMissing(data.ReplayInfo);
+
+            addReplay(data);
+
+            return data;
+        }
+
         public async Task<ReplayData> ParseAndStoreReplay(int id, Stream stream)
         {
             ReplayData data;
@@ -180,9 +206,9 @@ namespace AWBWApp.Game.IO
                 stream.Dispose();
             }
 
-            addReplay(data);
-
             await checkForUsernamesAndGetIfMissing(data.ReplayInfo);
+
+            addReplay(data);
 
             return data;
         }

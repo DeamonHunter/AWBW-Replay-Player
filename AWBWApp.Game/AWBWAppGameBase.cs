@@ -1,3 +1,5 @@
+using System.IO;
+using System.Threading.Tasks;
 using AWBWApp.Game.API;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.COs;
@@ -94,6 +96,22 @@ namespace AWBWApp.Game
 
             sessionHandler = new AWBWSessionHandler();
             dependencies.Cache(sessionHandler);
+        }
+
+        public async Task Import(params string[] paths)
+        {
+            if (paths.Length == 0)
+                return;
+
+            //Todo: Are we going to have any other extensions?
+
+            foreach (var path in paths)
+            {
+                if (Path.GetExtension(path) != ".zip")
+                    continue;
+
+                await replayStorage.ParseAndStoreReplay(path);
+            }
         }
 
         protected override UserInputManager CreateUserInputManager() => new AWBWAppUserInputManager();

@@ -1,6 +1,5 @@
-﻿using osu.Framework.Platform;
-using osu.Framework;
-using AWBWApp.Game;
+﻿using osu.Framework;
+using osu.Framework.Platform;
 
 namespace AWBWApp.Desktop
 {
@@ -8,9 +7,9 @@ namespace AWBWApp.Desktop
     {
         public static void Main()
         {
-            using (GameHost host = Host.GetSuitableHost(@"AWBWApp"))
-            using (osu.Framework.Game game = new AWBWAppGame())
-                host.Run(game);
+            using (GameHost host = Host.GetSuitableDesktopHost(@"AWBWApp"))
+                using (osu.Framework.Game game = new AWBWAppGameDesktop())
+                    host.Run(game);
         }
     }
 }
