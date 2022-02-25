@@ -87,7 +87,10 @@ namespace AWBWApp.Game.UI
             });
         }
 
-        public void SortList(long playerID, int turnNumber)
+        //Todo: Fix scheduling here.
+        public void SortList(long playerID, int turnNumber) => Schedule(() => sortList(playerID, turnNumber));
+
+        private void sortList(long playerID, int turnNumber)
         {
             if (drawablePlayers.Count <= 0)
                 return;
