@@ -2,7 +2,7 @@
     "Andy": {
         "Name": "Andy",
         "AWBWID": 1,
-        "DayToDay": {},
+        "DayToDayPower": {},
         "NormalPower": {
             "PowerStars": 3
             //Additional Effects: Heal all units by 2hp
@@ -19,7 +19,7 @@
     "Hachi": {
         "Name": "Hachi",
         "AWBWID": 17,
-        "DayToDay": {
+        "DayToDayPower": {
             "UnitPriceMultiplier": 0.9
         },
         "NormalPower": {
@@ -35,7 +35,7 @@
     "Jake": {
         "Name": "Jake",
         "AWBWID": 22,
-        "DayToDay": {
+        "DayToDayPower": {
             "PowerIncreases": [
                 {
                     "AffectedUnits": [ "all" ],
@@ -76,7 +76,7 @@
     "Max": {
         "Name": "Max",
         "AWBWID": 7,
-        "DayToDay": {
+        "DayToDayPower": {
             "PowerIncreases": [
                 {
                     "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neo Tank", "Recon", "Stealth", "Sub", "Tank"],
@@ -113,7 +113,7 @@
     "Nell": {
         "Name": "Nell",
         "AWBWID": 24,
-        "DayToDay": {
+        "DayToDayPower": {
             "LuckRange": { "x": 0, "y": 19 }
         },
         "NormalPower": {
@@ -128,7 +128,7 @@
     "Rachel": {
         "Name": "Rachel",
         "AWBWID": 28,
-        "DayToDay": {
+        "DayToDayPower": {
             //Additional Effects: Units will repair +1 more HP.
         },
         "NormalPower": {
@@ -145,7 +145,7 @@
     "Sami": {
         "Name": "Sami",
         "AWBWID": 8,
-        "DayToDay": {
+        "DayToDayPower": {
             "PowerIncreases": [
                 {
                     "AffectedUnits": [ "Infantry", "Mech"],
@@ -180,7 +180,7 @@
     "Colin": {
         "Name": "Colin",
         "AWBWID": 15,
-        "DayToDay": {
+        "DayToDayPower": {
             "UnitPriceMultiplier": 0.8,
             "PowerIncreases": [
                 {
@@ -201,7 +201,7 @@
     "Grit": {
         "Name": "Grit",
         "AWBWID": 2,
-        "DayToDay": {
+        "DayToDayPower": {
             "PowerIncreases": [
                 {
                     "AffectedUnits": [ "Artillery", "Battleship", "Carrier", "Missile", "Piperunner", "Rocket" ],
@@ -238,8 +238,9 @@
     "Olaf": {
         "Name": "Olaf",
         "AWBWID": 9,
-        "DayToDay": {
-            //Todo: Handle uneffected by snow
+        "DayToDayPower": {
+            //Todo: Handle uneffected by snow,
+            "GainSnowSightPenalty": true
         },
         "NormalPower": {
             "PowerStars": 3
@@ -253,7 +254,7 @@
     "Sasha": {
         "Name": "Sasha",
         "AWBWID": 19,
-        "DayToDay": {
+        "DayToDayPower": {
             "PropertyFundIncrease": 100
         },
         "NormalPower": {
@@ -268,7 +269,7 @@
     "Drake": {
         "Name": "Drake",
         "AWBWID": 5,
-        "DayToDay": {
+        "DayToDayPower": {
             //Todo: Handle uneffected by snow
             //Todo: Higher Rain chance in random weather
             "PowerIncreases": [
@@ -295,7 +296,7 @@
     "Eagle": {
         "Name": "Eagle",
         "AWBWID": 10,
-        "DayToDay": {
+        "DayToDayPower": {
             "PowerIncreases": [
                 {
                     "AffectedUnits": [ "B-Copter", "Bomber", "Fighter", "Stealth", "T-Copter" ],
@@ -334,7 +335,7 @@
     "Javier": {
         "Name": "Javier",
         "AWBWID": 27,
-        "DayToDay": {
+        "DayToDayPower": {
             //Todo: Conditional Effects: +20% defense against indirects, +10% defense per tower
         },
         "NormalPower": {
@@ -349,7 +350,7 @@
     "Jess": {
         "Name": "Jess",
         "AWBWID": 14,
-        "DayToDay": {
+        "DayToDayPower": {
             "PowerIncreases": [
                 {
                     "AffectedUnits": [ "Anti-Air", "Artillery", "Md.Tank", "Mega Tank", "Missile", "Neo Tank", "Piperunner", "Recon", "Rocket", "Tank" ],
@@ -385,7 +386,7 @@
     "Grimm": {
         "Name": "Grimm",
         "AWBWID": 20,
-        "DayToDay": {
+        "DayToDayPower": {
             "PowerIncreases": [
                 {
                     "AffectedUnits": [ "all" ],
@@ -416,7 +417,7 @@
     "Kanbei": {
         "Name": "Kanbei",
         "AWBWID": 3,
-        "DayToDay": {
+        "DayToDayPower": {
             "UnitPriceMultiplier": 1.2,
             "PowerIncreases": [
                 {
@@ -451,7 +452,7 @@
     "Sensei": {
         "Name": "Sensei",
         "AWBWID": 13,
-        "DayToDay": {
+        "DayToDayPower": {
             "PowerIncreases": [
                 {
                     "AffectedUnits": [ "B-Copter" ],
@@ -492,29 +493,29 @@
     "Sonja": {
         "Name": "Sonja",
         "AWBWID": 18,
-        "DayToDay": {
+        "DayToDayPower": {
             "HiddenHP": true,
             "CounterAttackPower": 1.5,
+            "SightIncrease": 1,
             "LuckRange": { "x": -9, "y": 9 }
             //Todo: Counter Attack damage *= 1.5
-            //Additional Features: Sight Range +1
         },
         "NormalPower": {
             "PowerStars": 3,
             "SeeIntoHiddenTiles": true
-            //Additional Features: Sight Range +1
+            //Additional Features: Sight Range +1, handled by co power
         },
         "SuperPower": {
             "PowerStars": 5,
             "AttackFirst": true,
             "SeeIntoHiddenTiles": true
-            //Additional Features: Sight Range +2
+            //Additional Features: Sight Range +1, handled by co power
         }
     },
     "Adder": {
         "Name": "Adder",
         "AWBWID": 11,
-        "DayToDay": {},
+        "DayToDayPower": {},
         "NormalPower": {
             "PowerStars": 2
             //Additional Effect: Units get +1 movement
@@ -527,7 +528,7 @@
     "Flak": {
         "Name": "Flak",
         "AWBWID": 25,
-        "DayToDay": {
+        "DayToDayPower": {
             "LuckRange": { "x": -9, "y": 24 }
         },
         "NormalPower": {
@@ -542,7 +543,7 @@
     "Hawke": {
         "Name": "Hawke",
         "AWBWID": 12,
-        "DayToDay": {
+        "DayToDayPower": {
             "PowerIncreases": [
                 {
                     "AffectedUnits": [ "all" ],
@@ -562,7 +563,7 @@
     "Jugger": {
         "Name": "Jugger",
         "AWBWID": 26,
-        "DayToDay": {
+        "DayToDayPower": {
             "LuckRange": { "x": -14, "y": 29 }
         },
         "NormalPower": {
@@ -577,7 +578,7 @@
     "Kindle": {
         "Name": "Kindle",
         "AWBWID": 23,
-        "DayToDay": {
+        "DayToDayPower": {
             "PowerIncreases": [
                 {
                     "AffectedUnits": [ "all" ],
@@ -612,7 +613,7 @@
     "Koal": {
         "Name": "Koal",
         "AWBWID": 21,
-        "DayToDay": {
+        "DayToDayPower": {
             "PowerIncreases": [
                 {
                     "AffectedUnits": [ "all" ],
@@ -647,7 +648,7 @@
     "Lash": {
         "Name": "Lash",
         "AWBWID": 16,
-        "DayToDay": {
+        "DayToDayPower": {
             //Todo: +10% attack for every terrain +10% defense
         },
         "NormalPower": {
@@ -663,7 +664,7 @@
     "Sturm": {
         "Name": "Sturm",
         "AWBWID": 29,
-        "DayToDay": {
+        "DayToDayPower": {
             //Todo: Movement cost decrease
             "PowerIncreases": [
                 {
@@ -685,7 +686,7 @@
     "Von Bolt": {
         "Name": "Von Bolt",
         "AWBWID": 30,
-        "DayToDay": {
+        "DayToDayPower": {
             "PowerIncreases": [
                 {
                     "AffectedUnits": [ "all" ],

@@ -122,9 +122,12 @@ namespace AWBWApp.Game.Game.Logic
         {
             this.replayData = replayData;
 
+            currentTurn = replayData.TurnData[0];
+
             Players.Clear();
             foreach (var player in replayData.ReplayInfo.Players)
                 Players.Add(player.Key, new PlayerInfo(player.Value, countryStorage.GetCountryByAWBWID(player.Value.CountryId)));
+            updatePlayerList(0, true);
 
             Map.ScheduleInitialGameState(this.replayData, map, Players);
             ScheduleAfterChildren(() =>
@@ -133,7 +136,6 @@ namespace AWBWApp.Game.Game.Logic
                 ScheduleAfterChildren(() =>
                 {
                     HasLoadedReplay = true;
-                    playerList.UpdateList(Players);
                     barWidget.UpdateActions();
                     camera.FitMapToSpace();
                     loadingLayer.Hide();
@@ -256,18 +258,26 @@ namespace AWBWApp.Game.Game.Logic
             Map.ScheduleUpdateToGameState(currentTurn, UpdateFogOfWar);
             ScheduleAfterChildren(() =>
             {
-                foreach (var player in Players)
-                {
-                    var unitValue = 0;
-                    var unitCount = 0;
+                updatePlayerList(turnIdx, false);
+                barWidget.UpdateActions();
+            });
+        }
 
+        private void updatePlayerList(int turnIdx, bool reset)
+        {
+            foreach (var player in Players)
+            {
+                var unitValue = 0;
+                var unitCount = 0;
+                var propertyValue = 0;
+
+                if (HasLoadedReplay)
+                {
                     foreach (var unit in Map.GetDrawableUnitsFromPlayer(player.Key))
                     {
                         unitCount++;
                         unitValue += (int)Math.Floor((unit.HealthPoints.Value / 10.0) * unit.UnitData.Cost);
                     }
-
-                    var propertyValue = 0;
 
                     foreach (var building in Map.GetDrawableBuildingsForPlayer(player.Key))
                     {
@@ -276,34 +286,46 @@ namespace AWBWApp.Game.Game.Logic
 
                         propertyValue += replayData.ReplayInfo.FundsPerBuilding;
                     }
-
-                    player.Value.UpdateTurn(currentTurn.Players[player.Key], COStorage, turnIdx, unitCount, unitValue, propertyValue);
                 }
-                playerList.SortList(currentTurn.ActivePlayerID, turnIdx);
-                barWidget.UpdateActions();
-            });
+
+                player.Value.UpdateTurn(currentTurn.Players[player.Key], COStorage, turnIdx, unitCount, unitValue, propertyValue);
+            }
+
+            if (reset)
+                playerList.UpdateList(Players);
+            playerList.SortList(currentTurn.ActivePlayerID, turnIdx);
         }
 
         public void UpdateFogOfWar()
         {
+            calculateFogForPlayer(currentTurn.ActivePlayerID, true);
+
             if (!currentTurn.ActiveTeam.IsNullOrEmpty())
             {
                 Map.ClearFog(true, false);
 
                 foreach (var player in replayData.ReplayInfo.Players)
                 {
-                    if (player.Value.TeamName != currentTurn.ActiveTeam)
+                    if (player.Value.TeamName != currentTurn.ActiveTeam || player.Key == currentTurn.ActivePlayerID)
                         continue;
 
-                    var (playerID, action, activeDay) = ActivePowers.FirstOrDefault(x => x.playerID == player.Value.ID);
-                    Map.UpdateFogOfWar(player.Value.ID, action?.SightRangeIncrease ?? 0, action?.COPower.SeeIntoHiddenTiles ?? false, false);
+                    calculateFogForPlayer(currentTurn.ActivePlayerID, false);
                 }
             }
-            else
-            {
-                var (playerID, action, activeDay) = ActivePowers.FirstOrDefault(x => x.playerID == currentTurn.ActivePlayerID);
-                Map.UpdateFogOfWar(currentTurn.ActivePlayerID, action?.SightRangeIncrease ?? 0, action?.COPower.SeeIntoHiddenTiles ?? false);
-            }
+        }
+
+        private void calculateFogForPlayer(int playerID, bool resetFog)
+        {
+            var dayToDayPower = Players[playerID].ActiveCO.Value.CO.DayToDayPower;
+
+            var (_, action, _) = ActivePowers.FirstOrDefault(x => x.playerID == playerID);
+
+            var sightRangeModifier = dayToDayPower.SightIncrease + (action?.SightRangeIncrease ?? 0);
+
+            if (currentTurn.StartWeather.Type == Weather.Rain)
+                sightRangeModifier -= 1;
+
+            Map.UpdateFogOfWar(playerID, sightRangeModifier, action?.COPower.SeeIntoHiddenTiles ?? false, resetFog);
         }
 
         public void AddPowerAction(PowerAction activePower)

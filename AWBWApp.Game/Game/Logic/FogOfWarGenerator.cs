@@ -56,7 +56,7 @@ namespace AWBWApp.Game.Game.Logic
 
             foreach (var drawableUnit in units)
             {
-                var visionRange = drawableUnit.UnitData.Vision;
+                var visionRange = Math.Max(1, drawableUnit.UnitData.Vision + rangeIncrease);
 
                 for (int x = -visionRange; x <= visionRange; x++)
                 {
@@ -67,7 +67,7 @@ namespace AWBWApp.Game.Game.Logic
                             continue;
 
                         var distance = Math.Abs(x) + Math.Abs(y);
-                        if (distance > (visionRange + rangeIncrease))
+                        if (distance > visionRange)
                             continue;
 
                         if (!canSeeIntoHiddenTiles)

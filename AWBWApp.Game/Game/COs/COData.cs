@@ -44,6 +44,9 @@ namespace AWBWApp.Game.Game.COs
         public bool SeeIntoHiddenTiles;
 
         [JsonProperty]
+        public int SightIncrease;
+
+        [JsonProperty]
         public int PowerStars;
 
         [JsonProperty]
