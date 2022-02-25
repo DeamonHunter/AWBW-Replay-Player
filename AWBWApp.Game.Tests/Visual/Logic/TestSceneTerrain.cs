@@ -125,12 +125,16 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
             replay.TurnData.Add(new TurnData
             {
+                ActivePlayerID = 0,
+                Players = new Dictionary<int, AWBWReplayPlayerTurn> { { 0, new AWBWReplayPlayerTurn { ActiveCOID = 1, RequiredPowerForNormal = 90000, RequiredPowerForSuper = 180000 } } },
                 ReplayUnit = turn.ReplayUnit,
                 Buildings = turn.Buildings,
                 StartWeather = new ReplayWeather { Type = Weather.Rain }
             });
             replay.TurnData.Add(new TurnData
             {
+                ActivePlayerID = 0,
+                Players = new Dictionary<int, AWBWReplayPlayerTurn> { { 0, new AWBWReplayPlayerTurn { ActiveCOID = 1, RequiredPowerForNormal = 90000, RequiredPowerForSuper = 180000 } } },
                 ReplayUnit = turn.ReplayUnit,
                 Buildings = turn.Buildings,
                 StartWeather = new ReplayWeather { Type = Weather.Snow }
@@ -175,12 +179,16 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             var replay = CreateEmptyReplay();
             replay.TurnData.Add(new TurnData
             {
+                ActivePlayerID = 0,
+                Players = new Dictionary<int, AWBWReplayPlayerTurn> { { 0, new AWBWReplayPlayerTurn { ActiveCOID = 1, RequiredPowerForNormal = 90000, RequiredPowerForSuper = 180000 } } },
                 ReplayUnit = new Dictionary<long, ReplayUnit>(),
                 Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
                 StartWeather = new ReplayWeather { Type = Weather.Rain }
             });
             replay.TurnData.Add(new TurnData
             {
+                ActivePlayerID = 0,
+                Players = new Dictionary<int, AWBWReplayPlayerTurn> { { 0, new AWBWReplayPlayerTurn { ActiveCOID = 1, RequiredPowerForNormal = 90000, RequiredPowerForSuper = 180000 } } },
                 ReplayUnit = new Dictionary<long, ReplayUnit>(),
                 Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
                 StartWeather = new ReplayWeather { Type = Weather.Snow }

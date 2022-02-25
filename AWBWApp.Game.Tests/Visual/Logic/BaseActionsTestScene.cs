@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AWBWApp.Game.API.Replay;
 using osu.Framework.Graphics.Primitives;
 
@@ -54,7 +55,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 ReplayUnit = new Dictionary<long, ReplayUnit>(),
                 CoPowers = new Dictionary<int, int>(),
                 Day = 0,
-                ActivePlayerID = 0,
+                ActivePlayerID = data.ReplayInfo.Players.First().Key,
                 Players = players,
                 StartWeather = new ReplayWeather()
             };

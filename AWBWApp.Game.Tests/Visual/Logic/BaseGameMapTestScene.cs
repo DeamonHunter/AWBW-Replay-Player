@@ -37,6 +37,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             {
                 RelativeSizeAxes = Axes.Both
             });
+
             ScreenStack.Push(ReplayController = new ReplayController()
             {
                 RelativeSizeAxes = Axes.Both
