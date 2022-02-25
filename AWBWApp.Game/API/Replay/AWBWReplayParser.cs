@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
+using AWBWApp.Game.Game.Logic;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Logging;
@@ -182,6 +183,17 @@ namespace AWBWApp.Game.API.New
                         break;
                     }
 
+                    case "weather_type":
+                    {
+                        var value = readString(ref text, ref textIndex);
+
+                        if (!firstTurn && replayData.ReplayInfo.WeatherType != value)
+                            throw new Exception("Data 'WeatherType' changed per turn when not expected.");
+
+                        replayData.ReplayInfo.WeatherType = value;
+                        break;
+                    }
+
                     case "fog":
                     {
                         var fog = ReadBool(ref text, ref textIndex);
@@ -284,32 +296,22 @@ namespace AWBWApp.Game.API.New
                         break;
                     }
 
-                    case "weather_type":
-                    {
-                        var value = readString(ref text, ref textIndex);
-
-                        if (newTurn.Weather == null)
-                            newTurn.Weather = new ReplayWeather();
-                        newTurn.Weather.Name = value;
-                        break;
-                    }
-
                     case "weather_code":
                     {
                         var value = readString(ref text, ref textIndex);
 
-                        if (newTurn.Weather == null)
-                            newTurn.Weather = new ReplayWeather();
-                        newTurn.Weather.Code = value;
+                        if (newTurn.StartWeather == null)
+                            newTurn.StartWeather = new ReplayWeather();
+                        newTurn.StartWeather.Type = WeatherHelper.ParseWeatherCode(value);
                         break;
                     }
 
                     case "weather_start":
                     {
                         var value = ReadNullableInteger(ref text, ref textIndex);
-                        if (newTurn.Weather == null)
-                            newTurn.Weather = new ReplayWeather();
-                        newTurn.Weather.TurnStartID = value;
+                        if (newTurn.StartWeather == null)
+                            newTurn.StartWeather = new ReplayWeather();
+                        newTurn.StartWeather.TurnStartID = value;
                         break;
                     }
 

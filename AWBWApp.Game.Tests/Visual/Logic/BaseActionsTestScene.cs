@@ -56,7 +56,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 Day = 0,
                 ActivePlayerID = 0,
                 Players = players,
-                Weather = new ReplayWeather()
+                StartWeather = new ReplayWeather()
             };
         }
 

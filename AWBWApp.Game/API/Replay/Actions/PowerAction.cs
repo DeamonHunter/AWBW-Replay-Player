@@ -311,7 +311,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             var weatherChange = (JObject)jObject["weather"];
 
             if (weatherChange != null)
-                action.ChangeToWeather = (string)weatherChange["weatherCode"];
+                action.ChangeToWeather = WeatherHelper.ParseWeatherCode((string)weatherChange["weatherCode"]);
 
             return action;
         }
@@ -328,7 +328,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public int SightRangeIncrease;
         public int MovementRangeIncrease;
 
-        public string ChangeToWeather;
+        public Weather? ChangeToWeather;
 
         public Dictionary<int, PlayerChange> PlayerChanges;
         public Dictionary<int, PlayerWideUnitChange> PlayerWideChanges;
@@ -348,9 +348,6 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             //Todo: How much should this do?
             controller.AddPowerAction(this);
-
-            if (ChangeToWeather.IsNullOrEmpty())
-                Logger.Log("Weather Change not Implemented.");
 
             if (SightRangeIncrease != 0 || COPower.SeeIntoHiddenTiles)
             {
@@ -389,6 +386,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                 foreach (var effect in waitForEffects)
                     yield return ReplayWait.WaitForTransformable(effect);
             }
+
+            if (ChangeToWeather.HasValue)
+                controller.Map.ChangeWeather(ChangeToWeather.Value);
 
             if (PlayerChanges != null)
             {

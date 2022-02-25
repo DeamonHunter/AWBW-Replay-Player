@@ -127,13 +127,13 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             {
                 ReplayUnit = turn.ReplayUnit,
                 Buildings = turn.Buildings,
-                Weather = new ReplayWeather { Code = "Rain" }
+                StartWeather = new ReplayWeather { Type = Weather.Rain }
             });
             replay.TurnData.Add(new TurnData
             {
                 ReplayUnit = turn.ReplayUnit,
                 Buildings = turn.Buildings,
-                Weather = new ReplayWeather { Code = "Snow" }
+                StartWeather = new ReplayWeather { Type = Weather.Snow }
             });
 
             ReplayController.LoadReplay(replay, gameMap);
@@ -177,13 +177,13 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             {
                 ReplayUnit = new Dictionary<long, ReplayUnit>(),
                 Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
-                Weather = new ReplayWeather { Code = "Rain" }
+                StartWeather = new ReplayWeather { Type = Weather.Rain }
             });
             replay.TurnData.Add(new TurnData
             {
                 ReplayUnit = new Dictionary<long, ReplayUnit>(),
                 Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
-                Weather = new ReplayWeather { Code = "Snow" }
+                StartWeather = new ReplayWeather { Type = Weather.Snow }
             });
 
             return replay;

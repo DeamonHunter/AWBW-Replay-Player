@@ -217,21 +217,25 @@ namespace AWBWApp.Game.Game.Logic
                 unitsDrawable.Remove(unit.Value);
             }
 
-            var weather = Enum.Parse<Weather>(gameState.Weather.Code);
+            ChangeWeather(gameState.StartWeather.Type);
+        }
 
-            if (weather != CurrentWeather)
+        public void ChangeWeather(Weather weather)
+        {
+            if (CurrentWeather == weather)
+                return;
+
+            CurrentWeather = weather;
+
+            foreach (var tile in gameBoard)
             {
-                CurrentWeather = weather;
-                foreach (var tile in gameBoard)
-                {
-                    if (tile == null)
-                        continue;
-                    tile.ChangeWeather(weather);
-                }
-
-                foreach (var building in buildings)
-                    building.Value.ChangeWeather(weather);
+                if (tile == null)
+                    continue;
+                tile.ChangeWeather(weather);
             }
+
+            foreach (var building in buildings)
+                building.Value.ChangeWeather(weather);
         }
 
         public void ClearFog(bool makeFoggy, bool triggerChange) => fogOfWarGenerator.ClearFog(makeFoggy, triggerChange);

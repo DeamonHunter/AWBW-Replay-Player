@@ -24,6 +24,7 @@ namespace AWBWApp.Game.API.Replay
         public int StartingFunds;
         public bool Fog;
         public bool PowersAllowed;
+        public string WeatherType;
 
         //Unnessecary data on the Game
         //Todo: Remove when double checked
@@ -53,7 +54,7 @@ namespace AWBWApp.Game.API.Replay
 
         public bool Active; //Todo: "active" What is this?
 
-        public ReplayWeather Weather;
+        public ReplayWeather StartWeather;
 
         public Dictionary<int, AWBWReplayPlayerTurn> Players;
         public List<IReplayAction> Actions;

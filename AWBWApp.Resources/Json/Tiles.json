@@ -468,9 +468,7 @@
         },
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/Sea",
-            "Rain": "Sea/Sea_Rain",
-            "Snow": "Sea/Sea_Snow"
+            "Clear": "Sea/Sea"
         }
     },
     "Shoal-N": {
