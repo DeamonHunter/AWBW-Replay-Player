@@ -17,11 +17,12 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             var action = new BuildUnitAction();
 
-            var unit = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)jObject["newUnit"], turnData.ActiveTeam, turnData.ActivePlayerID);
+            var unit = ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)jObject["newUnit"], turnData.ActiveTeam, turnData.ActivePlayerID);
 
-            //Todo: Do we want to parse the fog.
-            //Logger.Log("Missing Fog Parse.");
-            action.NewUnit = ReplayActionHelper.ParseJObjectIntoReplayUnit(unit);
+            if (unit.Type == JTokenType.Null)
+                return null;
+
+            action.NewUnit = ReplayActionHelper.ParseJObjectIntoReplayUnit((JObject)unit);
             return action;
         }
     }
