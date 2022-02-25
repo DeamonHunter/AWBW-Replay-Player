@@ -239,8 +239,7 @@
         "Name": "Olaf",
         "AWBWID": 9,
         "DayToDayPower": {
-            //Todo: Handle uneffected by snow,
-            "GainSnowSightPenalty": true
+            //Todo: Handle uneffected by snow
         },
         "NormalPower": {
             "PowerStars": 3

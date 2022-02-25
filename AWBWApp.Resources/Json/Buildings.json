@@ -1020,7 +1020,7 @@
     "Grey Sky Airport": {
         "AWBWID": 88,
         "BaseDefence": 3,
-        "CountryID": 7, //rf
+        "CountryID": 7, //gs
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -1042,7 +1042,7 @@
     "Grey Sky Base": {
         "AWBWID": 87,
         "BaseDefence": 3,
-        "CountryID": 7, //rf
+        "CountryID": 7, //gs
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -1068,7 +1068,7 @@
     "Grey Sky City": {
         "AWBWID": 86,
         "BaseDefence": 3,
-        "CountryID": 7, //rf
+        "CountryID": 7, //gs
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -1090,7 +1090,7 @@
     "Grey Sky HQ": {
         "AWBWID": 90,
         "BaseDefence": 4,
-        "CountryID": 7, //rf
+        "CountryID": 7, //gs
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -1112,7 +1112,7 @@
     "Grey Sky Port": {
         "AWBWID": 89,
         "BaseDefence": 3,
-        "CountryID": 7, //rf
+        "CountryID": 7, //gs
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -1136,7 +1136,7 @@
     "Grey Sky Com Tower": {
         "AWBWID": 137,
         "BaseDefence": 3,
-        "CountryID": 7, //rf
+        "CountryID": 7, //gs
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -1159,7 +1159,7 @@
     "Grey Sky Lab": {
         "AWBWID": 143,
         "BaseDefence": 3,
-        "CountryID": 7, //rf
+        "CountryID": 7, //gs
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -1845,7 +1845,7 @@
     "Cobalt Ice Airport": {
         "AWBWID": 149,
         "BaseDefence": 3,
-        "CountryID": 11, //ci
+        "CountryID": 16, //ci
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -1867,7 +1867,7 @@
     "Cobalt Ice Base": {
         "AWBWID": 150,
         "BaseDefence": 3,
-        "CountryID": 11, //ci
+        "CountryID": 16, //ci
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -1893,7 +1893,7 @@
     "Cobalt Ice City": {
         "AWBWID": 151,
         "BaseDefence": 3,
-        "CountryID": 11, //ci
+        "CountryID": 16, //ci
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -1915,7 +1915,7 @@
     "Cobalt Ice HQ": {
         "AWBWID": 153,
         "BaseDefence": 4,
-        "CountryID": 11, //ci
+        "CountryID": 16, //ci
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -1956,7 +1956,7 @@
     "Cobalt Ice Port": {
         "AWBWID": 155,
         "BaseDefence": 3,
-        "CountryID": 11, //ci
+        "CountryID": 16, //ci
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -1980,7 +1980,7 @@
     "Cobalt Ice Com Tower": {
         "AWBWID": 152,
         "BaseDefence": 3,
-        "CountryID": 11, //ci
+        "CountryID": 16, //ci
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2003,7 +2003,7 @@
     "Cobalt Ice Lab": {
         "AWBWID": 154,
         "BaseDefence": 3,
-        "CountryID": 11, //ci
+        "CountryID": 16, //ci
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2029,7 +2029,7 @@
     "Pink Cosmos Airport": {
         "AWBWID": 156,
         "BaseDefence": 3,
-        "CountryID": 12, //pc
+        "CountryID": 17, //pc
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2051,7 +2051,7 @@
     "Pink Cosmos Base": {
         "AWBWID": 157,
         "BaseDefence": 3,
-        "CountryID": 12, //pc
+        "CountryID": 17, //pc
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2075,7 +2075,7 @@
     "Pink Cosmos City": {
         "AWBWID": 158,
         "BaseDefence": 3,
-        "CountryID": 12, //pc
+        "CountryID": 17, //pc
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2097,7 +2097,7 @@
     "Pink Cosmos HQ": {
         "AWBWID": 160,
         "BaseDefence": 4,
-        "CountryID": 12, //pc
+        "CountryID": 17, //pc
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2119,7 +2119,7 @@
     "Pink Cosmos Port": {
         "AWBWID": 162,
         "BaseDefence": 3,
-        "CountryID": 12, //pc
+        "CountryID": 17, //pc
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2143,7 +2143,7 @@
     "Pink Cosmos Com Tower": {
         "AWBWID": 159,
         "BaseDefence": 3,
-        "CountryID": 12, //pc
+        "CountryID": 17, //pc
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2166,7 +2166,7 @@
     "Pink Cosmos Lab": {
         "AWBWID": 161,
         "BaseDefence": 3,
-        "CountryID": 12, //pc
+        "CountryID": 17, //pc
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2192,7 +2192,7 @@
     "Teal Galaxy Airport": {
         "AWBWID": 163,
         "BaseDefence": 3,
-        "CountryID": 13, //tg
+        "CountryID": 19, //tg
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2214,7 +2214,7 @@
     "Teal Galaxy Base": {
         "AWBWID": 164,
         "BaseDefence": 3,
-        "CountryID": 13, //tg
+        "CountryID": 19, //tg
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2240,7 +2240,7 @@
     "Teal Galaxy City": {
         "AWBWID": 165,
         "BaseDefence": 3,
-        "CountryID": 13, //tg
+        "CountryID": 19, //tg
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2262,7 +2262,7 @@
     "Teal Galaxy HQ": {
         "AWBWID": 167,
         "BaseDefence": 4,
-        "CountryID": 13, //tg
+        "CountryID": 19, //tg
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2284,7 +2284,7 @@
     "Teal Galaxy Port": {
         "AWBWID": 169,
         "BaseDefence": 3,
-        "CountryID": 13, //tg
+        "CountryID": 19, //tg
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2308,7 +2308,7 @@
     "Teal Galaxy Com Tower": {
         "AWBWID": 166,
         "BaseDefence": 3,
-        "CountryID": 13, //tg
+        "CountryID": 19, //tg
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2331,7 +2331,7 @@
     "Teal Galaxy Lab": {
         "AWBWID": 168,
         "BaseDefence": 3,
-        "CountryID": 13, //tg
+        "CountryID": 19, //tg
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2357,7 +2357,7 @@
     "Purple Lightning Airport": {
         "AWBWID": 170,
         "BaseDefence": 3,
-        "CountryID": 14, //pl
+        "CountryID": 20, //pl
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2379,7 +2379,7 @@
     "Purple Lightning Base": {
         "AWBWID": 171,
         "BaseDefence": 3,
-        "CountryID": 14, //pl
+        "CountryID": 20, //pl
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2405,7 +2405,7 @@
     "Purple Lightning City": {
         "AWBWID": 172,
         "BaseDefence": 3,
-        "CountryID": 14, //pl
+        "CountryID": 20, //pl
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2427,7 +2427,7 @@
     "Purple Lightning HQ": {
         "AWBWID": 174,
         "BaseDefence": 4,
-        "CountryID": 14, //pl
+        "CountryID": 20, //pl
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2449,7 +2449,7 @@
     "Purple Lightning Port": {
         "AWBWID": 176,
         "BaseDefence": 3,
-        "CountryID": 14, //pl
+        "CountryID": 20, //pl
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2473,7 +2473,7 @@
     "Purple Lightning Com Tower": {
         "AWBWID": 173,
         "BaseDefence": 3,
-        "CountryID": 14, //pl
+        "CountryID": 20, //pl
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2496,7 +2496,7 @@
     "Purple Lightning Lab": {
         "AWBWID": 175,
         "BaseDefence": 3,
-        "CountryID": 14, //pl
+        "CountryID": 20, //pl
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2522,7 +2522,7 @@
     "Acid Rain Airport": {
         "AWBWID": 181,
         "BaseDefence": 3,
-        "CountryID": 15, //ar
+        "CountryID": 21, //ar
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2544,7 +2544,7 @@
     "Acid Rain Base": {
         "AWBWID": 182,
         "BaseDefence": 3,
-        "CountryID": 15, //ar
+        "CountryID": 21, //ar
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2570,7 +2570,7 @@
     "Acid Rain City": {
         "AWBWID": 183,
         "BaseDefence": 3,
-        "CountryID": 15, //ar
+        "CountryID": 21, //ar
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2592,7 +2592,7 @@
     "Acid Rain HQ": {
         "AWBWID": 185,
         "BaseDefence": 4,
-        "CountryID": 15, //ar
+        "CountryID": 21, //ar
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2615,7 +2615,7 @@
     "Acid Rain Port": {
         "AWBWID": 187,
         "BaseDefence": 3,
-        "CountryID": 15, //ar
+        "CountryID": 21, //ar
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2639,7 +2639,7 @@
     "Acid Rain Com Tower": {
         "AWBWID": 184,
         "BaseDefence": 3,
-        "CountryID": 15, //ar
+        "CountryID": 21, //ar
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2662,7 +2662,7 @@
     "Acid Rain Lab": {
         "AWBWID": 186,
         "BaseDefence": 3,
-        "CountryID": 15, //ar
+        "CountryID": 21, //ar
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2687,7 +2687,7 @@
     */
     "White Nova Airport": {
         "AWBWID": 188,
-        "CountryID": 16, //wn
+        "CountryID": 22, //wn
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2708,7 +2708,7 @@
     "White Nova Base": {
         "AWBWID": 189,
         "BaseDefence": 3,
-        "CountryID": 16, //wn
+        "CountryID": 22, //wn
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2732,7 +2732,7 @@
     "White Nova City": {
         "AWBWID": 190,
         "BaseDefence": 3,
-        "CountryID": 16, //wn
+        "CountryID": 22, //wn
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2753,7 +2753,7 @@
     "White Nova HQ": {
         "AWBWID": 192,
         "BaseDefence": 4,
-        "CountryID": 16, //wn
+        "CountryID": 22, //wn
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2774,7 +2774,7 @@
     "White Nova Port": {
         "AWBWID": 194,
         "BaseDefence": 3,
-        "CountryID": 16, //wn
+        "CountryID": 22, //wn
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2797,7 +2797,7 @@
     "White Nova Com Tower": {
         "AWBWID": 191,
         "BaseDefence": 3,
-        "CountryID": 16, //wn
+        "CountryID": 22, //wn
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -2819,7 +2819,7 @@
     "White Nova Lab": {
         "AWBWID": 193,
         "BaseDefence": 3,
-        "CountryID": 16, //wn
+        "CountryID": 22, //wn
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
