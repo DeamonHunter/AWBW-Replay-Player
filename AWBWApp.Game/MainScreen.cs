@@ -34,6 +34,9 @@ namespace AWBWApp.Game
 
         [Resolved]
         private InterruptDialogueOverlay interruptOverlay { get; set; }
+
+        private MovingGrid grid;
+
         [BackgroundDependencyLoader]
         private void load()
         {
@@ -44,7 +47,7 @@ namespace AWBWApp.Game
                     Colour = new Color4(232, 209, 153, 255),
                     RelativeSizeAxes = Axes.Both,
                 },
-                new MovingGrid()
+                grid = new MovingGrid()
                 {
                     GridColor = new Color4(100, 100, 100, 255),
                     RelativeSizeAxes = Axes.Both,
@@ -132,6 +135,8 @@ namespace AWBWApp.Game
         {
             var rs = (ReplaySelectScreen)replayScreen;
             replayScreen = null;
+
+            rs.SetGridOffset(grid.GridOffset);
 
             if (info != null)
                 rs.SelectReplay(info);

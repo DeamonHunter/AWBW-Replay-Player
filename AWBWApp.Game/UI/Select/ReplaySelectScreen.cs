@@ -3,11 +3,16 @@ using System.Threading.Tasks;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.IO;
+using AWBWApp.Game.UI.Components;
 using osu.Framework.Allocation;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osu.Framework.Screens;
+using osuTK;
+using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Select
 {
@@ -25,6 +30,11 @@ namespace AWBWApp.Game.UI.Select
         [Resolved]
         private MapFileStorage mapStorage { get; set; }
 
+        private Box background { get; set; }
+        private MovingGrid grid { get; set; }
+
+        private static Color4 backgroundColor = new Color4(232, 209, 153, 255);
+
         [BackgroundDependencyLoader]
         private void load()
         {
@@ -40,6 +50,18 @@ namespace AWBWApp.Game.UI.Select
 
             AddRangeInternal(new Drawable[]
             {
+                background = new Box
+                {
+                    Colour = new Color4(232, 209, 153, 255),
+                    RelativeSizeAxes = Axes.Both,
+                },
+                grid = new MovingGrid()
+                {
+                    GridColor = new Color4(100, 100, 100, 255),
+                    RelativeSizeAxes = Axes.Both,
+                    Spacing = new Vector2(30),
+                    Velocity = new Vector2(11, 9)
+                },
                 new ResetScrollContainer(() => Carousel.ScrollToSelected())
                 {
                     RelativeSizeAxes = Axes.X,
@@ -62,6 +84,14 @@ namespace AWBWApp.Game.UI.Select
             return dependencies;
         }
 
+        public void SetGridOffset(Vector2 offset) => grid.GridOffset = offset;
+
+        public override void OnEntering(IScreen last)
+        {
+            base.OnEntering(last);
+
+            background.FadeColour(backgroundColor).FadeColour(backgroundColor.Darken(0.2f), 500, Easing.In);
+        }
 
         public void SelectReplay(ReplayInfo replayInfo)
         {

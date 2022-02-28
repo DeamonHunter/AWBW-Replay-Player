@@ -41,7 +41,18 @@ namespace AWBWApp.Game.UI.Components
 
         public Vector2 Velocity = new Vector2(1, 0);
 
-        private Vector2 offset;
+        private Vector2 gridOffset;
+
+        public Vector2 GridOffset
+        {
+            get => gridOffset;
+            set
+            {
+                gridOffset = value;
+                gridCache.Invalidate();
+            }
+        }
+
         private Vector2 gridSize;
 
         public MovingGrid()
@@ -62,7 +73,7 @@ namespace AWBWApp.Game.UI.Components
             }
 
             var distanceMoved = Velocity * (float)Clock.ElapsedFrameTime * 0.001f;
-            offset = new Vector2((offset.X + distanceMoved.X) % Spacing.X, (offset.Y + distanceMoved.Y) % Spacing.Y);
+            gridOffset = new Vector2((gridOffset.X + distanceMoved.X) % Spacing.X, (gridOffset.Y + distanceMoved.Y) % Spacing.Y);
             moveGridByDistance(distanceMoved);
         }
 
@@ -74,7 +85,7 @@ namespace AWBWApp.Game.UI.Components
             generateLines(Direction.Vertical, 0, drawSize.X, Spacing.X);
 
             gridSize = new Vector2(MathF.Ceiling(drawSize.X / Spacing.X) * Spacing.X, MathF.Ceiling(drawSize.Y / Spacing.Y) * Spacing.Y);
-            moveGridByDistance(offset);
+            moveGridByDistance(GridOffset);
         }
 
         private void generateLines(Direction direction, float startPosition, float endPosition, float step)
