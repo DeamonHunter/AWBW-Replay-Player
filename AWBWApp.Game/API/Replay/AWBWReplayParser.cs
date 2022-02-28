@@ -15,6 +15,7 @@ using MatchType = AWBWApp.Game.API.Replay.MatchType;
 
 namespace AWBWApp.Game.API.New
 {
+    //Todo: This would potentially be faster/cleaner using a memory stream or similar instead of reading everything into a string
     public class AWBWReplayParser
     {
         const string turn_start_text = "O:8:\"awbwGame\":";
