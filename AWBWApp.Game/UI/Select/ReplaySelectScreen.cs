@@ -11,7 +11,7 @@ using osu.Framework.Screens;
 
 namespace AWBWApp.Game.UI.Select
 {
-    public class ReplaySelectScreen : Screen
+    public class ReplaySelectScreen : EscapeableScreen
     {
         protected ReplayCarousel Carousel { get; private set; }
 

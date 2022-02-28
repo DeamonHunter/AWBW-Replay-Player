@@ -1,3 +1,4 @@
+using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Replay;
 using AWBWApp.Game.UI.Select;
@@ -17,7 +18,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game
 {
-    public class MainScreen : Screen
+    public class MainScreen : EscapeableScreen
     {
         private Screen replayScreen;
 

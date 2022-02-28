@@ -12,12 +12,11 @@ using AWBWApp.Game.UI.Replay;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Screens;
 using osuTK;
 
 namespace AWBWApp.Game.Game.Logic
 {
-    public class ReplayController : Screen
+    public class ReplayController : EscapeableScreen
     {
         public GameMap Map;
         public long GameID { get; private set; }
