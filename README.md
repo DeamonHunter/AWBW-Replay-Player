@@ -5,3 +5,5 @@ An Advance Wars By Web Replay Player.
 This project is still under active development, and many things are likely to change.
 
 While the current version is *usable* it is not without its issues. Particularly the menu's to get to the replay player are completely unfinished.
+
+Code quality of this repo is not great yet. The aim is to improve code quality after making sure things work.
