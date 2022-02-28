@@ -1193,9 +1193,11 @@ namespace AWBWApp.Game.API.New
             var day = int.Parse(number);
 
             TurnData turnData = null;
+            var turnIdx = -1;
 
             foreach (var turn in replayData.TurnData)
             {
+                turnIdx++;
                 if (turn.ActivePlayerID != playerID || turn.Day != day)
                     continue;
 
@@ -1252,7 +1254,16 @@ namespace AWBWApp.Game.API.New
                     if (index != i)
                         throw new Exception("Out of Order actions");
 
-                    turnData.Actions.Add(actionDatabase.ParseJObjectIntoReplayAction(jsonObject, replayData, turnData));
+                    try
+                    {
+                        var action = actionDatabase.ParseJObjectIntoReplayAction(jsonObject, replayData, turnData);
+                        if (action != null)
+                            turnData.Actions.Add(action);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new AggregateException($"Failed to parse Replay Action #{i} on Turn {turnIdx}. Day {day}, Active Player {playerID}", e);
+                    }
                 }
             }
             else
