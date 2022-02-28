@@ -62,6 +62,12 @@ namespace AWBWApp.Game.UI.Select
             return dependencies;
         }
 
+
+        public void SelectReplay(ReplayInfo replayInfo)
+        {
+            Carousel.Select(replayInfo);
+        }
+
         public void FinaliseSelection(ReplayInfo replayInfo = null)
         {
             if (!Carousel.ReplaysLoaded)
