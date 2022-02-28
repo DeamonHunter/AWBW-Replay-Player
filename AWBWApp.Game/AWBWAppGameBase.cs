@@ -39,6 +39,8 @@ namespace AWBWApp.Game
         private COStorage coStorage;
         private CountryStorage countryStorage;
 
+        private InterruptDialogueOverlay interruptOverlay;
+
         private AWBWSessionHandler sessionHandler;
 
         protected AWBWAppGameBase()
@@ -93,6 +95,9 @@ namespace AWBWApp.Game
             countryStorage = new CountryStorage();
             countryStorage.LoadStream(countriesJson);
             dependencies.Cache(countryStorage);
+
+            LoadComponentAsync(interruptOverlay = new InterruptDialogueOverlay(), Add);
+            dependencies.Cache(interruptOverlay);
 
             sessionHandler = new AWBWSessionHandler();
             dependencies.Cache(sessionHandler);

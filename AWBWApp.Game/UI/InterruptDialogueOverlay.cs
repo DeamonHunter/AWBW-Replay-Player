@@ -1,4 +1,5 @@
-﻿using AWBWApp.Game.UI.Interrupts;
+﻿using System.Collections.Generic;
+using AWBWApp.Game.UI.Interrupts;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 
@@ -9,6 +10,10 @@ namespace AWBWApp.Game.UI
         public BaseInterrupt CurrentInterrupt { get; private set; }
 
         private readonly Container interruptHolder;
+        private readonly Stack<BaseInterrupt> interrupts = new Stack<BaseInterrupt>();
+
+        public override bool IsPresent => interruptHolder.Children.Count > 0;
+        protected override bool BlockNonPositionalInput => true;
 
         public InterruptDialogueOverlay()
         {
@@ -22,12 +27,15 @@ namespace AWBWApp.Game.UI
             Width = 0.4f;
         }
 
-        public void Push(BaseInterrupt interrupt)
+        public void Push(BaseInterrupt interrupt, bool hidePreviousInterrupt = true)
         {
             if (interrupt == CurrentInterrupt || interrupt.State.Value != Visibility.Visible)
                 return;
 
-            CurrentInterrupt?.Hide();
+            if (hidePreviousInterrupt)
+                CurrentInterrupt?.Hide();
+            else
+                interrupts.Push(CurrentInterrupt);
 
             CurrentInterrupt = interrupt;
             CurrentInterrupt.State.ValueChanged += state => onInterruptStateChange(interrupt, state.NewValue);
@@ -46,8 +54,15 @@ namespace AWBWApp.Game.UI
 
             if (dialogue == CurrentInterrupt)
             {
-                Hide();
-                CurrentInterrupt = null;
+                if (interrupts.Count > 0)
+                {
+                    CurrentInterrupt = interrupts.Pop();
+                }
+                else
+                {
+                    Hide();
+                    CurrentInterrupt = null;
+                }
             }
         }
 
@@ -61,7 +76,6 @@ namespace AWBWApp.Game.UI
             if (CurrentInterrupt?.State.Value == Visibility.Visible)
             {
                 CurrentInterrupt.Hide();
-                ;
                 return;
             }
             this.FadeOut(BaseInterrupt.Exit_Duration, Easing.OutSine);

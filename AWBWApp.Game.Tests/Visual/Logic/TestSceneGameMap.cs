@@ -59,36 +59,9 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             });
         }
 
-        private int parseReplayString(string replay)
-        {
-            const string siteLink = "https://awbw.amarriner.com/2030.php?games_id=";
-
-            int replayId;
-            if (int.TryParse(replay, out replayId))
-                return replayId;
-
-            if (replay.StartsWith(siteLink))
-            {
-                var turnIndex = replay.IndexOf("&ndx=");
-
-                string possibleId;
-                if (turnIndex >= 0 && turnIndex > siteLink.Length)
-                    possibleId = replay.Substring(siteLink.Length, turnIndex - siteLink.Length);
-                else
-                    possibleId = replay.Substring(siteLink.Length);
-
-                if (int.TryParse(possibleId, out replayId))
-                    return replayId;
-
-                throw new Exception("Was unable to parse the replay in the website URL: " + replay);
-            }
-
-            throw new Exception("Could not parse replay id: " + replay + ".");
-        }
-
         private async void DownloadReplayFile()
         {
-            var gameID = parseReplayString(replayString);
+            var gameID = GetNewReplayInterrupt.ParseReplayString(replayString);
 
             Logger.Log($"Starting replay download.", level: LogLevel.Important);
 

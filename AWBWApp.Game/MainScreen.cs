@@ -1,5 +1,8 @@
+using System.Threading.Tasks;
+using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Components;
+using AWBWApp.Game.UI.Interrupts;
 using AWBWApp.Game.UI.Replay;
 using AWBWApp.Game.UI.Select;
 using osu.Framework.Allocation;
@@ -29,6 +32,8 @@ namespace AWBWApp.Game
         [Resolved]
         private GameHost host { get; set; }
 
+        [Resolved]
+        private InterruptDialogueOverlay interruptOverlay { get; set; }
         [BackgroundDependencyLoader]
         private void load()
         {
@@ -71,7 +76,7 @@ namespace AWBWApp.Game
                         new MainMenuButton(false)
                         {
                             Text = "Import A Replay",
-                            Action = () => this.Push(consumeReplaySelect())
+                            Action = openGetNewReplayInterrupt
                         }
                     }
                 }
@@ -123,11 +128,40 @@ namespace AWBWApp.Game
                 LoadComponentAsync(replayScreen = new ReplaySelectScreen());
         }
 
-        private Screen consumeReplaySelect()
+        private Screen consumeReplaySelect(ReplayInfo info = null)
         {
-            var rs = replayScreen;
+            var rs = (ReplaySelectScreen)replayScreen;
             replayScreen = null;
+
+            if (info != null)
+                rs.SelectReplay(info);
+
             return rs;
+        }
+
+        private void openGetNewReplayInterrupt()
+        {
+            if (interruptOverlay.CurrentInterrupt != null)
+                return;
+
+            var taskCompletion = new TaskCompletionSource<ReplayInfo>();
+
+            interruptOverlay.Push(new GetNewReplayInterrupt(taskCompletion));
+            Task.Run(async () =>
+            {
+                ReplayInfo info;
+
+                try
+                {
+                    info = await taskCompletion.Task.ConfigureAwait(false);
+                }
+                catch (TaskCanceledException)
+                {
+                    return;
+                }
+
+                Schedule(() => this.Push(consumeReplaySelect(info)));
+            });
         }
 
         private class MainMenuButton : BasicButton
