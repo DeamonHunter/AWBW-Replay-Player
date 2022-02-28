@@ -41,13 +41,16 @@ namespace AWBWApp.Game.IO
                 _playerNames = JsonConvert.DeserializeObject<Dictionary<long, string>>(File.ReadAllText(username_storage));
 
             if (checkForNewReplays)
-                Task.Run(checkAllReplays);
+                checkAllReplays();
         }
 
         public IEnumerable<ReplayInfo> GetAllKnownReplays() => _knownReplays.Values;
 
-        private async void checkAllReplays()
+        private void checkAllReplays()
         {
+            var newReplays = new List<string>();
+            var userNameChecks = new List<ReplayInfo>();
+
             foreach (var file in Directory.GetFiles(replay_folder))
             {
                 var fileName = Path.GetFileNameWithoutExtension(file);
@@ -56,27 +59,45 @@ namespace AWBWApp.Game.IO
                 if (extension != ".zip" || !int.TryParse(fileName, out int replayNumber))
                     continue;
 
-                if (_knownReplays.TryGetValue(replayNumber, out var replayInfo))
+                if (!_knownReplays.TryGetValue(replayNumber, out var replayInfo))
                 {
-                    await checkForUsernamesAndGetIfMissing(replayInfo);
+                    newReplays.Add(file);
                     continue;
                 }
 
-                try
+                foreach (var player in replayInfo.Players)
                 {
-                    var replay = await GetReplayData(replayNumber);
-                    addReplay(replay);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e, "Failed to Parse saved file: " + replayNumber);
+                    if (player.Value.Username != null)
+                        continue;
+
+                    userNameChecks.Add(replayInfo);
+                    break;
                 }
             }
+
+            Task.Run(async () =>
+            {
+                foreach (var replayInfo in userNameChecks)
+                    await checkForUsernamesAndGetIfMissing(replayInfo, true);
+
+                foreach (var replayPath in newReplays)
+                {
+                    try
+                    {
+                        var replay = await ParseAndStoreReplay(replayPath);
+                        addReplay(replay);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, "Failed to Parse saved file: " + replayPath);
+                    }
+                }
+            });
 
             saveReplays();
         }
 
-        private async Task checkForUsernamesAndGetIfMissing(ReplayInfo info)
+        private async Task checkForUsernamesAndGetIfMissing(ReplayInfo info, bool triggerChanged)
         {
             bool savePlayers = false;
 
@@ -108,7 +129,12 @@ namespace AWBWApp.Game.IO
             }
 
             if (savePlayers)
+            {
                 saveReplays();
+
+                if (triggerChanged)
+                    ReplayChanged?.Invoke(info);
+            }
         }
 
         private void addReplay(ReplayData data)
@@ -127,6 +153,8 @@ namespace AWBWApp.Game.IO
             contents = JsonConvert.SerializeObject(_playerNames, Formatting.Indented);
             File.WriteAllText(username_storage, contents);
         }
+
+        public bool TryGetReplayInfo(int id, out ReplayInfo info) => _knownReplays.TryGetValue(id, out info);
 
         public async Task<ReplayData> GetReplayData(ReplayInfo info) => await GetReplayData(info.ID);
 
@@ -153,7 +181,7 @@ namespace AWBWApp.Game.IO
                 stream.Dispose();
             }
 
-            await checkForUsernamesAndGetIfMissing(data.ReplayInfo);
+            await checkForUsernamesAndGetIfMissing(data.ReplayInfo, false);
 
             return data;
         }
@@ -177,7 +205,7 @@ namespace AWBWApp.Game.IO
 
             File.Move(path, newPath);
 
-            await checkForUsernamesAndGetIfMissing(data.ReplayInfo);
+            await checkForUsernamesAndGetIfMissing(data.ReplayInfo, false);
 
             addReplay(data);
 
@@ -206,7 +234,7 @@ namespace AWBWApp.Game.IO
                 stream.Dispose();
             }
 
-            await checkForUsernamesAndGetIfMissing(data.ReplayInfo);
+            await checkForUsernamesAndGetIfMissing(data.ReplayInfo, false);
 
             addReplay(data);
 
