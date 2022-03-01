@@ -93,6 +93,9 @@ namespace AWBWApp.Game.Game.Logic
                 },
                 loadingLayer = new LoadingLayer(true)
             });
+
+            Map.OnLoadComplete += _ => cameraControllerWithGrid.FitMapToSpace();
+
             loadingLayer.Show();
         }
 

@@ -76,6 +76,71 @@ namespace AWBWApp.Game.Game.Logic
             });
         }
 
+        public void ScheduleSetToLoading() => Schedule(setToLoading);
+
+        [BackgroundDependencyLoader]
+        private void load()
+        {
+            setToLoading();
+        }
+
+        private void setToLoading()
+        {
+            //Todo: Fix this hardcoded map
+            var loadingMap = new ReplayMap();
+            loadingMap.Size = new Vector2I(33, 11);
+            loadingMap.TerrainName = "Loading";
+            loadingMap.Ids = new short[]
+            {
+                28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+                28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+                28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+                28, 28, 28, 01, 28, 28, 28, 01, 01, 01, 28, 28, 01, 28, 28, 01, 01, 28, 28, 01, 01, 01, 28, 01, 01, 01, 28, 01, 01, 01, 28, 28, 28,
+                28, 28, 28, 01, 28, 28, 28, 01, 28, 01, 28, 01, 28, 01, 28, 01, 28, 01, 28, 28, 01, 28, 28, 01, 28, 01, 28, 01, 28, 28, 28, 28, 28,
+                28, 28, 28, 01, 28, 28, 28, 01, 28, 01, 28, 01, 01, 01, 28, 01, 28, 01, 28, 28, 01, 28, 28, 01, 28, 01, 28, 01, 28, 01, 28, 28, 28,
+                28, 28, 28, 01, 28, 28, 28, 01, 28, 01, 28, 01, 28, 01, 28, 01, 28, 01, 28, 28, 01, 28, 28, 01, 28, 01, 28, 01, 28, 01, 28, 28, 28,
+                28, 28, 28, 01, 01, 01, 28, 01, 01, 01, 28, 01, 28, 01, 28, 01, 01, 28, 28, 01, 01, 01, 28, 01, 28, 01, 28, 01, 01, 01, 28, 28, 28,
+                28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+                28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+                28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+            };
+
+            if (shoalGenerator == null)
+                shoalGenerator = new CustomShoalGenerator(terrainTileStorage, buildingStorage);
+            loadingMap = shoalGenerator.CreateCustomShoalVersion(loadingMap);
+
+            MapSize = loadingMap.Size;
+
+            gameBoardDrawable.Clear();
+            buildingsDrawable.Clear();
+            unitsDrawable.Clear();
+
+            gameBoard = new DrawableTile[MapSize.X, MapSize.Y];
+            buildings = new Dictionary<Vector2I, DrawableBuilding>();
+            units = new Dictionary<long, DrawableUnit>();
+
+            var mapIdx = 0;
+
+            for (int y = 0; y < MapSize.Y; y++)
+            {
+                for (int x = 0; x < MapSize.X; x++)
+                {
+                    var terrainId = loadingMap.Ids[mapIdx++];
+
+                    var terrainTile = terrainTileStorage.GetTileByAWBWId(terrainId);
+                    var tile = new DrawableTile(terrainTile) { Position = new Vector2(x * DrawableTile.BASE_SIZE.X, y * DrawableTile.BASE_SIZE.Y + DrawableTile.BASE_SIZE.Y - 1) };
+                    gameBoard[x, y] = tile;
+                    gameBoardDrawable.Add(tile);
+                }
+            }
+
+            AutoSizeAxes = Axes.Both;
+            effectAnimationController.Size = new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y);
+
+            gameBoardDrawable.FadeOut().FadeIn(250);
+            animateStart(4);
+        }
+
         public void ScheduleInitialGameState(ReplayData gameState, ReplayMap map, Dictionary<int, PlayerInfo> players)
         {
             this.players = players;
