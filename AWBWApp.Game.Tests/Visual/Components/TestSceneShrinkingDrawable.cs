@@ -13,7 +13,7 @@ using osu.Framework.Testing;
 using osuTK;
 using osuTK.Graphics;
 
-namespace AWBWApp.Game.Tests.Visual
+namespace AWBWApp.Game.Tests.Visual.Components
 {
     [TestFixture]
     public class TestSceneShrinkingDrawable : AWBWAppTestScene

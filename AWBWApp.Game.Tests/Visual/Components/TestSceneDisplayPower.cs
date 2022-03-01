@@ -1,7 +1,7 @@
 ﻿using AWBWApp.Game.UI.Replay;
 using NUnit.Framework;
 
-namespace AWBWApp.Game.Tests.Visual.Screens
+namespace AWBWApp.Game.Tests.Visual.Components
 {
     [TestFixture]
     public class TestSceneDisplayPower : AWBWAppTestScene

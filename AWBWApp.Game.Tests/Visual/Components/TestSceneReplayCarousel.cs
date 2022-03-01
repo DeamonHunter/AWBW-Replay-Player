@@ -9,7 +9,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Logging;
 using osuTK;
 
-namespace AWBWApp.Game.Tests.Visual.Screens
+namespace AWBWApp.Game.Tests.Visual.Components
 {
     [TestFixture]
     public class TestSceneReplayCarousel : AWBWAppTestScene
