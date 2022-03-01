@@ -207,7 +207,7 @@ namespace AWBWApp.Game.Game.Unit
             if (path.Count == 2)
             {
                 //Only moving 1 tile
-                transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(path[1].X, path[1].Y)), 325, Easing.InOutSine);
+                transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(path[1].X, path[1].Y)), 400, Easing.InOutQuad);
                 return transformSequence;
             }
 
@@ -215,11 +215,11 @@ namespace AWBWApp.Game.Game.Unit
             {
                 var pathNode = path[i];
                 if (i == 1)
-                    transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 250, Easing.In);
+                    transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 350, Easing.InQuad);
                 else if (i == path.Count - 1)
-                    transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 250, Easing.Out);
+                    transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 350, Easing.OutQuad);
                 else
-                    transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 110);
+                    transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 140);
             }
 
             return transformSequence;
