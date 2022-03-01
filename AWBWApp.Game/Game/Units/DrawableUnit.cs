@@ -8,6 +8,7 @@ using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Replay;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Animations;
 using osu.Framework.Graphics.Containers;
@@ -22,6 +23,7 @@ namespace AWBWApp.Game.Game.Unit
     public class DrawableUnit : CompositeDrawable, IHasMapPosition
     {
         public static readonly Vector2I BASE_SIZE = new Vector2I(16);
+        public static readonly Colour4 FogColor = new Colour4(150, 150, 150, 255);
 
         public readonly UnitData UnitData;
         public long UnitID { get; private set; }
@@ -31,6 +33,7 @@ namespace AWBWApp.Game.Game.Unit
         public BindableInt Fuel = new BindableInt();
         public BindableInt Ammo = new BindableInt();
 
+        public BindableBool FogOfWarActive = new BindableBool();
         public BindableBool CanMove = new BindableBool();
         public BindableBool IsCapturing = new BindableBool();
         public BindableBool BeingCarried = new BindableBool();
@@ -83,7 +86,8 @@ namespace AWBWApp.Game.Game.Unit
             this.country = country;
 
             HealthPoints.BindValueChanged(UpdateHp);
-            CanMove.BindValueChanged(updateCanMove, true);
+            CanMove.BindValueChanged(x => updateUnitColour(x.NewValue, FogOfWarActive.Value, x.NewValue), true);
+            FogOfWarActive.BindValueChanged(x => updateUnitColour(CanMove.Value, x.NewValue, x.NewValue), true);
             IsCapturing.BindValueChanged(updateCapturing);
             Dived.BindValueChanged(x => updateAnimation());
             BeingCarried.BindValueChanged(x => updateAnimation());
@@ -250,22 +254,26 @@ namespace AWBWApp.Game.Game.Unit
             }
         }
 
-        private void updateCanMove(ValueChangedEvent<bool> canMove)
-        {
-            Color4 animationColour;
-            if (canMove.NewValue)
-                animationColour = Color4.White;
-            else
-                animationColour = new Color4(200, 200, 200, 255);
-            textureAnimation.Colour = animationColour;
-        }
-
         private void updateCapturing(ValueChangedEvent<bool> isCapturing)
         {
             if (isCapturing.NewValue)
                 capturing.ScaleTo(0.5f).ScaleTo(1, 200, Easing.OutBounce).FadeIn(100, Easing.InQuint);
             else
                 capturing.FadeOut();
+        }
+
+        private void updateUnitColour(bool canMove, bool foggy, bool fadeOut)
+        {
+            Color4 colour;
+            if (foggy)
+                colour = FogColor;
+            else
+                colour = Color4.White;
+
+            if (canMove)
+                colour = colour.Darken(0.2f);
+
+            textureAnimation.FadeColour(colour, 250, fadeOut ? Easing.OutQuint : Easing.InQuint);
         }
     }
 }

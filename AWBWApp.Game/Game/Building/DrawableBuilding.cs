@@ -4,6 +4,7 @@ using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Animations;
 using osu.Framework.Graphics.Containers;
@@ -16,8 +17,10 @@ namespace AWBWApp.Game.Game.Building
     public class DrawableBuilding : CompositeDrawable, IHasMapPosition
     {
         public static readonly Vector2I BASE_SIZE = new Vector2I(16);
+        public static readonly Colour4 FogColor = new Colour4(150, 150, 150, 255);
 
         public Bindable<bool> HasDoneAction = new Bindable<bool>();
+        public BindableBool FogOfWarActive = new BindableBool();
 
         public long? OwnerID { get; private set; }
         public Vector2I MapPosition { get; private set; }
@@ -35,7 +38,8 @@ namespace AWBWApp.Game.Game.Building
 
             Size = BASE_SIZE;
             Position = GameMap.GetDrawablePositionForBottomOfTile(tilePosition);
-            HasDoneAction.BindValueChanged(updateHasActed);
+            HasDoneAction.BindValueChanged(x => updateBuildingColour(x.NewValue, FogOfWarActive.Value, x.NewValue));
+            FogOfWarActive.BindValueChanged(x => updateBuildingColour(HasDoneAction.Value, x.NewValue, x.NewValue));
         }
 
         [BackgroundDependencyLoader]
@@ -91,14 +95,18 @@ namespace AWBWApp.Game.Game.Building
             textureAnimation.Seek(playbackPosition);
         }
 
-        private void updateHasActed(ValueChangedEvent<bool> hasActed)
+        private void updateBuildingColour(bool acted, bool foggy, bool fadeOut)
         {
-            Color4 animationColour;
-            if (hasActed.NewValue)
-                animationColour = new Color4(200, 200, 200, 255);
+            Color4 colour;
+            if (foggy)
+                colour = FogColor;
             else
-                animationColour = Color4.White;
-            textureAnimation.Colour = animationColour;
+                colour = Color4.White;
+
+            if (acted)
+                colour = colour.Darken(0.2f);
+
+            textureAnimation.FadeColour(colour, 250, fadeOut ? Easing.OutQuint : Easing.InQuint);
         }
     }
 }

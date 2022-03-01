@@ -8,7 +8,6 @@ using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Unit;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
-using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Replay;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -32,7 +31,6 @@ namespace AWBWApp.Game.Game.Logic
 
         private Container<DrawableUnit> unitsDrawable;
         private Dictionary<long, DrawableUnit> units;
-        private Dictionary<Vector2I, DrawableUnit> unitsByPosition;
 
         [Resolved]
         private TerrainTileStorage terrainTileStorage { get; set; }
@@ -48,7 +46,6 @@ namespace AWBWApp.Game.Game.Logic
 
         private CustomShoalGenerator shoalGenerator { get; set; }
 
-        private FogOfWarDrawable fogOfWarDrawable;
         private FogOfWarGenerator fogOfWarGenerator;
 
         private EffectAnimationController effectAnimationController;
@@ -71,7 +68,6 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     AutoSizeAxes = Axes.Both
                 },
-                fogOfWarDrawable = new FogOfWarDrawable(),
                 effectAnimationController = new EffectAnimationController
                 {
                     Origin = Anchor.TopLeft,
@@ -120,10 +116,12 @@ namespace AWBWApp.Game.Game.Logic
                 for (int x = 0; x < MapSize.X; x++)
                 {
                     var terrainId = map.Ids[mapIdx++];
-                    if (buildingStorage.ContainsBuildingWithAWBWId(terrainId) && replayBuildings.TryGetValue(new Vector2I(x, y), out _))
-                        continue;
 
-                    var terrainTile = terrainTileStorage.GetTileByAWBWId(terrainId);
+                    TerrainTile terrainTile;
+                    if (buildingStorage.ContainsBuildingWithAWBWId(terrainId) && replayBuildings.TryGetValue(new Vector2I(x, y), out _))
+                        terrainTile = terrainTileStorage.GetTileByCode("Plain");
+                    else
+                        terrainTile = terrainTileStorage.GetTileByAWBWId(terrainId);
                     var tile = new DrawableTile(terrainTile) { Position = new Vector2(x * DrawableTile.BASE_SIZE.X, y * DrawableTile.BASE_SIZE.Y + DrawableTile.BASE_SIZE.Y - 1) };
                     gameBoard[x, y] = tile;
                     gameBoardDrawable.Add(tile);
@@ -158,10 +156,55 @@ namespace AWBWApp.Game.Game.Logic
             }
 
             fogOfWarGenerator = new FogOfWarGenerator(this);
-            fogOfWarDrawable.NewStart(this, fogOfWarGenerator);
+            fogOfWarGenerator.FogOfWar.BindValueChanged(x => updateFog(x.NewValue));
 
             AutoSizeAxes = Axes.Both;
             effectAnimationController.Size = new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y);
+
+            gameBoardDrawable.FadeIn();
+            animateStart(1.5f);
+        }
+
+        private void animateStart(float speed)
+        {
+            var inverseSpeed = 1 / speed;
+
+            var offsetPosition = new Vector2(DrawableTile.HALF_BASE_SIZE.X, -3 * DrawableTile.BASE_SIZE.Y);
+
+            for (int x = 0; x < MapSize.X; x++)
+            {
+                for (int y = 0; y < MapSize.Y; y++)
+                {
+                    var tile = gameBoard[x, y];
+                    var tilePos = tile.Position;
+
+                    tile.FadeOut().Delay((x + y) * 40 * inverseSpeed).FadeIn().MoveToOffset(offsetPosition).MoveTo(tilePos, 275 * inverseSpeed, Easing.OutCubic);
+
+                    var coord = new Vector2I(x, y);
+                    if (buildings.TryGetValue(coord, out var building))
+                        building.FadeOut().Delay(((x + y) * 40 + 25) * inverseSpeed).FadeIn().MoveToOffset(offsetPosition).MoveTo(building.Position, 275 * inverseSpeed, Easing.OutCubic);
+                    if (TryGetDrawableUnit(coord, out var unit))
+                        unit.FadeOut().Delay(((x + y) * 40 + 50) * inverseSpeed).FadeIn().MoveToOffset(offsetPosition).MoveTo(unit.Position, 275 * inverseSpeed, Easing.OutCubic);
+                }
+            }
+        }
+
+        private void updateFog(bool[,] fogOfWar)
+        {
+            for (int x = 0; x < MapSize.X; x++)
+            {
+                for (int y = 0; y < MapSize.Y; y++)
+                {
+                    var foggy = !fogOfWar[x, y];
+                    gameBoard[x, y].FogOfWarActive.Value = foggy;
+
+                    var coord = new Vector2I(x, y);
+                    if (buildings.TryGetValue(coord, out var building))
+                        building.FogOfWarActive.Value = foggy;
+                    if (TryGetDrawableUnit(coord, out var unit))
+                        unit.FogOfWarActive.Value = foggy;
+                }
+            }
         }
 
         public static Vector2 GetDrawablePositionForTopOfTile(Vector2I tilePos) => new Vector2(tilePos.X * DrawableTile.BASE_SIZE.X, tilePos.Y * DrawableTile.BASE_SIZE.Y - 1);
