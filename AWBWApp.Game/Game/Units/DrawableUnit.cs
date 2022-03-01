@@ -197,25 +197,29 @@ namespace AWBWApp.Game.Game.Unit
             return Vec2IHelper.ScalarMultiply(position, BASE_SIZE) + new Vector2I(0, BASE_SIZE.Y);
         }
 
-        public TransformSequence<DrawableUnit> FollowPath(IEnumerable<UnitPosition> path, bool reverse = false)
+        public TransformSequence<DrawableUnit> FollowPath(IList<UnitPosition> path, bool reverse = false)
         {
-            var enumerator = path.GetEnumerator();
-
-            enumerator.MoveNext();
-
-            UnitPosition pathNode = enumerator.Current;
-            if (pathNode == null)
+            if (path.Count < 1)
                 throw new Exception("Path must contain at least 1 position.");
 
-            var transformSequence = this.MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)));
+            var transformSequence = this.MoveTo(GetRealPositionFromMapTiles(new Vector2I(path[0].X, path[0].Y)));
 
-            while (enumerator.MoveNext())
+            if (path.Count == 2)
             {
-                pathNode = enumerator.Current;
-                if (pathNode == null)
-                    throw new Exception("Path contained null position.");
+                //Only moving 1 tile
+                transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(path[1].X, path[1].Y)), 325, Easing.InOutSine);
+                return transformSequence;
+            }
 
-                transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 250);
+            for (int i = 1; i < path.Count; i++)
+            {
+                var pathNode = path[i];
+                if (i == 1)
+                    transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 250, Easing.In);
+                else if (i == path.Count - 1)
+                    transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 250, Easing.Out);
+                else
+                    transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 110);
             }
 
             return transformSequence;
