@@ -61,7 +61,7 @@ namespace AWBWApp.Game.UI.Select
                     {
                         Type = EdgeEffectType.Shadow,
                         Offset = new Vector2(1),
-                        Radius = 10,
+                        Radius = 5,
                         Colour = Color4.Black.Opacity(100)
                     };
                     break;
@@ -72,9 +72,9 @@ namespace AWBWApp.Game.UI.Select
                     BorderContainer.EdgeEffect = new EdgeEffectParameters
                     {
                         Type = EdgeEffectType.Glow,
-                        Colour = new Color4(130, 204, 255, 150),
-                        Radius = 20,
-                        Roundness = 10,
+                        Colour = new Color4(130, 204, 255, 65),
+                        Radius = 5,
+                        Roundness = 0,
                     };
                     break;
             }

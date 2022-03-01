@@ -305,11 +305,6 @@ namespace AWBWApp.Game.UI.Select
             // child items (difficulties) are still visible.
             //item.Header.X = offsetX(dist, visibleHalfHeight) - (parent?.X ?? 0);
             item.ScaleTo(itemScale(dist));
-
-            // We are applying a multiplicative alpha (which is internally done by nesting an
-            // additional container and setting that container's alpha) such that we can
-            // layer alpha transformations on top.
-            item.SetMultiplicativeAlpha(Math.Clamp(1.75f - 1.5f * dist, 0, 1));
         }
 
         /// <summary>
@@ -452,6 +447,8 @@ namespace AWBWApp.Game.UI.Select
 
                 return replay != null && replay.ReplayInfo.ID == info.ID;
             });
+
+            selectedReplay.State.Value = CarouselItemState.Selected;
             ScrollToSelected(true);
         }
 

@@ -9,7 +9,7 @@ namespace AWBWApp.Game.UI.Select
 {
     public abstract class DrawableCarouselItem : PoolableDrawable
     {
-        public const float MAX_HEIGHT = 80;
+        public const float MAX_HEIGHT = 100;
 
         public override bool IsPresent => base.IsPresent || Item?.Visible == true;
 

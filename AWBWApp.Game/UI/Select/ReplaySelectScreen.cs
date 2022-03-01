@@ -70,8 +70,17 @@ namespace AWBWApp.Game.UI.Select
                 carouselContainer = new Container()
                 {
                     RelativeSizeAxes = Axes.Both,
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.TopRight,
+                    Size = new Vector2(0.7f, 1),
                     Child = new LoadingSpinner(true) { State = { Value = Visibility.Visible } }
-                }
+                },
+                new Box()
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = new Color4(200, 200, 200, 150),
+                    Size = new Vector2(0.3f, 1)
+                },
             });
         }
 
