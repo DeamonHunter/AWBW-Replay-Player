@@ -230,8 +230,12 @@ namespace AWBWApp.Game.Game.Logic
             animateStart(1.5f);
         }
 
+        private bool animating = false;
+
         private void animateStart(float speed)
         {
+            animating = true;
+
             var inverseSpeed = 1 / speed;
 
             var offsetPosition = new Vector2(DrawableTile.HALF_BASE_SIZE.X, -3 * DrawableTile.BASE_SIZE.Y);
@@ -277,6 +281,12 @@ namespace AWBWApp.Game.Game.Logic
 
         public void ScheduleUpdateToGameState(TurnData gameState, Action postUpdateAction)
         {
+            if (animating)
+            {
+                FinishTransforms(true);
+                animating = false;
+            }
+
             Schedule(() =>
             {
                 updateToGameState(gameState);
