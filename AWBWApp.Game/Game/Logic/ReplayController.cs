@@ -40,7 +40,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private LoadingLayer loadingLayer;
         private Container powerLayer;
-        private MapCameraController camera;
+        private CameraControllerWithGrid cameraControllerWithGrid;
         private ReplayBarWidget barWidget;
         private ReplayPlayerList playerList;
 
@@ -51,14 +51,32 @@ namespace AWBWApp.Game.Game.Logic
 
         public ReplayController()
         {
-            Map = new GameMap();
+            //Offset so the centered position would be half the bar to the right, and half a tile up. Chosen to look nice.
+            var mapPadding = new MarginPadding
+            {
+                Top = DrawableTile.HALF_BASE_SIZE.Y,
+                Bottom = DrawableTile.HALF_BASE_SIZE.Y,
+                Left = DrawableTile.HALF_BASE_SIZE.X,
+                Right = 200 + DrawableTile.HALF_BASE_SIZE.X
+            };
+
+            var safeMovement = new MarginPadding
+            {
+                Top = mapPadding.Top + DrawableTile.BASE_SIZE.Y * 4,
+                Bottom = mapPadding.Bottom + DrawableTile.BASE_SIZE.Y * 4,
+                Left = mapPadding.Left + DrawableTile.BASE_SIZE.X * 4,
+                Right = mapPadding.Right + DrawableTile.BASE_SIZE.X * 4,
+            };
+
             AddRangeInternal(new Drawable[]
             {
-                camera = new MapCameraController(Map)
+                cameraControllerWithGrid = new CameraControllerWithGrid()
                 {
                     MaxScale = 8,
-                    MapSpace = new MarginPadding { Top = DrawableTile.HALF_BASE_SIZE.Y, Bottom = DrawableTile.HALF_BASE_SIZE.Y, Left = DrawableTile.HALF_BASE_SIZE.Y, Right = 200 + DrawableTile.HALF_BASE_SIZE.Y }, //Offset so the centered position would be half the bar to the right, and half a tile up. Chosen to look nice.
-                    RelativeSizeAxes = Axes.Both
+                    MapSpace = mapPadding,
+                    MovementRegion = safeMovement,
+                    RelativeSizeAxes = Axes.Both,
+                    Child = Map = new GameMap(),
                 },
                 powerLayer = new Container
                 {
@@ -136,7 +154,7 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     HasLoadedReplay = true;
                     barWidget.UpdateActions();
-                    camera.FitMapToSpace();
+                    cameraControllerWithGrid.FitMapToSpace();
                     loadingLayer.Hide();
                 });
             });

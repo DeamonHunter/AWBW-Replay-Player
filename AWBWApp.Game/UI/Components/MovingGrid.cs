@@ -27,6 +27,21 @@ namespace AWBWApp.Game.UI.Components
             }
         }
 
+        private Vector2 lineSize = new Vector2(3);
+
+        public Vector2 LineSize
+        {
+            get => lineSize;
+            set
+            {
+                if (lineSize.X <= 0 || lineSize.Y <= 0)
+                    throw new ArgumentException("Line Size must be positive and non-zero.");
+
+                lineSize = value;
+                gridCache.Invalidate();
+            }
+        }
+
         private Color4 gridColor;
 
         public Color4 GridColor
@@ -48,7 +63,7 @@ namespace AWBWApp.Game.UI.Components
             get => gridOffset;
             set
             {
-                gridOffset = value;
+                gridOffset = new Vector2(value.X % Spacing.X, value.Y % Spacing.Y);
                 gridCache.Invalidate();
             }
         }
@@ -107,13 +122,13 @@ namespace AWBWApp.Game.UI.Components
                 if (direction == Direction.Horizontal)
                 {
                     gridLine.RelativeSizeAxes = Axes.X;
-                    gridLine.Height = 3;
+                    gridLine.Height = LineSize.Y;
                     gridLine.Y = currentPostion;
                 }
                 else
                 {
                     gridLine.RelativeSizeAxes = Axes.Y;
-                    gridLine.Width = 3;
+                    gridLine.Width = LineSize.X;
                     gridLine.X = currentPostion;
                 }
 
