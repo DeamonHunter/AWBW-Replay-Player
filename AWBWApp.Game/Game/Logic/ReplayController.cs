@@ -143,6 +143,8 @@ namespace AWBWApp.Game.Game.Logic
             this.replayData = replayData;
 
             currentTurn = replayData.TurnData[0];
+            currentActionIndex = -1;
+            checkPowers();
 
             Players.Clear();
             foreach (var player in replayData.ReplayInfo.Players)
@@ -150,14 +152,16 @@ namespace AWBWApp.Game.Game.Logic
             updatePlayerList(0, true);
 
             Map.ScheduleInitialGameState(this.replayData, map, Players);
+
+            //Todo: Ew
             ScheduleAfterChildren(() =>
             {
-                goToTurnWithIdx(0);
                 ScheduleAfterChildren(() =>
                 {
+                    UpdateFogOfWar();
+                    cameraControllerWithGrid.FitMapToSpace();
                     HasLoadedReplay = true;
                     barWidget.UpdateActions();
-                    cameraControllerWithGrid.FitMapToSpace();
                     loadingLayer.Hide();
                 });
             });
