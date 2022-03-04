@@ -1,4 +1,19 @@
 {
+    "Black Tile": {
+        "AWBWID": 0,
+        "BaseDefence": 1,
+        "MovementCostsPerType": {
+            "LightInf": 0,
+            "HeavyInf": 0,
+            "Tread": 0,
+            "Tire": 0,
+            "Air": 0
+        },
+        "TerrainType": "Plain",
+        "Textures": {
+            "Clear": "Black"
+        }
+    },
     "Plain": {
         "AWBWID": 1,
         "BaseDefence": 1,

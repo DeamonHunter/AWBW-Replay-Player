@@ -113,7 +113,10 @@ namespace AWBWApp.Game.IO
 
                     if (character == ',')
                     {
-                        row.Add(short.Parse(htmlShortened.Substring(numStart, idx - numStart - 1)));
+                        if (numStart == idx - 1)
+                            row.Add(0);
+                        else
+                            row.Add(short.Parse(htmlShortened.Substring(numStart, idx - numStart - 1)));
                         numStart = idx;
                     }
                 }
