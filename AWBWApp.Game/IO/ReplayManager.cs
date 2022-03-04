@@ -35,10 +35,10 @@ namespace AWBWApp.Game.IO
                 Directory.CreateDirectory(replay_folder);
 
             if (File.Exists(replay_storage))
-                _knownReplays = JsonConvert.DeserializeObject<Dictionary<int, ReplayInfo>>(File.ReadAllText(replay_storage));
+                _knownReplays = JsonConvert.DeserializeObject<Dictionary<int, ReplayInfo>>(File.ReadAllText(replay_storage)) ?? _knownReplays;
 
             if (File.Exists(username_storage))
-                _playerNames = JsonConvert.DeserializeObject<Dictionary<long, string>>(File.ReadAllText(username_storage));
+                _playerNames = JsonConvert.DeserializeObject<Dictionary<long, string>>(File.ReadAllText(username_storage)) ?? _playerNames;
 
             if (checkForNewReplays)
                 checkAllReplays();
