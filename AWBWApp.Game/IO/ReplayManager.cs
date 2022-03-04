@@ -126,6 +126,7 @@ namespace AWBWApp.Game.IO
                 //Todo: Check how this acts if we do not have internet.
 
                 player.Value.Username = usernameRequest.Username;
+                _playerNames[player.Value.UserId] = usernameRequest.Username;
             }
 
             if (savePlayers)
