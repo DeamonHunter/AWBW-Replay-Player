@@ -21,6 +21,9 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (deleteData == null)
                 throw new Exception("Join Replay Action did not contain information about Join.");
 
+            if (deleteData.ContainsKey("Move"))
+                throw new Exception("Movement data in delete action.");
+
             action.DeletedUnitId = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)deleteData["unitId"], turnData.ActiveTeam, turnData.ActivePlayerID);
             return action;
         }
