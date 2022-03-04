@@ -35,7 +35,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             "Sasha-Y", "Sasha-S",
             "Drake-Y", "Drake-S",
             "Eagle-Y", "Eagle-S",
-            //TODO: Javier
+            "Javier-Y", "Javier-S",
             "Jess-Y", "Jess-S",
             "Grimm-Y", "Grimm-S",
             "Kanbei-Y", "Kanbei-S",
