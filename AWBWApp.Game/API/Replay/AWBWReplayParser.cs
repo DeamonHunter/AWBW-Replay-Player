@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -58,14 +59,14 @@ namespace AWBWApp.Game.API.New
                     gameStateFile = text;
             }
 
-            var state = ReadBaseReplayData(gameStateFile);
-            ReadReplayActions(state, replayFile);
+            var state = readBaseReplayData(gameStateFile);
+            readReplayActions(state, replayFile);
             stopWatch.Stop();
             Logger.Log("Replay parsing took: " + stopWatch.Elapsed);
             return state;
         }
 
-        ReplayData ReadBaseReplayData(ReadOnlySpan<char> text)
+        private ReplayData readBaseReplayData(ReadOnlySpan<char> text)
         {
             var replayData = new ReplayData();
 
@@ -73,7 +74,7 @@ namespace AWBWApp.Game.API.New
 
             while (true)
             {
-                ReadTurn(replayData, text, ref textIndex, textIndex == 0);
+                readTurn(replayData, text, ref textIndex, textIndex == 0);
 
                 if (text[textIndex++] != '\n' || textIndex >= text.Length)
                     break;
@@ -82,7 +83,7 @@ namespace AWBWApp.Game.API.New
             return replayData;
         }
 
-        void ReadTurn(ReplayData replayData, ReadOnlySpan<char> text, ref int textIndex, bool firstTurn)
+        private void readTurn(ReplayData replayData, ReadOnlySpan<char> text, ref int textIndex, bool firstTurn)
         {
             if (!text.Slice(textIndex, turn_start_text.Length).Equals(turn_start_text, StringComparison.Ordinal))
                 throw new Exception("Game State file does not start correctly.");
@@ -106,25 +107,25 @@ namespace AWBWApp.Game.API.New
                 {
                     case "players":
                     {
-                        ReadPlayers(text, ref textIndex, replayData, newTurn, firstTurn);
+                        readPlayers(text, ref textIndex, replayData, newTurn, firstTurn);
                         break;
                     }
 
                     case "buildings":
                     {
-                        ReadBuildings(text, ref textIndex, newTurn, firstTurn);
+                        readBuildings(text, ref textIndex, newTurn);
                         break;
                     }
 
                     case "units":
                     {
-                        ReadUnits(text, ref textIndex, newTurn, firstTurn);
+                        readUnits(text, ref textIndex, newTurn);
                         break;
                     }
 
                     case "id":
                     {
-                        var id = ReadInteger(text, ref textIndex);
+                        var id = readInteger(text, ref textIndex);
                         if (!firstTurn && replayData.ReplayInfo.ID != id)
                             throw new Exception("Data 'ID' changed per turn when not expected.");
                         replayData.ReplayInfo.ID = id;
@@ -151,7 +152,7 @@ namespace AWBWApp.Game.API.New
 
                     case "creator":
                     {
-                        var creator = ReadInteger(text, ref textIndex);
+                        var creator = readInteger(text, ref textIndex);
                         if (!firstTurn && replayData.ReplayInfo.CreatorId != creator)
                             throw new Exception("Data 'CreatorId' changed per turn when not expected.");
                         replayData.ReplayInfo.CreatorId = creator;
@@ -160,7 +161,7 @@ namespace AWBWApp.Game.API.New
 
                     case "maps_id":
                     {
-                        var mapId = ReadInteger(text, ref textIndex);
+                        var mapId = readInteger(text, ref textIndex);
                         if (!firstTurn && replayData.ReplayInfo.MapId != mapId)
                             throw new Exception("Data 'MapId' changed per turn when not expected.");
                         replayData.ReplayInfo.MapId = mapId;
@@ -169,7 +170,7 @@ namespace AWBWApp.Game.API.New
 
                     case "funds":
                     {
-                        var funds = ReadInteger(text, ref textIndex);
+                        var funds = readInteger(text, ref textIndex);
                         if (!firstTurn && replayData.ReplayInfo.FundsPerBuilding != funds)
                             throw new Exception("Data 'FundsPerBuilding' changed per turn when not expected.");
                         replayData.ReplayInfo.FundsPerBuilding = funds;
@@ -178,7 +179,7 @@ namespace AWBWApp.Game.API.New
 
                     case "starting_funds":
                     {
-                        var funds = ReadInteger(text, ref textIndex);
+                        var funds = readInteger(text, ref textIndex);
                         if (!firstTurn && replayData.ReplayInfo.StartingFunds != funds)
                             throw new Exception("Data 'StartingFunds' changed per turn when not expected.");
                         replayData.ReplayInfo.StartingFunds = funds;
@@ -198,7 +199,7 @@ namespace AWBWApp.Game.API.New
 
                     case "fog":
                     {
-                        var fog = ReadBool(text, ref textIndex);
+                        var fog = readBool(text, ref textIndex);
                         if (!firstTurn && replayData.ReplayInfo.Fog != fog)
                             throw new Exception("Data 'Fog' changed per turn when not expected.");
                         replayData.ReplayInfo.Fog = fog;
@@ -207,7 +208,7 @@ namespace AWBWApp.Game.API.New
 
                     case "use_powers":
                     {
-                        var powersAvaliable = ReadBool(text, ref textIndex);
+                        var powersAvaliable = readBool(text, ref textIndex);
                         if (!firstTurn && replayData.ReplayInfo.PowersAllowed != powersAvaliable)
                             throw new Exception("Data 'PowersAllowed' changed per turn when not expected.");
                         replayData.ReplayInfo.PowersAllowed = powersAvaliable;
@@ -216,7 +217,7 @@ namespace AWBWApp.Game.API.New
 
                     case "official":
                     {
-                        var official = ReadBool(text, ref textIndex);
+                        var official = readBool(text, ref textIndex);
                         if (!firstTurn && replayData.ReplayInfo.OfficialGame != official)
                             throw new Exception("Data 'OfficialGame' changed per turn when not expected.");
                         replayData.ReplayInfo.OfficialGame = official;
@@ -234,7 +235,7 @@ namespace AWBWApp.Game.API.New
 
                     case "team":
                     {
-                        var teamMatch = ReadBool(text, ref textIndex);
+                        var teamMatch = readBool(text, ref textIndex);
                         if (!firstTurn && replayData.ReplayInfo.TeamMatch != teamMatch)
                             throw new Exception("Data 'LeagueMatch' changed per turn when not expected.");
 
@@ -244,13 +245,13 @@ namespace AWBWApp.Game.API.New
 
                     case "turn":
                     {
-                        newTurn.ActivePlayerID = ReadInteger(text, ref textIndex);
+                        newTurn.ActivePlayerID = readInteger(text, ref textIndex);
                         break;
                     }
 
                     case "day":
                     {
-                        newTurn.Day = ReadInteger(text, ref textIndex);
+                        newTurn.Day = readInteger(text, ref textIndex);
                         break;
                     }
 
@@ -310,7 +311,7 @@ namespace AWBWApp.Game.API.New
 
                     case "weather_start":
                     {
-                        var value = ReadNullableInteger(text, ref textIndex);
+                        var value = readNullableInteger(text, ref textIndex);
                         if (newTurn.StartWeather == null)
                             newTurn.StartWeather = new ReplayWeather();
                         newTurn.StartWeather.TurnStartID = value;
@@ -333,7 +334,7 @@ namespace AWBWApp.Game.API.New
 
                     case "capture_win":
                     {
-                        var value = ReadInteger(text, ref textIndex);
+                        var value = readInteger(text, ref textIndex);
 
                         int? trueValue;
                         if (value >= 1000)
@@ -403,28 +404,28 @@ namespace AWBWApp.Game.API.New
                     {
                         //Describes the interval at which the Auto End Turn would have finished the players turn.
                         //We do not need this as we do not care when the players would have been booted.
-                        var value = ReadInteger(text, ref textIndex);
+                        var value = readInteger(text, ref textIndex);
                         break;
                     }
 
                     case "boot_interval":
                     {
                         //Todo: Is this always -1? Is this just a holdover?
-                        var value = ReadInteger(text, ref textIndex);
+                        var value = readInteger(text, ref textIndex);
                         break;
                     }
 
                     case "max_rating":
                     {
                         //Todo: Is this always null? Is this just a holdover?
-                        var value = ReadNullableInteger(text, ref textIndex);
+                        var value = readNullableInteger(text, ref textIndex);
                         break;
                     }
 
                     case "min_rating":
                     {
                         //Todo: Is this always 0? Is this just a holdover?
-                        var value = ReadInteger(text, ref textIndex);
+                        var value = readInteger(text, ref textIndex);
                         break;
                     }
 
@@ -432,7 +433,7 @@ namespace AWBWApp.Game.API.New
                     {
                         //Describes the initial amount of time the player has per turn in seconds
                         //Not useful for replaying the game.
-                        ReadInteger(text, ref textIndex);
+                        readInteger(text, ref textIndex);
                         break;
                     }
 
@@ -440,7 +441,7 @@ namespace AWBWApp.Game.API.New
                     {
                         //Describes the extra amount of time the player has per turn in seconds
                         //Not useful for replaying the game.
-                        ReadInteger(text, ref textIndex);
+                        readInteger(text, ref textIndex);
                         break;
                     }
 
@@ -448,7 +449,7 @@ namespace AWBWApp.Game.API.New
                     {
                         //Describes the max amount of time a single turn can take up.
                         //Not useful for replaying the game.
-                        ReadInteger(text, ref textIndex);
+                        readInteger(text, ref textIndex);
                         break;
                     }
 
@@ -467,7 +468,7 @@ namespace AWBWApp.Game.API.New
             newTurn.ActiveTeam = replayData.ReplayInfo.Players[newTurn.ActivePlayerID].TeamName;
         }
 
-        void ReadPlayers(ReadOnlySpan<char> text, ref int textIndex, ReplayData data, TurnData turnData, bool firstTurn)
+        private void readPlayers(ReadOnlySpan<char> text, ref int textIndex, ReplayData data, TurnData turnData, bool firstTurn)
         {
             if (text[textIndex++] != 'a')
                 throw new Exception("Expected an array declaration for player data.");
@@ -484,7 +485,7 @@ namespace AWBWApp.Game.API.New
 
             for (int i = 0; i < numberOfPlayers; i++)
             {
-                var playerIndex = ReadInteger(text, ref textIndex);
+                var playerIndex = readInteger(text, ref textIndex);
 
                 if (!text.Slice(textIndex, player_start_text.Length).Equals(player_start_text, StringComparison.Ordinal))
                     throw new Exception("Player data does not start correctly.");
@@ -512,7 +513,7 @@ namespace AWBWApp.Game.API.New
                     {
                         case "id":
                         {
-                            var id = ReadInteger(text, ref textIndex);
+                            var id = readInteger(text, ref textIndex);
                             if (!firstTurn && playerData.ID != id)
                                 throw new Exception("Player 'id' changed per turn when not expected.");
                             playerData.ID = id;
@@ -522,7 +523,7 @@ namespace AWBWApp.Game.API.New
 
                         case "users_id":
                         {
-                            var id = ReadInteger(text, ref textIndex);
+                            var id = readInteger(text, ref textIndex);
                             if (!firstTurn && playerData.UserId != id)
                                 throw new Exception("Player 'users_id' changed per turn when not expected.");
                             playerData.UserId = id;
@@ -540,7 +541,7 @@ namespace AWBWApp.Game.API.New
 
                         case "countries_id":
                         {
-                            var id = ReadInteger(text, ref textIndex);
+                            var id = readInteger(text, ref textIndex);
                             if (!firstTurn && playerData.CountryId != id)
                                 throw new Exception("Player 'countries_id' changed per turn when not expected.");
                             playerData.CountryId = id;
@@ -549,7 +550,7 @@ namespace AWBWApp.Game.API.New
 
                         case "co_id":
                         {
-                            var id = ReadInteger(text, ref textIndex);
+                            var id = readInteger(text, ref textIndex);
                             if (firstTurn)
                                 playerData.COsUsedByPlayer.Add(id);
                             else if (!playerData.COsUsedByPlayer.Contains(id))
@@ -561,7 +562,7 @@ namespace AWBWApp.Game.API.New
 
                         case "tags_co_id":
                         {
-                            var id = ReadNullableInteger(text, ref textIndex);
+                            var id = readNullableInteger(text, ref textIndex);
 
                             if (id != null)
                             {
@@ -577,28 +578,28 @@ namespace AWBWApp.Game.API.New
 
                         case "co_max_power":
                         {
-                            var powerRequired = ReadNullableInteger(text, ref textIndex);
+                            var powerRequired = readNullableInteger(text, ref textIndex);
                             playerDataTurn.RequiredPowerForNormal = powerRequired;
                             break;
                         }
 
                         case "co_max_spower":
                         {
-                            var powerRequired = ReadNullableInteger(text, ref textIndex);
+                            var powerRequired = readNullableInteger(text, ref textIndex);
                             playerDataTurn.RequiredPowerForSuper = powerRequired;
                             break;
                         }
 
                         case "tags_co_max_power":
                         {
-                            var powerRequired = ReadNullableInteger(text, ref textIndex);
+                            var powerRequired = readNullableInteger(text, ref textIndex);
                             playerDataTurn.TagRequiredPowerForNormal = powerRequired;
                             break;
                         }
 
                         case "tags_co_max_spower":
                         {
-                            var powerRequired = ReadNullableInteger(text, ref textIndex);
+                            var powerRequired = readNullableInteger(text, ref textIndex);
                             playerDataTurn.TagRequiredPowerForSuper = powerRequired;
                             break;
                         }
@@ -606,14 +607,14 @@ namespace AWBWApp.Game.API.New
                         //These are likely turn by turn
                         case "funds":
                         {
-                            var funds = ReadInteger(text, ref textIndex);
+                            var funds = readInteger(text, ref textIndex);
                             playerDataTurn.Funds = funds;
                             break;
                         }
 
                         case "eliminated":
                         {
-                            var eliminated = ReadBool(text, ref textIndex);
+                            var eliminated = readBool(text, ref textIndex);
                             playerDataTurn.Eliminated = eliminated;
                             if (playerDataTurn.Eliminated && playerData.EliminatedOn == null)
                                 playerData.EliminatedOn = data.TurnData.Count - 1;
@@ -623,14 +624,14 @@ namespace AWBWApp.Game.API.New
 
                         case "co_power":
                         {
-                            var powerPoints = ReadInteger(text, ref textIndex);
+                            var powerPoints = readInteger(text, ref textIndex);
                             playerDataTurn.Power = powerPoints;
                             break;
                         }
 
                         case "tags_co_power":
                         {
-                            var powerPoints = ReadNullableInteger(text, ref textIndex);
+                            var powerPoints = readNullableInteger(text, ref textIndex);
                             playerDataTurn.TagPower = powerPoints;
                             break;
                         }
@@ -663,7 +664,7 @@ namespace AWBWApp.Game.API.New
 
                         case "order":
                         {
-                            var turnIndex = ReadInteger(text, ref textIndex);
+                            var turnIndex = readInteger(text, ref textIndex);
                             if (!firstTurn && playerData.RoundOrder != turnIndex)
                                 throw new Exception("Player 'order' changed per turn when not expected.");
                             playerData.RoundOrder = turnIndex;
@@ -672,7 +673,7 @@ namespace AWBWApp.Game.API.New
 
                         case "accept_draw":
                         {
-                            turnData.DrawWasAccepted = ReadBool(text, ref textIndex);
+                            turnData.DrawWasAccepted = readBool(text, ref textIndex);
                             break;
                         }
 
@@ -722,7 +723,7 @@ namespace AWBWApp.Game.API.New
                         {
                             //Describes which game/replay id this player info belongs to.
                             //Not useful in our condition as this information is redundent.
-                            ReadInteger(text, ref textIndex);
+                            readInteger(text, ref textIndex);
                             break;
                         }
 
@@ -754,7 +755,7 @@ namespace AWBWApp.Game.API.New
                         {
                             //Describes how much time this player had at the start of the turn.
                             //Not useful for us as we don't really care when turns begin and end.
-                            ReadInteger(text, ref textIndex);
+                            readInteger(text, ref textIndex);
                             break;
                         }
 
@@ -763,7 +764,7 @@ namespace AWBWApp.Game.API.New
                             //Todo: Maybe this may show some light on how a turn ended. Like does this change per turn, or is it always the same
                             //Likely describes how many times a player has had the turn auto ended.
                             //Not useful as we really don't care about the turns ending like this.
-                            var value = ReadInteger(text, ref textIndex);
+                            var value = readInteger(text, ref textIndex);
                             break;
                         }
 
@@ -804,7 +805,7 @@ namespace AWBWApp.Game.API.New
                 throw new Exception("Player data does not end correctly.");
         }
 
-        void ReadBuildings(ReadOnlySpan<char> text, ref int textIndex, TurnData data, bool firstTurn)
+        private void readBuildings(ReadOnlySpan<char> text, ref int textIndex, TurnData data)
         {
             if (text[textIndex++] != 'a')
                 throw new Exception("Expected an array declaration for building data.");
@@ -819,7 +820,7 @@ namespace AWBWApp.Game.API.New
 
             for (int i = 0; i < numberOfBuildings; i++)
             {
-                var buildingIndex = ReadInteger(text, ref textIndex); //Likely not needed
+                var buildingIndex = readInteger(text, ref textIndex); //Likely not needed
 
                 if (!text.Slice(textIndex, building_start_text.Length).Equals(building_start_text, StringComparison.Ordinal))
                     throw new Exception("Building data does not start correctly.");
@@ -840,42 +841,42 @@ namespace AWBWApp.Game.API.New
                     {
                         case "id":
                         {
-                            var id = ReadInteger(text, ref textIndex);
+                            var id = readInteger(text, ref textIndex);
                             building.ID = id;
                             break;
                         }
 
                         case "terrain_id":
                         {
-                            var id = ReadInteger(text, ref textIndex);
+                            var id = readInteger(text, ref textIndex);
                             building.TerrainID = id;
                             break;
                         }
 
                         case "x":
                         {
-                            var posX = ReadInteger(text, ref textIndex);
+                            var posX = readInteger(text, ref textIndex);
                             building.Position.X = posX;
                             break;
                         }
 
                         case "y":
                         {
-                            var posY = ReadInteger(text, ref textIndex);
+                            var posY = readInteger(text, ref textIndex);
                             building.Position.Y = posY;
                             break;
                         }
 
                         case "capture":
                         {
-                            var capture = ReadInteger(text, ref textIndex);
+                            var capture = readInteger(text, ref textIndex);
                             building.Capture = capture;
                             break;
                         }
 
                         case "last_capture":
                         {
-                            var capture = ReadInteger(text, ref textIndex);
+                            var capture = readInteger(text, ref textIndex);
                             building.LastCapture = capture;
                             break;
                         }
@@ -883,7 +884,7 @@ namespace AWBWApp.Game.API.New
                         case "games_id":
                         {
                             //We do not need this value, this was likely added to make database reading easier for AWBW
-                            ReadInteger(text, ref textIndex);
+                            readInteger(text, ref textIndex);
                             break;
                         }
 
@@ -907,7 +908,7 @@ namespace AWBWApp.Game.API.New
                 throw new Exception("Player data does not end correctly.");
         }
 
-        void ReadUnits(ReadOnlySpan<char> text, ref int textIndex, TurnData data, bool firstTurn)
+        private void readUnits(ReadOnlySpan<char> text, ref int textIndex, TurnData data)
         {
             if (text[textIndex++] != 'a')
                 throw new Exception("Expected an array declaration for unit data.");
@@ -922,7 +923,7 @@ namespace AWBWApp.Game.API.New
 
             for (int i = 0; i < numberOfUnits; i++)
             {
-                var unitIndex = ReadInteger(text, ref textIndex); //Likely not needed
+                var unitIndex = readInteger(text, ref textIndex); //Likely not needed
                 if (!text.Slice(textIndex, units_start_text.Length).Equals(units_start_text, StringComparison.Ordinal))
                     throw new Exception("Unit data does not start correctly.");
                 textIndex += units_start_text.Length;
@@ -942,14 +943,14 @@ namespace AWBWApp.Game.API.New
                     {
                         case "id":
                         {
-                            var id = ReadInteger(text, ref textIndex);
+                            var id = readInteger(text, ref textIndex);
                             unit.ID = id;
                             break;
                         }
 
                         case "players_id":
                         {
-                            var id = ReadInteger(text, ref textIndex);
+                            var id = readInteger(text, ref textIndex);
                             unit.PlayerID = id;
                             break;
                         }
@@ -963,28 +964,28 @@ namespace AWBWApp.Game.API.New
 
                         case "movement_points":
                         {
-                            var points = ReadInteger(text, ref textIndex);
+                            var points = readInteger(text, ref textIndex);
                             unit.MovementPoints = points;
                             break;
                         }
 
                         case "vision":
                         {
-                            var range = ReadInteger(text, ref textIndex);
+                            var range = readInteger(text, ref textIndex);
                             unit.Vision = range;
                             break;
                         }
 
                         case "fuel":
                         {
-                            var range = ReadInteger(text, ref textIndex);
+                            var range = readInteger(text, ref textIndex);
                             unit.Fuel = range;
                             break;
                         }
 
                         case "fuel_per_turn":
                         {
-                            var usage = ReadInteger(text, ref textIndex);
+                            var usage = readInteger(text, ref textIndex);
                             unit.FuelPerTurn = usage;
                             break;
                         }
@@ -998,14 +999,14 @@ namespace AWBWApp.Game.API.New
 
                         case "ammo":
                         {
-                            var count = ReadInteger(text, ref textIndex);
+                            var count = readInteger(text, ref textIndex);
                             unit.Ammo = count;
                             break;
                         }
 
                         case "short_range":
                         {
-                            var range = ReadInteger(text, ref textIndex);
+                            var range = readInteger(text, ref textIndex);
                             var value = unit.Range.GetValueOrDefault();
                             value.X = range;
                             unit.Range = value;
@@ -1014,7 +1015,7 @@ namespace AWBWApp.Game.API.New
 
                         case "long_range":
                         {
-                            var range = ReadInteger(text, ref textIndex);
+                            var range = readInteger(text, ref textIndex);
                             var value = unit.Range.GetValueOrDefault();
                             value.Y = range;
                             unit.Range = value;
@@ -1023,14 +1024,14 @@ namespace AWBWApp.Game.API.New
 
                         case "second_weapon":
                         {
-                            var hasSecondWeapon = ReadBool(text, ref textIndex);
+                            var hasSecondWeapon = readBool(text, ref textIndex);
                             unit.SecondWeapon = hasSecondWeapon;
                             break;
                         }
 
                         case "cost":
                         {
-                            var cost = ReadInteger(text, ref textIndex);
+                            var cost = readInteger(text, ref textIndex);
                             unit.Cost = cost;
                             break;
                         }
@@ -1044,7 +1045,7 @@ namespace AWBWApp.Game.API.New
 
                         case "x":
                         {
-                            var posX = ReadInteger(text, ref textIndex);
+                            var posX = readInteger(text, ref textIndex);
                             var value = unit.Position.GetValueOrDefault();
                             value.X = posX;
                             unit.Position = value;
@@ -1053,7 +1054,7 @@ namespace AWBWApp.Game.API.New
 
                         case "y":
                         {
-                            var posY = ReadInteger(text, ref textIndex);
+                            var posY = readInteger(text, ref textIndex);
                             var value = unit.Position.GetValueOrDefault();
                             value.Y = posY;
                             unit.Position = value;
@@ -1062,35 +1063,35 @@ namespace AWBWApp.Game.API.New
 
                         case "moved":
                         {
-                            var moved = ReadInteger(text, ref textIndex);
+                            var moved = readInteger(text, ref textIndex);
                             unit.TimesMoved = moved;
                             break;
                         }
 
                         case "capture":
                         {
-                            var captured = ReadInteger(text, ref textIndex);
+                            var captured = readInteger(text, ref textIndex);
                             unit.TimesCaptured = captured;
                             break;
                         }
 
                         case "fired":
                         {
-                            var fired = ReadInteger(text, ref textIndex);
+                            var fired = readInteger(text, ref textIndex);
                             unit.TimesFired = fired;
                             break;
                         }
 
                         case "hit_points":
                         {
-                            var hp = ReadFloat(text, ref textIndex);
+                            var hp = readFloat(text, ref textIndex);
                             unit.HitPoints = hp;
                             break;
                         }
 
                         case "cargo1_units_id":
                         {
-                            var carriedUnit = ReadInteger(text, ref textIndex);
+                            var carriedUnit = readInteger(text, ref textIndex);
                             if (carriedUnit == 0)
                                 break;
 
@@ -1102,7 +1103,7 @@ namespace AWBWApp.Game.API.New
 
                         case "cargo2_units_id":
                         {
-                            var carriedUnit = ReadInteger(text, ref textIndex);
+                            var carriedUnit = readInteger(text, ref textIndex);
                             if (carriedUnit == 0)
                                 break;
 
@@ -1114,7 +1115,7 @@ namespace AWBWApp.Game.API.New
 
                         case "carried":
                         {
-                            var carried = ReadBool(text, ref textIndex);
+                            var carried = readBool(text, ref textIndex);
                             unit.BeingCarried = carried;
                             break;
                         }
@@ -1122,7 +1123,7 @@ namespace AWBWApp.Game.API.New
                         case "games_id":
                         {
                             //We do not need this value, this was likely added to make database reading easier for AWBW
-                            ReadInteger(text, ref textIndex);
+                            readInteger(text, ref textIndex);
                             break;
                         }
 
@@ -1148,20 +1149,20 @@ namespace AWBWApp.Game.API.New
                 throw new Exception("Player data does not end correctly.");
         }
 
-        void ReadReplayActions(ReplayData replayData, ReadOnlySpan<char> text)
+        private void readReplayActions(ReplayData replayData, ReadOnlySpan<char> text)
         {
             var textIndex = 0;
 
             while (true)
             {
-                ReadReplayActionTurn(replayData, text, ref textIndex);
+                readReplayActionTurn(replayData, text, ref textIndex);
 
                 if (text[textIndex++] != '\n' || textIndex >= text.Length)
                     break;
             }
         }
 
-        void ReadReplayActionTurn(ReplayData replayData, ReadOnlySpan<char> text, ref int textIndex)
+        private void readReplayActionTurn(ReplayData replayData, ReadOnlySpan<char> text, ref int textIndex)
         {
             if (!text.Slice(textIndex, 2).Equals("p:", StringComparison.Ordinal))
                 throw new Exception("Improper action turn start. Turn indicator misconfigured.");
@@ -1176,7 +1177,7 @@ namespace AWBWApp.Game.API.New
                     break;
             }
             var number = text.Slice(startIndex, textIndex - startIndex - 1);
-            var playerID = int.Parse(number);
+            var playerID = int.Parse(number, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
 
             //Todo: Does this have any use?
             if (!text.Slice(textIndex, 2).Equals("d:", StringComparison.Ordinal))
@@ -1192,7 +1193,7 @@ namespace AWBWApp.Game.API.New
                     break;
             }
             number = text.Slice(startIndex, textIndex - startIndex - 1);
-            var day = int.Parse(number);
+            var day = int.Parse(number, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
 
             TurnData turnData = null;
             var turnIdx = -1;
@@ -1212,18 +1213,18 @@ namespace AWBWApp.Game.API.New
 
             textIndex += 7;
 
-            if (ReadInteger(text, ref textIndex) != 0)
+            if (readInteger(text, ref textIndex) != 0)
                 throw new Exception("Improper action turn start. 1st array member not in right format.");
 
-            if (ReadInteger(text, ref textIndex) != playerID)
+            if (readInteger(text, ref textIndex) != playerID)
                 throw new Exception("Inner array indicated the wrong player id.");
 
-            if (ReadInteger(text, ref textIndex) != 1)
+            if (readInteger(text, ref textIndex) != 1)
                 throw new Exception("Improper action turn start. 2nd array member not in right format.");
 
-            var playerTurnNumber = ReadInteger(text, ref textIndex);
+            var playerTurnNumber = readInteger(text, ref textIndex);
 
-            if (ReadInteger(text, ref textIndex) != 2)
+            if (readInteger(text, ref textIndex) != 2)
                 throw new Exception("Improper action turn start. 3rd array member not in right format.");
 
             if (text[textIndex++] != 'a')
@@ -1242,7 +1243,7 @@ namespace AWBWApp.Game.API.New
 
                 for (int i = 0; i < actionCount; i++)
                 {
-                    var index = ReadInteger(text, ref textIndex);
+                    var index = readInteger(text, ref textIndex);
                     var actionString = readString(text, ref textIndex);
 
                     if (actionString == "Array")
@@ -1277,7 +1278,7 @@ namespace AWBWApp.Game.API.New
 
                 if (actionCount == 1)
                 {
-                    var index = ReadInteger(text, ref textIndex);
+                    var index = readInteger(text, ref textIndex);
                     var actionString = readString(text, ref textIndex);
                     var jsonObject = JObject.Parse(actionString);
                     var action = actionDatabase.ParseJObjectIntoReplayAction(jsonObject, replayData, turnData);
@@ -1304,7 +1305,7 @@ namespace AWBWApp.Game.API.New
                 if (character == ':')
                     break;
             }
-            return int.Parse(text[startIndex..(index - 1)]);
+            return int.Parse(text[startIndex..(index - 1)], NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
         }
 
         //Todo: May fail if a unicode character appears near end of file.
@@ -1392,7 +1393,7 @@ namespace AWBWApp.Game.API.New
             }
         }
 
-        int ReadInteger(ReadOnlySpan<char> text, ref int index)
+        private int readInteger(ReadOnlySpan<char> text, ref int index)
         {
             if (text[index++] != 'i')
                 throw new Exception("Was expecting a integer.");
@@ -1408,10 +1409,10 @@ namespace AWBWApp.Game.API.New
                     break;
             }
             var number = text[startIndex..(index - 1)];
-            return int.Parse(number);
+            return int.Parse(number, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
         }
 
-        int? ReadNullableInteger(ReadOnlySpan<char> text, ref int index)
+        private int? readNullableInteger(ReadOnlySpan<char> text, ref int index)
         {
             var firstChar = text[index++];
 
@@ -1438,10 +1439,10 @@ namespace AWBWApp.Game.API.New
                     break;
             }
             var number = text[startIndex..(index - 1)];
-            return int.Parse(number);
+            return int.Parse(number, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
         }
 
-        float ReadFloat(ReadOnlySpan<char> text, ref int index)
+        private float readFloat(ReadOnlySpan<char> text, ref int index)
         {
             if (text[index++] != 'd')
                 throw new Exception("Was expecting a integer.");
@@ -1460,7 +1461,7 @@ namespace AWBWApp.Game.API.New
             return float.Parse(number);
         }
 
-        bool ReadBool(ReadOnlySpan<char> text, ref int index)
+        private bool readBool(ReadOnlySpan<char> text, ref int index)
         {
             var stringData = readString(text, ref index);
 
