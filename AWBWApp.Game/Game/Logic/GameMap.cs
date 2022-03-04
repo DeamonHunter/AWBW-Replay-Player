@@ -198,7 +198,14 @@ namespace AWBWApp.Game.Game.Logic
                 if (!awbwBuilding.Value.TerrainID.HasValue)
                     throw new Exception("Invalid building encountered: Missing terrain id.");
 
-                var building = buildingStorage.GetBuildingByAWBWId(awbwBuilding.Value.TerrainID.Value);
+                if (!buildingStorage.TryGetBuildingByAWBWId(awbwBuilding.Value.TerrainID.Value, out var building))
+                {
+                    //This is probably a terrain tile that get building properties. This can happen with pipes.
+                    if (terrainTileStorage.TryGetTileByAWBWId(awbwBuilding.Value.TerrainID.Value, out _))
+                        continue;
+
+                    throw new Exception("Unknown Building ID: " + awbwBuilding.Value.TerrainID.Value);
+                }
                 var position = awbwBuilding.Value.Position;
 
                 var drawableBuilding = new DrawableBuilding(building, getPlayerIDFromCountryID(building.CountryID), position);
@@ -492,11 +499,18 @@ namespace AWBWApp.Game.Game.Logic
                 if (!awbwBuilding.TerrainID.HasValue)
                     throw new Exception("Tried to update a missing building. But it didn't have a terrain id.");
 
-                var buildingTile = buildingStorage.GetBuildingByAWBWId(awbwBuilding.TerrainID.Value);
-                var drawableBuilding = new DrawableBuilding(buildingTile, getPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
-                buildings.Add(tilePosition, drawableBuilding);
-                buildingsDrawable.Add(drawableBuilding);
-                return;
+                if (buildingStorage.TryGetBuildingByAWBWId(awbwBuilding.TerrainID.Value, out var buildingTile))
+                {
+                    var drawableBuilding = new DrawableBuilding(buildingTile, getPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
+                    buildings.Add(tilePosition, drawableBuilding);
+                    buildingsDrawable.Add(drawableBuilding);
+                    return;
+                }
+
+                if (terrainTileStorage.TryGetTileByAWBWId(awbwBuilding.TerrainID.Value, out _))
+                    return;
+
+                throw new Exception("Unknown Building ID: " + awbwBuilding.TerrainID.Value);
             }
 
             var comparisonTerrainId = awbwBuilding.TerrainID ?? 0;
