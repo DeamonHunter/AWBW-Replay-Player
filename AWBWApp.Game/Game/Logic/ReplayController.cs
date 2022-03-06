@@ -9,9 +9,11 @@ using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Replay;
+using AWBWApp.Game.UI.Replay.Toolbar;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.UserInterface;
 using osuTK;
 
 namespace AWBWApp.Game.Game.Logic
@@ -29,6 +31,9 @@ namespace AWBWApp.Game.Game.Logic
         [Resolved]
         private CountryStorage countryStorage { get; set; }
 
+        [Cached]
+        private ReplaySettings settings { get; set; }
+
         public List<(int playerID, PowerAction action, int activeDay)> ActivePowers = new List<(int, PowerAction, int)>();
 
         private ReplayData replayData;
@@ -43,6 +48,8 @@ namespace AWBWApp.Game.Game.Logic
         private CameraControllerWithGrid cameraControllerWithGrid;
         private ReplayBarWidget barWidget;
         private ReplayPlayerList playerList;
+
+        private ReplayMenuBar menuBar;
 
         public Dictionary<int, PlayerInfo> Players { get; private set; } = new Dictionary<int, PlayerInfo>();
         public PlayerInfo ActivePlayer => currentTurn != null ? Players[currentTurn.ActivePlayerID] : null;
@@ -68,6 +75,8 @@ namespace AWBWApp.Game.Game.Logic
                 Right = mapPadding.Right + DrawableTile.BASE_SIZE.X * 4,
             };
 
+            settings = new ReplaySettings();
+
             AddRangeInternal(new Drawable[]
             {
                 cameraControllerWithGrid = new CameraControllerWithGrid()
@@ -84,12 +93,45 @@ namespace AWBWApp.Game.Game.Logic
                     RelativeSizeAxes = Axes.Both
                 },
                 barWidget = new ReplayBarWidget(this),
-                playerList = new ReplayPlayerList
+                new GridContainer()
                 {
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                    RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(225, 1)
+                    RelativeSizeAxes = Axes.Both,
+                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize), new Dimension(GridSizeMode.Distributed) },
+                    Content = new Drawable[][]
+                    {
+                        new Drawable[]
+                        {
+                            menuBar = new ReplayMenuBar()
+                            {
+                                Items = new[]
+                                {
+                                    new MenuItem("Settings")
+                                    {
+                                        Items = new[]
+                                        {
+                                            new ToggleMenuItem("Show Grid", settings.ShowGridOverMap),
+                                            new ToggleMenuItem("Show Hidden Units", settings.ShowHiddenUnits)
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        new Drawable[]
+                        {
+                            playerList = new ReplayPlayerList
+                            {
+                                Anchor = Anchor.TopRight,
+                                Origin = Anchor.TopRight,
+                                RelativeSizeAxes = Axes.Y,
+                                Size = new Vector2(225, 1)
+                            },
+                        }
+                    },
+                },
+                new ReplayMenuHover(menuBar)
+                {
+                    RelativeSizeAxes = Axes.X,
+                    Size = new Vector2(1, 40) //Gives a bit of leeway as this is larger than the menuBar
                 },
                 loadingLayer = new LoadingLayer(true)
             });

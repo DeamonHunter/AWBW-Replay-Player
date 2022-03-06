@@ -8,12 +8,15 @@ using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Unit;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Replay;
+using AWBWApp.Game.UI.Replay.Toolbar;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
 using osuTK;
+using osuTK.Graphics;
 
 namespace AWBWApp.Game.Game.Logic
 {
@@ -52,6 +55,8 @@ namespace AWBWApp.Game.Game.Logic
 
         private Dictionary<int, PlayerInfo> players;
 
+        private MovingGrid grid;
+
         public GameMap()
         {
             AddRange(new Drawable[]
@@ -63,6 +68,14 @@ namespace AWBWApp.Game.Game.Logic
                 buildingsDrawable = new Container<DrawableBuilding>
                 {
                     AutoSizeAxes = Axes.Both
+                },
+                grid = new MovingGrid()
+                {
+                    Position = new Vector2(-1, DrawableTile.BASE_SIZE.Y - 2),
+                    Velocity = Vector2.Zero,
+                    Spacing = new Vector2(16),
+                    LineSize = new Vector2(2),
+                    GridColor = new Color4(15, 15, 15, 255),
                 },
                 unitsDrawable = new Container<DrawableUnit>
                 {
@@ -79,9 +92,10 @@ namespace AWBWApp.Game.Game.Logic
         public void ScheduleSetToLoading() => Schedule(setToLoading);
 
         [BackgroundDependencyLoader]
-        private void load()
+        private void load(ReplaySettings settings)
         {
             setToLoading();
+            settings.ShowGridOverMap.BindValueChanged(x => grid.FadeTo(x.NewValue ? 1 : 0, 400, Easing.OutQuint), true);
         }
 
         private void setToLoading()
@@ -136,6 +150,7 @@ namespace AWBWApp.Game.Game.Logic
 
             AutoSizeAxes = Axes.Both;
             effectAnimationController.Size = new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y);
+            grid.Size = new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y);
 
             gameBoardDrawable.FadeOut().FadeIn(250);
             animateStart(4);
@@ -232,6 +247,7 @@ namespace AWBWApp.Game.Game.Logic
 
             AutoSizeAxes = Axes.Both;
             effectAnimationController.Size = new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y);
+            grid.Size = new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y);
 
             gameBoardDrawable.FadeIn();
             animateStart(1.5f);

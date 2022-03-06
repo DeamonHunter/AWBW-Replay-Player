@@ -6,6 +6,7 @@ using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Replay;
+using AWBWApp.Game.UI.Replay.Toolbar;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
@@ -52,6 +53,8 @@ namespace AWBWApp.Game.Game.Unit
 
         public HashSet<long> Cargo = new HashSet<long>();
 
+        private Bindable<bool> showUnitInFog;
+
         public DrawableUnit(UnitData unitData, ReplayUnit unit, CountryData country)
         {
             UnitData = unitData;
@@ -86,8 +89,8 @@ namespace AWBWApp.Game.Game.Unit
             this.country = country;
 
             HealthPoints.BindValueChanged(UpdateHp);
-            CanMove.BindValueChanged(x => updateUnitColour(x.NewValue, FogOfWarActive.Value, x.NewValue), true);
-            FogOfWarActive.BindValueChanged(x => updateUnitColour(CanMove.Value, x.NewValue, x.NewValue), true);
+            CanMove.BindValueChanged(x => updateUnitColour(x.NewValue));
+            FogOfWarActive.BindValueChanged(x => updateUnitColour(x.NewValue));
             IsCapturing.BindValueChanged(updateCapturing);
             Dived.BindValueChanged(x => updateAnimation());
             BeingCarried.BindValueChanged(x => updateAnimation());
@@ -135,10 +138,13 @@ namespace AWBWApp.Game.Game.Unit
         }
 
         [BackgroundDependencyLoader]
-        private void load(NearestNeighbourTextureStore store)
+        private void load(NearestNeighbourTextureStore store, ReplaySettings settings)
         {
             capturing.Texture = store.Get("UI/Capturing");
             capturing.Size = capturing.Texture.Size;
+
+            showUnitInFog = settings.ShowHiddenUnits.GetBoundCopy();
+            showUnitInFog.BindValueChanged(x => updateUnitColour(x.NewValue), true);
 
             if (UnitData.Frames == null)
             {
@@ -266,18 +272,21 @@ namespace AWBWApp.Game.Game.Unit
                 capturing.FadeOut();
         }
 
-        private void updateUnitColour(bool canMove, bool foggy, bool fadeOut)
+        private void updateUnitColour(bool newValue)
         {
             Color4 colour;
-            if (foggy)
+
+            if (FogOfWarActive.Value)
                 colour = FogColor;
             else
                 colour = Color4.White;
 
-            if (canMove)
+            if (CanMove.Value)
                 colour = colour.Darken(0.2f);
 
-            textureAnimation.FadeColour(colour, 250, fadeOut ? Easing.OutQuint : Easing.InQuint);
+            var alpha = !FogOfWarActive.Value || (showUnitInFog?.Value ?? true) ? 1 : 0;
+            this.FadeTo(alpha, 250, Easing.OutQuint);
+            textureAnimation.FadeColour(colour, 250, newValue ? Easing.OutQuint : Easing.InQuint);
         }
     }
 }
