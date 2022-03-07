@@ -186,10 +186,10 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 Distance = 3,
                 Path = new[]
                 {
-                    new UnitPosition { Unit_Visible = true, X = 0, Y = 0 },
-                    new UnitPosition { Unit_Visible = true, X = 0, Y = 1 },
-                    new UnitPosition { Unit_Visible = true, X = 0, Y = 2 },
-                    new UnitPosition { Unit_Visible = true, X = 1, Y = 2 },
+                    new UnitPosition { UnitVisible = true, X = 0, Y = 0 },
+                    new UnitPosition { UnitVisible = true, X = 0, Y = 1 },
+                    new UnitPosition { UnitVisible = true, X = 0, Y = 2 },
+                    new UnitPosition { UnitVisible = true, X = 1, Y = 2 },
                 },
                 Trapped = false,
                 Unit = new ReplayUnit

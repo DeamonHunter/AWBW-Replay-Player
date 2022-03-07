@@ -55,6 +55,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public IReplayAction ParseJObjectIntoReplayAction(JObject jObject, ReplayData replayData, TurnData turnData)
         {
             var action = new PowerAction();
+
             action.CombatOfficerName = (string)jObject["coName"];
             var coPower = (string)jObject["coPower"];
 
@@ -270,9 +271,11 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                 foreach (var unit in (JArray)details["units"])
                 {
-                    var newUnit = new PowerAction.CreateUnit();
-                    newUnit.UnitName = unitName;
-                    newUnit.HP = 9; //Hardcoded as it is not passed to us.
+                    var newUnit = new PowerAction.CreateUnit
+                    {
+                        UnitName = unitName,
+                        HP = 9 //Hardcoded as it is not passed to us.
+                    };
 
                     foreach (var entry in (JObject)unit)
                     {

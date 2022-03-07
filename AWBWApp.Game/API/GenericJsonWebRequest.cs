@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json.Linq;
+using osu.Framework.IO.Network;
 
-namespace osu.Framework.IO.Network
+namespace AWBWApp.Game.API
 {
     /// <summary>
     /// A web request with a specific JSON response format.
     /// </summary>
-    /// <typeparam name="T">the response format.</typeparam>
     public class GenericJsonWebRequest : WebRequest
     {
         protected override string Accept => "application/json";

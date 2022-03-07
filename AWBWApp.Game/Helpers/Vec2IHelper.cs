@@ -12,7 +12,7 @@ namespace AWBWApp.Game.Helpers
             return Math.Abs(vector.X) + Math.Abs(vector.Y);
         }
 
-        private static readonly Dictionary<int, List<Vector2I>> distanceCache = new Dictionary<int, List<Vector2I>>();
+        private static readonly Dictionary<int, List<Vector2I>> distance_cache = new Dictionary<int, List<Vector2I>>();
 
         /// <summary>
         /// Get the tiles that are x tiles away from a center point. 
@@ -32,7 +32,7 @@ namespace AWBWApp.Game.Helpers
                 yield break;
             }
 
-            if (!distanceCache.TryGetValue(distance, out var offsets))
+            if (!distance_cache.TryGetValue(distance, out var offsets))
             {
                 offsets = new List<Vector2I>();
 
@@ -50,7 +50,7 @@ namespace AWBWApp.Game.Helpers
                     offsets.Add(new Vector2I(x, i));
                 }
 
-                distanceCache.Add(distance, offsets);
+                distance_cache.Add(distance, offsets);
             }
 
             foreach (var offset in offsets)

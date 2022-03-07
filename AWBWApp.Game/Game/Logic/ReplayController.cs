@@ -41,13 +41,12 @@ namespace AWBWApp.Game.Game.Logic
         private TurnData currentTurn;
         private int currentActionIndex;
         private int currentTurnIndex;
-        private long selectedPlayer;
 
-        private LoadingLayer loadingLayer;
-        private Container powerLayer;
-        private CameraControllerWithGrid cameraControllerWithGrid;
-        private ReplayBarWidget barWidget;
-        private ReplayPlayerList playerList;
+        private readonly LoadingLayer loadingLayer;
+        private readonly Container powerLayer;
+        private readonly CameraControllerWithGrid cameraControllerWithGrid;
+        private readonly ReplayBarWidget barWidget;
+        private readonly ReplayPlayerList playerList;
 
         private ReplayMenuBar menuBar;
 

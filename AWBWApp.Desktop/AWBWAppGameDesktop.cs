@@ -15,7 +15,7 @@ namespace AWBWApp.Desktop
 
             var desktopWindow = (SDL2DesktopWindow)host.Window;
 
-            desktopWindow.DragDrop += f => fileDrop(f);
+            desktopWindow.DragDrop += fileDrop;
         }
 
         private readonly List<string> importableFiles = new List<string>();

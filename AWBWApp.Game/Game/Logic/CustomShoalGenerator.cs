@@ -7,10 +7,10 @@ namespace AWBWApp.Game.Game.Logic
 {
     public class CustomShoalGenerator
     {
-        private TerrainTileStorage tileStorage;
-        private BuildingStorage buildingStorage;
+        private readonly TerrainTileStorage tileStorage;
+        private readonly BuildingStorage buildingStorage;
 
-        private List<(NearbyTiles, string)> shoalOutComes = new List<(NearbyTiles, string)>
+        private readonly List<(NearbyTiles, string)> shoalOutComes = new List<(NearbyTiles, string)>
         {
             //Full Circle
             (new NearbyTiles { North = TerrainType.Land, East = TerrainType.Land, South = TerrainType.Land, West = TerrainType.Land }, "Shoal-N-E-S-W"),
@@ -47,7 +47,7 @@ namespace AWBWApp.Game.Game.Logic
             (new NearbyTiles { West = TerrainType.Land }, "Shoal-W"),
         };
 
-        private List<(NearbyTiles, string)> seaOutComes = new List<(NearbyTiles, string)>
+        private readonly List<(NearbyTiles, string)> seaOutComes = new List<(NearbyTiles, string)>
         {
             //Full Circle
             (new NearbyTiles { North = TerrainType.Land, East = TerrainType.Land, South = TerrainType.Land, West = TerrainType.Land }, "Sea-N-E-S-W"),
@@ -129,11 +129,12 @@ namespace AWBWApp.Game.Game.Logic
 
         public ReplayMap CreateCustomShoalVersion(ReplayMap map)
         {
-            var customShoal = new ReplayMap();
-            customShoal.TerrainName = map.TerrainName;
-            customShoal.Size = map.Size;
-
-            customShoal.Ids = new short[map.Ids.Length];
+            var customShoal = new ReplayMap
+            {
+                TerrainName = map.TerrainName,
+                Size = map.Size,
+                Ids = new short[map.Ids.Length]
+            };
 
             for (int i = 0; i < map.Ids.Length; i++)
             {

@@ -85,10 +85,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (RepairedUnits != null)
             {
-                foreach (var repairedUnit in RepairedUnits)
+                foreach (var (unitID, unitHP) in RepairedUnits)
                 {
-                    var unit = controller.Map.GetDrawableUnit(repairedUnit.id);
-                    unit.HealthPoints.Value = repairedUnit.hp;
+                    var unit = controller.Map.GetDrawableUnit(unitID);
+                    unit.HealthPoints.Value = unitHP;
                     unit.Ammo.Value = unit.UnitData.MaxAmmo;
                     unit.Fuel.Value = unit.UnitData.MaxFuel;
 
@@ -121,8 +121,6 @@ namespace AWBWApp.Game.API.Replay.Actions
             //Todo: Ignore Funds after turn start and next weather? These are already handled by GoToNextTurn()
             //Maybe have a weather changing animation?
             controller.GoToNextTurn(false);
-
-            yield break;
         }
 
         public void UndoAction(ReplayController controller, bool immediate)

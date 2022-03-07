@@ -7,7 +7,7 @@ namespace AWBWApp.Game.Game.Building
     public class BuildingTile
     {
         [JsonProperty]
-        public int AWBWId { get; set; }
+        public int AWBWID { get; set; }
 
         [JsonProperty]
         public int CountryID { get; set; }

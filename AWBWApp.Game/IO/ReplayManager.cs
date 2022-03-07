@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using AWBWApp.Game.API;
-using AWBWApp.Game.API.New;
 using AWBWApp.Game.API.Replay;
 using Newtonsoft.Json;
 using osu.Framework.Logging;
@@ -22,11 +21,11 @@ namespace AWBWApp.Game.IO
 
         public Action<ReplayInfo> ReplayRemoved;
 
-        private Dictionary<long, ReplayInfo> _knownReplays = new Dictionary<long, ReplayInfo>();
+        private readonly Dictionary<long, ReplayInfo> _knownReplays = new Dictionary<long, ReplayInfo>();
 
-        private Dictionary<long, string> _playerNames = new Dictionary<long, string>();
+        private readonly Dictionary<long, string> _playerNames = new Dictionary<long, string>();
 
-        private AWBWReplayParser _parser = new AWBWReplayParser();
+        private readonly AWBWReplayParser _parser = new AWBWReplayParser();
 
         public ReplayManager(bool checkForNewReplays = true)
         {

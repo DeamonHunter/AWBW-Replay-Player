@@ -30,10 +30,12 @@ namespace AWBWApp.Game.API.Replay.Actions
             for (int i = 0; i < path.Count; i++)
             {
                 var pathPart = (JObject)path[i];
-                var position = new UnitPosition();
-                position.X = (int)pathPart["x"];
-                position.Y = (int)pathPart["y"];
-                position.Unit_Visible = (bool)pathPart["unit_visible"];
+                var position = new UnitPosition
+                {
+                    X = (int)pathPart["x"],
+                    Y = (int)pathPart["y"],
+                    UnitVisible = (bool)pathPart["unit_visible"]
+                };
                 action.Path[i] = position;
             }
             action.Distance = (int)jObject["dist"];

@@ -25,18 +25,21 @@ namespace AWBWApp.Game.API
             base.ProcessResponse();
 
             var htmlPage = GetResponseString();
-            var idx = htmlPage.IndexOf(username_index);
+            if (htmlPage == null)
+                throw new Exception("Got null response.");
+
+            var idx = htmlPage.IndexOf(username_index, StringComparison.InvariantCulture);
 
             if (idx < 0)
                 throw new Exception("Unable to find username from profile page.");
 
-            var usernameStartItalicsMarker = htmlPage.IndexOf("<i>", idx);
+            var usernameStartItalicsMarker = htmlPage.IndexOf("<i>", idx, StringComparison.InvariantCulture);
             if (usernameStartItalicsMarker < 0)
                 throw new Exception("Unable to find username from profile page.");
 
             usernameStartItalicsMarker += 3;
 
-            var usernameEndItalicsMarker = htmlPage.IndexOf("</i>", usernameStartItalicsMarker);
+            var usernameEndItalicsMarker = htmlPage.IndexOf("</i>", usernameStartItalicsMarker, StringComparison.InvariantCulture);
             if (usernameEndItalicsMarker < 0)
                 throw new Exception("Unable to find username from profile page.");
 

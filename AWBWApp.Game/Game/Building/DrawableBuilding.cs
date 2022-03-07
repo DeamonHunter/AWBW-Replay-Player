@@ -17,7 +17,7 @@ namespace AWBWApp.Game.Game.Building
     public class DrawableBuilding : CompositeDrawable, IHasMapPosition
     {
         public static readonly Vector2I BASE_SIZE = new Vector2I(16);
-        public static readonly Colour4 FogColor = new Colour4(150, 150, 150, 255);
+        public static readonly Colour4 FOG_COLOUR = new Colour4(150, 150, 150, 255);
 
         public Bindable<bool> HasDoneAction = new Bindable<bool>();
         public BindableBool FogOfWarActive = new BindableBool();
@@ -99,7 +99,7 @@ namespace AWBWApp.Game.Game.Building
         {
             Color4 colour;
             if (foggy)
-                colour = FogColor;
+                colour = FOG_COLOUR;
             else
                 colour = Color4.White;
 

@@ -51,8 +51,9 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 //Todo: What is a "?" attacker when the player attacked with it. A dead unit?
                 Logger.Log("Attack action didn't have information on the player attacking?");
-                action.Attacker = action.MoveUnit.Unit;
-                action.Attacker.HitPoints = 0;
+                action.Attacker = action.MoveUnit?.Unit;
+                if (action.Attacker != null)
+                    action.Attacker.HitPoints = 0;
             }
             else
                 action.Attacker = ReplayActionHelper.ParseJObjectIntoReplayUnit((JObject)combatInfo["attacker"]);
@@ -67,10 +68,12 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                 foreach (var player in copValues)
                 {
-                    var powerChange = new AttackUnitAction.COPowerChange();
-                    powerChange.PlayerID = (long)player.Value["playerId"];
-                    powerChange.PowerChange = (int)player.Value["copValue"];
-                    powerChange.TagPowerChange = (int?)player.Value["tagValue"];
+                    var powerChange = new AttackUnitAction.COPowerChange
+                    {
+                        PlayerID = (long)player.Value["playerId"],
+                        PowerChange = (int)player.Value["copValue"],
+                        TagPowerChange = (int?)player.Value["tagValue"]
+                    };
                     action.PowerChanges.Add(powerChange);
                 }
             }
@@ -85,6 +88,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 {
                     if (player.Value.Type == JTokenType.Null)
                         continue;
+
                     action.GainedFunds.Add((long.Parse(player.Key), (int)player.Value));
                 }
             }
@@ -171,8 +175,8 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             if (GainedFunds != null)
             {
-                foreach (var player in GainedFunds)
-                    controller.Players[player.playerID].Funds.Value += player.funds;
+                foreach (var (playerID, funds) in GainedFunds)
+                    controller.Players[playerID].Funds.Value += funds;
             }
 
             foreach (var player in PowerChanges)

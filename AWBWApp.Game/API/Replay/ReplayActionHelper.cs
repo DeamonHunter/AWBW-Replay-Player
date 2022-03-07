@@ -138,12 +138,14 @@ namespace AWBWApp.Game.API.Replay
 
         public static ReplayBuilding ParseJObjectIntoReplayBuilding(JObject jObject)
         {
-            var building = new ReplayBuilding();
-            building.ID = (long)jObject["buildings_id"];
-            building.TerrainID = (int?)jObject["terrain_id"];
-            building.Capture = (int)jObject["buildings_capture"];
-            building.Position = new Vector2I((int)jObject["buildings_x"], (int)jObject["buildings_y"]);
-            building.Team = (string)jObject["buildings_team"];
+            var building = new ReplayBuilding
+            {
+                ID = (long)jObject["buildings_id"],
+                TerrainID = (int?)jObject["terrain_id"],
+                Capture = (int)jObject["buildings_capture"],
+                Position = new Vector2I((int)jObject["buildings_x"], (int)jObject["buildings_y"]),
+                Team = (string)jObject["buildings_team"]
+            };
 
             return building;
         }
@@ -154,6 +156,7 @@ namespace AWBWApp.Game.API.Replay
                 return true;
             if (boolean == "N" || boolean == "n")
                 return false;
+
             throw new Exception($"Unknown boolean value {boolean}");
         }
     }

@@ -69,7 +69,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             repairUnitAction.MoveUnit.Distance = 1;
             repairUnitAction.MoveUnit.Trapped = false;
             repairUnitAction.MoveUnit.Unit = new ReplayUnit { ID = blackBoat.ID, Position = new Vector2I(2, 2) };
-            repairUnitAction.MoveUnit.Path = new[] { new UnitPosition { X = 2, Y = 3, Unit_Visible = true }, new UnitPosition { X = 2, Y = 2, Unit_Visible = true } };
+            repairUnitAction.MoveUnit.Path = new[] { new UnitPosition { X = 2, Y = 3, UnitVisible = true }, new UnitPosition { X = 2, Y = 2, UnitVisible = true } };
             turn.Actions.Add(repairUnitAction);
 
             var map = CreateBasicMap(5, 5);

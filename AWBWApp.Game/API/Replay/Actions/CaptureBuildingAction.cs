@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using AWBWApp.Game.Game.Logic;
-using AWBWApp.Game.Game.Unit;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Logging;
@@ -72,11 +71,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     yield return transformable;
             }
 
-            DrawableUnit capturingUnit;
-            if (MoveUnit != null)
-                capturingUnit = controller.Map.GetDrawableUnit(MoveUnit.Unit.ID);
-            else
-                capturingUnit = controller.Map.GetDrawableUnit(Building.Position);
+            var capturingUnit = MoveUnit != null ? controller.Map.GetDrawableUnit(MoveUnit.Unit.ID) : controller.Map.GetDrawableUnit(Building.Position);
 
             yield return ReplayWait.WaitForTransformable(capturingUnit);
 

@@ -26,13 +26,13 @@ namespace AWBWApp.Game.Game.Logic
 
         public Weather CurrentWeather { get; private set; }
 
-        private Container<DrawableTile> gameBoardDrawable;
+        private readonly Container<DrawableTile> gameBoardDrawable;
         private DrawableTile[,] gameBoard;
 
-        private Container<DrawableBuilding> buildingsDrawable;
+        private readonly Container<DrawableBuilding> buildingsDrawable;
         private Dictionary<Vector2I, DrawableBuilding> buildings;
 
-        private Container<DrawableUnit> unitsDrawable;
+        private readonly Container<DrawableUnit> unitsDrawable;
         private Dictionary<long, DrawableUnit> units;
 
         [Resolved]
@@ -51,11 +51,13 @@ namespace AWBWApp.Game.Game.Logic
 
         private FogOfWarGenerator fogOfWarGenerator;
 
-        private EffectAnimationController effectAnimationController;
+        private readonly EffectAnimationController effectAnimationController;
 
         private Dictionary<long, PlayerInfo> players;
 
-        private MovingGrid grid;
+        private readonly MovingGrid grid;
+
+        private bool animatingMapStart;
 
         public GameMap()
         {
@@ -69,7 +71,7 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     AutoSizeAxes = Axes.Both
                 },
-                grid = new MovingGrid()
+                grid = new MovingGrid
                 {
                     Position = new Vector2(-1, DrawableTile.BASE_SIZE.Y - 2),
                     Velocity = Vector2.Zero,
@@ -101,22 +103,24 @@ namespace AWBWApp.Game.Game.Logic
         private void setToLoading()
         {
             //Todo: Fix this hardcoded map
-            var loadingMap = new ReplayMap();
-            loadingMap.Size = new Vector2I(33, 11);
-            loadingMap.TerrainName = "Loading";
-            loadingMap.Ids = new short[]
+            var loadingMap = new ReplayMap
             {
-                28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
-                28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
-                28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
-                28, 28, 28, 01, 28, 28, 28, 01, 01, 01, 28, 28, 01, 28, 28, 01, 01, 28, 28, 01, 01, 01, 28, 01, 01, 01, 28, 01, 01, 01, 28, 28, 28,
-                28, 28, 28, 01, 28, 28, 28, 01, 28, 01, 28, 01, 28, 01, 28, 01, 28, 01, 28, 28, 01, 28, 28, 01, 28, 01, 28, 01, 28, 28, 28, 28, 28,
-                28, 28, 28, 01, 28, 28, 28, 01, 28, 01, 28, 01, 01, 01, 28, 01, 28, 01, 28, 28, 01, 28, 28, 01, 28, 01, 28, 01, 28, 01, 28, 28, 28,
-                28, 28, 28, 01, 28, 28, 28, 01, 28, 01, 28, 01, 28, 01, 28, 01, 28, 01, 28, 28, 01, 28, 28, 01, 28, 01, 28, 01, 28, 01, 28, 28, 28,
-                28, 28, 28, 01, 01, 01, 28, 01, 01, 01, 28, 01, 28, 01, 28, 01, 01, 28, 28, 01, 01, 01, 28, 01, 28, 01, 28, 01, 01, 01, 28, 28, 28,
-                28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
-                28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
-                28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+                Size = new Vector2I(33, 11),
+                TerrainName = "Loading",
+                Ids = new short[]
+                {
+                    28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+                    28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+                    28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+                    28, 28, 28, 01, 28, 28, 28, 01, 01, 01, 28, 28, 01, 28, 28, 01, 01, 28, 28, 01, 01, 01, 28, 01, 01, 01, 28, 01, 01, 01, 28, 28, 28,
+                    28, 28, 28, 01, 28, 28, 28, 01, 28, 01, 28, 01, 28, 01, 28, 01, 28, 01, 28, 28, 01, 28, 28, 01, 28, 01, 28, 01, 28, 28, 28, 28, 28,
+                    28, 28, 28, 01, 28, 28, 28, 01, 28, 01, 28, 01, 01, 01, 28, 01, 28, 01, 28, 28, 01, 28, 28, 01, 28, 01, 28, 01, 28, 01, 28, 28, 28,
+                    28, 28, 28, 01, 28, 28, 28, 01, 28, 01, 28, 01, 28, 01, 28, 01, 28, 01, 28, 28, 01, 28, 28, 01, 28, 01, 28, 01, 28, 01, 28, 28, 28,
+                    28, 28, 28, 01, 01, 01, 28, 01, 01, 01, 28, 01, 28, 01, 28, 01, 01, 28, 28, 01, 01, 01, 28, 01, 28, 01, 28, 01, 01, 01, 28, 28, 28,
+                    28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+                    28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+                    28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+                }
             };
 
             if (shoalGenerator == null)
@@ -161,11 +165,11 @@ namespace AWBWApp.Game.Game.Logic
             this.players = players;
             Schedule(() =>
             {
-                SetToInitialGameState(gameState, map);
+                setToInitialGameState(gameState, map);
             });
         }
 
-        void SetToInitialGameState(ReplayData gameState, ReplayMap map)
+        private void setToInitialGameState(ReplayData gameState, ReplayMap map)
         {
             if (shoalGenerator == null)
                 shoalGenerator = new CustomShoalGenerator(terrainTileStorage, buildingStorage);
@@ -253,11 +257,9 @@ namespace AWBWApp.Game.Game.Logic
             animateStart(1.5f);
         }
 
-        private bool animating = false;
-
         private void animateStart(float speed)
         {
-            animating = true;
+            animatingMapStart = true;
 
             var inverseSpeed = 1 / speed;
 
@@ -304,10 +306,10 @@ namespace AWBWApp.Game.Game.Logic
 
         public void ScheduleUpdateToGameState(TurnData gameState, Action postUpdateAction)
         {
-            if (animating)
+            if (animatingMapStart)
             {
                 FinishTransforms(true);
-                animating = false;
+                animatingMapStart = false;
             }
 
             Schedule(() =>
@@ -531,7 +533,7 @@ namespace AWBWApp.Game.Game.Logic
 
             var comparisonTerrainId = awbwBuilding.TerrainID ?? 0;
 
-            if (comparisonTerrainId != 0 && building.BuildingTile.AWBWId != comparisonTerrainId)
+            if (comparisonTerrainId != 0 && building.BuildingTile.AWBWID != comparisonTerrainId)
             {
                 buildingsDrawable.Remove(building);
                 buildings.Remove(tilePosition);

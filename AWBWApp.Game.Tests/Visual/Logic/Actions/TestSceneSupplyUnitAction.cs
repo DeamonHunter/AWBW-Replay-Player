@@ -76,7 +76,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             supplyUnitAction.MoveUnit.Distance = 1;
             supplyUnitAction.MoveUnit.Trapped = false;
             supplyUnitAction.MoveUnit.Unit = new ReplayUnit { ID = blackBoat.ID, Position = new Vector2I(2, 2) };
-            supplyUnitAction.MoveUnit.Path = new[] { new UnitPosition { X = 2, Y = 3, Unit_Visible = true }, new UnitPosition { X = 2, Y = 2, Unit_Visible = true } };
+            supplyUnitAction.MoveUnit.Path = new[] { new UnitPosition { X = 2, Y = 3, UnitVisible = true }, new UnitPosition { X = 2, Y = 2, UnitVisible = true } };
             turn.Actions.Add(supplyUnitAction);
 
             var map = CreateBasicMap(5, 5);

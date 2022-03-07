@@ -108,8 +108,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                     {
                         var replayBuilding = new ReplayBuilding
                         {
-                            ID = building.AWBWId,
-                            TerrainID = building.AWBWId,
+                            ID = building.AWBWID,
+                            TerrainID = building.AWBWID,
                             Position = new Vector2I(x, y)
                         };
 

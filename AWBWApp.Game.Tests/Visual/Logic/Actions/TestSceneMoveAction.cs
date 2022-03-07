@@ -102,7 +102,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             var diff = nextPosition - previousPosition;
 
             var path = new UnitPosition[Math.Abs(diff.X) + Math.Abs(diff.Y) + 1];
-            path[0] = new UnitPosition { Unit_Visible = true, X = previousPosition.X, Y = previousPosition.Y };
+            path[0] = new UnitPosition { UnitVisible = true, X = previousPosition.X, Y = previousPosition.Y };
 
             var pos = previousPosition;
             var pathIdx = 1;
@@ -110,29 +110,29 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             if (diff.X > 0)
             {
                 for (pos.X += 1; pos.X < nextPosition.X; pos = new Vector2I(pos.X + 1, pos.Y))
-                    path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
-                path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
+                    path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
+                path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
             }
 
             if (diff.Y > 0)
             {
                 for (pos.Y += 1; pos.Y < nextPosition.Y; pos = new Vector2I(pos.X, pos.Y + 1))
-                    path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
-                path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
+                    path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
+                path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
             }
 
             if (diff.X < 0)
             {
                 for (pos.X -= 1; pos.X > nextPosition.X; pos = new Vector2I(pos.X - 1, pos.Y))
-                    path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
-                path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
+                    path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
+                path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
             }
 
             if (diff.Y < 0)
             {
                 for (pos.Y -= 1; pos.Y > nextPosition.Y; pos = new Vector2I(pos.X, pos.Y - 1))
-                    path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
-                path[pathIdx++] = new UnitPosition { Unit_Visible = true, X = pos.X, Y = pos.Y };
+                    path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
+                path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
             }
 
             return path;
@@ -156,10 +156,10 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 moveUnitAction.Unit = new ReplayUnit { ID = movingUnit.ID, Position = new Vector2I(4, 1) };
                 moveUnitAction.Path = new[]
                 {
-                    new UnitPosition { X = 1, Y = 1, Unit_Visible = true },
-                    new UnitPosition { X = 2, Y = 1, Unit_Visible = true },
-                    new UnitPosition { X = 3, Y = 1, Unit_Visible = true },
-                    new UnitPosition { X = 4, Y = 1, Unit_Visible = true },
+                    new UnitPosition { X = 1, Y = 1, UnitVisible = true },
+                    new UnitPosition { X = 2, Y = 1, UnitVisible = true },
+                    new UnitPosition { X = 3, Y = 1, UnitVisible = true },
+                    new UnitPosition { X = 4, Y = 1, UnitVisible = true },
                 };
                 moveUnitAction.Distance = moveUnitAction.Path.Length;
                 moveUnitAction.Trapped = true;

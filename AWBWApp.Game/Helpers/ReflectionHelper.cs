@@ -20,11 +20,10 @@ namespace AWBWApp.Game.Helpers
                         var instance = (T)Activator.CreateInstance(typeInAssembly);
                         var code = codeAccessor(instance);
                         if (code.IsNullOrEmpty())
-                            throw new ArgumentException($"{typeof(T).Name} instance of type: {typeInAssembly.GetType()} has an invalid code.");
+                            throw new ArgumentException($"{typeof(T).Name} instance of type: {typeInAssembly} has an invalid code.");
 
-                        T collision;
-                        if (mapping.TryGetValue(code, out collision))
-                            throw new ArgumentException($"{typeof(T).Name} instance of type: {typeInAssembly.GetType()} with code: {code} has the same code as type: {collision.GetType()}");
+                        if (mapping.TryGetValue(code, out T collision))
+                            throw new ArgumentException($"{typeof(T).Name} instance of type: {typeInAssembly} with code: {code} has the same code as type: {collision.GetType()}");
 
                         mapping.Add(code, instance);
                     }

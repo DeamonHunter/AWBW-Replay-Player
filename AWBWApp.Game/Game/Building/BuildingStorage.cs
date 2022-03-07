@@ -6,8 +6,8 @@ namespace AWBWApp.Game.Game.Building
 {
     public class BuildingStorage
     {
-        readonly Dictionary<int, BuildingTile> buildingsByAWBWId = new Dictionary<int, BuildingTile>();
-        readonly Dictionary<string, BuildingTile> buildingsByCode = new Dictionary<string, BuildingTile>();
+        private readonly Dictionary<int, BuildingTile> buildingsByAWBWId = new Dictionary<int, BuildingTile>();
+        private readonly Dictionary<string, BuildingTile> buildingsByCode = new Dictionary<string, BuildingTile>();
 
         public void LoadStream(Stream jsonStream)
         {
@@ -17,7 +17,7 @@ namespace AWBWApp.Game.Game.Building
             }
 
             foreach (var tile in buildingsByCode)
-                buildingsByAWBWId.Add(tile.Value.AWBWId, tile.Value);
+                buildingsByAWBWId.Add(tile.Value.AWBWID, tile.Value);
         }
 
         public BuildingTile GetBuildingByAWBWId(int id)

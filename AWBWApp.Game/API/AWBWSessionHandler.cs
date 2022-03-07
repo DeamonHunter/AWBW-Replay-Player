@@ -30,25 +30,26 @@ namespace AWBWApp.Game.API
                 return false;
             }
 
-            var loginRequest = new WebRequest("https://awbw.amarriner.com/logincheck.php");
+            string response;
 
-            loginRequest.Method = HttpMethod.Post;
-            loginRequest.AddParameter("username", userName);
-            loginRequest.AddParameter("password", password);
-            if (SessionID != null)
-                loginRequest.AddHeader("Cookie", SessionID);
-
-            await loginRequest.PerformAsync().ConfigureAwait(false);
-
-            if (loginRequest.Aborted)
+            using (var loginRequest = new WebRequest("https://awbw.amarriner.com/logincheck.php") { Method = HttpMethod.Post })
             {
-                LoginError = "Login request was aborted. Are you connected to the internet?";
-                return false;
+                loginRequest.AddParameter("username", userName);
+                loginRequest.AddParameter("password", password);
+                if (SessionID != null)
+                    loginRequest.AddHeader("Cookie", SessionID);
+
+                await loginRequest.PerformAsync().ConfigureAwait(false);
+
+                if (loginRequest.Aborted)
+                {
+                    LoginError = "Login request was aborted. Are you connected to the internet?";
+                    return false;
+                }
+
+                checkAndSaveCookies(loginRequest.ResponseHeaders);
+                response = loginRequest.GetResponseString();
             }
-
-            checkAndSaveCookies(loginRequest.ResponseHeaders);
-
-            var response = loginRequest.GetResponseString();
 
             if (response != "1")
             {
@@ -77,7 +78,7 @@ namespace AWBWApp.Game.API
                 if (index == -1)
                     throw new Exception("Invalid Cookie");
 
-                SessionID = cookie.Substring(0, index);
+                SessionID = cookie[..index];
             }
         }
     }
