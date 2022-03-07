@@ -13,9 +13,6 @@ namespace AWBWApp.Game.API.Replay.Actions
             yield break;
         }
 
-        public void UndoAction(ReplayController controller, bool immediate)
-        {
-            throw new System.NotImplementedException();
-        }
+        public void UndoAction(ReplayController controller, bool immediate) { }
     }
 }

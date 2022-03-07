@@ -21,8 +21,15 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (deleteData == null)
                 throw new Exception("Join Replay Action did not contain information about Join.");
 
-            if (deleteData.ContainsKey("Move"))
-                throw new Exception("Movement data in delete action.");
+            var moveObj = jObject["Move"];
+
+            if (moveObj is JObject moveData)
+            {
+                var moveAction = Database.ParseJObjectIntoReplayAction(moveData, replayData, turnData);
+                action.MoveUnit = moveAction as MoveUnitAction;
+                if (moveAction == null)
+                    throw new Exception("Delete action was expecting a movement action.");
+            }
 
             action.DeletedUnitId = (long)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)deleteData["unitId"], turnData.ActiveTeam, turnData.ActivePlayerID);
             return action;
@@ -31,21 +38,25 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class DeleteUnitAction : IReplayAction
     {
+        public MoveUnitAction MoveUnit;
         public long DeletedUnitId { get; set; }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Delete Action.");
 
+            if (MoveUnit != null)
+            {
+                foreach (var transformable in MoveUnit.PerformAction(controller))
+                    yield return transformable;
+            }
+
             controller.Map.DeleteUnit(DeletedUnitId, true);
-            yield break;
         }
 
         public void UndoAction(ReplayController controller, bool immediate)
         {
-            Logger.Log("Undoing Capture Action.");
-            throw new NotImplementedException("Undo Action for Capture Building is not complete");
-            //controller.Map.DestroyUnit(NewUnit.ID, false, immediate);
+            throw new NotImplementedException("Undo Delete Action is not complete");
         }
     }
 }

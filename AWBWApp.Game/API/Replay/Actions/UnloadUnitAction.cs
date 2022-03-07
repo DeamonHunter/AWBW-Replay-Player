@@ -33,8 +33,6 @@ namespace AWBWApp.Game.API.Replay.Actions
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Unload Action.");
-            Logger.Log("Income change not implemented.");
-
             var transportUnit = controller.Map.GetDrawableUnit(TransportID);
             var unloadingUnit = controller.Map.GetDrawableUnit(UnloadedUnit.ID);
 
@@ -54,8 +52,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller, bool immediate)
         {
-            Logger.Log("Undoing Capture Action.");
-            throw new NotImplementedException("Undo Action for Capture Building is not complete");
+            throw new NotImplementedException("Undo Unload Action is not complete");
         }
     }
 }

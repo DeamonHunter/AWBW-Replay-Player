@@ -129,6 +129,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 foreach (var transformable in MoveUnit.PerformAction(controller))
                     yield return transformable;
+
+                attackerUnit.CanMove.Value = true;
             }
 
             //Perform Attack vs Defender
@@ -204,9 +206,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller, bool immediate)
         {
-            Logger.Log("Undoing Capture Action.");
-            throw new NotImplementedException("Undo Action for Capture Building is not complete");
-            //controller.Map.DestroyUnit(NewUnit.ID, false, immediate);
+            throw new NotImplementedException("Undo Attack Action is not complete");
         }
 
         public class COPowerChange

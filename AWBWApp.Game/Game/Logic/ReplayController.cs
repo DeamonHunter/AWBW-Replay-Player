@@ -111,7 +111,7 @@ namespace AWBWApp.Game.Game.Logic
                                         {
                                             new ToggleMenuItem("Show Grid", Settings.ShowGridOverMap),
                                             new ToggleMenuItem("Show Hidden Units", Settings.ShowHiddenUnits),
-                                            new ToggleMenuItem("Show End Turn", Settings.ShowEndTurnNotifs)
+                                            new ToggleMenuItem("Skip End Turn", Settings.SkipEndTurn)
                                         }
                                     }
                                 }
@@ -271,7 +271,7 @@ namespace AWBWApp.Game.Game.Logic
                 currentActionIndex++;
                 var action = currentTurn.Actions[currentActionIndex];
 
-                if (!Settings.ShowEndTurnNotifs.Value && action is EndTurnActionBuilder)
+                if (Settings.SkipEndTurn.Value && action is EndTurnAction)
                 {
                     goToTurnWithIdx(currentTurnIndex + 1, false);
                     return;

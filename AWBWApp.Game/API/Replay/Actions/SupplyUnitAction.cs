@@ -52,7 +52,6 @@ namespace AWBWApp.Game.API.Replay.Actions
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Supply Action.");
-            Logger.Log("Supply animation not implemented.");
 
             if (MoveUnit != null)
             {
@@ -77,9 +76,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller, bool immediate)
         {
-            Logger.Log("Undoing Capture Action.");
-            throw new NotImplementedException("Undo Action for Capture Building is not complete");
-            //controller.Map.DestroyUnit(NewUnit.ID, false, immediate);
+            throw new NotImplementedException("Undo Supply Action is not complete");
         }
     }
 }

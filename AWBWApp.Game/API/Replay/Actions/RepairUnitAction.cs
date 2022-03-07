@@ -38,6 +38,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             var repairedUnit = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)supplyData["repaired"], turnData.ActiveTeam, turnData.ActivePlayerID);
             action.RepairedUnitID = (long)repairedUnit["units_id"];
             action.RepairedUnitHP = (int)repairedUnit["units_hit_points"];
+            action.FundsAfterRepair = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)supplyData["funds"], turnData.ActiveTeam, turnData.ActivePlayerID);
 
             return action;
         }
@@ -52,11 +53,11 @@ namespace AWBWApp.Game.API.Replay.Actions
         public long RepairedUnitID;
         public int RepairedUnitHP;
 
+        public int FundsAfterRepair;
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Repair Action.");
-            Logger.Log("Repair animation not implemented.");
-            Logger.Log("Funds not implemented.");
 
             if (MoveUnit != null)
             {
@@ -69,6 +70,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             unit.Fuel.Value = unit.UnitData.MaxFuel;
             unit.Ammo.Value = unit.UnitData.MaxAmmo;
 
+            controller.ActivePlayer.Funds.Value = FundsAfterRepair;
+
             controller.Map.PlayEffect("Effects/Supplied", 600, unit.MapPosition, 0,
                 x => x.ScaleTo(new Vector2(0, 1))
                       .ScaleTo(1, 250, Easing.OutQuint)
@@ -78,9 +81,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller, bool immediate)
         {
-            Logger.Log("Undoing Capture Action.");
-            throw new NotImplementedException("Undo Action for Capture Building is not complete");
-            //controller.Map.DestroyUnit(NewUnit.ID, false, immediate);
+            throw new NotImplementedException("Undo Repair Action is not complete");
         }
     }
 }

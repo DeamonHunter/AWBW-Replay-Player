@@ -83,13 +83,17 @@ namespace AWBWApp.Game.API.Replay.Actions
             //Todo: Capture building animation
             capturingUnit.CanMove.Value = false;
             controller.Map.UpdateBuilding(Building, false); //This will set the unit above to be capturing
+
+            if (IncomeChanges != null)
+            {
+                foreach (var incomeChange in IncomeChanges)
+                    controller.Players[incomeChange.PlayerId].PropertyValue.Value += incomeChange.AmountChanged;
+            }
         }
 
         public void UndoAction(ReplayController controller, bool immediate)
         {
-            Logger.Log("Undoing Capture Action.");
-            throw new NotImplementedException("Undo Action for Capture Building is not complete");
-            //controller.Map.DestroyUnit(NewUnit.ID, false, immediate);
+            throw new NotImplementedException("Undo Capture Action is not complete");
         }
 
         public struct IncomeChanged

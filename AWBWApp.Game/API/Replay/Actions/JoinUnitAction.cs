@@ -33,17 +33,20 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             action.JoiningUnitId = (long)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)joinData["joinID"], turnData.ActiveTeam, turnData.ActivePlayerID);
             action.JoinedUnit = ReplayActionHelper.ParseJObjectIntoReplayUnit((JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)joinData["unit"], turnData.ActiveTeam, turnData.ActivePlayerID));
+            action.FundsAfterJoin = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)joinData["newFunds"], turnData.ActiveTeam, turnData.ActivePlayerID);
             return action;
         }
     }
 
     public class JoinUnitAction : IReplayAction
     {
+        public MoveUnitAction MoveUnit;
+
         public long JoiningUnitId { get; set; }
 
         public ReplayUnit JoinedUnit { get; set; }
 
-        public MoveUnitAction MoveUnit;
+        public int FundsAfterJoin { get; set; }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
@@ -64,9 +67,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller, bool immediate)
         {
-            Logger.Log("Undoing Capture Action.");
-            throw new NotImplementedException("Undo Action for Capture Building is not complete");
-            //controller.Map.DestroyUnit(NewUnit.ID, false, immediate);
+            throw new NotImplementedException("Undo Join Action is not complete");
         }
     }
 }

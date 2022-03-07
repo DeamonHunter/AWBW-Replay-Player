@@ -341,9 +341,6 @@ namespace AWBWApp.Game.API.Replay.Actions
             var co = controller.COStorage.GetCOByName(CombatOfficerName);
             COPower = IsSuperPower ? co.SuperPower : co.NormalPower;
 
-            //Todo: Show power off
-            Logger.Log("Power Action animation not implemented");
-
             yield return ReplayWait.WaitForTransformable(controller.PlayPowerAnimation(CombatOfficerName, PowerName, IsSuperPower));
 
             //Todo: How much should this do?
@@ -431,7 +428,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                         if (unit.HealthPoints.Value <= 0)
                             controller.Map.DeleteUnit(unit.UnitID, true);
                         else
-                            PlayEffectForUnitChange(controller, unit.MapPosition, change.Value);
+                            playEffectForUnitChange(controller, unit.MapPosition, change.Value);
 
                         yield return ReplayWait.WaitForMilliseconds(50);
                     }
@@ -460,7 +457,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                         if (unit.HealthPoints.Value <= 0)
                             controller.Map.DeleteUnit(unit.UnitID, true);
                         else
-                            PlayEffectForUnitChange(controller, unit.MapPosition, change.Value);
+                            playEffectForUnitChange(controller, unit.MapPosition, change.Value);
                     }
                     else
                         throw new Exception("Unable to find unit: " + change.Key);
@@ -502,17 +499,17 @@ namespace AWBWApp.Game.API.Replay.Actions
             yield break;
         }
 
-        private void PlayEffectForUnitChange(ReplayController controller, Vector2I position, UnitChange change)
+        private void playEffectForUnitChange(ReplayController controller, Vector2I position, UnitChange change)
         {
         }
 
-        private void PlayEffectForUnitChange(ReplayController controller, Vector2I position, PlayerWideUnitChange change)
+        private void playEffectForUnitChange(ReplayController controller, Vector2I position, PlayerWideUnitChange change)
         {
         }
 
         public void UndoAction(ReplayController controller, bool immediate)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Undo Power Action is not complete");
         }
 
         public class PlayerChange

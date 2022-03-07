@@ -39,9 +39,6 @@ namespace AWBWApp.Game.API.Replay.Actions
             action.Distance = (int)jObject["dist"];
             action.Trapped = (bool)jObject["trapped"];
 
-            //Todo: Do we want to parse the fog.
-            //Logger.Log("Missing Fog Parse.");
-
             return action;
         }
     }

@@ -8,7 +8,7 @@ namespace AWBWApp.Game.API.Replay
 {
     public class ReplayActionDatabase
     {
-        Dictionary<string, IReplayActionBuilder> actionBuilders = new Dictionary<string, IReplayActionBuilder>();
+        private readonly Dictionary<string, IReplayActionBuilder> actionBuilders = new Dictionary<string, IReplayActionBuilder>();
 
         public ReplayActionDatabase()
         {
@@ -29,5 +29,7 @@ namespace AWBWApp.Game.API.Replay
 
             return actionBuilder.ParseJObjectIntoReplayAction(jObject, replayData, turnData);
         }
+
+        public IReplayActionBuilder GetActionBuilder(string code) => actionBuilders[code];
     }
 }

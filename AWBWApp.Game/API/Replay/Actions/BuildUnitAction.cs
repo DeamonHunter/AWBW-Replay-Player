@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
@@ -35,7 +36,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             Logger.Log("Performing Build Action.");
             var unit = controller.Map.AddUnit(NewUnit);
-            unit.CanMove.Value = false; //Todo: Is this always the case?
+            unit.CanMove.Value = false;
 
             if (controller.Map.TryGetDrawableBuilding(unit.MapPosition, out DrawableBuilding building))
                 building.HasDoneAction.Value = true;
@@ -47,8 +48,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller, bool immediate)
         {
-            Logger.Log("Undoing Build Action.");
-            controller.Map.DeleteUnit(NewUnit.ID, false);
+            throw new NotImplementedException("Undo Build Action is not complete");
         }
     }
 }
