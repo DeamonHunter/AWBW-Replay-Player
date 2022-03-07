@@ -43,7 +43,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 
             var supplyUnitAction = new SupplyUnitAction();
             supplyUnitAction.SupplyingUnitId = blackBoat.ID;
-            supplyUnitAction.SuppliedUnitIds = new List<int> { 1, 2, 3, 4 };
+            supplyUnitAction.SuppliedUnitIds = new List<long> { 1, 2, 3, 4 };
             turn.Actions.Add(supplyUnitAction);
 
             var map = CreateBasicMap(5, 5);
@@ -70,7 +70,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 
             var supplyUnitAction = new SupplyUnitAction();
             supplyUnitAction.SupplyingUnitId = blackBoat.ID;
-            supplyUnitAction.SuppliedUnitIds = new List<int> { 1, 2, 3 };
+            supplyUnitAction.SuppliedUnitIds = new List<long> { 1, 2, 3 };
 
             supplyUnitAction.MoveUnit = new MoveUnitAction();
             supplyUnitAction.MoveUnit.Distance = 1;

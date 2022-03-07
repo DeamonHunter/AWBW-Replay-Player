@@ -12,13 +12,13 @@ namespace AWBWApp.Game.API.Replay
 
     public class ReplayInfo
     {
-        public int ID;
+        public long ID;
         public string Name;
         public string Password;
-        public int CreatorId;
+        public long CreatorId;
 
-        public int MapId;
-        public Dictionary<int, ReplayUser> Players;
+        public long MapId;
+        public Dictionary<long, ReplayUser> Players;
 
         public int FundsPerBuilding;
         public int StartingFunds;
@@ -49,17 +49,15 @@ namespace AWBWApp.Game.API.Replay
     public class TurnData
     {
         public int Day;
-        public int ActivePlayerID = -1;
+        public long ActivePlayerID = -1;
         public string ActiveTeam;
 
         public bool Active; //Todo: "active" What is this?
 
         public ReplayWeather StartWeather;
 
-        public Dictionary<int, AWBWReplayPlayerTurn> Players;
+        public Dictionary<long, ReplayUserTurn> Players;
         public List<IReplayAction> Actions;
-
-        public Dictionary<int, int> CoPowers;
 
         //Should these be ID based?
         public Dictionary<Vector2I, ReplayBuilding> Buildings;

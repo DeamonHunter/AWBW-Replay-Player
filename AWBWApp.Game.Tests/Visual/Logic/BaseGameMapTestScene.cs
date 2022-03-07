@@ -101,13 +101,13 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         {
             var data = new ReplayData();
 
-            data.ReplayInfo.Players = new Dictionary<int, ReplayUser> { { 0, new ReplayUser { CountryId = 1, ID = 0, UserId = 0 } } };
+            data.ReplayInfo.Players = new Dictionary<long, ReplayUser> { { 0, new ReplayUser { CountryId = 1, ID = 0, UserId = 0 } } };
             data.TurnData = new List<TurnData>
             {
                 new TurnData
                 {
                     ActivePlayerID = 0,
-                    Players = new Dictionary<int, AWBWReplayPlayerTurn> { { 0, new AWBWReplayPlayerTurn { ActiveCOID = 1, RequiredPowerForNormal = 90000, RequiredPowerForSuper = 180000 } } },
+                    Players = new Dictionary<long, ReplayUserTurn> { { 0, new ReplayUserTurn { ActiveCOID = 1, RequiredPowerForNormal = 90000, RequiredPowerForSuper = 180000 } } },
                     ReplayUnit = new Dictionary<long, ReplayUnit>(),
                     Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
                     StartWeather = new ReplayWeather { Type = Weather.Clear }

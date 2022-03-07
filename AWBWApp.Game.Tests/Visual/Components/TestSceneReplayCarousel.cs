@@ -62,7 +62,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
 
                     var playerCount = random.Next(2, 8);
 
-                    var players = new Dictionary<int, ReplayUser>();
+                    var players = new Dictionary<long, ReplayUser>();
 
                     for (int j = 0; j < playerCount; j++)
                     {

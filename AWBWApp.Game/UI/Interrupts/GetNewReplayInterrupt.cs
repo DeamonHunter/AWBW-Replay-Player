@@ -104,12 +104,12 @@ namespace AWBWApp.Game.UI.Interrupts
             Schedule(attemptDownload);
         }
 
-        public static int ParseReplayString(string replay)
+        public static long ParseReplayString(string replay)
         {
             const string siteLink = "https://awbw.amarriner.com/2030.php?games_id=";
 
-            int replayId;
-            if (int.TryParse(replay, out replayId))
+            long replayId;
+            if (long.TryParse(replay, out replayId))
                 return replayId;
 
             if (replay.StartsWith(siteLink))
@@ -122,7 +122,7 @@ namespace AWBWApp.Game.UI.Interrupts
                 else
                     possibleId = replay.Substring(siteLink.Length);
 
-                if (int.TryParse(possibleId, out replayId))
+                if (long.TryParse(possibleId, out replayId))
                     return replayId;
 
                 throw new Exception("Was unable to parse the replay in the website URL: " + replay);
@@ -133,7 +133,7 @@ namespace AWBWApp.Game.UI.Interrupts
 
         private async void attemptDownload()
         {
-            int gameID;
+            long gameID;
 
             try
             {

@@ -31,15 +31,15 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (loadData == null)
                 throw new Exception("Load Replay Action did not contain information about Load.");
 
-            action.LoadedId = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)loadData["loaded"], turnData.ActiveTeam, turnData.ActivePlayerID);
-            action.TransportID = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)loadData["transport"], turnData.ActiveTeam, turnData.ActivePlayerID);
+            action.LoadedID = (long)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)loadData["loaded"], turnData.ActiveTeam, turnData.ActivePlayerID);
+            action.TransportID = (long)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)loadData["transport"], turnData.ActiveTeam, turnData.ActivePlayerID);
             return action;
         }
     }
 
     public class LoadUnitAction : IReplayAction
     {
-        public long LoadedId { get; set; }
+        public long LoadedID { get; set; }
         public long TransportID { get; set; }
 
         public MoveUnitAction MoveUnit;
@@ -55,7 +55,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     yield return transformable;
             }
 
-            var loadingUnit = controller.Map.GetDrawableUnit(LoadedId);
+            var loadingUnit = controller.Map.GetDrawableUnit(LoadedID);
             var transportUnit = controller.Map.GetDrawableUnit(TransportID);
 
             loadingUnit.BeingCarried.Value = true;

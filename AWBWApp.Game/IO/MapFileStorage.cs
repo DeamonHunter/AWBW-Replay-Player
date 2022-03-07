@@ -36,14 +36,14 @@ namespace AWBWApp.Game.IO
             }
         }
 
-        public ReplayMap Get(int mapID) => Get(mapID.ToString());
+        public ReplayMap Get(long mapID) => Get(mapID.ToString());
 
         public Task<ReplayMap> GetAsync(string name, CancellationToken token)
         {
             throw new System.NotImplementedException(); //Todo: Is there gonna be a case where we don't check this?
         }
 
-        public async Task<ReplayMap> GetOrDownloadMap(int mapID)
+        public async Task<ReplayMap> GetOrDownloadMap(long mapID)
         {
             var map = Get(mapID.ToString());
 

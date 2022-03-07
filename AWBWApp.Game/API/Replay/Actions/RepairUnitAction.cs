@@ -33,10 +33,10 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (supplyData == null)
                 throw new Exception("Capture Replay Action did not contain information about Capture.");
 
-            action.RepairingUnitID = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)supplyData["unit"], turnData.ActiveTeam, turnData.ActivePlayerID);
+            action.RepairingUnitID = (long)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)supplyData["unit"], turnData.ActiveTeam, turnData.ActivePlayerID);
 
             var repairedUnit = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)supplyData["repaired"], turnData.ActiveTeam, turnData.ActivePlayerID);
-            action.RepairedUnitID = (int)repairedUnit["units_id"];
+            action.RepairedUnitID = (long)repairedUnit["units_id"];
             action.RepairedUnitHP = (int)repairedUnit["units_hit_points"];
 
             return action;
@@ -47,9 +47,9 @@ namespace AWBWApp.Game.API.Replay.Actions
     {
         public MoveUnitAction MoveUnit;
 
-        public int RepairingUnitID;
+        public long RepairingUnitID;
 
-        public int RepairedUnitID;
+        public long RepairedUnitID;
         public int RepairedUnitHP;
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)

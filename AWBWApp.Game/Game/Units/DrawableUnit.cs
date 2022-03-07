@@ -28,7 +28,7 @@ namespace AWBWApp.Game.Game.Unit
 
         public readonly UnitData UnitData;
         public long UnitID { get; private set; }
-        public int? OwnerID { get; private set; }
+        public long? OwnerID { get; private set; }
 
         public BindableInt HealthPoints = new BindableInt();
         public BindableInt Fuel = new BindableInt();

@@ -53,7 +53,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private EffectAnimationController effectAnimationController;
 
-        private Dictionary<int, PlayerInfo> players;
+        private Dictionary<long, PlayerInfo> players;
 
         private MovingGrid grid;
 
@@ -156,7 +156,7 @@ namespace AWBWApp.Game.Game.Logic
             animateStart(4);
         }
 
-        public void ScheduleInitialGameState(ReplayData gameState, ReplayMap map, Dictionary<int, PlayerInfo> players)
+        public void ScheduleInitialGameState(ReplayData gameState, ReplayMap map, Dictionary<long, PlayerInfo> players)
         {
             this.players = players;
             Schedule(() =>
@@ -380,7 +380,7 @@ namespace AWBWApp.Game.Game.Logic
         }
 
         public void ClearFog(bool makeFoggy, bool triggerChange) => fogOfWarGenerator.ClearFog(makeFoggy, triggerChange);
-        public void UpdateFogOfWar(int playerId, int rangeIncrease, bool canSeeIntoHiddenTiles, bool resetFog = true) => fogOfWarGenerator.GenerateFogForPlayer(playerId, rangeIncrease, canSeeIntoHiddenTiles, resetFog);
+        public void UpdateFogOfWar(long playerId, int rangeIncrease, bool canSeeIntoHiddenTiles, bool resetFog = true) => fogOfWarGenerator.GenerateFogForPlayer(playerId, rangeIncrease, canSeeIntoHiddenTiles, resetFog);
 
         public DrawableUnit AddUnit(ReplayUnit unit)
         {
@@ -490,12 +490,12 @@ namespace AWBWApp.Game.Game.Logic
             return false;
         }
 
-        public IEnumerable<DrawableUnit> GetDrawableUnitsFromPlayer(int playerId)
+        public IEnumerable<DrawableUnit> GetDrawableUnitsFromPlayer(long playerId)
         {
             return units.Values.Where(x => x.OwnerID.HasValue && x.OwnerID == playerId);
         }
 
-        public IEnumerable<DrawableBuilding> GetDrawableBuildingsForPlayer(int playerId)
+        public IEnumerable<DrawableBuilding> GetDrawableBuildingsForPlayer(long playerId)
         {
             foreach (var building in buildings)
             {

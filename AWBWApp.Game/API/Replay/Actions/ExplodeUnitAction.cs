@@ -34,7 +34,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 throw new Exception("Join Replay Action did not contain information about Join.");
 
             action.HPChange = (float)explodeData["hp"];
-            action.ExplodedUnitId = (int)explodeData["unitId"];
+            action.ExplodedUnitId = (long)explodeData["unitId"];
             return action;
         }
     }

@@ -34,7 +34,7 @@ namespace AWBWApp.Game.Game.Logic
         [Cached]
         private ReplaySettings settings { get; set; }
 
-        public List<(int playerID, PowerAction action, int activeDay)> ActivePowers = new List<(int, PowerAction, int)>();
+        public List<(long playerID, PowerAction action, int activeDay)> ActivePowers = new List<(long, PowerAction, int)>();
 
         private ReplayData replayData;
 
@@ -51,7 +51,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private ReplayMenuBar menuBar;
 
-        public Dictionary<int, PlayerInfo> Players { get; private set; } = new Dictionary<int, PlayerInfo>();
+        public Dictionary<long, PlayerInfo> Players { get; private set; } = new Dictionary<long, PlayerInfo>();
         public PlayerInfo ActivePlayer => currentTurn != null ? Players[currentTurn.ActivePlayerID] : null;
 
         private readonly Queue<IEnumerator<ReplayWait>> currentOngoingActions = new Queue<IEnumerator<ReplayWait>>();
@@ -380,7 +380,7 @@ namespace AWBWApp.Game.Game.Logic
             }
         }
 
-        private void calculateFogForPlayer(int playerID, bool resetFog)
+        private void calculateFogForPlayer(long playerID, bool resetFog)
         {
             var dayToDayPower = Players[playerID].ActiveCO.Value.CO.DayToDayPower;
 

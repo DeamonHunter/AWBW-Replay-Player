@@ -6,8 +6,8 @@ namespace AWBWApp.Game.API.Replay
 {
     public class ReplayUnit
     {
-        public int ID;
-        public int? PlayerID;
+        public long ID;
+        public long? PlayerID;
 
         [CanBeNull]
         public string UnitName;
@@ -26,7 +26,7 @@ namespace AWBWApp.Game.API.Replay
         public bool? SecondWeapon; //Todo: What is this?
 
         [CanBeNull]
-        public List<int> CargoUnits;
+        public List<long> CargoUnits;
 
         //Likely uneeded but does show the value after CO Powers
         public int? MovementPoints;
@@ -39,9 +39,9 @@ namespace AWBWApp.Game.API.Replay
         //Todo: Find a better method for this so it isn't dependent on remembering to update this
         public ReplayUnit Clone()
         {
-            List<int> cargoUnits = null;
+            List<long> cargoUnits = null;
             if (CargoUnits != null)
-                cargoUnits = new List<int>(CargoUnits);
+                cargoUnits = new List<long>(CargoUnits);
 
             return new ReplayUnit
             {

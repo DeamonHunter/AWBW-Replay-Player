@@ -64,7 +64,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (!compatibleCOs.Contains($"{action.CombatOfficerName}-{coPower}"))
                 throw new Exception($"Player executed an unknown power: {action.CombatOfficerName}-{coPower}");
 
-            if ((int)jObject["playerID"] != turnData.ActivePlayerID)
+            if ((long)jObject["playerID"] != turnData.ActivePlayerID)
                 throw new Exception("Active player did not use the power. Is this supposed to be possible?");
 
             action.IsSuperPower = coPower == "S";
@@ -97,7 +97,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (hpChange != null)
             {
-                action.PlayerWideChanges = new Dictionary<int, PowerAction.PlayerWideUnitChange>();
+                action.PlayerWideChanges = new Dictionary<long, PowerAction.PlayerWideUnitChange>();
 
                 var hpGainEntry = jObject["hpGain"];
 
@@ -126,7 +126,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     }
 
                     foreach (var player in (JArray)hpGain["players"])
-                        action.PlayerWideChanges.Add((int)player, change);
+                        action.PlayerWideChanges.Add((long)player, change);
                 }
 
                 var hpLossEntry = jObject["hpLoss"];
@@ -156,7 +156,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     }
 
                     foreach (var player in (JArray)hpLoss["players"])
-                        action.PlayerWideChanges.Add((int)player, change);
+                        action.PlayerWideChanges.Add((long)player, change);
                 }
             }
 
@@ -171,7 +171,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                 if (unitReplaces.Type != JTokenType.Null)
                 {
-                    action.UnitChanges = new Dictionary<int, PowerAction.UnitChange>();
+                    action.UnitChanges = new Dictionary<long, PowerAction.UnitChange>();
 
                     foreach (JObject unit in (JArray)unitReplaces)
                     {
@@ -213,7 +213,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                             }
                         }
 
-                        action.UnitChanges.Add((int)unit["units_id"], change);
+                        action.UnitChanges.Add((long)unit["units_id"], change);
                     }
                 }
             }
@@ -223,7 +223,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (playerReplace != null)
             {
                 var details = ReplayActionHelper.GetPlayerSpecificDataFromJObject(playerReplace, turnData.ActiveTeam, turnData.ActivePlayerID);
-                action.PlayerChanges = new Dictionary<int, PowerAction.PlayerChange>();
+                action.PlayerChanges = new Dictionary<long, PowerAction.PlayerChange>();
 
                 foreach (var player in (JObject)details)
                 {
@@ -250,7 +250,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                         }
                     }
 
-                    action.PlayerChanges.Add(int.Parse(player.Key), change);
+                    action.PlayerChanges.Add(long.Parse(player.Key), change);
                 }
             }
 
@@ -260,7 +260,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 var details = ReplayActionHelper.GetPlayerSpecificDataFromJObject(unitAdd, turnData.ActiveTeam, turnData.ActivePlayerID);
 
-                var playerId = (int)details["playerId"];
+                var playerId = (long)details["playerId"];
                 if (playerId != turnData.ActivePlayerID)
                     throw new Exception("Adding units for a non-active player?");
 
@@ -279,7 +279,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                         switch (entry.Key)
                         {
                             case "units_id":
-                                newUnit.UnitID = (int)entry.Value;
+                                newUnit.UnitID = (long)entry.Value;
                                 break;
 
                             case "units_x":
@@ -330,9 +330,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public Weather? ChangeToWeather;
 
-        public Dictionary<int, PlayerChange> PlayerChanges;
-        public Dictionary<int, PlayerWideUnitChange> PlayerWideChanges;
-        public Dictionary<int, UnitChange> UnitChanges;
+        public Dictionary<long, PlayerChange> PlayerChanges;
+        public Dictionary<long, PlayerWideUnitChange> PlayerWideChanges;
+        public Dictionary<long, UnitChange> UnitChanges;
         public List<CreateUnit> CreatedUnits;
         public List<Vector2I> MissileCoords;
 
@@ -477,7 +477,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     var newUnit = new ReplayUnit
                     {
                         ID = unit.UnitID,
-                        PlayerID = (int)controller.ActivePlayer.ID,
+                        PlayerID = controller.ActivePlayer.ID,
                         UnitName = unit.UnitName,
                         Position = unit.Position,
                         HitPoints = unit.HP,
@@ -525,7 +525,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public class CreateUnit
         {
             public string UnitName;
-            public int UnitID;
+            public long UnitID;
             public int HP;
             public Vector2I Position;
         }

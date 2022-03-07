@@ -22,7 +22,7 @@ namespace AWBWApp.Game.IO
 
         public Action<ReplayInfo> ReplayRemoved;
 
-        private Dictionary<int, ReplayInfo> _knownReplays = new Dictionary<int, ReplayInfo>();
+        private Dictionary<long, ReplayInfo> _knownReplays = new Dictionary<long, ReplayInfo>();
 
         private Dictionary<long, string> _playerNames = new Dictionary<long, string>();
 
@@ -35,7 +35,7 @@ namespace AWBWApp.Game.IO
                 Directory.CreateDirectory(replay_folder);
 
             if (File.Exists(replay_storage))
-                _knownReplays = JsonConvert.DeserializeObject<Dictionary<int, ReplayInfo>>(File.ReadAllText(replay_storage)) ?? _knownReplays;
+                _knownReplays = JsonConvert.DeserializeObject<Dictionary<long, ReplayInfo>>(File.ReadAllText(replay_storage)) ?? _knownReplays;
 
             if (File.Exists(username_storage))
                 _playerNames = JsonConvert.DeserializeObject<Dictionary<long, string>>(File.ReadAllText(username_storage)) ?? _playerNames;
@@ -155,11 +155,11 @@ namespace AWBWApp.Game.IO
             File.WriteAllText(username_storage, contents);
         }
 
-        public bool TryGetReplayInfo(int id, out ReplayInfo info) => _knownReplays.TryGetValue(id, out info);
+        public bool TryGetReplayInfo(long id, out ReplayInfo info) => _knownReplays.TryGetValue(id, out info);
 
         public async Task<ReplayData> GetReplayData(ReplayInfo info) => await GetReplayData(info.ID);
 
-        public async Task<ReplayData> GetReplayData(int id)
+        public async Task<ReplayData> GetReplayData(long id)
         {
             var path = $"{replay_folder}/{id}.zip";
             if (!File.Exists(path))
@@ -213,7 +213,7 @@ namespace AWBWApp.Game.IO
             return data;
         }
 
-        public async Task<ReplayData> ParseAndStoreReplay(int id, Stream stream)
+        public async Task<ReplayData> ParseAndStoreReplay(long id, Stream stream)
         {
             ReplayData data;
 

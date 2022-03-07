@@ -23,7 +23,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 var countryIDs = GetCountryStorage().GetAllCountryIDs();
 
                 baseData = CreateBasicReplayData(0);
-                baseData.ReplayInfo.Players = new Dictionary<int, ReplayUser>(countryIDs.Count);
+                baseData.ReplayInfo.Players = new Dictionary<long, ReplayUser>(countryIDs.Count);
 
                 for (int i = 0; i < countryIDs.Count; i++)
                 {

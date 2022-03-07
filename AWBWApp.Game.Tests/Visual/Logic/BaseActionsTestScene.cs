@@ -13,7 +13,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 
             //Create some basic players
 
-            replayData.ReplayInfo.Players = new Dictionary<int, ReplayUser>(playerCount);
+            replayData.ReplayInfo.Players = new Dictionary<long, ReplayUser>(playerCount);
 
             for (int i = 0; i < playerCount; i++)
             {
@@ -33,11 +33,11 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 
         protected TurnData CreateBasicTurnData(ReplayData data)
         {
-            var players = new Dictionary<int, AWBWReplayPlayerTurn>();
+            var players = new Dictionary<long, ReplayUserTurn>();
 
             foreach (var player in data.ReplayInfo.Players)
             {
-                var playerData = new AWBWReplayPlayerTurn
+                var playerData = new ReplayUserTurn
                 {
                     ActiveCOID = player.Value.CountryId == 4 || player.Value.CountryId == 6 ? 17 : player.Value.CountryId, //Skip over 4/6 as those are not valid
                     RequiredPowerForNormal = 90000,
@@ -53,7 +53,6 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 Actions = new List<IReplayAction>(),
                 Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
                 ReplayUnit = new Dictionary<long, ReplayUnit>(),
-                CoPowers = new Dictionary<int, int>(),
                 Day = 0,
                 ActivePlayerID = data.ReplayInfo.Players.First().Key,
                 Players = players,

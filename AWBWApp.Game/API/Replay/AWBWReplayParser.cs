@@ -125,7 +125,7 @@ namespace AWBWApp.Game.API.New
 
                     case "id":
                     {
-                        var id = readInteger(text, ref textIndex);
+                        var id = readLong(text, ref textIndex);
                         if (!firstTurn && replayData.ReplayInfo.ID != id)
                             throw new Exception("Data 'ID' changed per turn when not expected.");
                         replayData.ReplayInfo.ID = id;
@@ -152,7 +152,7 @@ namespace AWBWApp.Game.API.New
 
                     case "creator":
                     {
-                        var creator = readInteger(text, ref textIndex);
+                        var creator = readLong(text, ref textIndex);
                         if (!firstTurn && replayData.ReplayInfo.CreatorId != creator)
                             throw new Exception("Data 'CreatorId' changed per turn when not expected.");
                         replayData.ReplayInfo.CreatorId = creator;
@@ -245,7 +245,7 @@ namespace AWBWApp.Game.API.New
 
                     case "turn":
                     {
-                        newTurn.ActivePlayerID = readInteger(text, ref textIndex);
+                        newTurn.ActivePlayerID = readLong(text, ref textIndex);
                         break;
                     }
 
@@ -477,8 +477,8 @@ namespace AWBWApp.Game.API.New
 
             var numberOfPlayers = readNextLength(text, ref textIndex);
 
-            data.ReplayInfo.Players ??= new Dictionary<int, ReplayUser>(numberOfPlayers);
-            turnData.Players = new Dictionary<int, AWBWReplayPlayerTurn>();
+            data.ReplayInfo.Players ??= new Dictionary<long, ReplayUser>(numberOfPlayers);
+            turnData.Players = new Dictionary<long, ReplayUserTurn>();
 
             if (text[textIndex++] != '{')
                 throw new Exception("Expected an array start for player data.");
@@ -500,7 +500,7 @@ namespace AWBWApp.Game.API.New
                     playerData = data.ReplayInfo.Players.First(x => x.Value.ReplayIndex == playerIndex).Value;
                 else
                     playerData = new ReplayUser { ReplayIndex = playerIndex };
-                var playerDataTurn = new AWBWReplayPlayerTurn();
+                var playerDataTurn = new ReplayUserTurn();
 
                 if (text[textIndex++] != '{')
                     throw new Exception("Player data does not start correctly.");
@@ -513,7 +513,7 @@ namespace AWBWApp.Game.API.New
                     {
                         case "id":
                         {
-                            var id = readInteger(text, ref textIndex);
+                            var id = readLong(text, ref textIndex);
                             if (!firstTurn && playerData.ID != id)
                                 throw new Exception("Player 'id' changed per turn when not expected.");
                             playerData.ID = id;
@@ -523,7 +523,7 @@ namespace AWBWApp.Game.API.New
 
                         case "users_id":
                         {
-                            var id = readInteger(text, ref textIndex);
+                            var id = readLong(text, ref textIndex);
                             if (!firstTurn && playerData.UserId != id)
                                 throw new Exception("Player 'users_id' changed per turn when not expected.");
                             playerData.UserId = id;
@@ -723,7 +723,7 @@ namespace AWBWApp.Game.API.New
                         {
                             //Describes which game/replay id this player info belongs to.
                             //Not useful in our condition as this information is redundent.
-                            readInteger(text, ref textIndex);
+                            readLong(text, ref textIndex);
                             break;
                         }
 
@@ -764,7 +764,7 @@ namespace AWBWApp.Game.API.New
                             //Todo: Maybe this may show some light on how a turn ended. Like does this change per turn, or is it always the same
                             //Likely describes how many times a player has had the turn auto ended.
                             //Not useful as we really don't care about the turns ending like this.
-                            var value = readInteger(text, ref textIndex);
+                            readInteger(text, ref textIndex);
                             break;
                         }
 
@@ -779,7 +779,7 @@ namespace AWBWApp.Game.API.New
                         {
                             //Likely describes which interface the player was using.
                             //This probably doesn't matter too much?
-                            var value = readString(text, ref textIndex);
+                            readString(text, ref textIndex);
                             break;
                         }
 
@@ -841,7 +841,7 @@ namespace AWBWApp.Game.API.New
                     {
                         case "id":
                         {
-                            var id = readInteger(text, ref textIndex);
+                            var id = readLong(text, ref textIndex);
                             building.ID = id;
                             break;
                         }
@@ -884,7 +884,7 @@ namespace AWBWApp.Game.API.New
                         case "games_id":
                         {
                             //We do not need this value, this was likely added to make database reading easier for AWBW
-                            readInteger(text, ref textIndex);
+                            readLong(text, ref textIndex);
                             break;
                         }
 
@@ -943,14 +943,14 @@ namespace AWBWApp.Game.API.New
                     {
                         case "id":
                         {
-                            var id = readInteger(text, ref textIndex);
+                            var id = readLong(text, ref textIndex);
                             unit.ID = id;
                             break;
                         }
 
                         case "players_id":
                         {
-                            var id = readInteger(text, ref textIndex);
+                            var id = readLong(text, ref textIndex);
                             unit.PlayerID = id;
                             break;
                         }
@@ -1091,24 +1091,24 @@ namespace AWBWApp.Game.API.New
 
                         case "cargo1_units_id":
                         {
-                            var carriedUnit = readInteger(text, ref textIndex);
+                            var carriedUnit = readLong(text, ref textIndex);
                             if (carriedUnit == 0)
                                 break;
 
                             if (unit.CargoUnits == null)
-                                unit.CargoUnits = new List<int>();
+                                unit.CargoUnits = new List<long>();
                             unit.CargoUnits.Add(carriedUnit);
                             break;
                         }
 
                         case "cargo2_units_id":
                         {
-                            var carriedUnit = readInteger(text, ref textIndex);
+                            var carriedUnit = readLong(text, ref textIndex);
                             if (carriedUnit == 0)
                                 break;
 
                             if (unit.CargoUnits == null)
-                                unit.CargoUnits = new List<int>();
+                                unit.CargoUnits = new List<long>();
                             unit.CargoUnits.Add(carriedUnit);
                             break;
                         }
@@ -1123,7 +1123,7 @@ namespace AWBWApp.Game.API.New
                         case "games_id":
                         {
                             //We do not need this value, this was likely added to make database reading easier for AWBW
-                            readInteger(text, ref textIndex);
+                            readLong(text, ref textIndex);
                             break;
                         }
 
@@ -1177,7 +1177,7 @@ namespace AWBWApp.Game.API.New
                     break;
             }
             var number = text.Slice(startIndex, textIndex - startIndex - 1);
-            var playerID = int.Parse(number, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
+            var playerID = long.Parse(number, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
 
             //Todo: Does this have any use?
             if (!text.Slice(textIndex, 2).Equals("d:", StringComparison.Ordinal))
@@ -1410,6 +1410,25 @@ namespace AWBWApp.Game.API.New
             }
             var number = text[startIndex..(index - 1)];
             return int.Parse(number, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
+        }
+
+        private long readLong(ReadOnlySpan<char> text, ref int index)
+        {
+            if (text[index++] != 'i')
+                throw new Exception("Was expecting a integer.");
+            if (text[index++] != ':')
+                throw new Exception("Integer was badly formatted.");
+
+            var startIndex = index;
+
+            while (true)
+            {
+                var character = text[index++];
+                if (character == ';')
+                    break;
+            }
+            var number = text[startIndex..(index - 1)];
+            return long.Parse(number, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
         }
 
         private int? readNullableInteger(ReadOnlySpan<char> text, ref int index)

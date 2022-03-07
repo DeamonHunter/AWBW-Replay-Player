@@ -65,7 +65,7 @@ namespace AWBWApp.Game.UI
             };
         }
 
-        public void UpdateList(Dictionary<int, PlayerInfo> players)
+        public void UpdateList(Dictionary<long, PlayerInfo> players)
         {
             Schedule(() =>
             {

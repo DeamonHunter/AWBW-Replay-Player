@@ -20,7 +20,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             var unit = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)jObject["unit"], turnData.ActiveTeam, turnData.ActivePlayerID);
 
             action.UnloadedUnit = ReplayActionHelper.ParseJObjectIntoReplayUnit(unit);
-            action.TransportID = (int)jObject["transportID"];
+            action.TransportID = (long)jObject["transportID"];
             return action;
         }
     }

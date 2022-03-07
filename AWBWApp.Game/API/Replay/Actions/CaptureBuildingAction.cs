@@ -45,7 +45,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 foreach (var playerIncome in incomeData.Children())
                 {
                     var playerIncomeData = (JObject)playerIncome;
-                    action.IncomeChanges[idx].PlayerId = (int)playerIncomeData["player"];
+                    action.IncomeChanges[idx].PlayerId = (long)playerIncomeData["player"];
                     action.IncomeChanges[idx].AmountChanged = (int)playerIncomeData["income"];
                     idx++;
                 }
@@ -94,7 +94,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public struct IncomeChanged
         {
-            public int PlayerId;
+            public long PlayerId;
             public int AmountChanged;
         }
     }

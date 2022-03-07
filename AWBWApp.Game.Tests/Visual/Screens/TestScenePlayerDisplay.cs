@@ -68,7 +68,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
 
             playerInfo = new PlayerInfo(replayPlayer, countryStorage.GetCountryByAWBWID(1));
 
-            var replayPlayerTurn = new AWBWReplayPlayerTurn
+            var replayPlayerTurn = new ReplayUserTurn
             {
                 ActiveCOID = 1,
                 ActiveCOPowers = ActiveCOPowers.None,
@@ -118,7 +118,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
 
         private void UpdatePlayerInfo(bool swapTag = false, int? gainMoney = null, int? gainPower = null, int? newRequiredPower = null, int? newSuperPower = null, int? gainUnits = null, int? gainUnitValue = null, int? gainPropertyValue = null)
         {
-            var replayPlayerTurn = new AWBWReplayPlayerTurn
+            var replayPlayerTurn = new ReplayUserTurn
             {
                 ActiveCOPowers = ActiveCOPowers.None, //Todo: Show
                 Eliminated = playerInfo.Eliminated.Value,

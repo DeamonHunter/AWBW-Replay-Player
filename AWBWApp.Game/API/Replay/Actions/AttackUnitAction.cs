@@ -68,7 +68,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 foreach (var player in copValues)
                 {
                     var powerChange = new AttackUnitAction.COPowerChange();
-                    powerChange.PlayerID = (int)player.Value["playerId"];
+                    powerChange.PlayerID = (long)player.Value["playerId"];
                     powerChange.PowerChange = (int)player.Value["copValue"];
                     powerChange.TagPowerChange = (int?)player.Value["tagValue"];
                     action.PowerChanges.Add(powerChange);
@@ -79,13 +79,13 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (gainedFunds != null)
             {
-                action.GainedFunds = new List<(int, int)>();
+                action.GainedFunds = new List<(long, int)>();
 
                 foreach (var player in gainedFunds)
                 {
                     if (player.Value.Type == JTokenType.Null)
                         continue;
-                    action.GainedFunds.Add((int.Parse(player.Key), (int)player.Value));
+                    action.GainedFunds.Add((long.Parse(player.Key), (int)player.Value));
                 }
             }
 
@@ -98,7 +98,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public ReplayUnit Attacker { get; set; }
         public ReplayUnit Defender { get; set; }
         public List<COPowerChange> PowerChanges { get; set; }
-        public List<(int playerID, int funds)> GainedFunds { get; set; }
+        public List<(long playerID, int funds)> GainedFunds { get; set; }
 
         public MoveUnitAction MoveUnit;
 
@@ -211,7 +211,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public class COPowerChange
         {
-            public int PlayerID;
+            public long PlayerID;
             public int PowerChange;
             public int? TagPowerChange;
         }

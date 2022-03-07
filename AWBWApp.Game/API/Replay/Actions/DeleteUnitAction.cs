@@ -24,7 +24,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (deleteData.ContainsKey("Move"))
                 throw new Exception("Movement data in delete action.");
 
-            action.DeletedUnitId = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)deleteData["unitId"], turnData.ActiveTeam, turnData.ActivePlayerID);
+            action.DeletedUnitId = (long)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)deleteData["unitId"], turnData.ActiveTeam, turnData.ActivePlayerID);
             return action;
         }
     }

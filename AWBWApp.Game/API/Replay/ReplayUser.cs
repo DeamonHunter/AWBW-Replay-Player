@@ -5,8 +5,8 @@ namespace AWBWApp.Game.API.Replay
 {
     public class ReplayUser
     {
-        public int ID;
-        public int UserId;
+        public long ID;
+        public long UserId;
         public string Username; //This needs to be filled in by asking AWBW
 
         public string TeamName;
@@ -19,9 +19,9 @@ namespace AWBWApp.Game.API.Replay
         public int? EliminatedOn;
     }
 
-    public class AWBWReplayPlayerTurn
+    public class ReplayUserTurn
     {
-        public int ID; //Just to make sure things stay the same
+        public long ID; //Just to make sure things stay the same
         public int Funds;
 
         public int ActiveCOID;

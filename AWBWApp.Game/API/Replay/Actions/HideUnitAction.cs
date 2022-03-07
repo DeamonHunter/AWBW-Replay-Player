@@ -31,14 +31,14 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (hideData == null)
                 throw new Exception("Hide Replay Action did not contain information about Hide.");
 
-            action.HidingUnitID = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)hideData["unit"], turnData.ActiveTeam, turnData.ActivePlayerID);
+            action.HidingUnitID = (long)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)hideData["unit"], turnData.ActiveTeam, turnData.ActivePlayerID);
             return action;
         }
     }
 
     public class HideUnitAction : IReplayAction
     {
-        public int HidingUnitID { get; set; }
+        public long HidingUnitID { get; set; }
 
         public MoveUnitAction MoveUnit;
 

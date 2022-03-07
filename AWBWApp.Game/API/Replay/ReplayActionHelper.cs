@@ -8,7 +8,7 @@ namespace AWBWApp.Game.API.Replay
 {
     public static class ReplayActionHelper
     {
-        public static JToken GetPlayerSpecificDataFromJObject(JObject jObject, string teamName, int playerId)
+        public static JToken GetPlayerSpecificDataFromJObject(JObject jObject, string teamName, long playerId)
         {
             JToken data;
             var playerString = playerId.ToString();
@@ -27,10 +27,10 @@ namespace AWBWApp.Game.API.Replay
         public static ReplayUnit ParseJObjectIntoReplayUnit(JObject jObject)
         {
             var unit = new ReplayUnit();
-            unit.ID = (int)jObject["units_id"];
+            unit.ID = (long)jObject["units_id"];
 
             if (jObject.TryGetValue("units_players_id", out JToken playerId))
-                unit.PlayerID = (int)playerId;
+                unit.PlayerID = (long)playerId;
 
             if (jObject.TryGetValue("units_name", out JToken unitName))
                 unit.UnitName = (string)unitName;
@@ -90,24 +90,24 @@ namespace AWBWApp.Game.API.Replay
 
             if (jObject.TryGetValue("units_cargo1_units_id", out JToken carriedId1))
             {
-                var id = (int)carriedId1;
+                var id = (long)carriedId1;
 
                 if (id != 0)
                 {
                     if (unit.CargoUnits == null)
-                        unit.CargoUnits = new List<int>();
+                        unit.CargoUnits = new List<long>();
                     unit.CargoUnits.Add(id);
                 }
             }
 
             if (jObject.TryGetValue("units_cargo2_units_id", out JToken carriedId2))
             {
-                var id = (int)carriedId2;
+                var id = (long)carriedId2;
 
                 if (id != 0)
                 {
                     if (unit.CargoUnits == null)
-                        unit.CargoUnits = new List<int>();
+                        unit.CargoUnits = new List<long>();
                     unit.CargoUnits.Add(id);
                 }
             }
@@ -139,7 +139,7 @@ namespace AWBWApp.Game.API.Replay
         public static ReplayBuilding ParseJObjectIntoReplayBuilding(JObject jObject)
         {
             var building = new ReplayBuilding();
-            building.ID = (int)jObject["buildings_id"];
+            building.ID = (long)jObject["buildings_id"];
             building.TerrainID = (int?)jObject["terrain_id"];
             building.Capture = (int)jObject["buildings_capture"];
             building.Position = new Vector2I((int)jObject["buildings_x"], (int)jObject["buildings_y"]);

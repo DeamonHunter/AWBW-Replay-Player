@@ -41,7 +41,7 @@ namespace AWBWApp.Game.Game.Logic
                 FogOfWar.TriggerChange();
         }
 
-        public void GenerateFogForPlayer(int player, int rangeIncrease, bool canSeeIntoHiddenTiles, bool resetFog = true) => generateFog(gameMap.GetDrawableBuildingsForPlayer(player), gameMap.GetDrawableUnitsFromPlayer(player), rangeIncrease, canSeeIntoHiddenTiles, resetFog);
+        public void GenerateFogForPlayer(long player, int rangeIncrease, bool canSeeIntoHiddenTiles, bool resetFog = true) => generateFog(gameMap.GetDrawableBuildingsForPlayer(player), gameMap.GetDrawableUnitsFromPlayer(player), rangeIncrease, canSeeIntoHiddenTiles, resetFog);
 
         private void generateFog(IEnumerable<DrawableBuilding> buildings, IEnumerable<DrawableUnit> units, int rangeIncrease, bool canSeeIntoHiddenTiles, bool resetFog = true)
         {

@@ -31,7 +31,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (joinData == null)
                 throw new Exception("Join Replay Action did not contain information about Join.");
 
-            action.JoiningUnitId = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)joinData["joinID"], turnData.ActiveTeam, turnData.ActivePlayerID);
+            action.JoiningUnitId = (long)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)joinData["joinID"], turnData.ActiveTeam, turnData.ActivePlayerID);
             action.JoinedUnit = ReplayActionHelper.ParseJObjectIntoReplayUnit((JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)joinData["unit"], turnData.ActiveTeam, turnData.ActivePlayerID));
             return action;
         }

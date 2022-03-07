@@ -36,7 +36,7 @@ namespace AWBWApp.Game.Game.Logic
             EliminatedOn = player.EliminatedOn;
         }
 
-        public void UpdateTurn(AWBWReplayPlayerTurn turn, COStorage coStorage, int turnNumber, int unitCount, int unitValue, int propertyValue)
+        public void UpdateTurn(ReplayUserTurn turn, COStorage coStorage, int turnNumber, int unitCount, int unitValue, int propertyValue)
         {
             Eliminated.Value = EliminatedOn.HasValue && turnNumber >= EliminatedOn;
 
