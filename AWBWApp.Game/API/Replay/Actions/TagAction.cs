@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using AWBWApp.Game.Game.Logic;
-using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
 
 namespace AWBWApp.Game.API.Replay.Actions
@@ -15,26 +12,16 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public ReplayActionDatabase Database { get; set; }
 
-        //Todo: Figure out if anything of this is needed.
         public IReplayAction ParseJObjectIntoReplayAction(JObject jObject, ReplayData replayData, TurnData turnData)
         {
-            var action = new TagAction();
-
             var updatedInfo = (JObject)jObject["updatedInfo"];
 
             var eventName = (string)updatedInfo["event"];
 
             if (eventName == "NextTurn")
-                return new EndTurnAction(); //Todo: Is there anything special to this end turn action?
+                return Database.GetActionBuilder("End").ParseJObjectIntoReplayAction(jObject, replayData, turnData);
 
-            throw new NotImplementedException("Tag actions, that aren't end turn actions, are not implemented.");
+            throw new NotImplementedException("Tag actions, that aren't end turn actions are not implemented.");
         }
-    }
-
-    public class TagAction : IReplayAction
-    {
-        public IEnumerable<ReplayWait> PerformAction(ReplayController controller) { yield break; }
-
-        public void UndoAction(ReplayController controller, bool immediate) { }
     }
 }

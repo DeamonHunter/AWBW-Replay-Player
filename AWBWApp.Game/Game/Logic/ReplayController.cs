@@ -32,7 +32,7 @@ namespace AWBWApp.Game.Game.Logic
         private CountryStorage countryStorage { get; set; }
 
         [Cached]
-        private ReplaySettings settings { get; set; }
+        public ReplaySettings Settings { get; private set; }
 
         public List<(long playerID, PowerAction action, int activeDay)> ActivePowers = new List<(long, PowerAction, int)>();
 
@@ -75,7 +75,7 @@ namespace AWBWApp.Game.Game.Logic
                 Right = mapPadding.Right + DrawableTile.BASE_SIZE.X * 4,
             };
 
-            settings = new ReplaySettings();
+            Settings = new ReplaySettings();
 
             AddRangeInternal(new Drawable[]
             {
@@ -109,8 +109,9 @@ namespace AWBWApp.Game.Game.Logic
                                     {
                                         Items = new[]
                                         {
-                                            new ToggleMenuItem("Show Grid", settings.ShowGridOverMap),
-                                            new ToggleMenuItem("Show Hidden Units", settings.ShowHiddenUnits)
+                                            new ToggleMenuItem("Show Grid", Settings.ShowGridOverMap),
+                                            new ToggleMenuItem("Show Hidden Units", Settings.ShowHiddenUnits),
+                                            new ToggleMenuItem("Show End Turn", Settings.ShowEndTurnNotifs)
                                         }
                                     }
                                 }
@@ -186,6 +187,7 @@ namespace AWBWApp.Game.Game.Logic
 
             currentTurn = replayData.TurnData[0];
             currentActionIndex = -1;
+            currentTurnIndex = 0;
             checkPowers();
 
             Players.Clear();
@@ -244,19 +246,36 @@ namespace AWBWApp.Game.Game.Logic
 
         public void GoToNextAction()
         {
-            completeAllActions();
-
             if (currentTurn.Actions == null)
             {
                 //Todo: Maybe some notification to say no actions occured?
-                goToTurnWithIdx(currentTurnIndex + 1);
+                goToTurnWithIdx(currentTurnIndex + 1, true);
                 return;
             }
+
+            if (currentActionIndex >= 0)
+            {
+                var currentAction = currentTurn.Actions[currentActionIndex];
+
+                if (currentAction is EndTurnAction)
+                {
+                    completeAllActions();
+                    return; //Wait for end turn action to do its thing
+                }
+            }
+
+            completeAllActions();
 
             if (currentActionIndex < currentTurn.Actions.Count - 1)
             {
                 currentActionIndex++;
                 var action = currentTurn.Actions[currentActionIndex];
+
+                if (!Settings.ShowEndTurnNotifs.Value && action is EndTurnActionBuilder)
+                {
+                    goToTurnWithIdx(currentTurnIndex + 1, false);
+                    return;
+                }
 
                 if (action == null)
                 {
@@ -264,17 +283,11 @@ namespace AWBWApp.Game.Game.Logic
                     return;
                 }
 
-                if (action is EndTurnActionBuilder)
-                {
-                    goToTurnWithIdx(currentTurnIndex + 1);
-                    return;
-                }
-
                 currentOngoingActions.Enqueue(action.PerformAction(this).GetEnumerator());
             }
             else if (currentTurnIndex < replayData.TurnData.Count - 1)
             {
-                goToTurnWithIdx(currentTurnIndex + 1);
+                goToTurnWithIdx(currentTurnIndex + 1, false);
                 return;
             }
 
@@ -288,7 +301,7 @@ namespace AWBWApp.Game.Game.Logic
 
             foreach (var ongoingAction in currentOngoingActions)
             {
-                while (ongoingAction.MoveNext())
+                do
                 {
                     if (ongoingAction.Current?.Transformable != null)
                     {
@@ -296,18 +309,19 @@ namespace AWBWApp.Game.Game.Logic
                         if (ongoingAction.Current.Transformable.LifetimeEnd != double.MaxValue)
                             ongoingAction.Current.Transformable.Expire();
                     }
-                }
+                } while (ongoingAction.MoveNext());
             }
         }
 
         public void HideLoad() => loadingLayer.Hide();
 
-        public void GoToNextTurn() => goToTurnWithIdx(currentTurnIndex + 1);
-        public void GoToPreviousTurn() => goToTurnWithIdx(currentTurnIndex - 1);
+        public void GoToNextTurn(bool completeActions = true) => goToTurnWithIdx(currentTurnIndex + 1, completeActions);
+        public void GoToPreviousTurn(bool completeActions = true) => goToTurnWithIdx(currentTurnIndex - 1, completeActions);
 
-        private void goToTurnWithIdx(int turnIdx)
+        private void goToTurnWithIdx(int turnIdx, bool completeActions)
         {
-            completeAllActions();
+            if (completeActions)
+                completeAllActions();
 
             if (turnIdx < 0)
                 turnIdx = 0;
@@ -405,6 +419,14 @@ namespace AWBWApp.Game.Game.Logic
             powerLayer.Add(powerAnimation);
 
             return powerAnimation;
+        }
+
+        public Drawable PlayEndTurnAnimation(PlayerInfo playerInfo, int day)
+        {
+            var endTurnPopup = new EndTurnPopupDrawable(playerInfo, day);
+            powerLayer.Add(endTurnPopup);
+
+            return endTurnPopup;
         }
 
         void checkPowers()

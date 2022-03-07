@@ -1283,7 +1283,7 @@ namespace AWBWApp.Game.API.New
                     var jsonObject = JObject.Parse(actionString);
                     var action = actionDatabase.ParseJObjectIntoReplayAction(jsonObject, replayData, turnData);
 
-                    if (!(action is EndTurnAction || action is TagAction))
+                    if (!(action is EndTurnAction))
                         throw new Exception("Replay actions contained an unknown turn id.");
                 }
             }

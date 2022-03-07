@@ -9,7 +9,7 @@ using osuTK;
 namespace AWBWApp.Game.Tests.Visual.Components
 {
     [TestFixture]
-    public class TestReplayCarouselItem : AWBWAppTestScene
+    public class TestSceneReplayCarouselItem : AWBWAppTestScene
     {
         [Resolved]
         private ReplayManager replayManager { get; set; }
