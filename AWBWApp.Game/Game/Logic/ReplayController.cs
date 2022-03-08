@@ -133,7 +133,7 @@ namespace AWBWApp.Game.Game.Logic
                     RelativeSizeAxes = Axes.X,
                     Size = new Vector2(1, 40) //Gives a bit of leeway as this is larger than the menuBar
                 },
-                loadingLayer = new LoadingLayer(true)
+                loadingLayer = new ReplayLoadingLayer()
             });
 
             Map.OnLoadComplete += _ => cameraControllerWithGrid.FitMapToSpace();
