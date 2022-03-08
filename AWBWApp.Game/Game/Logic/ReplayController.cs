@@ -377,6 +377,13 @@ namespace AWBWApp.Game.Game.Logic
 
         public void UpdateFogOfWar()
         {
+            if (!replayData.ReplayInfo.Fog)
+            {
+                //Todo: We don't need to clear this all the time
+                Map.ClearFog(false, true);
+                return;
+            }
+
             calculateFogForPlayer(currentTurn.ActivePlayerID, true);
 
             if (!currentTurn.ActiveTeam.IsNullOrEmpty())
