@@ -33,11 +33,9 @@ namespace AWBWApp.Desktop
         {
             bool scheduleRecheck = true;
 
-            const string github_token = null;
-
             try
             {
-                updateManager ??= new GithubUpdateManager(@"https://github.com/DeamonHunter/AWBW-Replay-Player", false, github_token, @"AWBWReplayPlayer");
+                updateManager ??= new GithubUpdateManager(@"https://github.com/DeamonHunter/AWBW-Replay-Player");
 
                 var info = await updateManager.CheckForUpdate(!useDeltaPatching).ConfigureAwait(false);
 
