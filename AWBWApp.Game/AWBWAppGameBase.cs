@@ -125,7 +125,7 @@ namespace AWBWApp.Game
 
         public virtual Version AssemblyVersion => Assembly.GetEntryAssembly()?.GetName().Version ?? new Version();
 
-        public bool IsDeployedBuild => AssemblyVersion.Major > 0;
+        public bool IsDeployedBuild => AssemblyVersion.Major > 0 || AssemblyVersion.Minor > 0;
 
         public virtual string Version
         {

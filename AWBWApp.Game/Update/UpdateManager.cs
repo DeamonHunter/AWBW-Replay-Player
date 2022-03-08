@@ -22,6 +22,7 @@ namespace AWBWApp.Game.Update
             Schedule(() => Task.Run(CheckForUpdateAsync));
 
             var version = game.Version;
+            Logger.Log("[Version] " + version);
 
             string lastVersion = config.Get<string>(AWBWSetting.Version);
 

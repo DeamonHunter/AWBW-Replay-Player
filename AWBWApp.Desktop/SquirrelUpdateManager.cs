@@ -36,11 +36,14 @@ namespace AWBWApp.Desktop
             try
             {
                 updateManager ??= new GithubUpdateManager(@"https://github.com/DeamonHunter/AWBW-Replay-Player");
+                Logger.Log("[Update] Checking for update.");
 
                 var info = await updateManager.CheckForUpdate(!useDeltaPatching).ConfigureAwait(false);
 
                 if (info.ReleasesToApply.Count == 0)
                 {
+                    Logger.Log("[Update] No Releases to Apply.");
+
                     if (updatePending)
                     {
                         return true;
@@ -53,10 +56,13 @@ namespace AWBWApp.Desktop
 
                 try
                 {
+                    Logger.Log("[Update] Downloading Releases.");
                     await updateManager.DownloadReleases(info.ReleasesToApply).ConfigureAwait(false);
 
+                    Logger.Log("[Update] Applying Releases.");
                     await updateManager.ApplyReleases(info);
 
+                    Logger.Log("[Update] Finished applying Releases.");
                     updatePending = true;
                 }
                 catch (Exception e)
