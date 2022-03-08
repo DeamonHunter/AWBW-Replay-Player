@@ -277,8 +277,13 @@ namespace AWBWApp.Game.Game.Logic
                     var coord = new Vector2I(x, y);
                     if (buildings.TryGetValue(coord, out var building))
                         building.FadeOut().Delay(((x + y) * 40 + 25) * inverseSpeed).FadeIn().MoveToOffset(offsetPosition).MoveTo(building.Position, 275 * inverseSpeed, Easing.OutCubic);
+
                     if (TryGetDrawableUnit(coord, out var unit))
-                        unit.FadeOut().Delay(((x + y) * 40 + 50) * inverseSpeed).FadeIn().MoveToOffset(offsetPosition).MoveTo(unit.Position, 275 * inverseSpeed, Easing.OutCubic);
+                    {
+                        unit.UnitAnimatingIn = true;
+                        unit.FadeOut().Delay(((x + y) * 40 + 50) * inverseSpeed).FadeInFromZero();
+                        unit.Delay(((x + y) * 40 + 50) * inverseSpeed).MoveToOffset(offsetPosition).MoveTo(unit.Position, 275 * inverseSpeed, Easing.OutCubic).OnComplete(x => x.UnitAnimatingIn = false);
+                    }
                 }
             }
         }
@@ -295,6 +300,7 @@ namespace AWBWApp.Game.Game.Logic
                     var coord = new Vector2I(x, y);
                     if (buildings.TryGetValue(coord, out var building))
                         building.FogOfWarActive.Value = foggy;
+
                     if (TryGetDrawableUnit(coord, out var unit))
                         unit.FogOfWarActive.Value = foggy;
                 }

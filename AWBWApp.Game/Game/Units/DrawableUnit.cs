@@ -30,6 +30,20 @@ namespace AWBWApp.Game.Game.Unit
         public long UnitID { get; private set; }
         public long? OwnerID { get; private set; }
 
+        public bool UnitAnimatingIn
+        {
+            get => unitAnimatingIn;
+            set
+            {
+                if (unitAnimatingIn == value) return;
+
+                unitAnimatingIn = value;
+                updateUnitColour(true);
+            }
+        }
+
+        private bool unitAnimatingIn;
+
         public BindableInt HealthPoints = new BindableInt();
         public BindableInt Fuel = new BindableInt();
         public BindableInt Ammo = new BindableInt();
@@ -89,8 +103,6 @@ namespace AWBWApp.Game.Game.Unit
             this.country = country;
 
             HealthPoints.BindValueChanged(UpdateHp);
-            CanMove.BindValueChanged(x => updateUnitColour(x.NewValue));
-            FogOfWarActive.BindValueChanged(x => updateUnitColour(x.NewValue));
             IsCapturing.BindValueChanged(updateCapturing);
             Dived.BindValueChanged(x => updateAnimation());
             BeingCarried.BindValueChanged(x => updateAnimation());
@@ -143,9 +155,6 @@ namespace AWBWApp.Game.Game.Unit
             capturing.Texture = store.Get("UI/Capturing");
             capturing.Size = capturing.Texture.Size;
 
-            showUnitInFog = settings.ShowHiddenUnits.GetBoundCopy();
-            showUnitInFog.BindValueChanged(x => updateUnitColour(x.NewValue), true);
-
             if (UnitData.Frames == null)
             {
                 var texture = store.Get($"{UnitData.BaseTextureByTeam[country.Code]}-0");
@@ -185,6 +194,11 @@ namespace AWBWApp.Game.Game.Unit
                 }
                 divedAnimation.Seek(UnitData.FrameOffset);
             }
+
+            showUnitInFog = settings.ShowHiddenUnits.GetBoundCopy();
+            showUnitInFog.BindValueChanged(x => updateUnitColour(x.NewValue));
+            CanMove.BindValueChanged(x => updateUnitColour(x.NewValue));
+            FogOfWarActive.BindValueChanged(x => updateUnitColour(x.NewValue));
         }
 
         public void MoveToPosition(Vector2I position, bool updateVisual = true)
@@ -285,7 +299,10 @@ namespace AWBWApp.Game.Game.Unit
                 colour = colour.Darken(0.2f);
 
             var alpha = !FogOfWarActive.Value || (showUnitInFog?.Value ?? true) ? 1 : 0;
-            this.FadeTo(alpha, 250, Easing.OutQuint);
+
+            if (!UnitAnimatingIn || alpha != 1)
+                this.FadeTo(alpha, 250, Easing.OutQuint);
+
             textureAnimation.FadeColour(colour, 250, newValue ? Easing.OutQuint : Easing.InQuint);
         }
     }
