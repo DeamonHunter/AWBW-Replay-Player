@@ -30,7 +30,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
                 Username = "DeamonHunter"
             };
 
-            var turn = new ReplayUserTurn()
+            var turn = new ReplayUserTurn
             {
                 ID = 1,
                 Funds = 1000,

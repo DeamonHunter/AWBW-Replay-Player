@@ -19,7 +19,7 @@ namespace AWBWApp.Game.UI
 
         private Axes shrinkAxes = Axes.Both;
 
-        private Drawable childDrawable;
+        private readonly Drawable childDrawable;
 
         private Vector2 prevDrawSize;
         private Vector2 prevChildSize;

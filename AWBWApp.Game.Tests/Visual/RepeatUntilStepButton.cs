@@ -3,9 +3,10 @@
 
 using System;
 using osu.Framework.Graphics;
+using osu.Framework.Testing.Drawables.Steps;
 using osuTK.Graphics;
 
-namespace osu.Framework.Testing.Drawables.Steps
+namespace AWBWApp.Game.Tests.Visual
 {
     public class RepeatUntilStepButton : StepButton
     {
@@ -18,7 +19,7 @@ namespace osu.Framework.Testing.Drawables.Steps
 
         private string text;
 
-        private Func<bool> isSuccessDelegate;
+        private readonly Func<bool> isSuccessDelegate;
 
         public new string Text
         {

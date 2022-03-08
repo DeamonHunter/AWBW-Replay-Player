@@ -19,7 +19,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                 RelativeSizeAxes = Axes.Both
             });
 
-            ScreenStack.Push(Screen = new ReplaySelectScreen()
+            ScreenStack.Push(Screen = new ReplaySelectScreen
             {
                 RelativeSizeAxes = Axes.Both
             });

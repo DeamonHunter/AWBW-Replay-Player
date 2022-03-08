@@ -3,17 +3,20 @@ using System.Linq;
 using AWBWApp.Game.API.Replay;
 using osu.Framework.Graphics.Primitives;
 
-namespace AWBWApp.Game.Tests.Visual.Logic.Actions
+namespace AWBWApp.Game.Tests.Visual.Logic
 {
     public abstract class BaseActionsTestScene : BaseGameMapTestScene
     {
         protected ReplayData CreateBasicReplayData(int playerCount)
         {
-            var replayData = new ReplayData();
-
-            //Create some basic players
-
-            replayData.ReplayInfo.Players = new Dictionary<long, ReplayUser>(playerCount);
+            var replayData = new ReplayData
+            {
+                ReplayInfo = new ReplayInfo
+                {
+                    //Create some basic players
+                    Players = new Dictionary<long, ReplayUser>(playerCount)
+                }
+            };
 
             for (int i = 0; i < playerCount; i++)
             {

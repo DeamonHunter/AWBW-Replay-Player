@@ -21,29 +21,29 @@ namespace AWBWApp.Game.Tests.Visual.Components
         // Add visual tests to ensure correct behaviour of your game: https://github.com/ppy/osu-framework/wiki/Development-and-Testing
         // You can make changes to classes associated with the tests and they will recompile and update immediately.
 
-        private List<ShrinkingCompositeDrawable> _shrinkerList = new List<ShrinkingCompositeDrawable>();
-        private List<Sprite> _spriteList = new List<Sprite>();
+        private readonly List<ShrinkingCompositeDrawable> shrinkerList = new List<ShrinkingCompositeDrawable>();
+        private readonly List<Sprite> spriteList = new List<Sprite>();
 
-        private Vector2 _originalSpriteSize;
+        private Vector2 originalSpriteSize;
 
         public TestSceneShrinkingDrawable()
         {
-            var content = new Drawable[,]
+            var content = new[,]
             {
                 {
-                    AddBox(Anchor.TopLeft),
-                    AddBox(Anchor.TopCentre),
-                    AddBox(Anchor.TopRight)
+                    addBox(Anchor.TopLeft),
+                    addBox(Anchor.TopCentre),
+                    addBox(Anchor.TopRight)
                 },
                 {
-                    AddBox(Anchor.CentreLeft),
-                    AddBox(Anchor.Centre),
-                    AddBox(Anchor.CentreRight)
+                    addBox(Anchor.CentreLeft),
+                    addBox(Anchor.Centre),
+                    addBox(Anchor.CentreRight)
                 },
                 {
-                    AddBox(Anchor.BottomLeft),
-                    AddBox(Anchor.BottomCentre),
-                    AddBox(Anchor.BottomRight)
+                    addBox(Anchor.BottomLeft),
+                    addBox(Anchor.BottomCentre),
+                    addBox(Anchor.BottomRight)
                 },
             };
 
@@ -61,9 +61,9 @@ namespace AWBWApp.Game.Tests.Visual.Components
         {
             AddStep("Reset sprite Scale", () =>
             {
-                foreach (var sprite in _spriteList)
-                    sprite.ResizeTo(_originalSpriteSize);
-                foreach (var shrinker in _shrinkerList)
+                foreach (var sprite in spriteList)
+                    sprite.ResizeTo(originalSpriteSize);
+                foreach (var shrinker in shrinkerList)
                     shrinker.ScaleTo(1);
             });
         }
@@ -73,10 +73,10 @@ namespace AWBWApp.Game.Tests.Visual.Components
         {
             AddStep("Grow all sprites", () =>
             {
-                foreach (var sprite in _spriteList)
-                    sprite.ResizeTo(_originalSpriteSize * 10, 500);
+                foreach (var sprite in spriteList)
+                    sprite.ResizeTo(originalSpriteSize * 10, 500);
             });
-            AddUntilStep("Wait For growth: ", () => _spriteList[0].LatestTransformEndTime == _spriteList[0].Time.Current);
+            AddUntilStep("Wait For growth: ", () => spriteList[0].LatestTransformEndTime == spriteList[0].Time.Current);
         }
 
         [Test]
@@ -84,12 +84,12 @@ namespace AWBWApp.Game.Tests.Visual.Components
         {
             AddStep("Grow all sprites", () =>
             {
-                foreach (var sprite in _spriteList)
+                foreach (var sprite in spriteList)
                 {
-                    sprite.ResizeTo(new Vector2(_originalSpriteSize.X * 10, _originalSpriteSize.Y), 500);
+                    sprite.ResizeTo(new Vector2(originalSpriteSize.X * 10, originalSpriteSize.Y), 500);
                 }
             });
-            AddUntilStep("Wait For growth: ", () => _spriteList[0].LatestTransformEndTime == _spriteList[0].Time.Current);
+            AddUntilStep("Wait For growth: ", () => spriteList[0].LatestTransformEndTime == spriteList[0].Time.Current);
         }
 
         [Test]
@@ -97,12 +97,12 @@ namespace AWBWApp.Game.Tests.Visual.Components
         {
             AddStep("Grow all sprites", () =>
             {
-                foreach (var sprite in _spriteList)
+                foreach (var sprite in spriteList)
                 {
-                    sprite.ResizeTo(new Vector2(_originalSpriteSize.X, _originalSpriteSize.Y * 10), 500);
+                    sprite.ResizeTo(new Vector2(originalSpriteSize.X, originalSpriteSize.Y * 10), 500);
                 }
             });
-            AddUntilStep("Wait For growth: ", () => _spriteList[0].LatestTransformEndTime == _spriteList[0].Time.Current);
+            AddUntilStep("Wait For growth: ", () => spriteList[0].LatestTransformEndTime == spriteList[0].Time.Current);
         }
 
         [Test]
@@ -110,12 +110,12 @@ namespace AWBWApp.Game.Tests.Visual.Components
         {
             AddStep("Grow all sprites", () =>
             {
-                foreach (var shrinker in _shrinkerList)
+                foreach (var shrinker in shrinkerList)
                     shrinker.ScaleTo(2, 500);
-                foreach (var sprite in _spriteList)
-                    sprite.ResizeTo(_originalSpriteSize * 10, 500);
+                foreach (var sprite in spriteList)
+                    sprite.ResizeTo(originalSpriteSize * 10, 500);
             });
-            AddUntilStep("Wait For growth: ", () => _spriteList[0].LatestTransformEndTime == _spriteList[0].Time.Current);
+            AddUntilStep("Wait For growth: ", () => spriteList[0].LatestTransformEndTime == spriteList[0].Time.Current);
         }
 
         [BackgroundDependencyLoader]
@@ -123,16 +123,16 @@ namespace AWBWApp.Game.Tests.Visual.Components
         {
             var texture = store.Get("UI/Team-A");
 
-            _originalSpriteSize = texture.Size;
+            originalSpriteSize = texture.Size;
 
-            foreach (var sprite in _spriteList)
+            foreach (var sprite in spriteList)
             {
                 sprite.Texture = texture;
                 sprite.Size = texture.Size;
             }
         }
 
-        private Drawable AddBox(Anchor anchor)
+        private Drawable addBox(Anchor anchor)
         {
             var box = new Sprite
             {
@@ -140,10 +140,10 @@ namespace AWBWApp.Game.Tests.Visual.Components
                 Origin = anchor
             };
 
-            _spriteList.Add(box);
+            spriteList.Add(box);
 
             ShrinkingCompositeDrawable shrinkingDrawable;
-            var container = new Container()
+            var container = new Container
             {
                 Anchor = anchor,
                 Origin = anchor,
@@ -167,7 +167,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
                 }
             };
 
-            _shrinkerList.Add(shrinkingDrawable);
+            shrinkerList.Add(shrinkingDrawable);
 
             return container;
         }

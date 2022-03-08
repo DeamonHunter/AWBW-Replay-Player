@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
@@ -60,19 +61,21 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         public void RenderRandomMap(int xSize, int ySize)
         {
             var replayData = createEmptyReplayWithWeatherChanges();
-            var gameMap = new ReplayMap();
-            gameMap.Size = new Vector2I(xSize, ySize);
-            gameMap.Ids = new short[xSize * ySize];
+            var gameMap = new ReplayMap
+            {
+                Size = new Vector2I(xSize, ySize),
+                Ids = new short[xSize * ySize]
+            };
 
             var random = new Random();
 
-            var storage = GetTileStorage();
+            var terrainTileStorage = GetTileStorage();
 
             for (int x = 0; x < xSize; x++)
             {
                 for (int y = 0; y < ySize; y++)
                 {
-                    var randomTile = storage.GetRandomTerrainTile(random);
+                    var randomTile = terrainTileStorage.GetRandomTerrainTile(random);
                     gameMap.Ids[x * ySize + y] = (short)randomTile.AWBWId;
                 }
             }
@@ -86,9 +89,11 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             var turn = replay.TurnData[0];
             replay.TurnData = new List<TurnData> { turn };
 
-            var gameMap = new ReplayMap();
-            gameMap.Size = new Vector2I(xSize, ySize);
-            gameMap.Ids = new short[xSize * ySize];
+            var gameMap = new ReplayMap
+            {
+                Size = new Vector2I(xSize, ySize),
+                Ids = new short[xSize * ySize]
+            };
 
             var tileStorage = GetTileStorage();
             var buildingStorage = GetBuildingStorage();
@@ -155,6 +160,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 using (var sr = new StreamReader(stream))
                     gameMap = JsonConvert.DeserializeObject<ReplayMap>(sr.ReadToEnd());
             }
+
+            Debug.Assert(gameMap != null, "Game Map was Null.");
 
             var buildingStorage = GetBuildingStorage();
 

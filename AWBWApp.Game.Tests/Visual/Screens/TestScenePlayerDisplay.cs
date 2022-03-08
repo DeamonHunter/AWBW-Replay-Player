@@ -26,28 +26,28 @@ namespace AWBWApp.Game.Tests.Visual.Screens
         public void TestCreateReplayPlayer()
         {
             AddStep("Create Replay Player", () => reset(false, false));
-            AddTests(false);
+            addTests(false);
         }
 
         [Test]
         public void TestCreateReplayPlayerWithTeam()
         {
             AddStep("Create Replay Player", () => reset(true, false));
-            AddTests(false);
+            addTests(false);
         }
 
         [Test]
         public void TestCreateReplayPlayerWithTag()
         {
             AddStep("Create Replay Player", () => reset(false, true));
-            AddTests(true);
+            addTests(true);
         }
 
         [Test]
         public void TestCreateReplayPlayerWithTeamAndTag()
         {
             AddStep("Create Replay Player", () => reset(true, true));
-            AddTests(true);
+            addTests(true);
         }
 
         private void reset(bool addTeam, bool addTag)
@@ -89,7 +89,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
 
             playerInfo.UpdateTurn(replayPlayerTurn, coStorage, 0, 0, 0, 0);
 
-            Child = new Container()
+            Child = new Container
             {
                 AutoSizeAxes = Axes.Y,
                 Width = 225,
@@ -99,24 +99,24 @@ namespace AWBWApp.Game.Tests.Visual.Screens
             };
         }
 
-        private void AddTests(bool tag)
+        private void addTests(bool tag)
         {
-            AddStep("Add money", () => UpdatePlayerInfo(gainMoney: 10000));
-            AddStep("Add units", () => UpdatePlayerInfo(gainUnits: 10, gainUnitValue: 10000));
-            AddStep("Add property value", () => UpdatePlayerInfo(gainPropertyValue: 10000));
-            AddStep("Add power", () => UpdatePlayerInfo(gainPower: 10000));
-            AddStep("Set Power to next value", () => UpdatePlayerInfo(gainPower: 10000));
+            AddStep("Add money", () => updatePlayerInfo(gainMoney: 10000));
+            AddStep("Add units", () => updatePlayerInfo(gainUnits: 10, gainUnitValue: 10000));
+            AddStep("Add property value", () => updatePlayerInfo(gainPropertyValue: 10000));
+            AddStep("Add power", () => updatePlayerInfo(gainPower: 10000));
+            AddStep("Set Power to next value", () => updatePlayerInfo(gainPower: 10000));
 
             if (tag)
             {
-                AddStep("Swap Tag", () => UpdatePlayerInfo(swapTag: true));
-                AddStep("Add power", () => UpdatePlayerInfo(gainPower: 10000));
-                AddStep("Set Power to next value", () => UpdatePlayerInfo(gainPower: 10000));
-                AddStep("Swap Tag", () => UpdatePlayerInfo(swapTag: true));
+                AddStep("Swap Tag", () => updatePlayerInfo(swapTag: true));
+                AddStep("Add power", () => updatePlayerInfo(gainPower: 10000));
+                AddStep("Set Power to next value", () => updatePlayerInfo(gainPower: 10000));
+                AddStep("Swap Tag", () => updatePlayerInfo(swapTag: true));
             }
         }
 
-        private void UpdatePlayerInfo(bool swapTag = false, int? gainMoney = null, int? gainPower = null, int? newRequiredPower = null, int? newSuperPower = null, int? gainUnits = null, int? gainUnitValue = null, int? gainPropertyValue = null)
+        private void updatePlayerInfo(bool swapTag = false, int? gainMoney = null, int? gainPower = null, int? newRequiredPower = null, int? newSuperPower = null, int? gainUnits = null, int? gainUnitValue = null, int? gainPropertyValue = null)
         {
             var replayPlayerTurn = new ReplayUserTurn
             {

@@ -31,14 +31,14 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
         protected ScreenStack ScreenStack;
 
-        public BaseGameMapTestScene()
+        protected BaseGameMapTestScene()
         {
             Add(ScreenStack = new ScreenStack
             {
                 RelativeSizeAxes = Axes.Both
             });
 
-            ScreenStack.Push(ReplayController = new ReplayController()
+            ScreenStack.Push(ReplayController = new ReplayController
             {
                 RelativeSizeAxes = Axes.Both
             });
@@ -99,18 +99,22 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
         public ReplayData CreateEmptyReplay()
         {
-            var data = new ReplayData();
-
-            data.ReplayInfo.Players = new Dictionary<long, ReplayUser> { { 0, new ReplayUser { CountryId = 1, ID = 0, UserId = 0 } } };
-            data.TurnData = new List<TurnData>
+            var data = new ReplayData
             {
-                new TurnData
+                ReplayInfo = new ReplayInfo
                 {
-                    ActivePlayerID = 0,
-                    Players = new Dictionary<long, ReplayUserTurn> { { 0, new ReplayUserTurn { ActiveCOID = 1, RequiredPowerForNormal = 90000, RequiredPowerForSuper = 180000 } } },
-                    ReplayUnit = new Dictionary<long, ReplayUnit>(),
-                    Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
-                    StartWeather = new ReplayWeather { Type = Weather.Clear }
+                    Players = new Dictionary<long, ReplayUser> { { 0, new ReplayUser { CountryId = 1, ID = 0, UserId = 0 } } }
+                },
+                TurnData = new List<TurnData>
+                {
+                    new TurnData
+                    {
+                        ActivePlayerID = 0,
+                        Players = new Dictionary<long, ReplayUserTurn> { { 0, new ReplayUserTurn { ActiveCOID = 1, RequiredPowerForNormal = 90000, RequiredPowerForSuper = 180000 } } },
+                        ReplayUnit = new Dictionary<long, ReplayUnit>(),
+                        Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
+                        StartWeather = new ReplayWeather { Type = Weather.Clear }
+                    }
                 }
             };
 

@@ -27,8 +27,10 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 
             var createdUnit = CreateBasicReplayUnit(0, 1, "Infantry", new Vector2I(2, 2));
 
-            var createUnitAction = new BuildUnitAction();
-            createUnitAction.NewUnit = createdUnit;
+            var createUnitAction = new BuildUnitAction
+            {
+                NewUnit = createdUnit
+            };
             turn.Actions.Add(createUnitAction);
 
             ReplayController.LoadReplay(replayData, CreateBasicMap(5, 5));

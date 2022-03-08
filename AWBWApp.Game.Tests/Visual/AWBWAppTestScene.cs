@@ -1,7 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using osu.Framework.Testing;
-using osu.Framework.Testing.Drawables.Steps;
 
 namespace AWBWApp.Game.Tests.Visual
 {
@@ -51,7 +51,12 @@ namespace AWBWApp.Game.Tests.Visual
                 var field = type.GetField("addStepsAsSetupSteps", BindingFlags.Instance | BindingFlags.NonPublic);
 
                 if (field != null)
-                    return (bool)field.GetValue(this);
+                {
+                    var value = field.GetValue(this);
+
+                    Debug.Assert(value != null, "addStepsAsSetupSteps had a null value.");
+                    return (bool)value;
+                }
                 type = type.BaseType;
             }
 

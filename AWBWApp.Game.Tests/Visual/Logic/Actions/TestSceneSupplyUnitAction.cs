@@ -41,9 +41,11 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             suppliedUnit = CreateBasicReplayUnit(4, 1, "Infantry", new Vector2I(2, 3));
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
 
-            var supplyUnitAction = new SupplyUnitAction();
-            supplyUnitAction.SupplyingUnitId = blackBoat.ID;
-            supplyUnitAction.SuppliedUnitIds = new List<long> { 1, 2, 3, 4 };
+            var supplyUnitAction = new SupplyUnitAction
+            {
+                SupplyingUnitId = blackBoat.ID,
+                SuppliedUnitIds = new List<long> { 1, 2, 3, 4 }
+            };
             turn.Actions.Add(supplyUnitAction);
 
             var map = CreateBasicMap(5, 5);
@@ -68,15 +70,19 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             suppliedUnit = CreateBasicReplayUnit(3, 1, "Infantry", new Vector2I(3, 2));
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
 
-            var supplyUnitAction = new SupplyUnitAction();
-            supplyUnitAction.SupplyingUnitId = blackBoat.ID;
-            supplyUnitAction.SuppliedUnitIds = new List<long> { 1, 2, 3 };
+            var supplyUnitAction = new SupplyUnitAction
+            {
+                SupplyingUnitId = blackBoat.ID,
+                SuppliedUnitIds = new List<long> { 1, 2, 3 },
 
-            supplyUnitAction.MoveUnit = new MoveUnitAction();
-            supplyUnitAction.MoveUnit.Distance = 1;
-            supplyUnitAction.MoveUnit.Trapped = false;
-            supplyUnitAction.MoveUnit.Unit = new ReplayUnit { ID = blackBoat.ID, Position = new Vector2I(2, 2) };
-            supplyUnitAction.MoveUnit.Path = new[] { new UnitPosition { X = 2, Y = 3, UnitVisible = true }, new UnitPosition { X = 2, Y = 2, UnitVisible = true } };
+                MoveUnit = new MoveUnitAction
+                {
+                    Distance = 1,
+                    Trapped = false,
+                    Unit = new ReplayUnit { ID = blackBoat.ID, Position = new Vector2I(2, 2) },
+                    Path = new[] { new UnitPosition { X = 2, Y = 3, UnitVisible = true }, new UnitPosition { X = 2, Y = 2, UnitVisible = true } }
+                }
+            };
             turn.Actions.Add(supplyUnitAction);
 
             var map = CreateBasicMap(5, 5);

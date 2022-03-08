@@ -66,7 +66,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
 
                     for (int j = 0; j < playerCount; j++)
                     {
-                        players[j] = new ReplayUser()
+                        players[j] = new ReplayUser
                         {
                             ID = j,
                             CountryId = j + 1,

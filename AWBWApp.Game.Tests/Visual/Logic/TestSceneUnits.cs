@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
-using AWBWApp.Game.Tests.Visual.Logic.Actions;
 using NUnit.Framework;
 using osu.Framework.Graphics.Primitives;
 
@@ -9,7 +8,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
     [TestFixture]
     public class TestSceneUnits : BaseActionsTestScene
     {
-        private List<int> UnitIds;
+        private List<int> unitIds;
 
         private ReplayData baseData;
 
@@ -18,7 +17,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         {
             AddStep("Show All units", () =>
             {
-                UnitIds = GetUnitStorage().GetAllUnitIds();
+                unitIds = GetUnitStorage().GetAllUnitIds();
 
                 var countryIDs = GetCountryStorage().GetAllCountryIDs();
 
@@ -41,16 +40,16 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
                 var unitStorage = GetUnitStorage();
 
-                for (int x = 0; x < UnitIds.Count; x++)
+                for (int x = 0; x < unitIds.Count; x++)
                 {
                     for (int y = 0; y < countryIDs.Count; y++)
                     {
-                        var unit = CreateBasicReplayUnit(x * countryIDs.Count + y, countryIDs[y], unitStorage.GetUnitByAWBWId(UnitIds[x]).Name, new Vector2I(x, y));
+                        var unit = CreateBasicReplayUnit(x * countryIDs.Count + y, countryIDs[y], unitStorage.GetUnitByAWBWId(unitIds[x]).Name, new Vector2I(x, y));
                         turn.ReplayUnit.Add(unit.ID, unit);
                     }
                 }
 
-                ReplayController.LoadReplay(baseData, CreateBasicMap(UnitIds.Count, countryIDs.Count));
+                ReplayController.LoadReplay(baseData, CreateBasicMap(unitIds.Count, countryIDs.Count));
             });
         }
     }

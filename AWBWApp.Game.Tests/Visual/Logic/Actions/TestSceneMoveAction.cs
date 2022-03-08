@@ -12,7 +12,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         [Test]
         public void TestStraightLine1Space()
         {
-            AddStep("Setup", () => MoveTestBasic(1));
+            AddStep("Setup", () => moveTestBasic(1));
             AddStep("Move Right", () => ReplayController.GoToNextAction());
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(1, 1));
             AddStep("Attack Up", () => ReplayController.GoToNextAction());
@@ -27,7 +27,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         public void TestStraightLine3Spaces()
         {
             AddLabel("Straight Line - 3 spaces");
-            AddStep("Setup", () => MoveTestBasic(3));
+            AddStep("Setup", () => moveTestBasic(3));
             AddStep("Move Right", () => ReplayController.GoToNextAction());
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(1, 3));
             AddStep("Attack Up", () => ReplayController.GoToNextAction());
@@ -41,7 +41,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         [Test]
         public void TestTrapped()
         {
-            AddStep("Setup", () => MoveTestTrap());
+            AddStep("Setup", moveTestTrap);
             AddStep("Move Right", () => ReplayController.GoToNextAction());
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(4, 1));
         }
@@ -50,7 +50,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         public void TestStraightDiagonal1Spaces()
         {
             AddLabel("Move Diagonal - 1 spaces");
-            AddStep("Setup", () => MoveTestCorner(1));
+            AddStep("Setup", () => moveTestCorner(1));
             AddStep("Move Right", () => ReplayController.GoToNextAction());
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, 1));
             AddStep("Attack Up", () => ReplayController.GoToNextAction());
@@ -61,14 +61,14 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         public void TestStraightDiagonal3Spaces()
         {
             AddLabel("Move Diagonal - 3 spaces");
-            AddStep("Setup", () => MoveTestCorner(3));
+            AddStep("Setup", () => moveTestCorner(3));
             AddStep("Move Right", () => ReplayController.GoToNextAction());
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, 3));
             AddStep("Attack Up", () => ReplayController.GoToNextAction());
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(4, 3));
         }
 
-        private void MoveTestBasic(int spaces)
+        private void moveTestBasic(int spaces)
         {
             var replayData = CreateBasicReplayData(2);
             var turn = CreateBasicTurnData(replayData);
@@ -85,9 +85,11 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 var nextPosition = GetPositionForIteration(i, spaces);
                 var previousPosition = GetPositionForIteration(i - 1, spaces);
 
-                var moveUnitAction = new MoveUnitAction();
-                moveUnitAction.Unit = new ReplayUnit { ID = movingUnit.ID, Position = nextPosition };
-                moveUnitAction.Path = CreatePath(previousPosition, nextPosition);
+                var moveUnitAction = new MoveUnitAction
+                {
+                    Unit = new ReplayUnit { ID = movingUnit.ID, Position = nextPosition },
+                    Path = createPath(previousPosition, nextPosition)
+                };
                 moveUnitAction.Distance = moveUnitAction.Path.Length;
                 moveUnitAction.Trapped = false;
 
@@ -97,7 +99,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             ReplayController.LoadReplay(replayData, CreateBasicMap(mapSize, mapSize));
         }
 
-        private UnitPosition[] CreatePath(Vector2I previousPosition, Vector2I nextPosition)
+        private UnitPosition[] createPath(Vector2I previousPosition, Vector2I nextPosition)
         {
             var diff = nextPosition - previousPosition;
 
@@ -132,13 +134,13 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             {
                 for (pos.Y -= 1; pos.Y > nextPosition.Y; pos = new Vector2I(pos.X, pos.Y - 1))
                     path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
-                path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
+                path[pathIdx] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
             }
 
             return path;
         }
 
-        private void MoveTestTrap()
+        private void moveTestTrap()
         {
             var replayData = CreateBasicReplayData(2);
             var turn = CreateBasicTurnData(replayData);
@@ -152,14 +154,16 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 
             for (int i = 1; i < 5; i++)
             {
-                var moveUnitAction = new MoveUnitAction();
-                moveUnitAction.Unit = new ReplayUnit { ID = movingUnit.ID, Position = new Vector2I(4, 1) };
-                moveUnitAction.Path = new[]
+                var moveUnitAction = new MoveUnitAction
                 {
-                    new UnitPosition { X = 1, Y = 1, UnitVisible = true },
-                    new UnitPosition { X = 2, Y = 1, UnitVisible = true },
-                    new UnitPosition { X = 3, Y = 1, UnitVisible = true },
-                    new UnitPosition { X = 4, Y = 1, UnitVisible = true },
+                    Unit = new ReplayUnit { ID = movingUnit.ID, Position = new Vector2I(4, 1) },
+                    Path = new[]
+                    {
+                        new UnitPosition { X = 1, Y = 1, UnitVisible = true },
+                        new UnitPosition { X = 2, Y = 1, UnitVisible = true },
+                        new UnitPosition { X = 3, Y = 1, UnitVisible = true },
+                        new UnitPosition { X = 4, Y = 1, UnitVisible = true },
+                    }
                 };
                 moveUnitAction.Distance = moveUnitAction.Path.Length;
                 moveUnitAction.Trapped = true;
@@ -177,7 +181,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             ReplayController.LoadReplay(replayData, map);
         }
 
-        private void MoveTestCorner(int spaces)
+        private void moveTestCorner(int spaces)
         {
             var replayData = CreateBasicReplayData(2);
             var turn = CreateBasicTurnData(replayData);
@@ -194,12 +198,13 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 var nextPosition = GetPositionForIteration(i * 2 + 2, spaces);
                 var previousPosition = GetPositionForIteration((i - 1) * 2 + 2, spaces);
 
-                var moveUnitAction = new MoveUnitAction();
-                moveUnitAction.Unit = new ReplayUnit { ID = movingUnit.ID, Position = nextPosition };
-
-                moveUnitAction.Path = CreatePath(previousPosition, nextPosition);
+                var moveUnitAction = new MoveUnitAction
+                {
+                    Unit = new ReplayUnit { ID = movingUnit.ID, Position = nextPosition },
+                    Path = createPath(previousPosition, nextPosition),
+                    Trapped = false
+                };
                 moveUnitAction.Distance = moveUnitAction.Path.Length;
-                moveUnitAction.Trapped = false;
 
                 turn.Actions.Add(moveUnitAction);
             }

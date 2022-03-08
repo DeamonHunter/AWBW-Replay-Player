@@ -35,10 +35,12 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             repairedUnit.HitPoints = 8;
             turn.ReplayUnit.Add(repairedUnit.ID, repairedUnit);
 
-            var repairUnitAction = new RepairUnitAction();
-            repairUnitAction.RepairingUnitID = blackBoat.ID;
-            repairUnitAction.RepairedUnitID = repairedUnit.ID;
-            repairUnitAction.RepairedUnitHP = 9;
+            var repairUnitAction = new RepairUnitAction
+            {
+                RepairingUnitID = blackBoat.ID,
+                RepairedUnitID = repairedUnit.ID,
+                RepairedUnitHP = 9
+            };
             turn.Actions.Add(repairUnitAction);
 
             var map = CreateBasicMap(5, 5);
@@ -60,16 +62,20 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             repairedUnit.HitPoints = 8;
             turn.ReplayUnit.Add(repairedUnit.ID, repairedUnit);
 
-            var repairUnitAction = new RepairUnitAction();
-            repairUnitAction.RepairingUnitID = blackBoat.ID;
-            repairUnitAction.RepairedUnitID = repairedUnit.ID;
-            repairUnitAction.RepairedUnitHP = 9;
+            var repairUnitAction = new RepairUnitAction
+            {
+                RepairingUnitID = blackBoat.ID,
+                RepairedUnitID = repairedUnit.ID,
+                RepairedUnitHP = 9,
+                MoveUnit = new MoveUnitAction
+                {
+                    Distance = 1,
+                    Trapped = false,
+                    Unit = new ReplayUnit { ID = blackBoat.ID, Position = new Vector2I(2, 2) },
+                    Path = new[] { new UnitPosition { X = 2, Y = 3, UnitVisible = true }, new UnitPosition { X = 2, Y = 2, UnitVisible = true } }
+                }
+            };
 
-            repairUnitAction.MoveUnit = new MoveUnitAction();
-            repairUnitAction.MoveUnit.Distance = 1;
-            repairUnitAction.MoveUnit.Trapped = false;
-            repairUnitAction.MoveUnit.Unit = new ReplayUnit { ID = blackBoat.ID, Position = new Vector2I(2, 2) };
-            repairUnitAction.MoveUnit.Path = new[] { new UnitPosition { X = 2, Y = 3, UnitVisible = true }, new UnitPosition { X = 2, Y = 2, UnitVisible = true } };
             turn.Actions.Add(repairUnitAction);
 
             var map = CreateBasicMap(5, 5);

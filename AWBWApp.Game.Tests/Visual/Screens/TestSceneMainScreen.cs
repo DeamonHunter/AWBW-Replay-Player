@@ -18,7 +18,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                 RelativeSizeAxes = Axes.Both
             });
 
-            ScreenStack.Push(MainScreen = new MainScreen()
+            ScreenStack.Push(MainScreen = new MainScreen
             {
                 RelativeSizeAxes = Axes.Both
             });

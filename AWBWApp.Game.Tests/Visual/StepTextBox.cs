@@ -10,13 +10,13 @@ using osu.Framework.Input.Events;
 using osuTK.Graphics;
 using osuTK.Input;
 
-namespace osu.Framework.Testing.Drawables.Steps
+namespace AWBWApp.Game.Tests.Visual
 {
     public class StepTextBox : BasicTextBox
     {
         public Action<string> ValueChanged;
 
-        private string defaultText;
+        private readonly string defaultText;
 
         public StepTextBox(string description, string start)
         {

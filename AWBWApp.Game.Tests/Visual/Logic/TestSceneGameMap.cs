@@ -27,7 +27,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         [Resolved]
         private AWBWSessionHandler sessionHandler { get; set; }
 
-        private InterruptDialogueOverlay overlay;
+        private readonly InterruptDialogueOverlay overlay;
         private CustomShoalGenerator generator;
 
         private string replayString = default_game_id.ToString();
@@ -48,7 +48,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         {
             AddStep("Clear Replay", () => ReplayController.ClearReplay());
             AddTextStep("Replay Number", default_game_id.ToString(), x => replayString = x);
-            AddStep("Load Map", () => Task.Run(DownloadReplayFile));
+            AddStep("Load Map", () => Task.Run(downloadReplayFile));
             AddUntilStep("Wait Until Map is loaded", () => ReplayController.HasLoadedReplay);
             AddRepeatUntilStep("Finish replay", 3000, () => ReplayController.GoToNextAction(), () => !ReplayController.HasNextAction());
 
@@ -59,11 +59,11 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             });
         }
 
-        private async void DownloadReplayFile()
+        private async void downloadReplayFile()
         {
             var gameID = GetNewReplayInterrupt.ParseReplayString(replayString);
 
-            Logger.Log($"Starting replay download.", level: LogLevel.Important);
+            Logger.Log("Starting replay download.", level: LogLevel.Important);
 
             var replay = await replayStorage.GetReplayData(gameID);
 
@@ -71,11 +71,11 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             {
                 if (!sessionHandler.LoggedIn)
                 {
-                    Logger.Log($"Replay not Found. Requesting from AWBW.", level: LogLevel.Important);
+                    Logger.Log("Replay not Found. Requesting from AWBW.", level: LogLevel.Important);
                     var taskCompletionSource = new TaskCompletionSource<bool>();
                     Schedule(() => overlay.Push(new LoginInterrupt(taskCompletionSource)));
 
-                    Logger.Log($"Pushed overlay", level: LogLevel.Important);
+                    Logger.Log("Pushed overlay", level: LogLevel.Important);
 
                     try
                     {
@@ -88,7 +88,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                     }
                 }
 
-                Logger.Log($"Successfully logged in.", level: LogLevel.Important);
+                Logger.Log("Successfully logged in.", level: LogLevel.Important);
                 var link = "https://awbw.amarriner.com/replay_download.php?games_id=" + gameID;
                 var webRequest = new WebRequest(link);
                 webRequest.AddHeader("Cookie", sessionHandler.SessionID);
