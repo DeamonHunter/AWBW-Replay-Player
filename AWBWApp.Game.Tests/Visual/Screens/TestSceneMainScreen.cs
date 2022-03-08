@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Screens;
 
@@ -17,7 +18,11 @@ namespace AWBWApp.Game.Tests.Visual.Screens
             {
                 RelativeSizeAxes = Axes.Both
             });
+        }
 
+        [BackgroundDependencyLoader]
+        private void load()
+        {
             ScreenStack.Push(MainScreen = new MainScreen
             {
                 RelativeSizeAxes = Axes.Both

@@ -8,6 +8,8 @@ namespace AWBWApp.Game
     {
         private ScreenStack screenStack;
 
+        private DependencyContainer dependencies;
+
         [BackgroundDependencyLoader]
         private void load()
         {
@@ -18,11 +20,52 @@ namespace AWBWApp.Game
             screenStack.ScreenExited += screenExited;
         }
 
+        private Task asyncLoadStream;
+
+        private void loadComponentAfterOtherComponents<T>(T component, Action<T> loadCompleteAction, bool cache = false) where T : Drawable
+        {
+            if (cache)
+                dependencies.Cache(component);
+
+            Schedule(() =>
+            {
+                var previousTask = asyncLoadStream;
+
+                asyncLoadStream = Task.Run(async () =>
+                {
+                    if (previousTask != null)
+                        await previousTask.ConfigureAwait(false);
+
+                    try
+                    {
+                        Task task = null;
+                        var del = new ScheduledDelegate(() => task = LoadComponentAsync(component, loadCompleteAction));
+                        Scheduler.Add(del);
+
+                        while (!IsDisposed && !del.Completed)
+                            await Task.Delay(10).ConfigureAwait(false);
+
+                        if (IsDisposed)
+                            return;
+
+                        Debug.Assert(task != null);
+
+                        await task.ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                    }
+                });
+            });
+        }
+
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            screenStack.Push(new MainScreen());
+            loadComponentAfterOtherComponents(new MainScreen(), x => screenStack.Push(x));
         }
 
         private void screenExited(IScreen lastScreen, IScreen newScreen)

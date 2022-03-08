@@ -7,6 +7,7 @@ using AWBWApp.Game.UI.Select;
 using NUnit.Framework;
 using osu.Framework.Graphics;
 using osu.Framework.Logging;
+using osu.Framework.Platform;
 using osuTK;
 
 namespace AWBWApp.Game.Tests.Visual.Components
@@ -15,6 +16,9 @@ namespace AWBWApp.Game.Tests.Visual.Components
     public class TestSceneReplayCarousel : AWBWAppTestScene
     {
         private ReplayCarousel carousel;
+
+        [Resolved]
+        private Storage hostStorage { get; set; }
 
         [TestCase(0)]
         [TestCase(1)]
@@ -29,7 +33,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
         public void TestReplayManager()
         {
             bool changed = false;
-            var replayManager = new ReplayManager();
+            var replayManager = new ReplayManager(hostStorage);
             createCarousel(c =>
             {
                 carousel.ReplaysChanged = () => changed = true;

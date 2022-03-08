@@ -6,14 +6,17 @@ using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
 using Newtonsoft.Json;
 using osu.Framework.Logging;
+using osu.Framework.Platform;
 
 namespace AWBWApp.Game.IO
 {
     public class ReplayManager
     {
         private const string replay_folder = "ReplayData/Replays";
-        private const string replay_storage = "ReplayData/ReplayStorage.json";
-        private const string username_storage = "ReplayData/UsernameStorage.json";
+        private const string replay_storage = "ReplayStorage.json";
+        private const string username_storage = "UsernameStorage.json";
+
+        private readonly Storage underlyingStorage;
 
         public Action<ReplayInfo> ReplayAdded;
 
@@ -27,17 +30,27 @@ namespace AWBWApp.Game.IO
 
         private readonly AWBWReplayParser _parser = new AWBWReplayParser();
 
-        public ReplayManager(bool checkForNewReplays = true)
+        public ReplayManager(Storage storage, bool checkForNewReplays = true)
         {
-            //Ensure that the replay directory always exists before getting it.
-            if (!Directory.Exists(replay_folder))
-                Directory.CreateDirectory(replay_folder);
+            underlyingStorage = new WrappedStorage(storage, replay_folder);
 
-            if (File.Exists(replay_storage))
-                _knownReplays = JsonConvert.DeserializeObject<Dictionary<long, ReplayInfo>>(File.ReadAllText(replay_storage)) ?? _knownReplays;
+            if (underlyingStorage.Exists(replay_storage))
+            {
+                using (var stream = underlyingStorage.GetStream(replay_storage))
+                {
+                    using (var sr = new StreamReader(stream))
+                        _knownReplays = JsonConvert.DeserializeObject<Dictionary<long, ReplayInfo>>(sr.ReadToEnd()) ?? _knownReplays;
+                }
+            }
 
-            if (File.Exists(username_storage))
-                _playerNames = JsonConvert.DeserializeObject<Dictionary<long, string>>(File.ReadAllText(username_storage)) ?? _playerNames;
+            if (underlyingStorage.Exists(username_storage))
+            {
+                using (var stream = underlyingStorage.GetStream(username_storage))
+                {
+                    using (var sr = new StreamReader(stream))
+                        _playerNames = JsonConvert.DeserializeObject<Dictionary<long, string>>(sr.ReadToEnd()) ?? _playerNames;
+                }
+            }
 
             if (checkForNewReplays)
                 checkAllReplays();
@@ -50,7 +63,10 @@ namespace AWBWApp.Game.IO
             var newReplays = new List<string>();
             var userNameChecks = new List<ReplayInfo>();
 
-            foreach (var file in Directory.GetFiles(replay_folder))
+            if (!underlyingStorage.ExistsDirectory(""))
+                return;
+
+            foreach (var file in underlyingStorage.GetFiles(""))
             {
                 var fileName = Path.GetFileNameWithoutExtension(file);
                 var extension = Path.GetExtension(file);
@@ -148,10 +164,20 @@ namespace AWBWApp.Game.IO
         private void saveReplays()
         {
             var contents = JsonConvert.SerializeObject(_knownReplays, Formatting.Indented);
-            File.WriteAllText(replay_storage, contents);
+
+            using (var stream = underlyingStorage.GetStream(replay_storage, FileAccess.Write, FileMode.Create))
+            {
+                using (var sw = new StreamWriter(stream))
+                    sw.Write(contents);
+            }
 
             contents = JsonConvert.SerializeObject(_playerNames, Formatting.Indented);
-            File.WriteAllText(username_storage, contents);
+
+            using (var stream = underlyingStorage.GetStream(username_storage, FileAccess.Write, FileMode.Create))
+            {
+                using (var sw = new StreamWriter(stream))
+                    sw.Write(contents);
+            }
         }
 
         public bool TryGetReplayInfo(long id, out ReplayInfo info) => _knownReplays.TryGetValue(id, out info);
@@ -160,25 +186,22 @@ namespace AWBWApp.Game.IO
 
         public async Task<ReplayData> GetReplayData(long id)
         {
-            var path = $"{replay_folder}/{id}.zip";
-            if (!File.Exists(path))
+            var path = $"{id}.zip";
+            if (!underlyingStorage.Exists(path))
                 return null;
-
-            var stream = File.OpenRead(path);
 
             ReplayData data;
 
-            try
+            using (var stream = underlyingStorage.GetStream(path))
             {
-                data = _parser.ParseReplay(stream);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Failed to parse replay with id: " + id, e);
-            }
-            finally
-            {
-                stream.Dispose();
+                try
+                {
+                    data = _parser.ParseReplay(stream);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Failed to parse replay with id: " + id, e);
+                }
             }
 
             await checkForUsernamesAndGetIfMissing(data.ReplayInfo, false);
@@ -193,17 +216,20 @@ namespace AWBWApp.Game.IO
             try
             {
                 using (var readFileStream = new FileStream(path, FileMode.Open))
+                {
                     data = _parser.ParseReplay(readFileStream);
+
+                    readFileStream.Seek(0, SeekOrigin.Begin);
+                    using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.zip", FileAccess.Write, FileMode.Create))
+                        readFileStream.CopyTo(writeStream);
+                }
+
+                File.Delete(path);
             }
             catch (Exception e)
             {
                 throw new AggregateException("Failed to parse replay with path: " + path, e);
             }
-
-            //Store only after parsing it. So we don't save a bad replay
-            var newPath = $"{replay_folder}/{data.ReplayInfo.ID}.zip";
-
-            File.Move(path, newPath);
 
             await checkForUsernamesAndGetIfMissing(data.ReplayInfo, false);
 
@@ -221,12 +247,10 @@ namespace AWBWApp.Game.IO
                 data = _parser.ParseReplay(stream);
 
                 //Store only after parsing it. So we don't save a bad replay
-                var path = $"{replay_folder}/{id}.zip";
-
-                using (var fileStream = File.OpenWrite(path))
+                using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.zip", FileAccess.Write, FileMode.Create))
                 {
                     stream.Seek(0, SeekOrigin.Begin);
-                    stream.CopyTo(fileStream);
+                    stream.CopyTo(writeStream);
                 }
             }
             finally

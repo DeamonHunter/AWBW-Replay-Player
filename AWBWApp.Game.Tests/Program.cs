@@ -7,7 +7,7 @@ namespace AWBWApp.Game.Tests
     {
         public static void Main()
         {
-            using (GameHost host = Host.GetSuitableDesktopHost("visual-tests"))
+            using (GameHost host = Host.GetSuitableDesktopHost(@"AWBWReplayPlayer"))
             {
                 using (var game = new AWBWAppTestBrowser())
                     host.Run(game);

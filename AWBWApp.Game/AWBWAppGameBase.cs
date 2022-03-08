@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using AWBWApp.Game.API;
 using AWBWApp.Game.Game.Building;
@@ -11,10 +13,12 @@ using AWBWApp.Game.IO;
 using AWBWApp.Game.UI;
 using AWBWApp.Resources;
 using osu.Framework.Allocation;
+using osu.Framework.Development;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input;
 using osu.Framework.IO.Stores;
+using osu.Framework.Platform;
 using osuTK;
 
 namespace AWBWApp.Game
@@ -26,6 +30,10 @@ namespace AWBWApp.Game
         // the screen scaling for all components including the test browser and framework overlays.
 
         protected override Container<Drawable> Content { get; }
+
+        protected AWBWConfigManager LocalConfig { get; set; }
+
+        protected Storage HostStorage { get; set; }
 
         private NearestNeighbourTextureStore unfilteredTextures;
         private DependencyContainer dependencies;
@@ -40,7 +48,6 @@ namespace AWBWApp.Game
         private CountryStorage countryStorage;
 
         private InterruptDialogueOverlay interruptOverlay;
-
         private AWBWSessionHandler sessionHandler;
 
         protected AWBWAppGameBase()
@@ -58,6 +65,10 @@ namespace AWBWApp.Game
         {
             Resources.AddStore(new DllResourceStore(typeof(AWBWAppResources).Assembly));
 
+            dependencies.CacheAs(this);
+            dependencies.Cache(HostStorage);
+            dependencies.Cache(LocalConfig);
+
             unfilteredTextures = new NearestNeighbourTextureStore(Textures);
             dependencies.Cache(unfilteredTextures);
 
@@ -65,10 +76,10 @@ namespace AWBWApp.Game
             fileStorage.AddExtension(".json");
             dependencies.Cache(fileStorage);
 
-            replayStorage = new ReplayManager();
+            replayStorage = new ReplayManager(HostStorage);
             dependencies.Cache(replayStorage);
 
-            mapStorage = new MapFileStorage();
+            mapStorage = new MapFileStorage(HostStorage);
             dependencies.Cache(mapStorage);
 
             var tilesJson = fileStorage.GetStream("Json/Tiles");
@@ -96,11 +107,36 @@ namespace AWBWApp.Game
             countryStorage.LoadStream(countriesJson);
             dependencies.Cache(countryStorage);
 
-            LoadComponentAsync(interruptOverlay = new InterruptDialogueOverlay(), Add);
+            Add(interruptOverlay = new InterruptDialogueOverlay());
             dependencies.Cache(interruptOverlay);
 
             sessionHandler = new AWBWSessionHandler();
             dependencies.Cache(sessionHandler);
+        }
+
+        public override void SetHost(GameHost host)
+        {
+            base.SetHost(host);
+
+            HostStorage ??= host.Storage;
+
+            LocalConfig ??= new AWBWConfigManager(HostStorage);
+        }
+
+        public virtual Version AssemblyVersion => Assembly.GetEntryAssembly()?.GetName().Version ?? new Version();
+
+        public bool IsDeployedBuild => AssemblyVersion.Major > 0;
+
+        public virtual string Version
+        {
+            get
+            {
+                if (!IsDeployedBuild)
+                    return @"local " + (DebugUtils.IsDebugBuild ? @"debug" : @"release");
+
+                var version = AssemblyVersion;
+                return $@"{version.Major}.{version.Minor}.{version.Build}-lazer";
+            }
         }
 
         public async Task Import(params string[] paths)
