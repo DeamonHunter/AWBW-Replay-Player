@@ -38,8 +38,8 @@ namespace AWBWApp.Game.Game.Building
 
             Size = BASE_SIZE;
             Position = GameMap.GetDrawablePositionForBottomOfTile(tilePosition);
-            HasDoneAction.BindValueChanged(x => updateBuildingColour(x.NewValue, FogOfWarActive.Value, x.NewValue));
-            FogOfWarActive.BindValueChanged(x => updateBuildingColour(HasDoneAction.Value, x.NewValue, x.NewValue));
+            HasDoneAction.BindValueChanged(x => updateBuildingColour(x.NewValue));
+            FogOfWarActive.BindValueChanged(x => updateBuildingColour(x.NewValue));
         }
 
         [BackgroundDependencyLoader]
@@ -93,17 +93,20 @@ namespace AWBWApp.Game.Game.Building
                 textureAnimation.AddFrame(weatherTextures[0]);
 
             textureAnimation.Seek(playbackPosition);
+
+            updateBuildingColour(false);
+            textureAnimation.FinishTransforms();
         }
 
-        private void updateBuildingColour(bool acted, bool foggy, bool fadeOut)
+        private void updateBuildingColour(bool fadeOut)
         {
             Color4 colour;
-            if (foggy)
+            if (FogOfWarActive.Value)
                 colour = FOG_COLOUR;
             else
                 colour = Color4.White;
 
-            if (acted)
+            if (HasDoneAction.Value)
                 colour = colour.Darken(0.2f);
 
             textureAnimation.FadeColour(colour, 250, fadeOut ? Easing.OutQuint : Easing.InQuint);
