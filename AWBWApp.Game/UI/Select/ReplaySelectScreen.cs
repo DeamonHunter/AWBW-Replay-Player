@@ -123,12 +123,16 @@ namespace AWBWApp.Game.UI.Select
             if (replayController != null)
                 return false;
 
-            this.Push(replayController = new ReplayController());
-            Task.Run(async () =>
+            LoadComponentAsync(replayController = new ReplayController(), _ =>
             {
-                var data = await replayManager.GetReplayData(Carousel.SelectedReplayData);
-                var terrainFile = await mapStorage.GetOrDownloadMap(data.ReplayInfo.MapId);
-                replayController.LoadReplay(data, terrainFile);
+                this.Push(replayController);
+                Task.Run(async () =>
+                {
+                    var data = await replayManager.GetReplayData(Carousel.SelectedReplayData);
+                    var terrainFile = await mapStorage.GetOrDownloadMap(data.ReplayInfo.MapId);
+
+                    replayController.LoadReplay(data, terrainFile);
+                });
             });
 
             return true;
