@@ -11,7 +11,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Select
 {
-    public class CarouselHeader : Container
+    public class DrawableCarouselPanel : Container
     {
         public Container BorderContainer;
 
@@ -24,7 +24,7 @@ namespace AWBWApp.Game.UI.Select
         private const float corner_radius = 10;
         private const float border_thickness = 2.5f;
 
-        public CarouselHeader()
+        public DrawableCarouselPanel()
         {
             RelativeSizeAxes = Axes.X;
             Height = DrawableCarouselItem.MAX_HEIGHT;

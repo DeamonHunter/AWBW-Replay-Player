@@ -2,6 +2,7 @@
     "Neutral City": {
         "AWBWID": 34,
         "BaseDefence": 3,
+        "Colour": "#f0f0f0",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -18,6 +19,7 @@
     "Neutral Base": {
         "AWBWID": 35,
         "BaseDefence": 3,
+        "Colour": "#f0f0f0",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -35,6 +37,7 @@
     "Neutral Airport": {
         "AWBWID": 36,
         "BaseDefence": 3,
+        "Colour": "#f0f0f0",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -51,6 +54,7 @@
     "Neutral Port": {
         "AWBWID": 37,
         "BaseDefence": 3,
+        "Colour": "#f0f0f0",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -69,6 +73,7 @@
     "Neutral Com Tower": {
         "AWBWID": 133,
         "BaseDefence": 3,
+        "Colour": "#f0f0f0",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -86,6 +91,7 @@
     "Neutral Lab": {
         "AWBWID": 145,
         "BaseDefence": 3,
+        "Colour": "#f0f0f0",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -103,6 +109,7 @@
     "Missile Silo": {
         "AWBWID": 111,
         "BaseDefence": 3,
+        "Colour": "#ffffff",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -116,25 +123,10 @@
             "Snow": "Team/Neutral/Silo_Snow"
         }
     },
-    "Missile Silo Empty": {
-        "AWBWID": 112,
-        "BaseDefence": 3,
-        "MovementCostsPerType": {
-            "LightInf": 1,
-            "HeavyInf": 1,
-            "Tread": 1,
-            "Tire": 1,
-            "Air": 1
-        },
-        "Textures": {
-            "Clear": "Team/Neutral/SiloEmpty",
-            "Rain": "Team/Neutral/SiloEmpty_Rain",
-            "Snow": "Team/Neutral/SiloEmpty_Snow"
-        }
-    },
     "Horizontal Pipe Seam": {
         "AWBWID": 113,
         "BaseDefence": 0,
+        "Colour": "#a88080",
         "MovementCostsPerType": {
             "Pipe": 1
         },
@@ -147,6 +139,7 @@
     "Vertical Pipe Seam": {
         "AWBWID": 114,
         "BaseDefence": 0,
+        "Colour": "#a88080",
         "MovementCostsPerType": {
             "Pipe": 1
         },
@@ -154,38 +147,6 @@
             "Clear": "Team/Neutral/VSeam",
             "Rain": "Team/Neutral/VSeam_Rain",
             "Snow": "Team/Neutral/VSeam_Snow"
-        }
-    },
-    "HPipe Rubble": {
-        "AWBWID": 115,
-        "BaseDefence": 1,
-        "MovementCostsPerType": {
-            "LightInf": 1,
-            "HeavyInf": 1,
-            "Tread": 1,
-            "Tire": 2,
-            "Air": 1
-        },
-        "Textures": {
-            "Clear": "Team/Neutral/HRubble",
-            "Rain": "Team/Neutral/HRubble_Rain",
-            "Snow": "Team/Neutral/HRubble_Snow"
-        }
-    },
-    "VPipe Rubble": {
-        "AWBWID": 116,
-        "BaseDefence": 1,
-        "MovementCostsPerType": {
-            "LightInf": 1,
-            "HeavyInf": 1,
-            "Tread": 1,
-            "Tire": 2,
-            "Air": 1
-        },
-        "Textures": {
-            "Clear": "Team/Neutral/VRubble",
-            "Rain": "Team/Neutral/VRubble_Rain",
-            "Snow": "Team/Neutral/VRubble_Snow"
         }
     },
     /*

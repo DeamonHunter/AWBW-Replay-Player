@@ -387,7 +387,7 @@ namespace AWBWApp.Game.API.Replay
                                 break;
 
                             case "A":
-                                type = MatchType.Normal;
+                                type = MatchType.Tag;
                                 break;
 
                             default:

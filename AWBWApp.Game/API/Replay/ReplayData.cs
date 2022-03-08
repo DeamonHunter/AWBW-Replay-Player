@@ -43,7 +43,8 @@ namespace AWBWApp.Game.API.Replay
     public enum MatchType
     {
         League,
-        Normal
+        Normal,
+        Tag
     }
 
     public class TurnData

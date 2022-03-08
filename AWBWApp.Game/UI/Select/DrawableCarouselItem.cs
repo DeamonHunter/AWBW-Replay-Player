@@ -13,7 +13,7 @@ namespace AWBWApp.Game.UI.Select
 
         public override bool IsPresent => base.IsPresent || Item?.Visible == true;
 
-        public readonly CarouselHeader Header;
+        public readonly DrawableCarouselPanel Panel;
 
         protected readonly Container MovementContainer;
         protected readonly Container<Drawable> Content;
@@ -31,7 +31,7 @@ namespace AWBWApp.Game.UI.Select
                     item.Filtered.ValueChanged -= onStateChange;
                     item.State.ValueChanged -= onStateChange;
 
-                    Header.State.UnbindFrom(item.State);
+                    Panel.State.UnbindFrom(item.State);
 
                     if (item is CarouselGroup group)
                     {
@@ -61,7 +61,7 @@ namespace AWBWApp.Game.UI.Select
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
                     {
-                        Header = new CarouselHeader(),
+                        Panel = new DrawableCarouselPanel(),
                         Content = new Container()
                         {
                             RelativeSizeAxes = Axes.Both
@@ -80,7 +80,7 @@ namespace AWBWApp.Game.UI.Select
         protected override void Update()
         {
             base.Update();
-            Content.Y = Header.Height; //Todo: Hmmm
+            Content.Y = Panel.Height; //Todo: Hmmm
         }
 
         protected virtual void UpdateItem()
@@ -93,7 +93,7 @@ namespace AWBWApp.Game.UI.Select
             Item.Filtered.ValueChanged += onStateChange;
             Item.State.ValueChanged += onStateChange;
 
-            Header.State.BindTo(Item.State);
+            Panel.State.BindTo(Item.State);
 
             if (Item is CarouselGroup group)
             {
@@ -144,6 +144,6 @@ namespace AWBWApp.Game.UI.Select
             return true;
         }
 
-        public void SetMultiplicativeAlpha(float alpha) => Header.BorderContainer.Alpha = alpha;
+        public void SetMultiplicativeAlpha(float alpha) => Panel.BorderContainer.Alpha = alpha;
     }
 }

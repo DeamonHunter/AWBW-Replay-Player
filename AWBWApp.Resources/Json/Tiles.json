@@ -9,6 +9,7 @@
             "Tire": 0,
             "Air": 0
         },
+        "Colour": "#272529",
         "TerrainType": "Plain",
         "Textures": {
             "Clear": "Black"
@@ -24,6 +25,7 @@
             "Tire": 2,
             "Air": 1
         },
+        "Colour": "#c0e030",
         "TerrainType": "Plain",
         "Textures": {
             "Clear": "Plain",
@@ -40,6 +42,7 @@
             "HeavyInf": 1,
             "Air": 1
         },
+        "Colour": "#d08848",
         "TerrainType": "Mountain",
         "Textures": {
             "Clear": "Mountain",
@@ -58,6 +61,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "Colour": "#48b098",
         "TerrainType": "Forest",
         "Textures": {
             "Clear": "Wood",
@@ -75,6 +79,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "Colour": "#6492ff",
         "TerrainType": "River",
         "Textures": {
             "Clear": "River/H",
@@ -92,6 +97,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "Colour": "#6492ff",
         "TerrainType": "River",
         "Textures": {
             "Clear": "River/V",
@@ -109,6 +115,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "Colour": "#6492ff",
         "TerrainType": "River",
         "Textures": {
             "Clear": "River/C",
@@ -126,6 +133,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "Colour": "#6492ff",
         "TerrainType": "River",
         "Textures": {
             "Clear": "River/ES",
@@ -143,6 +151,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "Colour": "#6492ff",
         "TerrainType": "River",
         "Textures": {
             "Clear": "River/SW",
@@ -160,6 +169,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "Colour": "#6492ff",
         "TerrainType": "River",
         "Textures": {
             "Clear": "River/WN",
@@ -177,6 +187,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "Colour": "#6492ff",
         "TerrainType": "River",
         "Textures": {
             "Clear": "River/NE",
@@ -194,6 +205,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "Colour": "#6492ff",
         "TerrainType": "River",
         "Textures": {
             "Clear": "River/ESW",
@@ -211,6 +223,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "Colour": "#6492ff",
         "TerrainType": "River",
         "Textures": {
             "Clear": "River/SWN",
@@ -228,6 +241,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "Colour": "#6492ff",
         "TerrainType": "River",
         "Textures": {
             "Clear": "River/WNE",
@@ -245,6 +259,7 @@
             "Tire": 3,
             "Air": 1
         },
+        "Colour": "#6492ff",
         "TerrainType": "River",
         "Textures": {
             "Clear": "River/NES",
@@ -262,6 +277,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "Colour": "#98a0b8",
         "TerrainType": "Road",
         "Textures": {
             "Clear": "Road/H",
@@ -279,6 +295,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "Colour": "#98a0b8",
         "TerrainType": "Road",
         "Textures": {
             "Clear": "Road/V",
@@ -296,6 +313,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "Colour": "#98a0b8",
         "TerrainType": "Road",
         "Textures": {
             "Clear": "Road/C",
@@ -313,6 +331,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "Colour": "#98a0b8",
         "TerrainType": "Road",
         "Textures": {
             "Clear": "Road/ES",
@@ -330,6 +349,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "Colour": "#98a0b8",
         "TerrainType": "Road",
         "Textures": {
             "Clear": "Road/SW",
@@ -347,6 +367,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "Colour": "#98a0b8",
         "TerrainType": "Road",
         "Textures": {
             "Clear": "Road/WN",
@@ -364,6 +385,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "Colour": "#98a0b8",
         "TerrainType": "Road",
         "Textures": {
             "Clear": "Road/NE",
@@ -381,6 +403,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "Colour": "#98a0b8",
         "TerrainType": "Road",
         "Textures": {
             "Clear": "Road/ESW",
@@ -398,6 +421,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "Colour": "#98a0b8",
         "TerrainType": "Road",
         "Textures": {
             "Clear": "Road/SWN",
@@ -415,6 +439,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "Colour": "#98a0b8",
         "TerrainType": "Road",
         "Textures": {
             "Clear": "Road/WNE",
@@ -432,6 +457,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "Colour": "#98a0b8",
         "TerrainType": "Road",
         "Textures": {
             "Clear": "Road/NES",
@@ -449,6 +475,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "Colour": "#98a0b8",
         "TerrainType": "Road",
         "Textures": {
             "Clear": "Road/HBridge",
@@ -466,6 +493,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "Colour": "#98a0b8",
         "TerrainType": "Road",
         "Textures": {
             "Clear": "Road/VBridge",
@@ -481,6 +509,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/Sea"
@@ -497,6 +526,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/N"
@@ -513,6 +543,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/S"
@@ -529,6 +560,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/E"
@@ -545,6 +577,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/W"
@@ -559,6 +592,7 @@
             "Lander": 2,
             "Air": 1
         },
+        "Colour": "#b6619a",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Reef"
@@ -570,6 +604,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "Colour": "#c8b088",
         "TerrainType": "Building",
         "Textures": {
             "Clear": "Pipe/V",
@@ -583,6 +618,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "Colour": "#c8b088",
         "TerrainType": "Building",
         "Textures": {
             "Clear": "Pipe/H",
@@ -596,6 +632,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "Colour": "#c8b088",
         "TerrainType": "Building",
         "Textures": {
             "Clear": "Pipe/NE",
@@ -609,6 +646,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "Colour": "#c8b088",
         "TerrainType": "Building",
         "Textures": {
             "Clear": "Pipe/ES",
@@ -622,6 +660,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "Colour": "#c8b088",
         "TerrainType": "Building",
         "Textures": {
             "Clear": "Pipe/SW",
@@ -635,6 +674,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "Colour": "#c8b088",
         "TerrainType": "Building",
         "Textures": {
             "Clear": "Pipe/WN",
@@ -648,6 +688,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "Colour": "#c8b088",
         "TerrainType": "Building",
         "Textures": {
             "Clear": "Pipe/NEnd",
@@ -661,6 +702,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "Colour": "#c8b088",
         "TerrainType": "Building",
         "Textures": {
             "Clear": "Pipe/EEnd",
@@ -674,6 +716,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "Colour": "#c8b088",
         "TerrainType": "Building",
         "Textures": {
             "Clear": "Pipe/SEnd",
@@ -687,6 +730,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "Colour": "#c8b088",
         "TerrainType": "Building",
         "Textures": {
             "Clear": "Pipe/WEnd",
@@ -704,6 +748,8 @@
             "Tire": 1,
             "Air": 1
         },
+        "Colour": "#b6b6aa",
+        "TerrainType": "Plain",
         "Textures": {
             "Clear": "Team/Neutral/SiloEmpty-0",
             "Rain": "Team/Neutral/SiloEmpty_Rain-0",
@@ -720,6 +766,7 @@
             "Tire": 2,
             "Air": 1
         },
+        "Colour": "#c0e030",
         "TerrainType": "Plain",
         "Textures": {
             "Clear": "Team/Neutral/HRubble-0",
@@ -737,6 +784,7 @@
             "Tire": 2,
             "Air": 1
         },
+        "Colour": "#c0e030",
         "TerrainType": "Plain",
         "Textures": {
             "Clear": "Team/Neutral/VRubble-0",
@@ -754,6 +802,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/N-E-S-W"
@@ -767,6 +816,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/E-S-W"
@@ -780,6 +830,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/N-S-W"
@@ -793,6 +844,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/N-E-W"
@@ -806,6 +858,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/N-E-S"
@@ -819,6 +872,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/N-S"
@@ -832,6 +886,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/E-W"
@@ -845,6 +900,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/N-E-SW"
@@ -858,6 +914,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/N-E"
@@ -871,6 +928,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/E-S-NW"
@@ -884,6 +942,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/E-S"
@@ -897,6 +956,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/S-W-NE"
@@ -910,6 +970,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/S-W"
@@ -923,6 +984,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/N-W-SE"
@@ -936,6 +998,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/N-W"
@@ -949,6 +1012,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/N-SE-SW"
@@ -962,6 +1026,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/N-SE"
@@ -975,6 +1040,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/N-SW"
@@ -988,6 +1054,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/N"
@@ -1001,6 +1068,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/E-NW-SW"
@@ -1014,6 +1082,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/E-NW"
@@ -1027,6 +1096,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/E-SW"
@@ -1040,6 +1110,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/E"
@@ -1053,6 +1124,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/S-NW-NE"
@@ -1066,6 +1138,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/S-NW"
@@ -1079,6 +1152,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/S-NE"
@@ -1092,6 +1166,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/S"
@@ -1105,6 +1180,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/W-NE-SE"
@@ -1118,6 +1194,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/W-NE"
@@ -1131,6 +1208,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/W-SE"
@@ -1144,6 +1222,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/W"
@@ -1157,6 +1236,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/NW-NE-SE-SW"
@@ -1170,6 +1250,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/NE-SE-SW"
@@ -1183,6 +1264,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/NW-SE-SW"
@@ -1196,6 +1278,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/NW-NE-SW"
@@ -1209,6 +1292,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/NW-NE-SE"
@@ -1222,6 +1306,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/SE-SW"
@@ -1235,6 +1320,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/NW-SW"
@@ -1248,6 +1334,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/NW-NE"
@@ -1261,6 +1348,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/NE-SE"
@@ -1274,6 +1362,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/NW-SE"
@@ -1287,6 +1376,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/NE-SW"
@@ -1300,6 +1390,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/NW"
@@ -1313,6 +1404,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/NE"
@@ -1326,6 +1418,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/SE"
@@ -1339,6 +1432,7 @@
             "Lander": 1,
             "Air": 1
         },
+        "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
             "Clear": "Sea/SW"
@@ -1355,6 +1449,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/N-E-S-W"
@@ -1371,6 +1466,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/Shoal"
@@ -1387,6 +1483,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/E-S-W"
@@ -1403,6 +1500,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/N-S-W"
@@ -1419,6 +1517,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/N-E-S"
@@ -1435,6 +1534,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/N-E-W"
@@ -1451,6 +1551,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/N-S"
@@ -1467,6 +1568,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/E-W"
@@ -1483,6 +1585,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/N-E"
@@ -1499,6 +1602,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/E-S"
@@ -1515,6 +1619,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/S-W"
@@ -1531,6 +1636,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/N-W"
@@ -1547,6 +1653,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/MN"
@@ -1563,6 +1670,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/ME"
@@ -1579,6 +1687,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/MS"
@@ -1595,6 +1704,7 @@
             "Air": 1,
             "Lander": 1
         },
+        "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/MW"

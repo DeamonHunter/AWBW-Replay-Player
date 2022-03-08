@@ -46,16 +46,6 @@ namespace AWBWApp.Game.UI.Select
 
                 if (index == replayInfo.Players.Count - 1)
                     continue;
-                /*
-                playersDrawables[index * 2 + 1] = new SpriteText
-                {
-                    Text = ", ",
-                    Anchor = Anchor.BottomCentre,
-                    Origin = Anchor.BottomCentre,
-                    Font = FontUsage.Default.With(size: 20),
-                    Shadow = true
-                };
-                */
 
                 index++;
             }

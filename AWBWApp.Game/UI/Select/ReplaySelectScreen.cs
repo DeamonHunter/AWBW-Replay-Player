@@ -19,6 +19,7 @@ namespace AWBWApp.Game.UI.Select
     public class ReplaySelectScreen : EscapeableScreen
     {
         protected ReplayCarousel Carousel { get; private set; }
+        protected ReplayInfoWedge ReplayInfo { get; private set; }
 
         private Container carouselContainer;
 
@@ -75,10 +76,9 @@ namespace AWBWApp.Game.UI.Select
                     Size = new Vector2(0.7f, 1),
                     Child = new LoadingSpinner(true) { State = { Value = Visibility.Visible } }
                 },
-                new Box()
+                ReplayInfo = new ReplayInfoWedge()
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Colour = new Color4(200, 200, 200, 150),
                     Size = new Vector2(0.3f, 1)
                 },
             });
@@ -136,6 +136,7 @@ namespace AWBWApp.Game.UI.Select
 
         private void updateSelected(ReplayInfo updatedReplay)
         {
+            ReplayInfo.Replay = updatedReplay;
         }
 
         private void carouselReplaysLoaded()

@@ -39,7 +39,7 @@ namespace AWBWApp.Game.UI.Select
         public Action ReplaysChanged;
 
         /// <summary>
-        /// Called whenever <see cref="SelectedReplay"/> is changed
+        /// Called whenever <see cref="ReplayInfoWedge"/> is changed
         /// </summary>
         public Action<ReplayInfo> SelectionChanged;
 
@@ -297,7 +297,7 @@ namespace AWBWApp.Game.UI.Select
         /// <param name="parent">For nested items, the parent of the item to be updated.</param>
         private void updateItem(DrawableCarouselItem item, DrawableCarouselItem parent = null)
         {
-            Vector2 posInScroll = Scroll.ScrollContent.ToLocalSpace(item.Header.ScreenSpaceDrawQuad.Centre);
+            Vector2 posInScroll = Scroll.ScrollContent.ToLocalSpace(item.Panel.ScreenSpaceDrawQuad.Centre);
             float itemDrawY = posInScroll.Y - visibleUpperBound;
             float dist = Math.Abs(1f - itemDrawY / visibleHalfHeight);
 
