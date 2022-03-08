@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using AWBWApp.Game;
+using AWBWApp.Game.Update;
+using osu.Framework;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
@@ -16,6 +20,19 @@ namespace AWBWApp.Desktop
             var desktopWindow = (SDL2DesktopWindow)host.Window;
 
             desktopWindow.DragDrop += fileDrop;
+        }
+
+        protected override UpdateManager CreateUpdateManager()
+        {
+            switch (RuntimeInfo.OS)
+            {
+                case RuntimeInfo.Platform.Windows:
+                    Debug.Assert(OperatingSystem.IsWindows());
+                    return new SquirrelUpdateManager();
+
+                default:
+                    return new UpdateManager();
+            }
         }
 
         private readonly List<string> importableFiles = new List<string>();

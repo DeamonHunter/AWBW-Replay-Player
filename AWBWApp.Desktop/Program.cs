@@ -1,5 +1,8 @@
-﻿using osu.Framework;
+﻿using System;
+using System.Runtime.Versioning;
+using osu.Framework;
 using osu.Framework.Platform;
+using Squirrel;
 
 namespace AWBWApp.Desktop
 {
@@ -7,11 +10,23 @@ namespace AWBWApp.Desktop
     {
         public static void Main()
         {
-            using (GameHost host = Host.GetSuitableDesktopHost(@"AWBWApp"))
+            if (OperatingSystem.IsWindows())
+                setupSquirrel();
+
+            using (GameHost host = Host.GetSuitableDesktopHost(@"AWBWReplayPlayer"))
             {
                 using (osu.Framework.Game game = new AWBWAppGameDesktop())
                     host.Run(game);
             }
+        }
+
+        [SupportedOSPlatform("windows")]
+        private static void setupSquirrel()
+        {
+            SquirrelAwareApp.HandleEvents(onEveryRun: (version, tools, firstRun) =>
+            {
+                tools.SetProcessAppUserModelId();
+            });
         }
     }
 }

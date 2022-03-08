@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using AWBWApp.Game.IO;
 using NUnit.Framework;
+using osu.Framework.Allocation;
+using osu.Framework.Platform;
 
 namespace AWBWApp.Game.Tests.Replays
 {
