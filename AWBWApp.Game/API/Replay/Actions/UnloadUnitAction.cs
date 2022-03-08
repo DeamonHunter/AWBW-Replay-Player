@@ -46,6 +46,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             });
             yield return ReplayWait.WaitForTransformable(unloadingUnit);
 
+            unloadingUnit.MoveToPosition(UnloadedUnit.Position.Value);
             unloadingUnit.CanMove.Value = false;
             controller.UpdateFogOfWar();
         }

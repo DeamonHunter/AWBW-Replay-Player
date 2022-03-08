@@ -56,7 +56,22 @@ namespace AWBWApp.Game.Game.Logic
 
             foreach (var drawableUnit in units)
             {
+                if (drawableUnit.BeingCarried.Value)
+                    continue;
+
                 var visionRange = Math.Max(1, drawableUnit.UnitData.Vision + rangeIncrease);
+
+                //Air Units don't get to get their sight increased
+                if (drawableUnit.UnitData.MovementType != MovementType.Air)
+                {
+                    if (gameMap.TryGetDrawableBuilding(drawableUnit.MapPosition, out DrawableBuilding unitBuilding))
+                        visionRange = Math.Max(1, visionRange + unitBuilding.BuildingTile.SightDistanceIncrease);
+                    else
+                    {
+                        var tile = gameMap.GetDrawableTile(drawableUnit.MapPosition);
+                        visionRange = Math.Max(1, visionRange + tile.TerrainTile.SightDistanceIncrease);
+                    }
+                }
 
                 for (int x = -visionRange; x <= visionRange; x++)
                 {
