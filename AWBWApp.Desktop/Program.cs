@@ -23,10 +23,21 @@ namespace AWBWApp.Desktop
         [SupportedOSPlatform("windows")]
         private static void setupSquirrel()
         {
-            SquirrelAwareApp.HandleEvents(onEveryRun: (version, tools, firstRun) =>
-            {
-                tools.SetProcessAppUserModelId();
-            });
+            SquirrelAwareApp.HandleEvents(
+                onInitialInstall: (version, tools) =>
+                {
+                    tools.CreateShortcutForThisExe();
+                    tools.CreateUninstallerRegistryEntry();
+                },
+                onAppUninstall: (version, tools) =>
+                {
+                    tools.RemoveShortcutForThisExe();
+                    tools.RemoveUninstallerRegistryEntry();
+                },
+                onEveryRun: (version, tools, firstRun) =>
+                {
+                    tools.SetProcessAppUserModelId();
+                });
         }
     }
 }
