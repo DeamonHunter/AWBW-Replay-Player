@@ -388,14 +388,12 @@ namespace AWBWApp.Game.Game.Logic
 
             if (!currentTurn.ActiveTeam.IsNullOrEmpty())
             {
-                Map.ClearFog(true, false);
-
                 foreach (var player in replayData.ReplayInfo.Players)
                 {
                     if (player.Value.TeamName != currentTurn.ActiveTeam || player.Key == currentTurn.ActivePlayerID)
                         continue;
 
-                    calculateFogForPlayer(currentTurn.ActivePlayerID, false);
+                    calculateFogForPlayer(player.Key, false);
                 }
             }
         }
