@@ -203,7 +203,7 @@ namespace AWBWApp.Game
                 AutoSizeAxes = Axes.Both;
                 Children = new Drawable[]
                 {
-                    wrench = new Wrench(new Color4(53, 86, 218, 255), new Color4(26, 29, 203, 255))
+                    wrench = new Wrench(new Color4(53, 86, 218, 255), new Color4(26, 29, 203, 255), new Color4(77, 114, 221, 255))
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre
@@ -299,7 +299,7 @@ namespace AWBWApp.Game
 
             private class Wrench : Container
             {
-                public Wrench(ColourInfo baseColor, ColourInfo outLineColour)
+                public Wrench(ColourInfo baseColor, ColourInfo outLineColour, ColourInfo highlightColour)
                 {
                     AutoSizeAxes = Axes.Both;
                     Children = new Drawable[]
@@ -365,7 +365,31 @@ namespace AWBWApp.Game
                             Size = new Vector2(270, 90),
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre
-                        }
+                        },
+                        new SemiCirclePiece(false)
+                        {
+                            CircleColour = highlightColour,
+                            Size = new Vector2(100),
+                            Position = new Vector2(-140, -40)
+                        },
+                        new SemiCirclePiece(true)
+                        {
+                            CircleColour = highlightColour,
+                            Size = new Vector2(100),
+                            Position = new Vector2(-140, 40)
+                        },
+                        new SemiCirclePiece(false)
+                        {
+                            CircleColour = highlightColour,
+                            Size = new Vector2(100),
+                            Position = new Vector2(140, -40)
+                        },
+                        new SemiCirclePiece(true)
+                        {
+                            CircleColour = highlightColour,
+                            Size = new Vector2(100),
+                            Position = new Vector2(140, 40)
+                        },
                     };
                 }
             }
