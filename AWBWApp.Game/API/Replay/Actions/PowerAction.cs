@@ -388,7 +388,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             if (ChangeToWeather.HasValue)
-                controller.Map.ChangeWeather(ChangeToWeather.Value);
+                controller.Map.CurrentWeather.Value = ChangeToWeather.Value;
 
             if (PlayerChanges != null)
             {

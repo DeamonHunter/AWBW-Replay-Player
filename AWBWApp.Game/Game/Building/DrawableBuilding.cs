@@ -30,6 +30,9 @@ namespace AWBWApp.Game.Game.Building
         private TextureAnimation textureAnimation;
         private Dictionary<Weather, List<Texture>> texturesByWeather;
 
+        [Resolved]
+        private IBindable<Weather> currentWeather { get; set; }
+
         public DrawableBuilding(BuildingTile buildingTile, long? ownerID, Vector2I tilePosition)
         {
             BuildingTile = buildingTile;
@@ -65,10 +68,10 @@ namespace AWBWApp.Game.Game.Building
                 texturesByWeather.Add(texturePair.Key, textureList);
             }
 
-            ChangeWeather(Weather.Clear);
+            currentWeather.BindValueChanged(x => changeWeather(x.NewValue), true);
         }
 
-        public void ChangeWeather(Weather weather)
+        private void changeWeather(Weather weather)
         {
             if (!texturesByWeather.TryGetValue(weather, out var weatherTextures))
                 weatherTextures = texturesByWeather[Weather.Clear];

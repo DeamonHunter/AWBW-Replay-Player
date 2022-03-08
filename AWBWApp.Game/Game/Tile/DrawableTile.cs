@@ -27,6 +27,9 @@ namespace AWBWApp.Game.Game.Tile
 
         private Dictionary<Weather, Texture> texturesByWeather;
 
+        [Resolved]
+        private IBindable<Weather> currentWeather { get; set; }
+
         public DrawableTile(TerrainTile terrainTile)
         {
             TerrainTile = terrainTile;
@@ -55,10 +58,10 @@ namespace AWBWApp.Game.Game.Tile
                 texturesByWeather.Add(texturePair.Key, texture);
             }
 
-            ChangeWeather(Weather.Clear);
+            currentWeather.BindValueChanged(x => changeWeather(x.NewValue), true);
         }
 
-        public void ChangeWeather(Weather weather)
+        private void changeWeather(Weather weather)
         {
             if (!texturesByWeather.TryGetValue(weather, out var weatherTexture))
                 weatherTexture = texturesByWeather[Weather.Clear];

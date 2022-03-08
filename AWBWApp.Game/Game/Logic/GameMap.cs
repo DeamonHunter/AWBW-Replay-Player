@@ -12,6 +12,7 @@ using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Replay;
 using AWBWApp.Game.UI.Replay.Toolbar;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
@@ -24,7 +25,7 @@ namespace AWBWApp.Game.Game.Logic
     {
         public Vector2I MapSize { get; private set; }
 
-        public Weather CurrentWeather { get; private set; }
+        public Bindable<Weather> CurrentWeather = new Bindable<Weather>();
 
         private readonly Container<DrawableTile> gameBoardDrawable;
         private DrawableTile[,] gameBoard;
@@ -89,6 +90,15 @@ namespace AWBWApp.Game.Game.Logic
                     Anchor = Anchor.TopLeft
                 }
             });
+        }
+
+        private DependencyContainer dependencies;
+
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        {
+            dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+            dependencies.CacheAs<IBindable<Weather>>(CurrentWeather);
+            return dependencies;
         }
 
         public void ScheduleSetToLoading() => Schedule(setToLoading);
@@ -253,6 +263,7 @@ namespace AWBWApp.Game.Game.Logic
             effectAnimationController.Size = new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y);
             grid.Size = new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y);
 
+            CurrentWeather.Value = gameState.TurnData[0].StartWeather.Type;
             gameBoardDrawable.FadeIn();
             animateStart(1.5f);
         }
@@ -366,25 +377,7 @@ namespace AWBWApp.Game.Game.Logic
                 unitsDrawable.Remove(unit.Value);
             }
 
-            ChangeWeather(gameState.StartWeather.Type);
-        }
-
-        public void ChangeWeather(Weather weather)
-        {
-            if (CurrentWeather == weather)
-                return;
-
-            CurrentWeather = weather;
-
-            foreach (var tile in gameBoard)
-            {
-                if (tile == null)
-                    continue;
-                tile.ChangeWeather(weather);
-            }
-
-            foreach (var building in buildings)
-                building.Value.ChangeWeather(weather);
+            CurrentWeather.Value = gameState.StartWeather.Type;
         }
 
         public void ClearFog(bool makeFoggy, bool triggerChange) => fogOfWarGenerator.ClearFog(makeFoggy, triggerChange);
