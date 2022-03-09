@@ -5,16 +5,12 @@ using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.IO;
 using osu.Framework.Allocation;
 using osu.Framework.Caching;
-using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Pooling;
-using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osu.Framework.Layout;
 using osuTK;
-using osuTK.Graphics;
 using osuTK.Input;
 
 namespace AWBWApp.Game.UI.Select
@@ -106,35 +102,12 @@ namespace AWBWApp.Game.UI.Select
 
         private PendingScrollOperation pendingScrollOperation = PendingScrollOperation.None;
 
-        private Container noReplaysContainer;
-
         public ReplayCarousel()
         {
             rootCarouselItem = new CarouselRoot(this);
             InternalChildren = new Drawable[]
             {
                 setPool,
-                noReplaysContainer = new Container()
-                {
-                    Size = new Vector2(300, 200),
-                    Alpha = 0,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Children = new Drawable[]
-                    {
-                        new Box()
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.Black.Opacity(0.5f)
-                        },
-                        new SpriteText()
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Text = "No Replays have been added..."
-                        }
-                    }
-                },
                 Scroll = new CarouselScrollContainer
                 {
                     RelativeSizeAxes = Axes.Both
@@ -168,9 +141,6 @@ namespace AWBWApp.Game.UI.Select
 
             ScheduleAfterChildren(() =>
             {
-                if (rootCarouselItem.Children.Count == 0)
-                    noReplaysContainer.FadeIn(400, Easing.In);
-
                 ReplaysChanged?.Invoke();
                 ReplaysLoaded = true;
 
