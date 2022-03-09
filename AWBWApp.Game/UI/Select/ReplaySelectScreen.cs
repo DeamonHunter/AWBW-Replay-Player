@@ -180,6 +180,14 @@ namespace AWBWApp.Game.UI.Select
             return true;
         }
 
+        public override void OnResuming(IScreen last)
+        {
+            base.OnResuming(last);
+
+            replayController = null;
+            Carousel.AllowSelection = true;
+        }
+
         private void updateSelected(ReplayInfo updatedReplay)
         {
             ReplayInfo.Replay = updatedReplay;
