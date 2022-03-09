@@ -107,7 +107,7 @@ namespace AWBWApp.Game
             countryStorage.LoadStream(countriesJson);
             dependencies.Cache(countryStorage);
 
-            Add(interruptOverlay = new InterruptDialogueOverlay());
+            LoadComponentAsync(interruptOverlay = new InterruptDialogueOverlay(), Add);
             dependencies.Cache(interruptOverlay);
 
             sessionHandler = new AWBWSessionHandler();
