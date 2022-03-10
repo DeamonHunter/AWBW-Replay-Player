@@ -35,7 +35,7 @@ namespace AWBWApp.Game.IO
             }
         }
 
-        public ReplayMap Get(long mapID) => Get(mapID.ToString());
+        public ReplayMap Get(long mapID) => Get($"{mapID}.json");
 
         public async Task<ReplayMap> GetOrDownloadMap(long mapID)
         {
