@@ -137,7 +137,7 @@ namespace AWBWApp.Game
                     return @"local " + (DebugUtils.IsDebugBuild ? @"debug" : @"release");
 
                 var version = AssemblyVersion;
-                return $@"{version.Major}.{version.Minor}.{version.Build}-lazer";
+                return $@"{version.Major}.{version.Minor}.{version.Build}";
             }
         }
 

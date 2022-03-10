@@ -13,7 +13,7 @@ namespace AWBWApp.Game.UI.Notifications
             set
             {
                 text = value;
-                TextDrawable.Text = text;
+                Schedule(() => TextDrawable.Text = text);
             }
         }
 

@@ -178,7 +178,7 @@ namespace AWBWApp.Game.UI.Notifications
                 set
                 {
                     active = value;
-                    this.FadeColour(active ? new Color4(20, 20, 200, 256) : new Color4(128, 128, 128, 256), 100);
+                    this.FadeColour(active ? new Color4(84, 153, 89, 255) : new Color4(128, 128, 128, 255), 100);
                 }
             }
 
@@ -195,7 +195,7 @@ namespace AWBWApp.Game.UI.Notifications
                     }
                 };
 
-                Colour = new Color4(128, 128, 128, 256);
+                Active = false;
                 Height = 5;
             }
         }

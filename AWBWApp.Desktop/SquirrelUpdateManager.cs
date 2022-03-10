@@ -91,7 +91,7 @@ namespace AWBWApp.Desktop
                     {
                         logger.Add(@"Delta patching failed. Will attempt a full download.");
 
-                        await checkForUpdateAsync(false).ConfigureAwait(false);
+                        await checkForUpdateAsync(false, notification).ConfigureAwait(false);
                     }
                     else
                     {
