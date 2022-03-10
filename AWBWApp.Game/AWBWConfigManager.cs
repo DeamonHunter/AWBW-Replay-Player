@@ -14,11 +14,18 @@ namespace AWBWApp.Game
         protected override void InitialiseDefaults()
         {
             SetDefault(AWBWSetting.Version, string.Empty);
+
+            SetDefault(AWBWSetting.ReplaySkipEndTurn, false);
+            SetDefault(AWBWSetting.ReplayShowHiddenUnits, true);
+            SetDefault(AWBWSetting.ReplayShowGridOverMap, false);
         }
     }
 
     public enum AWBWSetting
     {
-        Version
+        Version,
+        ReplaySkipEndTurn,
+        ReplayShowHiddenUnits,
+        ReplayShowGridOverMap
     }
 }

@@ -9,11 +9,10 @@ using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Replay;
-using AWBWApp.Game.UI.Replay.Toolbar;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.UserInterface;
 using osuTK;
 
 namespace AWBWApp.Game.Game.Logic
@@ -31,9 +30,6 @@ namespace AWBWApp.Game.Game.Logic
         [Resolved]
         private CountryStorage countryStorage { get; set; }
 
-        [Cached]
-        public ReplaySettings Settings { get; private set; }
-
         public List<(long playerID, PowerAction action, int activeDay)> ActivePowers = new List<(long, PowerAction, int)>();
 
         private ReplayData replayData;
@@ -48,8 +44,7 @@ namespace AWBWApp.Game.Game.Logic
         private readonly ReplayBarWidget barWidget;
         private readonly ReplayPlayerList playerList;
 
-        private ReplayMenuBar menuBar;
-
+        private IBindable<bool> skipEndTurnBindable;
         public Dictionary<long, PlayerInfo> Players { get; private set; } = new Dictionary<long, PlayerInfo>();
         public PlayerInfo ActivePlayer => currentTurn != null ? Players[currentTurn.ActivePlayerID] : null;
 
@@ -73,8 +68,6 @@ namespace AWBWApp.Game.Game.Logic
                 Left = mapPadding.Left + DrawableTile.BASE_SIZE.X * 4,
                 Right = mapPadding.Right + DrawableTile.BASE_SIZE.X * 4,
             };
-
-            Settings = new ReplaySettings();
 
             AddRangeInternal(new Drawable[]
             {
@@ -100,24 +93,6 @@ namespace AWBWApp.Game.Game.Logic
                     {
                         new Drawable[]
                         {
-                            menuBar = new ReplayMenuBar()
-                            {
-                                Items = new[]
-                                {
-                                    new MenuItem("Settings")
-                                    {
-                                        Items = new[]
-                                        {
-                                            new ToggleMenuItem("Show Grid", Settings.ShowGridOverMap),
-                                            new ToggleMenuItem("Show Hidden Units", Settings.ShowHiddenUnits),
-                                            new ToggleMenuItem("Skip End Turn", Settings.SkipEndTurn)
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        new Drawable[]
-                        {
                             playerList = new ReplayPlayerList
                             {
                                 Anchor = Anchor.TopRight,
@@ -128,17 +103,18 @@ namespace AWBWApp.Game.Game.Logic
                         }
                     },
                 },
-                new ReplayMenuHover(menuBar)
-                {
-                    RelativeSizeAxes = Axes.X,
-                    Size = new Vector2(1, 40) //Gives a bit of leeway as this is larger than the menuBar
-                },
                 loadingLayer = new ReplayLoadingLayer()
             });
 
             Map.OnLoadComplete += _ => cameraControllerWithGrid.FitMapToSpace();
 
             loadingLayer.Show();
+        }
+
+        [BackgroundDependencyLoader]
+        private void load(AWBWConfigManager configManager)
+        {
+            skipEndTurnBindable = configManager.GetBindable<bool>(AWBWSetting.ReplaySkipEndTurn);
         }
 
         protected override void Update()
@@ -270,7 +246,7 @@ namespace AWBWApp.Game.Game.Logic
                 currentActionIndex++;
                 var action = currentTurn.Actions[currentActionIndex];
 
-                if (Settings.SkipEndTurn.Value && action is EndTurnAction)
+                if (skipEndTurnBindable.Value && action is EndTurnAction)
                 {
                     goToTurnWithIdx(currentTurnIndex + 1, false);
                     return;

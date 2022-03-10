@@ -10,7 +10,6 @@ using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Replay;
-using AWBWApp.Game.UI.Replay.Toolbar;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -104,10 +103,10 @@ namespace AWBWApp.Game.Game.Logic
         public void ScheduleSetToLoading() => Schedule(setToLoading);
 
         [BackgroundDependencyLoader]
-        private void load(ReplaySettings settings)
+        private void load(AWBWConfigManager settings)
         {
             setToLoading();
-            settings.ShowGridOverMap.BindValueChanged(x => grid.FadeTo(x.NewValue ? 1 : 0, 400, Easing.OutQuint), true);
+            settings.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap).BindValueChanged(x => grid.FadeTo(x.NewValue ? 1 : 0, 400, Easing.OutQuint), true);
         }
 
         private void setToLoading()

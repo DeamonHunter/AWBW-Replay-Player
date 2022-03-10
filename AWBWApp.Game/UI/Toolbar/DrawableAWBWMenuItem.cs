@@ -9,13 +9,13 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay.Toolbar
 {
-    public class DrawableReplayMenuItem : Menu.DrawableMenuItem
+    public class DrawableAWBWMenuItem : Menu.DrawableMenuItem
     {
         private TextContainer text;
 
         private Action<bool, Drawable> onHoverChange;
 
-        public DrawableReplayMenuItem(MenuItem item, Action<bool, Drawable> onHoverChange)
+        public DrawableAWBWMenuItem(MenuItem item, Action<bool, Drawable> onHoverChange)
             : base(item)
         {
             Anchor = Anchor.CentreLeft;

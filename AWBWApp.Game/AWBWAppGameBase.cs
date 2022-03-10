@@ -157,6 +157,14 @@ namespace AWBWApp.Game
             }
         }
 
+        public void GracefullyExit()
+        {
+            if (!OnExiting())
+                Exit();
+            else
+                Scheduler.AddDelayed(GracefullyExit, 2000);
+        }
+
         protected override UserInputManager CreateUserInputManager() => new AWBWAppUserInputManager();
 
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));

@@ -80,8 +80,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             var player = controller.Players[NextPlayerID];
 
-            if (!controller.Settings.SkipEndTurn.Value)
-                yield return ReplayWait.WaitForTransformable(controller.PlayEndTurnAnimation(player, NextDay));
+            yield return ReplayWait.WaitForTransformable(controller.PlayEndTurnAnimation(player, NextDay));
 
             if (RepairedUnits != null)
             {

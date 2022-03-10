@@ -1,87 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using AWBWApp.Game.UI.Replay.Toolbar;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
-using osu.Framework.Threading;
 using osuTK;
 using osuTK.Graphics;
 
-namespace AWBWApp.Game.UI.Replay
+namespace AWBWApp.Game.UI.Toolbar
 {
-    public class ReplayMenuBar : Menu
+    public class AWBWMenu : Menu
     {
-        public Bindable<MenuState> MenuShown = new Bindable<MenuState>();
-        public bool KeepOpen = false;
-
-        public float HideDelay = 1000;
-
         private HashSet<Drawable> hoveredDrawables = new HashSet<Drawable>();
-        private ScheduledDelegate hoverHideDelegate;
 
-        public ReplayMenuBar()
+        public AWBWMenu()
             : base(Direction.Horizontal, true)
         {
             RelativeSizeAxes = Axes.X;
-            Size = new Vector2(1, 40);
-            MenuShown.BindValueChanged(x => updateMenuShown(x.NewValue));
-
+            Size = new Vector2(1, 0);
             BackgroundColour = new Color4(25, 25, 25, 255);
         }
 
-        protected override void LoadComplete()
-        {
-            base.LoadComplete();
+        public bool IsActive => IsHovered || hoveredDrawables.Count > 0 || InternalChildren[1].Size != Vector2.Zero;
 
-            AnimateClose();
-            FinishTransforms(true);
-        }
+        protected override DrawableMenuItem CreateDrawableMenuItem(MenuItem item) => new DrawableAWBWMenuItemWithHeader(item, onHoverChange);
 
-        protected override void Update()
-        {
-            base.Update();
+        protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) => new BasicScrollContainer(direction);
 
-            if (MenuShown.Value != MenuState.Open)
-                return;
-
-            if (IsHovered || InternalChildren[1].Size != Vector2.Zero || hoveredDrawables.Count > 0 || KeepOpen)
-            {
-                if (hoverHideDelegate != null)
-                {
-                    hoverHideDelegate.Cancel();
-                    hoverHideDelegate = null;
-                }
-                return;
-            }
-
-            if (hoverHideDelegate == null)
-                hoverHideDelegate = Scheduler.AddDelayed(() => MenuShown.Value = MenuState.Closed, HideDelay);
-        }
-
-        private void updateMenuShown(MenuState newValue)
-        {
-            if (newValue == MenuState.Open)
-                AnimateOpen();
-            else
-                AnimateClose();
-        }
-
-        protected override void AnimateOpen()
-        {
-            MenuShown.Value = MenuState.Open;
-            this.FadeIn(300, Easing.OutQuint);
-            this.ScaleTo(Vector2.One, 300, Easing.OutQuint);
-        }
-
-        protected override void AnimateClose()
-        {
-            MenuShown.Value = MenuState.Closed;
-            this.FadeOut(300, Easing.OutQuint);
-            this.ScaleTo(new Vector2(1, 0), 300, Easing.OutQuint);
-        }
+        protected override Menu CreateSubMenu() => new SubMenu(this, onHoverChange);
 
         private void onHoverChange(bool gainedHover, Drawable drawable)
         {
@@ -91,18 +38,27 @@ namespace AWBWApp.Game.UI.Replay
                 hoveredDrawables.Remove(drawable);
         }
 
-        protected override DrawableMenuItem CreateDrawableMenuItem(MenuItem item) => new DrawableReplayMenuItemWithHeader(item, onHoverChange);
+        protected override bool Handle(UIEvent e)
+        {
+            switch (e)
+            {
+                case ScrollEvent _:
+                    if (ReceivePositionalInputAt(e.ScreenSpaceMousePosition))
+                        return true;
+                    break;
 
-        protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) => new BasicScrollContainer(direction);
-
-        protected override Menu CreateSubMenu() => new SubMenu(this, onHoverChange);
+                case MouseEvent _:
+                    return true;
+            }
+            return base.Handle(e);
+        }
 
         private class SubMenu : Menu
         {
-            private Menu parentMenu;
+            private readonly Menu parentMenu;
 
-            private Action<bool, Drawable> baseOnHoverChange;
-            private HashSet<Drawable> hoveredDrawables = new HashSet<Drawable>();
+            private readonly Action<bool, Drawable> baseOnHoverChange;
+            private readonly HashSet<Drawable> hoveredDrawables = new HashSet<Drawable>();
 
             public SubMenu(Menu parentMenu, Action<bool, Drawable> onHoverChange)
                 : base(Direction.Vertical)
@@ -171,7 +127,7 @@ namespace AWBWApp.Game.UI.Replay
                         return new DrawableToggleMenuItem(toggle, onHoverChange);
                 }
 
-                return new DrawableReplayMenuItem(item, onHoverChange);
+                return new DrawableAWBWMenuItem(item, onHoverChange);
             }
 
             protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) => new BasicScrollContainer(direction);

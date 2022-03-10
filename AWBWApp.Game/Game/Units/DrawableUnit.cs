@@ -6,7 +6,6 @@ using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Replay;
-using AWBWApp.Game.UI.Replay.Toolbar;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
@@ -67,7 +66,7 @@ namespace AWBWApp.Game.Game.Unit
 
         public HashSet<long> Cargo = new HashSet<long>();
 
-        private Bindable<bool> showUnitInFog;
+        private IBindable<bool> showUnitInFog;
 
         public DrawableUnit(UnitData unitData, ReplayUnit unit, CountryData country)
         {
@@ -150,7 +149,7 @@ namespace AWBWApp.Game.Game.Unit
         }
 
         [BackgroundDependencyLoader]
-        private void load(NearestNeighbourTextureStore store, ReplaySettings settings)
+        private void load(NearestNeighbourTextureStore store, AWBWConfigManager configManager)
         {
             capturing.Texture = store.Get("UI/Capturing");
             capturing.Size = capturing.Texture.Size;
@@ -195,7 +194,7 @@ namespace AWBWApp.Game.Game.Unit
                 divedAnimation.Seek(UnitData.FrameOffset);
             }
 
-            showUnitInFog = settings.ShowHiddenUnits.GetBoundCopy();
+            showUnitInFog = configManager.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits);
             showUnitInFog.BindValueChanged(x => updateUnitColour(x.NewValue));
             CanMove.BindValueChanged(x => updateUnitColour(x.NewValue));
             FogOfWarActive.BindValueChanged(x => updateUnitColour(x.NewValue));

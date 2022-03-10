@@ -8,11 +8,11 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Replay.Toolbar
 {
-    public class DrawableReplayMenuItemWithHeader : DrawableReplayMenuItem
+    public class DrawableAWBWMenuItemWithHeader : DrawableAWBWMenuItem
     {
         private ExpandingBox backgroundBox;
 
-        public DrawableReplayMenuItemWithHeader(MenuItem item, Action<bool, Drawable> onHoverChange)
+        public DrawableAWBWMenuItemWithHeader(MenuItem item, Action<bool, Drawable> onHoverChange)
             : base(item, onHoverChange)
         {
             StateChanged += stateChanged;

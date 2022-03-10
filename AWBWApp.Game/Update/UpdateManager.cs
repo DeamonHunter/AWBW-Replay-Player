@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using AWBWApp.Game.UI.Notifications;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Logging;
@@ -7,10 +8,13 @@ namespace AWBWApp.Game.Update
 {
     public class UpdateManager : CompositeDrawable
     {
-        public bool CanCheckForUpdate => GetType() != typeof(UpdateManager);
+        public bool CanCheckForUpdate => game.IsDeployedBuild && GetType() != typeof(UpdateManager);
 
         [Resolved]
         private AWBWConfigManager config { get; set; }
+
+        [Resolved]
+        private NotificationOverlay notificationOverlay { get; set; }
 
         [Resolved]
         private AWBWAppGameBase game { get; set; }
@@ -29,7 +33,7 @@ namespace AWBWApp.Game.Update
             if (game.IsDeployedBuild && version != lastVersion)
             {
                 if (!string.IsNullOrEmpty(lastVersion))
-                    Logger.Log("Update Complete."); //Todo: Some sort of notification
+                    notificationOverlay.Post(new SimpleNotification(true) { Text = "You are now running the latest version: " + version });
             }
 
             config.SetValue(AWBWSetting.Version, version);

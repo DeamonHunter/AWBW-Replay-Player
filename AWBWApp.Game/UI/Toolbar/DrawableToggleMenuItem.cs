@@ -7,7 +7,7 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Replay.Toolbar
 {
-    public class DrawableToggleMenuItem : DrawableReplayMenuItem
+    public class DrawableToggleMenuItem : DrawableAWBWMenuItem
     {
         protected new ToggleMenuItem Item => (ToggleMenuItem)base.Item;
 
