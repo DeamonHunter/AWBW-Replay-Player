@@ -5,6 +5,7 @@ using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.IO;
 using AWBWApp.Game.UI.Select;
 using NUnit.Framework;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Logging;
 using osu.Framework.Platform;

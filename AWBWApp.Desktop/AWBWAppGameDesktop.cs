@@ -19,6 +19,7 @@ namespace AWBWApp.Desktop
 
             var desktopWindow = (SDL2DesktopWindow)host.Window;
 
+            desktopWindow.Title = Name;
             desktopWindow.DragDrop += fileDrop;
         }
 
