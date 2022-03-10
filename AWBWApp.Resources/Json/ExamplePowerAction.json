@@ -1,0 +1,111 @@
+{
+    //Example Power showing all available options. No CO Power uses all options
+    "coName": "Andy",
+    "coPower": "Y", // Can be "Y" (Normal) or "S" (Super).
+    "playerID": 123456,
+    "powerName": "Hyper Upgrade",
+    "playersCOP": 0, //The amount of leftover power after using the action
+
+    //Note: ALL values from here on, may or may not be present.
+
+    "global": {
+        //This is present for powers that change all unit stats. e.g. Sonja's vision, Adder's Movement
+
+        "units_movement_points": 1, //Number of additional movement points for all units
+        "units_vision": 1 //The amount of additional vision for all units
+    },
+
+    "hpChange": {
+        //This is present if a unit changes health/fuel globally
+
+        "hpGain": {
+            "hp": 1, //The amount of health added
+            "units_fuel": 1.0, //The percentage of fuel to set to. (i.e. 50% of 99 fuel)
+            "players": [ 12345, 23456, 34567 ]
+        },
+        "hpLoss": {
+            "hp": -1, //The amount of health added. (Will always be negative in this case)
+            "units_fuel": 0.5, //The percentage of fuel to set to. (i.e. 50% of 99 fuel)
+            "players": [ 12345, 23456, 34567 ]
+        }
+    },
+
+    "unitReplace": {
+        //Similar to "global" or "hpChange" but only affects specific units
+
+        //This provides information to specific players. So each player/team may have different info here.
+        //If fog is turned off: Only "global" will be here.
+        //If the match has teams: Team names will be here. e.g. "A", "B", "C".
+        //Otherwise each individual id will be listed: "12345", "23456", "34567" etc.
+
+        "12345": {
+            "units": [
+                {
+                    "units_id": 1,
+                    "units_ammo": 5, //The exact amount of ammo
+                    "units_fuel": 5, //The exact amount of fuel
+                    "units_hit_points": 5, //The exact amount of hp
+                    "units_movement_points": 5, //The exact amount of movement points
+                    "units_long_range": 1,
+                    "units_moved": 0 //Sets how many times the unit has moved. Believe Eagle's lightning strike uses this to reactivate units
+                },
+                {}
+            ]
+        },
+        "23456": {}
+    },
+
+    "playerReplace": {
+        //This provides information to specific players. So each player/team may have different info here.
+        //If fog is turned off: Only "global" will be here.
+        //If the match has teams: Team names will be here. e.g. "A", "B", "C".
+        //Otherwise each individual id will be listed: "12345", "23456", "34567" etc.
+
+        "12345": {
+            //This contains individual entries for all players effected by the player
+
+            "12345": {
+                "players_funds": 12345, //The exact amount of funds
+                "players_co_power": 12345, //The exact amount of power left over.
+                "tags_co_power": 12345 //The exact amount of power left over for the tag CO.
+            },
+            "23456": {}
+        },
+        "23456": {}
+    },
+
+    "unitAdd": {
+        //This provides information to specific players. So each player/team may have different info here.
+        //If fog is turned off: Only "global" will be here.
+        //If the match has teams: Team names will be here. e.g. "A", "B", "C".
+        //Otherwise each individual id will be listed: "12345", "23456", "34567" etc.
+
+
+        //Units Add is only used by Sensei. So it has hardcoded values
+        //All units created by this will be created with default stats. Except hp will be 9 instead of 10
+        "12345": {
+            "playerID": 12345, //Which player is making units
+            "unitName": "Infantry", //The name of the unit being created. Either Infantry or Mech
+            "units": [
+                {
+                    "units_id": 1, //The ID of the unit being created
+                    "units_x": 0, //X position of the unit
+                    "units_y": 0 //Y position of the unit
+                }
+            ]
+        },
+        "23456": {}
+    },
+
+    "missileCoords": [
+        //Where missiles will be fired.
+        //Sturms Meteors are also missiles.
+        { "x": 1, "y": 1 },
+        { "x": 2, "y": 1 }
+    ],
+
+    "weather": {
+        "weatherCode": "R", //Either R for rain or S for snow
+        "weatherName": "Rain"
+    }
+}
