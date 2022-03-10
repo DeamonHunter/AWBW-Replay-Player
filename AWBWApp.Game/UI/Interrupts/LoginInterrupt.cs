@@ -79,6 +79,7 @@ namespace AWBWApp.Game.UI.Interrupts
                             {
                                 Text = "Cancel",
                                 BackgroundColour = Color4Extensions.FromHex(@"681d1f"),
+                                HoverColour = Color4Extensions.FromHex(@"681d1f").Lighten(0.2f),
                                 Action = cancel,
                                 RelativePositionAxes = Axes.X,
                                 Position = new Vector2(-0.25f, 0f)
@@ -87,6 +88,7 @@ namespace AWBWApp.Game.UI.Interrupts
                             {
                                 Text = "Accept",
                                 BackgroundColour = Color4Extensions.FromHex(@"1d681e"),
+                                HoverColour = Color4Extensions.FromHex(@"1d681e").Lighten(0.2f),
                                 Action = scheduleLogin,
                                 RelativePositionAxes = Axes.X,
                                 Position = new Vector2(0.25f, 0f)
@@ -136,15 +138,14 @@ namespace AWBWApp.Game.UI.Interrupts
             }
             catch (Exception e)
             {
-                failed("Unknown error has occured while logging in.");
-                Logger.Log(e.Message, level: LogLevel.Error);
+                Logger.Error(e, "Unknown Error occured: " + e.Message);
                 return;
             }
         }
 
         private void failed(string reason)
         {
-            Logger.Log("Failed to login: " + errorText, level: LogLevel.Important);
+            Logger.Log("Failed to login: " + errorText, level: LogLevel.Verbose);
             errorText.Text = reason;
             blockingLayer.Hide();
         }
