@@ -73,13 +73,13 @@ namespace AWBWApp.Desktop
                 try
                 {
                     Logger.Log("[Update] Downloading Releases.");
-                    await updateManager.DownloadReleases(info.ReleasesToApply).ConfigureAwait(false);
+                    await updateManager.DownloadReleases(info.ReleasesToApply, p => notification.Progress = p / 100f).ConfigureAwait(false);
 
                     notification.Progress = 0;
                     notification.Text = @"Installing update...";
 
                     Logger.Log("[Update] Applying Releases.");
-                    await updateManager.ApplyReleases(info);
+                    await updateManager.ApplyReleases(info, p => notification.Progress = p / 100f);
 
                     Logger.Log("[Update] Finished applying Releases.");
                     notification.State = ProgressNotificationState.Completed;
