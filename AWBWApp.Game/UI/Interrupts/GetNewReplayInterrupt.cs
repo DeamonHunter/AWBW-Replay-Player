@@ -203,8 +203,11 @@ namespace AWBWApp.Game.UI.Interrupts
         private void failed(string reason)
         {
             Logger.Log("Failed to login: " + errorText, level: LogLevel.Verbose);
-            errorText.Text = reason;
-            blockingLayer.Hide();
+            Schedule(() =>
+            {
+                errorText.Text = reason;
+                blockingLayer.Hide();
+            });
         }
 
         private void cancel()
