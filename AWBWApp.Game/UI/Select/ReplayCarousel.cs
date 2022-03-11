@@ -158,6 +158,8 @@ namespace AWBWApp.Game.UI.Select
 
             if (existingReplay != null)
                 rootCarouselItem.RemoveChild(existingReplay);
+            else
+                newItem.State.Value = CarouselItemState.Selected;
 
             rootCarouselItem.AddChild(newItem);
             itemsCache.Invalidate();
