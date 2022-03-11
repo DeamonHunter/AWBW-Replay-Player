@@ -453,7 +453,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                         if (change.Value.HitPoints.HasValue)
                             unit.HealthPoints.Value = change.Value.HitPoints.Value;
                         if (change.Value.UnitsMoved.HasValue)
-                            unit.CanMove.Value = change.Value.UnitsMoved.Value <= 0;
+                            unit.CanMove.Value = change.Value.UnitsMoved.Value == 0;
 
                         if (change.Value.MovementPoints.HasValue)
                             Logger.Log("Unit Movement Change not implemented yet.");

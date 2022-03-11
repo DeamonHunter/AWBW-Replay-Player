@@ -294,7 +294,7 @@ namespace AWBWApp.Game.Game.Unit
             else
                 colour = Color4.White;
 
-            if (CanMove.Value)
+            if (!CanMove.Value)
                 colour = colour.Darken(0.2f);
 
             var alpha = !FogOfWarActive.Value || (showUnitInFog?.Value ?? true) ? 1 : 0;
