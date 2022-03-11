@@ -188,15 +188,18 @@ namespace AWBWApp.Game.UI.Interrupts
                     }
 
                     var link = "https://awbw.amarriner.com/replay_download.php?games_id=" + gameID;
-                    var webRequest = new WebRequest(link);
-                    webRequest.AddHeader("Cookie", sessionHandler.SessionID);
-                    await webRequest.PerformAsync().ConfigureAwait(false);
 
-                    if (webRequest.ResponseStream.Length <= 100)
-                        throw new Exception($"Unable to find the replay of game '{gameID}'. Is the session cookie correct?");
+                    using (var webRequest = new WebRequest(link))
+                    {
+                        webRequest.AddHeader("Cookie", sessionHandler.SessionID);
+                        await webRequest.PerformAsync().ConfigureAwait(false);
 
-                    var replayData = await replayStorage.ParseAndStoreReplay(gameID, webRequest.ResponseStream);
-                    replay = replayData.ReplayInfo;
+                        if (webRequest.ResponseStream.Length <= 100)
+                            throw new Exception($"Unable to find the replay of game '{gameID}'. Is the session cookie correct?");
+
+                        var replayData = await replayStorage.ParseAndStoreReplay(gameID, webRequest.ResponseStream);
+                        replay = replayData.ReplayInfo;
+                    }
                 }
                 else
                     Logger.Log($"Replay of id '{gameID}' existed locally.");
