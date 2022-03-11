@@ -85,23 +85,12 @@ namespace AWBWApp.Game.Game.Logic
                     RelativeSizeAxes = Axes.Both
                 },
                 barWidget = new ReplayBarWidget(this),
-                new GridContainer()
+                playerList = new ReplayPlayerList
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    RowDimensions = new[] { new Dimension(GridSizeMode.AutoSize), new Dimension(GridSizeMode.Distributed) },
-                    Content = new Drawable[][]
-                    {
-                        new Drawable[]
-                        {
-                            playerList = new ReplayPlayerList
-                            {
-                                Anchor = Anchor.TopRight,
-                                Origin = Anchor.TopRight,
-                                RelativeSizeAxes = Axes.Y,
-                                Size = new Vector2(225, 1)
-                            },
-                        }
-                    },
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.TopRight,
+                    RelativeSizeAxes = Axes.Y,
+                    Size = new Vector2(225, 1)
                 },
                 loadingLayer = new ReplayLoadingLayer()
             });
