@@ -17,9 +17,17 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             var action = new EliminatedAction();
 
-            action.CausedByPlayerID = (long)jObject["eliminatedByPId"];
+            action.CausedByPlayerID = (long?)jObject["eliminatedByPId"];
             action.EliminatedPlayerID = (long)jObject["playerId"];
             action.EliminationMessage = (string)jObject["message"];
+            var resigned = (string)jObject["action"];
+
+            if (resigned == "Resign")
+                action.Resigned = true;
+            else if (resigned == null)
+                action.Resigned = false;
+            else
+                throw new Exception("Unknown resign action: " + resigned);
 
             if (jObject.TryGetValue("GameOver", out var jToken))
             {
@@ -38,6 +46,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     case "playerId":
                     case "message":
                     case "GameOver":
+                    case "action":
                         break;
 
                     default:
@@ -51,15 +60,16 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class EliminatedAction : IReplayAction
     {
-        public long CausedByPlayerID;
+        public long? CausedByPlayerID;
         public long EliminatedPlayerID;
         public string EliminationMessage;
+        public bool Resigned;
 
         public GameOverAction GameOverAction;
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
-            var powerAnimation = new EliminationPopupDrawable(controller.Players[EliminatedPlayerID], EliminationMessage);
+            var powerAnimation = new EliminationPopupDrawable(controller.Players[EliminatedPlayerID], EliminationMessage, Resigned);
             controller.AddGenericActionAnimation(powerAnimation);
             yield return ReplayWait.WaitForTransformable(powerAnimation);
 

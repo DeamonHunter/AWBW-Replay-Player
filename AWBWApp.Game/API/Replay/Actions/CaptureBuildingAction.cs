@@ -96,7 +96,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     controller.Players[incomeChange.PlayerId].PropertyValue.Value += incomeChange.AmountChanged;
             }
 
-            //Capturing a building can wipe a player out. E.g. Capturing a HQ or getting enough buildings to win
+            //Capturing a building can eliminate a player. i.e. They have no buildings left or reached the total building goal.
             if (EliminatedAction != null)
             {
                 foreach (var transformable in EliminatedAction.PerformAction(controller))

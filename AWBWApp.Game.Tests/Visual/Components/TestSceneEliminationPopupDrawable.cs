@@ -52,7 +52,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
             AddStep("Create", () =>
             {
                 Clear();
-                endTurnPopup = new EliminationPopupDrawable(playerInfo, $"{playerInfo.Username} was eliminated by capture!");
+                endTurnPopup = new EliminationPopupDrawable(playerInfo, $"{playerInfo.Username} was eliminated by capture!", false);
 
                 Add(endTurnPopup);
             });

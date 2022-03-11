@@ -93,6 +93,14 @@ namespace AWBWApp.Game.API.Replay.Actions
                 }
             }
 
+            if (attackData.TryGetValue("eliminated", out var eliminatedData) && eliminatedData.Type != JTokenType.Null)
+            {
+                var eliminationAction = Database.GetActionBuilder("Eliminated").ParseJObjectIntoReplayAction((JObject)eliminatedData, replayData, turnData);
+                action.EliminatedAction = eliminationAction as EliminatedAction;
+                if (eliminationAction == null)
+                    throw new Exception("Attack action was expecting a elimination action.");
+            }
+
             return action;
         }
     }
@@ -105,6 +113,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public List<(long playerID, int funds)> GainedFunds { get; set; }
 
         public MoveUnitAction MoveUnit;
+        public EliminatedAction EliminatedAction;
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
@@ -149,6 +158,13 @@ namespace AWBWApp.Game.API.Replay.Actions
                 attackerUnit.UpdateUnit(attackerStats);
                 controller.Map.DeleteUnit(defenderUnit.UnitID, true);
                 afterAttackChanges(controller);
+
+                //Destroying a unit can eliminate a player. i.e. They have no units left.
+                if (EliminatedAction != null)
+                {
+                    foreach (var transformable in EliminatedAction.PerformAction(controller))
+                        yield return transformable;
+                }
                 yield break;
             }
 
@@ -169,6 +185,13 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             afterAttackChanges(controller);
+
+            //Destroying a unit can eliminate a player. i.e. They have no units left.
+            if (EliminatedAction != null)
+            {
+                foreach (var transformable in EliminatedAction.PerformAction(controller))
+                    yield return transformable;
+            }
         }
 
         private void afterAttackChanges(ReplayController controller)

@@ -13,7 +13,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public ReplayActionDatabase Database { get; set; }
 
         //Todo: Figure out if anything of this is needed.
-        public IReplayAction ParseJObjectIntoReplayAction(JObject jObject, ReplayData replayData, TurnData turnData) => null;
+        public IReplayAction ParseJObjectIntoReplayAction(JObject jObject, ReplayData replayData, TurnData turnData) => Database.GetActionBuilder("Eliminated").ParseJObjectIntoReplayAction((JObject)jObject["Resign"], replayData, turnData);
     }
 
     public class ResignAction : IReplayAction

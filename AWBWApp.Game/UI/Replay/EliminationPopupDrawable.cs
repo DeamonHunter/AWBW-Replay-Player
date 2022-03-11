@@ -19,7 +19,7 @@ namespace AWBWApp.Game.UI.Replay
         private Sprite tagCharacterSprite;
         private SpriteIcon tagCharacterSpriteIcon;
 
-        public EliminationPopupDrawable(PlayerInfo playerInfo, string eliminationMessage)
+        public EliminationPopupDrawable(PlayerInfo playerInfo, string eliminationMessage, bool resigned)
         {
             this.playerInfo = playerInfo;
 
@@ -64,7 +64,7 @@ namespace AWBWApp.Game.UI.Replay
                                     AutoSizeAxes = Axes.Y,
                                     TextAnchor = Anchor.TopCentre,
                                     Colour = new Color4(30, 30, 30, 255),
-                                    Text = $"{playerInfo.Username}\nwas Eliminated!"
+                                    Text = resigned ? $"{playerInfo.Username}\nhas Resigned!" : $"{playerInfo.Username}\nwas Eliminated!"
                                 },
                                 new Container()
                                 {
