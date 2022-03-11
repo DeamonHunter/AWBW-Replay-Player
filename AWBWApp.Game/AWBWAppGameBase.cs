@@ -11,6 +11,8 @@ using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.IO;
 using AWBWApp.Game.UI;
+using AWBWApp.Game.UI.Interrupts;
+using AWBWApp.Game.UI.Notifications;
 using AWBWApp.Resources;
 using osu.Framework.Allocation;
 using osu.Framework.Development;
@@ -18,6 +20,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input;
 using osu.Framework.IO.Stores;
+using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osuTK;
 
@@ -141,20 +144,43 @@ namespace AWBWApp.Game
             }
         }
 
-        public async Task Import(params string[] paths)
+        public virtual async Task ImportFiles(ProgressNotification updateNotification, params string[] paths)
         {
             if (paths.Length == 0)
                 return;
 
             //Todo: Are we going to have any other extensions?
 
-            foreach (var path in paths)
-            {
-                if (Path.GetExtension(path) != ".zip")
-                    continue;
+            if (interruptOverlay?.CurrentInterrupt is GetNewReplayInterrupt || interruptOverlay?.CurrentInterrupt is LoginInterrupt)
+                Schedule(interruptOverlay.PopAll);
 
-                await replayStorage.ParseAndStoreReplay(path);
+            for (int i = 0; i < paths.Length; i++)
+            {
+                var path = paths[i];
+
+                if (Path.GetExtension(path) != ".zip")
+                {
+                    if (updateNotification != null)
+                        updateNotification.Progress = (float)i / paths.Length;
+                    continue;
+                }
+
+                try
+                {
+                    var data = await replayStorage.ParseAndStoreReplay(path);
+                    await mapStorage.GetOrDownloadMap(data.ReplayInfo.MapId);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, "Failed to parse replay: " + e.Message);
+                }
+
+                if (updateNotification != null)
+                    updateNotification.Progress = (float)i / paths.Length;
             }
+
+            if (updateNotification != null)
+                updateNotification.State = ProgressNotificationState.Completed;
         }
 
         public void GracefullyExit()

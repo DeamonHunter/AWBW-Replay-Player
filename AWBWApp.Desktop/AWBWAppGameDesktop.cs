@@ -61,7 +61,7 @@ namespace AWBWApp.Desktop
                 var paths = importableFiles.ToArray();
                 importableFiles.Clear();
 
-                Task.Factory.StartNew(() => Import(paths), TaskCreationOptions.LongRunning);
+                Task.Factory.StartNew(() => ImportFiles(null, paths), TaskCreationOptions.LongRunning);
             }
         }
     }

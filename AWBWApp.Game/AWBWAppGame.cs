@@ -119,6 +119,26 @@ namespace AWBWApp.Game
 
         protected virtual UpdateManager CreateUpdateManager() => new UpdateManager();
 
+        public override Task ImportFiles(ProgressNotification updateNotification, params string[] paths)
+        {
+            if (updateNotification == null)
+            {
+                updateNotification = new ProgressNotification(true)
+                {
+                    CompletionText = $"{paths.Length} files have been imported.",
+                    Text = $"Importing {paths.Length} files...",
+                    State = ProgressNotificationState.Active,
+                    Activated = () => false //Todo: Make this cancel
+                };
+                notificationOverlay.Post(updateNotification);
+            }
+
+            if (screenStack.CurrentScreen is MainScreen mainScreen)
+                mainScreen.GoToReplaySelect();
+
+            return base.ImportFiles(updateNotification, paths);
+        }
+
         private void screenExited(IScreen lastScreen, IScreen newScreen)
         {
             if (newScreen == null)

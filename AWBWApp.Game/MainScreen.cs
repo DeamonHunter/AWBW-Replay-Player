@@ -169,6 +169,8 @@ namespace AWBWApp.Game
             });
         }
 
+        public void GoToReplaySelect() => Schedule(() => this.Push(consumeReplaySelect()));
+
         private class MainMenuButton : BasicButton
         {
             public MainMenuButton(bool exit)

@@ -70,6 +70,8 @@ namespace AWBWApp.Game.UI.Interrupts
                     new Container
                     {
                         RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Padding = new MarginPadding { Bottom = 10 },
                         Children = new Drawable[]
                         {
                             cancelButton = new InterruptButton
@@ -91,7 +93,16 @@ namespace AWBWApp.Game.UI.Interrupts
                                 Position = new Vector2(0.25f, 0f)
                             }
                         }
-                    }
+                    },
+                    new TextFlowContainer(t => t.Font = t.Font.With(size: 18))
+                    {
+                        Origin = Anchor.TopCentre,
+                        Anchor = Anchor.TopCentre,
+                        TextAnchor = Anchor.TopCentre,
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Text = "Note: You can also drag a replay zip file into AWBW Replay Player and it will automatically open."
+                    },
                 }
             );
 
@@ -150,17 +161,17 @@ namespace AWBWApp.Game.UI.Interrupts
             try
             {
                 blockingLayer.Show();
-                Logger.Log($"Starting replay download.", level: LogLevel.Important);
+                Logger.Log($"Starting replay download.", level: LogLevel.Verbose);
 
                 if (!replayStorage.TryGetReplayInfo(gameID, out var replay))
                 {
                     if (!sessionHandler.LoggedIn)
                     {
-                        Logger.Log($"Replay not Found. Requesting from AWBW.", level: LogLevel.Important);
+                        Logger.Log($"Replay not Found. Requesting from AWBW.", level: LogLevel.Verbose);
                         var taskCompletionSource = new TaskCompletionSource<bool>();
                         Schedule(() => interrupt.Push(new LoginInterrupt(taskCompletionSource), false));
 
-                        Logger.Log($"Pushed overlay", level: LogLevel.Important);
+                        Logger.Log($"Pushed overlay", level: LogLevel.Verbose);
 
                         try
                         {
@@ -168,12 +179,14 @@ namespace AWBWApp.Game.UI.Interrupts
                         }
                         catch (TaskCanceledException)
                         {
-                            Logger.Log("Logging in was cancelled. Need to abort download.");
+                            sessionIdCallback.TrySetCanceled();
+                            failed("Login was cancelled.");
                             return;
                         }
+
+                        Logger.Log($"Successfully logged in.", level: LogLevel.Verbose);
                     }
 
-                    Logger.Log($"Successfully logged in.", level: LogLevel.Important);
                     var link = "https://awbw.amarriner.com/replay_download.php?games_id=" + gameID;
                     var webRequest = new WebRequest(link);
                     webRequest.AddHeader("Cookie", sessionHandler.SessionID);
@@ -195,7 +208,7 @@ namespace AWBWApp.Game.UI.Interrupts
             catch (Exception e)
             {
                 failed("Unknown error has occured while logging in.");
-                Logger.Log(e.Message, level: LogLevel.Error);
+                Logger.Error(e, e.Message);
                 return;
             }
         }

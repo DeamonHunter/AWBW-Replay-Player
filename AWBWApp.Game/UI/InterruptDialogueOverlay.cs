@@ -66,6 +66,18 @@ namespace AWBWApp.Game.UI
             }
         }
 
+        public void PopAll()
+        {
+            while (interrupts.Count > 0)
+            {
+                CurrentInterrupt.Delay(100).Expire();
+                CurrentInterrupt = interrupts.Pop();
+            }
+            CurrentInterrupt.Delay(100).Expire();
+            CurrentInterrupt = null;
+            Hide();
+        }
+
         protected override void PopIn()
         {
             this.FadeIn(BaseInterrupt.Enter_Duration, Easing.OutQuint);

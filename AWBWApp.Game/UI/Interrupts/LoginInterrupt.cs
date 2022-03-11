@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AWBWApp.Game.API;
 using osu.Framework.Allocation;
@@ -136,9 +137,15 @@ namespace AWBWApp.Game.UI.Interrupts
                 ActionInvoked();
                 Schedule(Hide);
             }
+            catch (HttpRequestException)
+            {
+                failed("Failed to Login to server. Are you connected to the internet?");
+                return;
+            }
             catch (Exception e)
             {
-                Logger.Error(e, "Unknown Error occured: " + e.Message);
+                Logger.Error(e, e.Message);
+                failed("Unknown Error has occured.");
                 return;
             }
         }
