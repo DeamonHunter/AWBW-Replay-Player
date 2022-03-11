@@ -538,10 +538,32 @@ namespace AWBWApp.Game.Game.Logic
 
                 if (awbwBuilding.TerrainID.HasValue && awbwBuilding.TerrainID != 0)
                 {
-                    var buildingTile = buildingStorage.GetBuildingByAWBWId(awbwBuilding.TerrainID.Value);
-                    var drawableBuilding = new DrawableBuilding(buildingTile, getPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
-                    buildings.Add(tilePosition, drawableBuilding);
-                    buildingsDrawable.Add(drawableBuilding);
+                    if (buildingStorage.TryGetBuildingByAWBWId(awbwBuilding.TerrainID.Value, out var buildingTile))
+                    {
+                        var drawableBuilding = new DrawableBuilding(buildingTile, getPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
+                        buildings.Add(tilePosition, drawableBuilding);
+                        buildingsDrawable.Add(drawableBuilding);
+                    }
+                    else if (terrainTileStorage.TryGetTileByAWBWId(awbwBuilding.TerrainID.Value, out var terrainTile))
+                    {
+                        //Likely a blown up pipe. May need to change the tile underneath
+
+                        var tile = gameBoard[tilePosition.X, tilePosition.Y];
+
+                        if (tile.TerrainTile != terrainTile)
+                        {
+                            //Todo: Likely messes with drawing order. May need to see if this can be fixed up if it causes some issues
+                            var newTile = new DrawableTile(terrainTile);
+                            tile.Expire();
+                            gameBoard[tilePosition.X, tilePosition.Y] = newTile;
+
+                            newTile.Position = tile.Position;
+                            newTile.FogOfWarActive.Value = tile.FogOfWarActive.Value;
+                            newTile.Depth = tile.Depth;
+
+                            gameBoardDrawable.Add(newTile);
+                        }
+                    }
                 }
             }
 
