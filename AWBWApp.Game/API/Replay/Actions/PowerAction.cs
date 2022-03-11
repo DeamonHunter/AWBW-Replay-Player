@@ -49,7 +49,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             "Koal-Y", "Koal-S",
             "Lash-Y", "Lash-S",
             "Sturm-Y", "Sturm-S",
-            //Todo: Von Bolt
+            "Von Bolt-S"
         };
 
         public IReplayAction ParseJObjectIntoReplayAction(JObject jObject, ReplayData replayData, TurnData turnData)

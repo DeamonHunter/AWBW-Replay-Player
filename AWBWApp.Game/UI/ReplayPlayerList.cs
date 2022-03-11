@@ -426,12 +426,16 @@ namespace AWBWApp.Game.UI
                 var requiredNormalPower = coUpdated.NewValue.PowerRequiredForNormal ?? 0;
                 var requiredSuperPower = coUpdated.NewValue.PowerRequiredForSuper ?? requiredNormalPower;
 
+                //For Von Bolt who has no normal power. AWBW sets Normal Power = Super Power, but then never updates it.
+                if (progressBar.PowerRequiredForNormal == 0)
+                    requiredNormalPower = 0;
+
                 var normalPowerChanged = requiredNormalPower != progressBar.PowerRequiredForNormal;
                 var superPowerChanged = requiredSuperPower != progressBar.PowerRequiredForSuper;
 
                 if (normalPowerChanged || superPowerChanged)
                 {
-                    if (!(normalPowerChanged && superPowerChanged))
+                    if (!((normalPowerChanged || progressBar.PowerRequiredForNormal == 0) && superPowerChanged))
                         throw new Exception("Only one of the two required powers changed?");
 
                     var superSegments = progressBar.PowerRequiredForSuper / progressBar.ProgressPerBar;
@@ -469,6 +473,10 @@ namespace AWBWApp.Game.UI
                 {
                     if (!requiredNormal.HasValue && !requiredSuper.HasValue)
                         throw new Exception("RequiredPowers cannot both be null.");
+
+                    //AWBW actually makes both powers the same.
+                    if (requiredNormal == requiredSuper)
+                        requiredNormal = null;
 
                     smallBars = requiredNormal.HasValue ? requiredNormal.Value / progressPerBar : 0;
                     var largeBars = requiredSuper.HasValue ? (requiredSuper.Value / progressPerBar) - smallBars : 0;
