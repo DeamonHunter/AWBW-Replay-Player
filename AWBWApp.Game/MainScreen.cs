@@ -115,6 +115,7 @@ namespace AWBWApp.Game
         public override void OnEntering(IScreen last)
         {
             buttonsContainer.FadeOut();
+            this.FadeIn();
             logo.Animate();
         }
 
