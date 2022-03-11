@@ -48,6 +48,14 @@ namespace AWBWApp.Game.API
                 }
 
                 checkAndSaveCookies(loginRequest.ResponseHeaders);
+
+                if (SessionID == null)
+                {
+                    LoggedIn = false;
+                    LoginError = "Failed to login to server. Is it currently having issues?";
+                    return false;
+                }
+
                 response = loginRequest.GetResponseString();
             }
 
