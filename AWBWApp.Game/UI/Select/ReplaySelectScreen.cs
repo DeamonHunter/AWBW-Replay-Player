@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Logic;
@@ -160,22 +161,30 @@ namespace AWBWApp.Game.UI.Select
                 Carousel.AllowSelection = false;
         }
 
+        private CancellationTokenSource tokenSource;
+        private CancellationToken cancellationToken;
+
         protected virtual bool OnStart()
         {
             if (replayController != null)
                 return false;
 
+            tokenSource = new CancellationTokenSource();
+            cancellationToken = tokenSource.Token;
             LoadComponentAsync(replayController = new ReplayController(), _ =>
             {
                 this.Push(replayController);
+
                 Task.Run(async () =>
                 {
                     var data = await replayManager.GetReplayData(Carousel.SelectedReplayData);
                     var terrainFile = await mapStorage.GetOrDownloadMap(data.ReplayInfo.MapId);
+                    if (cancellationToken.IsCancellationRequested)
+                        return;
 
                     replayController.LoadReplay(data, terrainFile);
-                });
-            });
+                }, cancellationToken);
+            }, cancellationToken);
 
             return true;
         }
@@ -184,6 +193,8 @@ namespace AWBWApp.Game.UI.Select
         {
             base.OnResuming(last);
 
+            if (replayController == null || !replayController.IsLoaded)
+                tokenSource.Cancel();
             replayController = null;
             Carousel.AllowSelection = true;
         }
