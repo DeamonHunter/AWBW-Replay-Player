@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.UI.Replay;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics;
 using osuTK;
@@ -80,7 +81,9 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             var player = controller.Players[NextPlayerID];
 
-            yield return ReplayWait.WaitForTransformable(controller.PlayEndTurnAnimation(player, NextDay));
+            var endTurnPopup = new EndTurnPopupDrawable(player, NextDay);
+            controller.AddGenericActionAnimation(endTurnPopup);
+            yield return ReplayWait.WaitForTransformable(endTurnPopup);
 
             if (RepairedUnits != null)
             {

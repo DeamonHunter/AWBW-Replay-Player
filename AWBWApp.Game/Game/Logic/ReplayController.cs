@@ -397,21 +397,7 @@ namespace AWBWApp.Game.Game.Logic
             ActivePowers.Add((currentTurn.ActivePlayerID, activePower, currentTurn.Day));
         }
 
-        public Drawable PlayPowerAnimation(string combatOfficer, string powerName, bool super)
-        {
-            var powerAnimation = new PowerDisplay(combatOfficer, powerName, super);
-            powerLayer.Add(powerAnimation);
-
-            return powerAnimation;
-        }
-
-        public Drawable PlayEndTurnAnimation(PlayerInfo playerInfo, int day)
-        {
-            var endTurnPopup = new EndTurnPopupDrawable(playerInfo, day);
-            powerLayer.Add(endTurnPopup);
-
-            return endTurnPopup;
-        }
+        public void AddGenericActionAnimation(Drawable animatingDrawable) => powerLayer.Add(animatingDrawable);
 
         void checkPowers()
         {

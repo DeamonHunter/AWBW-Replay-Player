@@ -33,7 +33,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             action.Building = ReplayActionHelper.ParseJObjectIntoReplayBuilding((JObject)captureData["buildingInfo"]);
 
-            var incomeObj = jObject["income"];
+            var incomeObj = captureData["income"];
 
             if (incomeObj is JObject incomeData)
             {
@@ -41,14 +41,23 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                 var idx = 0;
 
-                foreach (var playerIncome in incomeData.Children())
+                foreach (var playerIncome in incomeData)
                 {
-                    var playerIncomeData = (JObject)playerIncome;
+                    var playerIncomeData = (JObject)playerIncome.Value;
                     action.IncomeChanges[idx].PlayerId = (long)playerIncomeData["player"];
                     action.IncomeChanges[idx].AmountChanged = (int)playerIncomeData["income"];
                     idx++;
                 }
             }
+
+            if (captureData.TryGetValue("eliminated", out var eliminatedData) && eliminatedData.Type != JTokenType.Null)
+            {
+                var eliminationAction = Database.GetActionBuilder("Eliminated").ParseJObjectIntoReplayAction((JObject)eliminatedData, replayData, turnData);
+                action.EliminatedAction = eliminationAction as EliminatedAction;
+                if (eliminationAction == null)
+                    throw new Exception("Capture action was expecting a elimination action.");
+            }
+
             return action;
         }
     }
@@ -59,6 +68,8 @@ namespace AWBWApp.Game.API.Replay.Actions
         public ReplayBuilding Building;
 
         public IncomeChanged[] IncomeChanges;
+
+        public EliminatedAction EliminatedAction;
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
@@ -83,6 +94,13 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 foreach (var incomeChange in IncomeChanges)
                     controller.Players[incomeChange.PlayerId].PropertyValue.Value += incomeChange.AmountChanged;
+            }
+
+            //Capturing a building can wipe a player out. E.g. Capturing a HQ or getting enough buildings to win
+            if (EliminatedAction != null)
+            {
+                foreach (var transformable in EliminatedAction.PerformAction(controller))
+                    yield return transformable;
             }
         }
 

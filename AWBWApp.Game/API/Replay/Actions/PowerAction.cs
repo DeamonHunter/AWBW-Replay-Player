@@ -344,7 +344,9 @@ namespace AWBWApp.Game.API.Replay.Actions
             var co = controller.COStorage.GetCOByName(CombatOfficerName);
             COPower = IsSuperPower ? co.SuperPower : co.NormalPower;
 
-            yield return ReplayWait.WaitForTransformable(controller.PlayPowerAnimation(CombatOfficerName, PowerName, IsSuperPower));
+            var powerAnimation = new PowerDisplay(CombatOfficerName, PowerName, IsSuperPower);
+            controller.AddGenericActionAnimation(powerAnimation);
+            yield return ReplayWait.WaitForTransformable(powerAnimation);
 
             //Todo: How much should this do?
             controller.AddPowerAction(this);

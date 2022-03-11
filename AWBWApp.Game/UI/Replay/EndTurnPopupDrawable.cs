@@ -21,7 +21,8 @@ namespace AWBWApp.Game.UI.Replay
         {
             this.playerInfo = playerInfo;
 
-            Size = new Vector2(200, 50);
+            Width = 200;
+            AutoSizeAxes = Axes.Y;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
@@ -165,7 +166,7 @@ namespace AWBWApp.Game.UI.Replay
             this.FadeOut().FadeIn(300, Easing.OutQuint);
             this.ScaleTo(new Vector2(0, 0.5f)).ScaleTo(1, 300, Easing.OutQuint);
 
-            using (BeginDelayedSequence(850))
+            using (BeginDelayedSequence(1250))
             {
                 this.FadeIn(300, Easing.OutQuint);
                 this.ScaleTo(new Vector2(0, 0.5f), 300, Easing.InQuint).Then().Expire();
