@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
@@ -360,7 +361,23 @@ namespace AWBWApp.Game.UI.Select
             [BackgroundDependencyLoader]
             private async void load(MapFileStorage mapStorage, TerrainTileStorage terrainStorage, BuildingStorage buildingStorage, CountryStorage countryStorage)
             {
-                var map = await mapStorage.GetOrDownloadMap(mapID);
+                ReplayMap map;
+
+                try
+                {
+                    map = await mapStorage.GetOrDownloadMap(mapID);
+                }
+                catch (Exception e)
+                {
+                    map = null;
+                }
+
+                if (map == null)
+                {
+                    mapName.Text = $"Missing Map: {mapID}";
+                    Schedule(loadLayer.Hide);
+                    return;
+                }
 
                 mapName.Text = map.TerrainName;
 
