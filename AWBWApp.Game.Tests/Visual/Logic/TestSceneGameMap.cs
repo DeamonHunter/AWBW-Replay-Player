@@ -90,14 +90,17 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
                 Logger.Log("Successfully logged in.", level: LogLevel.Important);
                 var link = "https://awbw.amarriner.com/replay_download.php?games_id=" + gameID;
-                var webRequest = new WebRequest(link);
-                webRequest.AddHeader("Cookie", sessionHandler.SessionID);
-                await webRequest.PerformAsync().ConfigureAwait(false);
 
-                if (webRequest.ResponseStream.Length <= 100)
-                    throw new Exception($"Unable to find the replay of game '{gameID}'. Is the session cookie correct?");
+                using (var webRequest = new WebRequest(link))
+                {
+                    webRequest.AddHeader("Cookie", sessionHandler.SessionID);
+                    await webRequest.PerformAsync().ConfigureAwait(false);
 
-                replay = await replayStorage.ParseAndStoreReplay(gameID, webRequest.ResponseStream);
+                    if (webRequest.ResponseStream.Length <= 100)
+                        throw new Exception($"Unable to find the replay of game '{gameID}'. Is the session cookie correct?");
+
+                    replay = await replayStorage.ParseAndStoreReplay(gameID, webRequest.ResponseStream);
+                }
             }
             else
                 Logger.Log($"Replay of id '{gameID}' existed locally.");
@@ -108,13 +111,16 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             {
                 Logger.Log($"Map of id '{replay.ReplayInfo.MapId}' doesn't exist. Requesting from AWBW.");
                 var link = "https://awbw.amarriner.com/text_map.php?maps_id=" + replay.ReplayInfo.MapId;
-                var webRequest = new WebRequest(link);
-                await webRequest.PerformAsync().ConfigureAwait(false);
 
-                if (webRequest.ResponseStream.Length <= 100)
-                    throw new Exception($"Unable to find the replay of game '{gameID}'. Is the session cookie correct?");
+                using (var webRequest = new WebRequest(link))
+                {
+                    await webRequest.PerformAsync().ConfigureAwait(false);
 
-                terrainFile = mapStorage.ParseAndStoreResponseHTML(replay.ReplayInfo.MapId, webRequest.GetResponseString());
+                    if (webRequest.ResponseStream.Length <= 100)
+                        throw new Exception($"Unable to find the replay of game '{gameID}'. Is the session cookie correct?");
+
+                    terrainFile = mapStorage.ParseAndStoreResponseHTML(replay.ReplayInfo.MapId, webRequest.GetResponseString());
+                }
             }
             else
                 Logger.Log($"Replay of id '{gameID}' existed locally.");

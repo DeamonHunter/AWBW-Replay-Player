@@ -39,19 +39,28 @@ namespace AWBWApp.Game.IO
 
         public async Task<ReplayMap> GetOrDownloadMap(long mapID)
         {
-            var map = Get(mapID.ToString());
+            var map = Get(mapID);
 
             if (map != null)
                 return map;
 
             var link = "https://awbw.amarriner.com/text_map.php?maps_id=" + mapID;
-            var webRequest = new WebRequest(link);
-            await webRequest.PerformAsync().ConfigureAwait(false);
 
-            if (webRequest.ResponseStream.Length <= 100)
-                throw new Exception($"Unable to find the map with ID '{mapID}'. Is the session cookie correct?");
+            using (var webRequest = new WebRequest(link))
+            {
+                await webRequest.PerformAsync().ConfigureAwait(false);
 
-            return ParseAndStoreResponseHTML(mapID, webRequest.GetResponseString());
+                if (webRequest.ResponseStream.Length <= 100)
+                    throw new Exception($"Unable to find the map with ID '{mapID}'. Is the session cookie correct?");
+
+                //Double check if we already got the map by the time this got through.
+                //Todo: Maybe keep track of the requests we already have.
+                map = Get(mapID);
+                if (map != null)
+                    return map;
+
+                return ParseAndStoreResponseHTML(mapID, webRequest.GetResponseString());
+            }
         }
 
         public IEnumerable<string> GetAvailableResources() => underlyingStorage.GetFiles("");
