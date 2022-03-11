@@ -17,7 +17,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
         protected ScreenStack ScreenStack;
 
         [Cached]
-        private NotificationOverlay notificationOverlay { get; set; }
+        private NotificationOverlay notificationOverlay { get; set; } = new NotificationOverlay();
 
         private AWBWMenuBar menuBar { get; set; }
 
@@ -27,6 +27,12 @@ namespace AWBWApp.Game.Tests.Visual.Screens
             {
                 RelativeSizeAxes = Axes.Both
             });
+        }
+
+        [SetUp]
+        public void Setup()
+        {
+            ScreenStack.Push(MainScreen = new MainScreen());
         }
 
         [BackgroundDependencyLoader]
@@ -43,12 +49,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                         new ToggleMenuItem("Skip End Turn", localConfig.GetBindable<bool>(AWBWSetting.ReplaySkipEndTurn))
                     }
                 }
-            }, notificationOverlay = new NotificationOverlay()));
-
-            ScreenStack.Push(MainScreen = new MainScreen
-            {
-                RelativeSizeAxes = Axes.Both
-            });
+            }, notificationOverlay));
         }
     }
 }

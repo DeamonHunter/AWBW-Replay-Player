@@ -154,10 +154,14 @@ namespace AWBWApp.Game.Game.Logic
             currentTurn = null;
             currentTurnIndex = -1;
             currentActionIndex = -1;
+            completeAllActions();
         }
 
         public void LoadReplay(ReplayData replayData, ReplayMap map)
         {
+            if (replayData != null)
+                ClearReplay();
+
             this.replayData = replayData;
 
             currentTurn = replayData.TurnData[0];

@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using AWBWApp.Game.IO;
 using NUnit.Framework;
-using osu.Framework.Allocation;
 using osu.Framework.Platform;
 
 namespace AWBWApp.Game.Tests.Replays
@@ -9,13 +10,16 @@ namespace AWBWApp.Game.Tests.Replays
     [TestFixture]
     public class TestReplayParsing
     {
-        [Resolved]
-        private Storage hostStorage { get; set; }
+        //Todo: This test doesn't really work outside of a desktop environment.
+        // Probably needs to be upgraded such that it loads a file from a dll and then parses all of the files in that.
 
         [Test]
         public async Task TestParsingAllReplays()
         {
-            var replayStorage = new ReplayManager(hostStorage, false);
+            var storagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AWBWReplayPlayer");
+            var storage = new DesktopStorage(storagePath, null);
+
+            var replayStorage = new ReplayManager(storage, false);
 
             var replays = replayStorage.GetAllKnownReplays();
 

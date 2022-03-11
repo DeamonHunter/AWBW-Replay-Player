@@ -146,7 +146,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (defenderUnit.HealthPoints.Value <= 0)
             {
-                attackerUnit.UpdateUnit(Attacker);
+                attackerUnit.UpdateUnit(attackerStats);
                 controller.Map.DeleteUnit(defenderUnit.UnitID, true);
                 afterAttackChanges(controller);
                 yield break;
