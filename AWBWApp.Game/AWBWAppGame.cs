@@ -165,7 +165,7 @@ namespace AWBWApp.Game
                                 if (entry.Exception != null)
                                     clipboard?.SetText(entry.Exception.ToString());
 
-                                return true;
+                                return false;
                             }
                         }));
                     }

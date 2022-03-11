@@ -8,6 +8,8 @@ namespace AWBWApp.Game.UI.Notifications
             : base(true)
         {
             Light.Colour = new Color4(200, 20, 20, 255);
+
+            Activated = () => false;
         }
     }
 }
