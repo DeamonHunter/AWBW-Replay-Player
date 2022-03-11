@@ -92,7 +92,7 @@ namespace AWBWApp.Game.UI.Replay
                                         new Box()
                                         {
                                             RelativeSizeAxes = Axes.Both,
-                                            Colour = new Color4(0.8f + 0.2f * borderColour.R, 0.8f + 0.2f * borderColour.G, 0.8f + 0.2f * borderColour.B, 1f)
+                                            Colour = borderColour.LightenAndFade(0.8f)
                                         },
                                         spriteFillFlow = new FillFlowContainer()
                                         {
