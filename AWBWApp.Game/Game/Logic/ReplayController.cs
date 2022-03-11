@@ -148,19 +148,28 @@ namespace AWBWApp.Game.Game.Logic
 
         public void ClearReplay()
         {
-            HasLoadedReplay = false;
             loadingLayer.Show();
 
+            completeAllActions();
+
+            HasLoadedReplay = false;
             currentTurn = null;
             currentTurnIndex = -1;
             currentActionIndex = -1;
-            completeAllActions();
+            replayData = null;
         }
 
         public void LoadReplay(ReplayData replayData, ReplayMap map)
         {
-            if (replayData != null)
-                ClearReplay();
+            if (this.replayData != null)
+            {
+                Schedule(() =>
+                {
+                    ClearReplay();
+                    LoadReplay(replayData, map);
+                });
+                return;
+            }
 
             this.replayData = replayData;
 
