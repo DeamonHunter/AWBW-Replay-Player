@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace AWBWApp.Game.Game.COs
@@ -28,6 +29,11 @@ namespace AWBWApp.Game.Game.COs
         public COData GetCOByName(string name)
         {
             return coByName[name];
+        }
+
+        public List<int> GetAllCOIDs()
+        {
+            return coByAWBWId.Keys.ToList();
         }
     }
 }

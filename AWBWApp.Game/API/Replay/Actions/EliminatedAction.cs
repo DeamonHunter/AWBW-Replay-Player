@@ -21,6 +21,14 @@ namespace AWBWApp.Game.API.Replay.Actions
             action.EliminatedPlayerID = (long)jObject["playerId"];
             action.EliminationMessage = (string)jObject["message"];
 
+            if (jObject.TryGetValue("GameOver", out var jToken))
+            {
+                var gameOverAction = Database.GetActionBuilder("GameOver").ParseJObjectIntoReplayAction((JObject)jToken, replayData, turnData);
+                action.GameOverAction = gameOverAction as GameOverAction;
+                if (action.GameOverAction == null)
+                    throw new Exception("Elimination action was expecting a game over action.");
+            }
+
             //Todo: Remove once we confirm what is in this action
             foreach (var keyValuePair in jObject)
             {
@@ -47,13 +55,19 @@ namespace AWBWApp.Game.API.Replay.Actions
         public long EliminatedPlayerID;
         public string EliminationMessage;
 
+        public GameOverAction GameOverAction;
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             var powerAnimation = new EliminationPopupDrawable(controller.Players[EliminatedPlayerID], EliminationMessage);
             controller.AddGenericActionAnimation(powerAnimation);
             yield return ReplayWait.WaitForTransformable(powerAnimation);
 
-            yield break;
+            if (GameOverAction != null)
+            {
+                foreach (var replayWait in GameOverAction.PerformAction(controller))
+                    yield return replayWait;
+            }
         }
 
         public void UndoAction(ReplayController controller, bool immediate)
