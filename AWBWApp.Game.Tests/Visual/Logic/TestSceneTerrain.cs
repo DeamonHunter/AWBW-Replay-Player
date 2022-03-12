@@ -47,6 +47,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             AddLabel("Shoals Test");
             AddStep("Map: Sea Test", () => LoadMapFromFile("Json/Maps/SeaTest"));
             AddStep("Map: Shoal Test", () => LoadMapFromFile("Json/Maps/ShoalTest"));
+            AddStep("Map: Shoal Alt Test A", () => LoadMapFromFile("Json/Maps/ShoalAltTestA"));
             AddStep("Map: Custom Shoals", () => LoadMapFromFile("Json/Maps/98331"));
 
             generator = new CustomShoalGenerator(GetTileStorage(), GetBuildingStorage());

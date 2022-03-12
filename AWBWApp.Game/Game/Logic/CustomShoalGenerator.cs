@@ -16,7 +16,26 @@ namespace AWBWApp.Game.Game.Logic
             (new NearbyTiles { North = TerrainType.Land, East = TerrainType.Land, South = TerrainType.Land, West = TerrainType.Land }, "Shoal-N-E-S-W"),
 
             //Empty Circle
-            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Shoal, South = TerrainType.Shoal, West = TerrainType.Shoal }, "Shoal"),
+            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Sea, South = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-C-AN-AE-AS-AW"),
+
+            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Sea, South = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-C-AE-AS-AW"),
+            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Shoal, South = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-C-AN-AS-AW"),
+            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Sea, South = TerrainType.Shoal, West = TerrainType.Sea }, "Shoal-C-AN-AE-AW"),
+            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Sea, South = TerrainType.Sea, West = TerrainType.Shoal }, "Shoal-C-AN-AE-AS"),
+
+            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Shoal, South = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-C-AS-AW"),
+            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Sea, South = TerrainType.Shoal, West = TerrainType.Sea }, "Shoal-C-AE-AW"),
+            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Sea, South = TerrainType.Sea, West = TerrainType.Shoal }, "Shoal-C-AE-AS"),
+            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Shoal, South = TerrainType.Shoal, West = TerrainType.Sea }, "Shoal-C-AN-AW"),
+            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Shoal, South = TerrainType.Sea, West = TerrainType.Shoal }, "Shoal-C-AN-AS"),
+            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Sea, South = TerrainType.Shoal, West = TerrainType.Shoal }, "Shoal-C-AN-AE"),
+
+            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Shoal, South = TerrainType.Shoal, West = TerrainType.Sea }, "Shoal-C-AW"),
+            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Shoal, South = TerrainType.Sea, West = TerrainType.Shoal }, "Shoal-C-AS"),
+            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Sea, South = TerrainType.Shoal, West = TerrainType.Shoal }, "Shoal-C-AE"),
+            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Shoal, South = TerrainType.Shoal, West = TerrainType.Shoal }, "Shoal-C-AN"),
+
+            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Shoal, South = TerrainType.Shoal, West = TerrainType.Shoal }, "Shoal-C"),
 
             //Missing an edge
             (new NearbyTiles { East = TerrainType.Land, South = TerrainType.Land, West = TerrainType.Land }, "Shoal-E-S-W"),
@@ -34,16 +53,41 @@ namespace AWBWApp.Game.Game.Logic
             (new NearbyTiles { South = TerrainType.Land, West = TerrainType.Land }, "Shoal-S-W"),
             (new NearbyTiles { North = TerrainType.Land, West = TerrainType.Land }, "Shoal-N-W"),
 
-            //Modified Edge (Show a shoal if the other side is a shoal)
-            (new NearbyTiles { North = TerrainType.Land, South = TerrainType.Shoal }, "Shoal-MN"),
-            (new NearbyTiles { East = TerrainType.Land, West = TerrainType.Shoal }, "Shoal-ME"),
-            (new NearbyTiles { North = TerrainType.Shoal, South = TerrainType.Land }, "Shoal-MS"),
-            (new NearbyTiles { East = TerrainType.Shoal, West = TerrainType.Land }, "Shoal-MW"),
-
-            //Edge
+            //Single Edge Tiles
+            (new NearbyTiles { North = TerrainType.Land, East = TerrainType.Sea, South = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-N-AW-AS-AE"),
+            (new NearbyTiles { North = TerrainType.Land, West = TerrainType.Sea, East = TerrainType.Sea }, "Shoal-N-AW-AE"),
+            (new NearbyTiles { North = TerrainType.Land, West = TerrainType.Sea, South = TerrainType.Sea }, "Shoal-N-AW-AS"),
+            (new NearbyTiles { North = TerrainType.Land, West = TerrainType.Sea }, "Shoal-N-AW"),
+            (new NearbyTiles { North = TerrainType.Land, East = TerrainType.Sea, South = TerrainType.Sea }, "Shoal-N-AS-AE"),
+            (new NearbyTiles { North = TerrainType.Land, East = TerrainType.Sea }, "Shoal-N-AE"),
+            (new NearbyTiles { North = TerrainType.Land, South = TerrainType.Sea }, "Shoal-N-AS"),
             (new NearbyTiles { North = TerrainType.Land }, "Shoal-N"),
+
+            (new NearbyTiles { East = TerrainType.Land, North = TerrainType.Sea, South = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-E-AN-AW-AS"),
+            (new NearbyTiles { East = TerrainType.Land, North = TerrainType.Sea, South = TerrainType.Sea }, "Shoal-E-AN-AS"),
+            (new NearbyTiles { East = TerrainType.Land, North = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-E-AN-AW"),
+            (new NearbyTiles { East = TerrainType.Land, North = TerrainType.Sea }, "Shoal-E-AN"),
+            (new NearbyTiles { East = TerrainType.Land, South = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-E-AW-AS"),
+            (new NearbyTiles { East = TerrainType.Land, South = TerrainType.Sea }, "Shoal-E-AS"),
+            (new NearbyTiles { East = TerrainType.Land, West = TerrainType.Sea }, "Shoal-E-AW"),
             (new NearbyTiles { East = TerrainType.Land }, "Shoal-E"),
+
+            (new NearbyTiles { East = TerrainType.Sea, West = TerrainType.Sea, South = TerrainType.Land, North = TerrainType.Sea }, "Shoal-S-AE-AN-AW"),
+            (new NearbyTiles { East = TerrainType.Sea, West = TerrainType.Sea, South = TerrainType.Land }, "Shoal-S-AE-AW"),
+            (new NearbyTiles { East = TerrainType.Sea, South = TerrainType.Land, North = TerrainType.Sea }, "Shoal-S-AE-AN"),
+            (new NearbyTiles { East = TerrainType.Sea, South = TerrainType.Land }, "Shoal-S-AE"),
+            (new NearbyTiles { West = TerrainType.Sea, South = TerrainType.Land, North = TerrainType.Sea }, "Shoal-S-AN-AW"),
+            (new NearbyTiles { West = TerrainType.Sea, South = TerrainType.Land }, "Shoal-S-AW"),
+            (new NearbyTiles { South = TerrainType.Land, North = TerrainType.Sea }, "Shoal-S-AN"),
             (new NearbyTiles { South = TerrainType.Land }, "Shoal-S"),
+
+            (new NearbyTiles { South = TerrainType.Sea, North = TerrainType.Sea, West = TerrainType.Land, East = TerrainType.Sea }, "Shoal-W-AS-AE-AN"),
+            (new NearbyTiles { South = TerrainType.Sea, North = TerrainType.Sea, West = TerrainType.Land }, "Shoal-W-AS-AN"),
+            (new NearbyTiles { South = TerrainType.Sea, West = TerrainType.Land, East = TerrainType.Sea }, "Shoal-W-AS-AE"),
+            (new NearbyTiles { South = TerrainType.Sea, West = TerrainType.Land }, "Shoal-W-AS"),
+            (new NearbyTiles { North = TerrainType.Sea, West = TerrainType.Land, East = TerrainType.Sea }, "Shoal-W-AE-AN"),
+            (new NearbyTiles { North = TerrainType.Sea, West = TerrainType.Land }, "Shoal-W-AN"),
+            (new NearbyTiles { West = TerrainType.Land, East = TerrainType.Sea }, "Shoal-W-AE"),
             (new NearbyTiles { West = TerrainType.Land }, "Shoal-W"),
         };
 

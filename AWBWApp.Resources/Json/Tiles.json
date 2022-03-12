@@ -1438,6 +1438,8 @@
             "Clear": "Sea/SW"
         }
     },
+
+    //Shoals
     "Shoal-N-E-S-W": {
         "AWBWID": 1046,
         "BaseDefence": 0,
@@ -1455,7 +1457,7 @@
             "Clear": "Shoal/N-E-S-W"
         }
     },
-    "Shoal": {
+    "Shoal-C": {
         "AWBWID": 1047,
         "BaseDefence": 0,
         "MovementCostsPerType": {
@@ -1469,10 +1471,10 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/Shoal"
+            "Clear": "Shoal/C"
         }
     },
-    "Shoal-E-S-W": {
+    "Shoal-C-AN": {
         "AWBWID": 1048,
         "BaseDefence": 0,
         "MovementCostsPerType": {
@@ -1486,10 +1488,10 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/E-S-W"
+            "Clear": "Shoal/C-AN"
         }
     },
-    "Shoal-N-S-W": {
+    "Shoal-C-AE": {
         "AWBWID": 1049,
         "BaseDefence": 0,
         "MovementCostsPerType": {
@@ -1503,10 +1505,10 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-S-W"
+            "Clear": "Shoal/C-AE"
         }
     },
-    "Shoal-N-E-S": {
+    "Shoal-C-AS": {
         "AWBWID": 1050,
         "BaseDefence": 0,
         "MovementCostsPerType": {
@@ -1520,10 +1522,10 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-E-S"
+            "Clear": "Shoal/C-AS"
         }
     },
-    "Shoal-N-E-W": {
+    "Shoal-C-AW": {
         "AWBWID": 1051,
         "BaseDefence": 0,
         "MovementCostsPerType": {
@@ -1537,11 +1539,1019 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-E-W"
+            "Clear": "Shoal/C-AW"
+        }
+    },
+    "Shoal-C-AN-AE": {
+        "AWBWID": 1052,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/C-AN-AE"
+        }
+    },
+    "Shoal-C-AN-AS": {
+        "AWBWID": 1053,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/C-AN-AS"
+        }
+    },
+    "Shoal-C-AN-AW": {
+        "AWBWID": 1054,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/C-AN-AW"
+        }
+    },
+    "Shoal-C-AE-AS": {
+        "AWBWID": 1055,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/C-AE-AS"
+        }
+    },
+    "Shoal-C-AE-AW": {
+        "AWBWID": 1056,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/C-AE-AW"
+        }
+    },
+    "Shoal-C-AS-AW": {
+        "AWBWID": 1057,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/C-AS-AW"
+        }
+    },
+    "Shoal-C-AN-AE-AS": {
+        "AWBWID": 1058,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/C-AN-AE-AS"
+        }
+    },
+    "Shoal-C-AN-AE-AW": {
+        "AWBWID": 1059,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/C-AN-AE-AW"
+        }
+    },
+    "Shoal-C-AN-AS-AW": {
+        "AWBWID": 1060,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/C-AN-AS-AW"
+        }
+    },
+    "Shoal-C-AE-AS-AW": {
+        "AWBWID": 1061,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/C-AE-AS-AW"
+        }
+    },
+    "Shoal-C-AN-AE-AS-AW": {
+        "AWBWID": 1062,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/C-AN-AE-AS-AW"
+        }
+    },
+
+    //Shoal Singles
+    "Shoal-N-AS": {
+        "AWBWID": 1063,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-AS"
+        }
+    },
+    "Shoal-N-AW": {
+        "AWBWID": 1064,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-AW"
+        }
+    },
+    "Shoal-N-AW-AS": {
+        "AWBWID": 1065,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-AW-AS"
+        }
+    },
+    "Shoal-N-AE": {
+        "AWBWID": 1066,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-AE"
+        }
+    },
+    "Shoal-N-AS-AE": {
+        "AWBWID": 1067,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-AS-AE"
+        }
+    },
+    "Shoal-N-AW-AE": {
+        "AWBWID": 1068,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-AW-AE"
+        }
+    },
+    "Shoal-N-AW-AS-AE": {
+        "AWBWID": 1069,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-AW-AS-AE"
+        }
+    },
+    "Shoal-E-AW": {
+        "AWBWID": 1070,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/E-AW"
+        }
+    },
+    "Shoal-E-AN": {
+        "AWBWID": 1071,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/E-AN"
+        }
+    },
+    "Shoal-E-AN-AW": {
+        "AWBWID": 1072,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/E-AN-AW"
+        }
+    },
+    "Shoal-E-AS": {
+        "AWBWID": 1073,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/E-AS"
+        }
+    },
+    "Shoal-E-AW-AS": {
+        "AWBWID": 1074,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/E-AW-AS"
+        }
+    },
+    "Shoal-E-AN-AS": {
+        "AWBWID": 1075,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/E-AN-AS"
+        }
+    },
+    "Shoal-E-AN-AW-AS": {
+        "AWBWID": 1076,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/E-AN-AW-AS"
+        }
+    },
+    "Shoal-S-AN": {
+        "AWBWID": 1077,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/S-AN"
+        }
+    },
+    "Shoal-S-AE": {
+        "AWBWID": 1078,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/S-AE"
+        }
+    },
+    "Shoal-S-AE-AN": {
+        "AWBWID": 1079,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/S-AE-AN"
+        }
+    },
+    "Shoal-S-AW": {
+        "AWBWID": 1080,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/S-AW"
+        }
+    },
+    "Shoal-S-AN-AW": {
+        "AWBWID": 1081,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/S-AN-AW"
+        }
+    },
+    "Shoal-S-AE-AW": {
+        "AWBWID": 1082,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/S-AE-AW"
+        }
+    },
+    "Shoal-S-AE-AN-AW": {
+        "AWBWID": 1083,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/S-AE-AN-AW"
+        }
+    },
+    "Shoal-W-AE": {
+        "AWBWID": 1084,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/W-AE"
+        }
+    },
+    "Shoal-W-AS": {
+        "AWBWID": 1085,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/W-AS"
+        }
+    },
+    "Shoal-W-AS-AE": {
+        "AWBWID": 1086,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/W-AS-AE"
+        }
+    },
+    "Shoal-W-AN": {
+        "AWBWID": 1087,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/W-AN"
+        }
+    },
+    "Shoal-W-AE-AN": {
+        "AWBWID": 1088,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/W-AE-AN"
+        }
+    },
+    "Shoal-W-AS-AN": {
+        "AWBWID": 1089,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/W-AS-AN"
+        }
+    },
+    "Shoal-W-AS-AE-AN": {
+        "AWBWID": 1090,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/W-AS-AE-AN"
+        }
+    },
+
+
+    //Shoal Doubles
+    "Shoal-N-W": {
+        "AWBWID": 1091,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-W"
+        }
+    },
+    "Shoal-N-W-M": {
+        "AWBWID": 1092,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-W-M"
+        }
+    },
+    "Shoal-N-W-AS": {
+        "AWBWID": 1093,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-W-AS"
+        }
+    },
+    "Shoal-N-W-AW": {
+        "AWBWID": 1094,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-W-AW"
+        }
+    },
+    "Shoal-N-W-AS-AW": {
+        "AWBWID": 1095,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-W-AS-AW"
+        }
+    },
+    "Shoal-N-E": {
+        "AWBWID": 1096,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-E"
+        }
+    },
+    "Shoal-N-E-M": {
+        "AWBWID": 1097,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-E-M"
+        }
+    },
+    "Shoal-N-E-AW": {
+        "AWBWID": 1098,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-E-M"
+        }
+    },
+    "Shoal-N-E-AS": {
+        "AWBWID": 1099,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-E-M"
+        }
+    },
+    "Shoal-N-E-AW-AS": {
+        "AWBWID": 1100,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/N-E-M"
+        }
+    },
+    "Shoal-E-S": {
+        "AWBWID": 1101,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/E-S"
+        }
+    },
+    "Shoal-E-S-M": {
+        "AWBWID": 1102,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/E-S-M"
+        }
+    },
+    "Shoal-E-S-AN": {
+        "AWBWID": 1103,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/E-S-AN"
+        }
+    },
+    "Shoal-E-S-AW": {
+        "AWBWID": 1104,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/E-S-AW"
+        }
+    },
+    "Shoal-E-S-AN-AW": {
+        "AWBWID": 1105,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/E-S-AN-AW"
+        }
+    },
+    "Shoal-S-W": {
+        "AWBWID": 1106,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/S-W"
+        }
+    },
+    "Shoal-S-W-M": {
+        "AWBWID": 1107,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/S-W-M"
+        }
+    },
+    "Shoal-S-W-AE": {
+        "AWBWID": 1108,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/S-W-AE"
+        }
+    },
+    "Shoal-S-W-AN": {
+        "AWBWID": 1109,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/S-W-AN"
+        }
+    },
+    "Shoal-S-W-AE-AN": {
+        "AWBWID": 1110,
+        "BaseDefence": 0,
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Lander": 1
+        },
+        "Colour": "#ffe249",
+        "TerrainType": "Shoal",
+        "Textures": {
+            "Clear": "Shoal/S-W-AE-AN"
         }
     },
     "Shoal-N-S": {
-        "AWBWID": 1052,
+        "AWBWID": 1111,
         "BaseDefence": 0,
         "MovementCostsPerType": {
             "LightInf": 1,
@@ -1558,7 +2568,7 @@
         }
     },
     "Shoal-E-W": {
-        "AWBWID": 1053,
+        "AWBWID": 1112,
         "BaseDefence": 0,
         "MovementCostsPerType": {
             "LightInf": 1,
@@ -1574,8 +2584,18 @@
             "Clear": "Shoal/E-W"
         }
     },
-    "Shoal-N-E": {
-        "AWBWID": 1054,
+
+
+
+
+
+
+
+
+
+
+    "Shoal-E-S-W": {
+        "AWBWID": 1113,
         "BaseDefence": 0,
         "MovementCostsPerType": {
             "LightInf": 1,
@@ -1588,11 +2608,11 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-E"
+            "Clear": "Shoal/E-S-W"
         }
     },
-    "Shoal-E-S": {
-        "AWBWID": 1055,
+    "Shoal-N-S-W": {
+        "AWBWID": 1114,
         "BaseDefence": 0,
         "MovementCostsPerType": {
             "LightInf": 1,
@@ -1605,11 +2625,11 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/E-S"
+            "Clear": "Shoal/N-S-W"
         }
     },
-    "Shoal-S-W": {
-        "AWBWID": 1056,
+    "Shoal-N-E-S": {
+        "AWBWID": 1115,
         "BaseDefence": 0,
         "MovementCostsPerType": {
             "LightInf": 1,
@@ -1622,11 +2642,11 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/S-W"
+            "Clear": "Shoal/N-E-S"
         }
     },
-    "Shoal-N-W": {
-        "AWBWID": 1057,
+    "Shoal-N-E-W": {
+        "AWBWID": 1116,
         "BaseDefence": 0,
         "MovementCostsPerType": {
             "LightInf": 1,
@@ -1639,75 +2659,7 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-W"
+            "Clear": "Shoal/N-E-W"
         }
     },
-    "Shoal-MN": {
-        "AWBWID": 1058,
-        "BaseDefence": 0,
-        "MovementCostsPerType": {
-            "LightInf": 1,
-            "HeavyInf": 1,
-            "Tread": 1,
-            "Tire": 1,
-            "Air": 1,
-            "Lander": 1
-        },
-        "Colour": "#ffe249",
-        "TerrainType": "Shoal",
-        "Textures": {
-            "Clear": "Shoal/MN"
-        }
-    },
-    "Shoal-ME": {
-        "AWBWID": 1059,
-        "BaseDefence": 0,
-        "MovementCostsPerType": {
-            "LightInf": 1,
-            "HeavyInf": 1,
-            "Tread": 1,
-            "Tire": 1,
-            "Air": 1,
-            "Lander": 1
-        },
-        "Colour": "#ffe249",
-        "TerrainType": "Shoal",
-        "Textures": {
-            "Clear": "Shoal/ME"
-        }
-    },
-    "Shoal-MS": {
-        "AWBWID": 1060,
-        "BaseDefence": 0,
-        "MovementCostsPerType": {
-            "LightInf": 1,
-            "HeavyInf": 1,
-            "Tread": 1,
-            "Tire": 1,
-            "Air": 1,
-            "Lander": 1
-        },
-        "Colour": "#ffe249",
-        "TerrainType": "Shoal",
-        "Textures": {
-            "Clear": "Shoal/MS"
-        }
-    },
-    "Shoal-MW": {
-        "AWBWID": 1061,
-        "BaseDefence": 0,
-        "MovementCostsPerType": {
-            "LightInf": 1,
-            "HeavyInf": 1,
-            "Tread": 1,
-            "Tire": 1,
-            "Air": 1,
-            "Lander": 1
-        },
-        "Colour": "#ffe249",
-        "TerrainType": "Shoal",
-        "Textures": {
-            "Clear": "Shoal/MW"
-        }
-    }
 }
