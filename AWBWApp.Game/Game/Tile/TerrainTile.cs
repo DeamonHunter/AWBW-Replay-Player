@@ -35,6 +35,8 @@ namespace AWBWApp.Game.Game.Tile
         Building = 1 << 5,
         Sea = 1 << 6,
         Shoal = 1 << 7,
-        Land = Plain | Road | Building | Mountain | Forest | River
+
+        CustomShoals = Shoal | River,
+        Land = Plain | Road | Building | Mountain | Forest
     }
 }

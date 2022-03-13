@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Tile;
@@ -9,87 +10,6 @@ namespace AWBWApp.Game.Game.Logic
     {
         private readonly TerrainTileStorage tileStorage;
         private readonly BuildingStorage buildingStorage;
-
-        private readonly List<(NearbyTiles, string)> shoalOutComes = new List<(NearbyTiles, string)>
-        {
-            //Full Circle
-            (new NearbyTiles { North = TerrainType.Land, East = TerrainType.Land, South = TerrainType.Land, West = TerrainType.Land }, "Shoal-N-E-S-W"),
-
-            //Empty Circle
-            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Sea, South = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-C-AN-AE-AS-AW"),
-
-            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Sea, South = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-C-AE-AS-AW"),
-            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Shoal, South = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-C-AN-AS-AW"),
-            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Sea, South = TerrainType.Shoal, West = TerrainType.Sea }, "Shoal-C-AN-AE-AW"),
-            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Sea, South = TerrainType.Sea, West = TerrainType.Shoal }, "Shoal-C-AN-AE-AS"),
-
-            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Shoal, South = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-C-AS-AW"),
-            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Sea, South = TerrainType.Shoal, West = TerrainType.Sea }, "Shoal-C-AE-AW"),
-            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Sea, South = TerrainType.Sea, West = TerrainType.Shoal }, "Shoal-C-AE-AS"),
-            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Shoal, South = TerrainType.Shoal, West = TerrainType.Sea }, "Shoal-C-AN-AW"),
-            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Shoal, South = TerrainType.Sea, West = TerrainType.Shoal }, "Shoal-C-AN-AS"),
-            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Sea, South = TerrainType.Shoal, West = TerrainType.Shoal }, "Shoal-C-AN-AE"),
-
-            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Shoal, South = TerrainType.Shoal, West = TerrainType.Sea }, "Shoal-C-AW"),
-            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Shoal, South = TerrainType.Sea, West = TerrainType.Shoal }, "Shoal-C-AS"),
-            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Sea, South = TerrainType.Shoal, West = TerrainType.Shoal }, "Shoal-C-AE"),
-            (new NearbyTiles { North = TerrainType.Sea, East = TerrainType.Shoal, South = TerrainType.Shoal, West = TerrainType.Shoal }, "Shoal-C-AN"),
-
-            (new NearbyTiles { North = TerrainType.Shoal, East = TerrainType.Shoal, South = TerrainType.Shoal, West = TerrainType.Shoal }, "Shoal-C"),
-
-            //Missing an edge
-            (new NearbyTiles { East = TerrainType.Land, South = TerrainType.Land, West = TerrainType.Land }, "Shoal-E-S-W"),
-            (new NearbyTiles { North = TerrainType.Land, South = TerrainType.Land, West = TerrainType.Land }, "Shoal-N-S-W"),
-            (new NearbyTiles { North = TerrainType.Land, East = TerrainType.Land, West = TerrainType.Land }, "Shoal-N-E-W"),
-            (new NearbyTiles { North = TerrainType.Land, East = TerrainType.Land, South = TerrainType.Land }, "Shoal-N-E-S"),
-
-            //Tunnels
-            (new NearbyTiles { North = TerrainType.Land, South = TerrainType.Land }, "Shoal-N-S"),
-            (new NearbyTiles { East = TerrainType.Land, West = TerrainType.Land }, "Shoal-E-W"),
-
-            //Corners
-            (new NearbyTiles { North = TerrainType.Land, East = TerrainType.Land }, "Shoal-N-E"),
-            (new NearbyTiles { East = TerrainType.Land, South = TerrainType.Land }, "Shoal-E-S"),
-            (new NearbyTiles { South = TerrainType.Land, West = TerrainType.Land }, "Shoal-S-W"),
-            (new NearbyTiles { North = TerrainType.Land, West = TerrainType.Land }, "Shoal-N-W"),
-
-            //Single Edge Tiles
-            (new NearbyTiles { North = TerrainType.Land, East = TerrainType.Sea, South = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-N-AW-AS-AE"),
-            (new NearbyTiles { North = TerrainType.Land, West = TerrainType.Sea, East = TerrainType.Sea }, "Shoal-N-AW-AE"),
-            (new NearbyTiles { North = TerrainType.Land, West = TerrainType.Sea, South = TerrainType.Sea }, "Shoal-N-AW-AS"),
-            (new NearbyTiles { North = TerrainType.Land, West = TerrainType.Sea }, "Shoal-N-AW"),
-            (new NearbyTiles { North = TerrainType.Land, East = TerrainType.Sea, South = TerrainType.Sea }, "Shoal-N-AS-AE"),
-            (new NearbyTiles { North = TerrainType.Land, East = TerrainType.Sea }, "Shoal-N-AE"),
-            (new NearbyTiles { North = TerrainType.Land, South = TerrainType.Sea }, "Shoal-N-AS"),
-            (new NearbyTiles { North = TerrainType.Land }, "Shoal-N"),
-
-            (new NearbyTiles { East = TerrainType.Land, North = TerrainType.Sea, South = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-E-AN-AW-AS"),
-            (new NearbyTiles { East = TerrainType.Land, North = TerrainType.Sea, South = TerrainType.Sea }, "Shoal-E-AN-AS"),
-            (new NearbyTiles { East = TerrainType.Land, North = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-E-AN-AW"),
-            (new NearbyTiles { East = TerrainType.Land, North = TerrainType.Sea }, "Shoal-E-AN"),
-            (new NearbyTiles { East = TerrainType.Land, South = TerrainType.Sea, West = TerrainType.Sea }, "Shoal-E-AW-AS"),
-            (new NearbyTiles { East = TerrainType.Land, South = TerrainType.Sea }, "Shoal-E-AS"),
-            (new NearbyTiles { East = TerrainType.Land, West = TerrainType.Sea }, "Shoal-E-AW"),
-            (new NearbyTiles { East = TerrainType.Land }, "Shoal-E"),
-
-            (new NearbyTiles { East = TerrainType.Sea, West = TerrainType.Sea, South = TerrainType.Land, North = TerrainType.Sea }, "Shoal-S-AE-AN-AW"),
-            (new NearbyTiles { East = TerrainType.Sea, West = TerrainType.Sea, South = TerrainType.Land }, "Shoal-S-AE-AW"),
-            (new NearbyTiles { East = TerrainType.Sea, South = TerrainType.Land, North = TerrainType.Sea }, "Shoal-S-AE-AN"),
-            (new NearbyTiles { East = TerrainType.Sea, South = TerrainType.Land }, "Shoal-S-AE"),
-            (new NearbyTiles { West = TerrainType.Sea, South = TerrainType.Land, North = TerrainType.Sea }, "Shoal-S-AN-AW"),
-            (new NearbyTiles { West = TerrainType.Sea, South = TerrainType.Land }, "Shoal-S-AW"),
-            (new NearbyTiles { South = TerrainType.Land, North = TerrainType.Sea }, "Shoal-S-AN"),
-            (new NearbyTiles { South = TerrainType.Land }, "Shoal-S"),
-
-            (new NearbyTiles { South = TerrainType.Sea, North = TerrainType.Sea, West = TerrainType.Land, East = TerrainType.Sea }, "Shoal-W-AS-AE-AN"),
-            (new NearbyTiles { South = TerrainType.Sea, North = TerrainType.Sea, West = TerrainType.Land }, "Shoal-W-AS-AN"),
-            (new NearbyTiles { South = TerrainType.Sea, West = TerrainType.Land, East = TerrainType.Sea }, "Shoal-W-AS-AE"),
-            (new NearbyTiles { South = TerrainType.Sea, West = TerrainType.Land }, "Shoal-W-AS"),
-            (new NearbyTiles { North = TerrainType.Sea, West = TerrainType.Land, East = TerrainType.Sea }, "Shoal-W-AE-AN"),
-            (new NearbyTiles { North = TerrainType.Sea, West = TerrainType.Land }, "Shoal-W-AN"),
-            (new NearbyTiles { West = TerrainType.Land, East = TerrainType.Sea }, "Shoal-W-AE"),
-            (new NearbyTiles { West = TerrainType.Land }, "Shoal-W"),
-        };
 
         private readonly List<(NearbyTiles, string)> seaOutComes = new List<(NearbyTiles, string)>
         {
@@ -231,30 +151,7 @@ namespace AWBWApp.Game.Game.Logic
                     {
                         var nearby = getNearbyTiles(map, i, x, y);
 
-                        var id = -1;
-
-                        foreach (var outCome in shoalOutComes)
-                        {
-                            if (outCome.Item1.NorthWest != TerrainType.None && nearby.NorthWest != TerrainType.None && (outCome.Item1.NorthWest & nearby.NorthWest) == 0)
-                                continue;
-                            if (outCome.Item1.North != TerrainType.None && nearby.North != TerrainType.None && (outCome.Item1.North & nearby.North) == 0)
-                                continue;
-                            if (outCome.Item1.NorthEast != TerrainType.None && nearby.NorthEast != TerrainType.None && (outCome.Item1.NorthEast & nearby.NorthEast) == 0)
-                                continue;
-                            if (outCome.Item1.East != TerrainType.None && nearby.East != TerrainType.None && (outCome.Item1.East & nearby.East) == 0)
-                                continue;
-                            if (outCome.Item1.SouthEast != TerrainType.None && nearby.SouthEast != TerrainType.None && (outCome.Item1.SouthEast & nearby.SouthEast) == 0)
-                                continue;
-                            if (outCome.Item1.South != TerrainType.None && nearby.South != TerrainType.None && (outCome.Item1.South & nearby.South) == 0)
-                                continue;
-                            if (outCome.Item1.SouthWest != TerrainType.None && nearby.SouthWest != TerrainType.None && (outCome.Item1.SouthWest & nearby.SouthWest) == 0)
-                                continue;
-                            if (outCome.Item1.West != TerrainType.None && nearby.West != TerrainType.None && (outCome.Item1.West & nearby.West) == 0)
-                                continue;
-
-                            id = tileStorage.GetTileByCode(outCome.Item2).AWBWId;
-                            break;
-                        }
+                        var id = tileStorage.GetTileByCode(constructCustomShoal(nearby)).AWBWId;
 
                         if (id != -1)
                             customShoal.Ids[i] = (short)id;
@@ -274,23 +171,96 @@ namespace AWBWApp.Game.Game.Logic
 
         private NearbyTiles getNearbyTiles(ReplayMap map, int tileIndex, int x, int y)
         {
-            var centerType = getTerrainTypeFromId(map.Ids[tileIndex]);
+            var centerTile = map.Ids[tileIndex];
 
-            var nearby = new NearbyTiles
+            var northWestTile = x > 0 && y > 0 ? map.Ids[tileIndex - map.Size.X - 1] : centerTile;
+            var northTile = y > 0 ? map.Ids[tileIndex - map.Size.X] : centerTile;
+            var northEastTile = x < map.Size.X - 1 && y > 0 ? map.Ids[tileIndex - map.Size.X + 1] : centerTile;
+
+            var westTile = x > 0 ? map.Ids[tileIndex - 1] : centerTile;
+            var eastTile = x < map.Size.X - 1 ? map.Ids[tileIndex + 1] : centerTile;
+
+            var southWestTile = x > 0 && y < map.Size.Y - 1 ? map.Ids[tileIndex + map.Size.X - 1] : centerTile;
+            var southTile = y < map.Size.Y - 1 ? map.Ids[tileIndex + map.Size.X] : centerTile;
+            var southEastTile = x < map.Size.X - 1 && y < map.Size.Y - 1 ? map.Ids[tileIndex + map.Size.X + 1] : centerTile;
+
+            //Todo: May need more special handlings
+            //26 is Hbridge
+            //27 is VBridge
+            //4 is HRiver
+            //5 is VRiver
+
+            if (northWestTile == 26)
+                northWestTile = 5;
+            if (northTile == 26)
+                northTile = 5;
+            if (northEastTile == 26)
+                northEastTile = 5;
+
+            if (southWestTile == 26)
+                southWestTile = 5;
+            if (southTile == 26)
+                southTile = 5;
+            if (southEastTile == 26)
+                southEastTile = 5;
+
+            if (northEastTile == 27)
+                northEastTile = 4;
+            if (eastTile == 27)
+                eastTile = 4;
+            if (southEastTile == 27)
+                southEastTile = 4;
+
+            if (northWestTile == 27)
+                northWestTile = 4;
+            if (westTile == 27)
+                westTile = 4;
+            if (southWestTile == 27)
+                southWestTile = 4;
+
+            return new NearbyTiles
             {
-                NorthWest = x > 0 && y > 0 ? getTerrainTypeFromId(map.Ids[tileIndex - map.Size.X - 1]) : centerType,
-                North = y > 0 ? getTerrainTypeFromId(map.Ids[tileIndex - map.Size.X]) : centerType,
-                NorthEast = x < map.Size.X - 1 && y > 0 ? getTerrainTypeFromId(map.Ids[tileIndex - map.Size.X + 1]) : centerType,
+                NorthWest = getTerrainTypeFromId(northWestTile),
+                North = getTerrainTypeFromId(northTile),
+                NorthEast = getTerrainTypeFromId(northEastTile),
 
-                West = x > 0 ? getTerrainTypeFromId(map.Ids[tileIndex - 1]) : centerType,
-                East = x < map.Size.X - 1 ? getTerrainTypeFromId(map.Ids[tileIndex + 1]) : centerType,
+                West = getTerrainTypeFromId(westTile),
+                East = getTerrainTypeFromId(eastTile),
 
-                SouthWest = x > 0 && y < map.Size.Y - 1 ? getTerrainTypeFromId(map.Ids[tileIndex + map.Size.X - 1]) : centerType,
-                South = y < map.Size.Y - 1 ? getTerrainTypeFromId(map.Ids[tileIndex + map.Size.X]) : centerType,
-                SouthEast = x < map.Size.X - 1 && y < map.Size.Y - 1 ? getTerrainTypeFromId(map.Ids[tileIndex + map.Size.X + 1]) : centerType
+                SouthWest = getTerrainTypeFromId(southWestTile),
+                South = getTerrainTypeFromId(southTile),
+                SouthEast = getTerrainTypeFromId(southEastTile)
             };
+        }
 
-            return nearby;
+        private string constructCustomShoal(NearbyTiles tiles)
+        {
+            var sb = new StringBuilder(12);
+
+            if ((tiles.North & TerrainType.Land) != 0)
+                sb.Append("N-");
+            else if ((tiles.North & TerrainType.CustomShoals) == 0)
+                sb.Append("AN-");
+
+            if ((tiles.East & TerrainType.Land) != 0)
+                sb.Append("E-");
+            else if ((tiles.East & TerrainType.CustomShoals) == 0)
+                sb.Append("AE-");
+
+            if ((tiles.South & TerrainType.Land) != 0)
+                sb.Append("S-");
+            else if ((tiles.South & TerrainType.CustomShoals) == 0)
+                sb.Append("AS-");
+
+            if ((tiles.West & TerrainType.Land) != 0)
+                sb.Append("W-");
+            else if ((tiles.West & TerrainType.CustomShoals) == 0)
+                sb.Append("AW-");
+
+            if (sb.Length > 0)
+                sb.Remove(sb.Length - 1, 1);
+
+            return sb.Length > 0 ? $"Shoal-{sb}" : "Shoal-C";
         }
 
         private TerrainType getTerrainTypeFromId(int id)
