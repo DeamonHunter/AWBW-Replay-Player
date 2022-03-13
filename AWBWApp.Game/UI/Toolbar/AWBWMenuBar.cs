@@ -57,9 +57,10 @@ namespace AWBWApp.Game.UI.Replay
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
                     {
-                        Menu = new AWBWMenu()
+                        Menu = new AWBWMenu
                         {
-                            Items = menuItems
+                            Items = menuItems,
+                            RelativeSizeAxes = Axes.X
                         },
                         overlay
                     }

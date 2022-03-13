@@ -223,8 +223,6 @@ namespace AWBWApp.Game.IO
                     using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.zip", FileAccess.Write, FileMode.Create))
                         readFileStream.CopyTo(writeStream);
                 }
-
-                File.Delete(path);
             }
             catch (Exception e)
             {
@@ -263,6 +261,16 @@ namespace AWBWApp.Game.IO
             addReplay(data);
 
             return data;
+        }
+
+        public void ShowReplayInFolder(ReplayInfo replayInfo) => underlyingStorage.PresentFileExternally($"{replayInfo.ID}.zip");
+
+        //Todo: Possibly do what osu does and not commit this until shutdown (aka allow it to be restored.)
+        public void DeleteReplay(ReplayInfo replayInfo)
+        {
+            _knownReplays.Remove(replayInfo.ID);
+            underlyingStorage.Delete($"{replayInfo.ID}.json");
+            ReplayRemoved?.Invoke(replayInfo);
         }
 
         #region Disposable

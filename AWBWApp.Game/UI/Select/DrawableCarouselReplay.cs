@@ -1,17 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.UI.Interrupts;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Select
 {
-    public class DrawableCarouselReplay : DrawableCarouselItem
+    public class DrawableCarouselReplay : DrawableCarouselItem, IHasContextMenu
     {
         public const float CAROUSEL_BEATMAP_SPACING = 5;
 
@@ -24,8 +28,12 @@ namespace AWBWApp.Game.UI.Select
         private ReplayInfo replayInfo;
 
         private Action<ReplayInfo> startRequest;
+        private Action<ReplayInfo> showFolderRequest;
 
         private Sprite background;
+
+        [Resolved(CanBeNull = true)]
+        private InterruptDialogueOverlay interruptOverlay { get; set; }
 
         public DrawableCarouselReplay() { }
 
@@ -43,6 +51,7 @@ namespace AWBWApp.Game.UI.Select
             if (replaySelect != null)
             {
                 startRequest = replaySelect.FinaliseSelection;
+                showFolderRequest = replaySelect.ShowReplayInFolderRequest;
             }
 
             Anchor = Anchor.TopCentre;
@@ -58,6 +67,27 @@ namespace AWBWApp.Game.UI.Select
                     RelativeSizeAxes = Axes.Both
                 }
             };
+        }
+
+        public MenuItem[] ContextMenuItems
+        {
+            get
+            {
+                var items = new List<MenuItem>
+                {
+                    new MenuItem("Start", () =>
+                    {
+                        Item.State.Value = CarouselItemState.Selected;
+                        startRequest?.Invoke(replayInfo);
+                    }),
+                    new MenuItem("Show In Folder", () => showFolderRequest?.Invoke(replayInfo))
+                };
+
+                if (interruptOverlay != null)
+                    items.Add(new MenuItem("Delete...", () => interruptOverlay.Push(new DeleteReplayInterrupt(replayInfo))));
+
+                return items.ToArray();
+            }
         }
 
         protected override void Selected()

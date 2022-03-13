@@ -161,6 +161,8 @@ namespace AWBWApp.Game.UI.Select
                 Carousel.AllowSelection = false;
         }
 
+        public void ShowReplayInFolderRequest(ReplayInfo replayInfo) => replayManager.ShowReplayInFolder(replayInfo);
+
         private CancellationTokenSource tokenSource;
         private CancellationToken cancellationToken;
 

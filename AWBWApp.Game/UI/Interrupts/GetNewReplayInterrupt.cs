@@ -7,7 +7,6 @@ using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.IO.Network;
 using osu.Framework.Logging;
@@ -18,15 +17,6 @@ namespace AWBWApp.Game.UI.Interrupts
 {
     public class GetNewReplayInterrupt : BaseInterrupt
     {
-        private TextBox replayInput;
-
-        private SpriteText errorText;
-
-        private Button acceptButton;
-        private Button cancelButton;
-
-        private LoadingLayer blockingLayer;
-
         [Resolved]
         private ReplayManager replayStorage { get; set; }
 
@@ -36,6 +26,9 @@ namespace AWBWApp.Game.UI.Interrupts
         [Resolved]
         private AWBWSessionHandler sessionHandler { get; set; }
 
+        private readonly TextBox replayInput;
+        private readonly TextFlowContainer errorText;
+        private readonly LoadingLayer blockingLayer;
         private readonly TaskCompletionSource<ReplayInfo> sessionIdCallback;
 
         public GetNewReplayInterrupt(TaskCompletionSource<ReplayInfo> sessionIdCallback)
@@ -59,10 +52,11 @@ namespace AWBWApp.Game.UI.Interrupts
                         Height = 40,
                         TabbableContentContainer = this
                     },
-                    errorText = new SpriteText()
+                    errorText = new TextFlowContainer()
                     {
                         Anchor = Anchor.TopCentre,
                         Origin = Anchor.TopCentre,
+                        TextAnchor = Anchor.TopCentre,
                         RelativeSizeAxes = Axes.X,
                         Width = 0.95f,
                         Colour = Color4.Red
@@ -74,16 +68,16 @@ namespace AWBWApp.Game.UI.Interrupts
                         Padding = new MarginPadding { Bottom = 10 },
                         Children = new Drawable[]
                         {
-                            cancelButton = new InterruptButton
+                            new InterruptButton
                             {
                                 Text = "Cancel",
                                 BackgroundColour = Color4Extensions.FromHex(@"681d1f"),
                                 HoverColour = Color4Extensions.FromHex(@"681d1f").Lighten(0.2f),
-                                Action = cancel,
+                                Action = Cancel,
                                 RelativePositionAxes = Axes.X,
                                 Position = new Vector2(-0.25f, 0f)
                             },
-                            acceptButton = new InterruptButton
+                            new InterruptButton
                             {
                                 Text = "Accept",
                                 BackgroundColour = Color4Extensions.FromHex(@"1d681e"),
@@ -226,11 +220,10 @@ namespace AWBWApp.Game.UI.Interrupts
             });
         }
 
-        private void cancel()
+        protected override void Cancel()
         {
             sessionIdCallback.TrySetCanceled();
-            ActionInvoked();
-            Hide();
+            base.Cancel();
         }
 
         private class InterruptButton : BasicButton

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using AWBWApp.Game.API;
+using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.IO;
+using AWBWApp.Game.UI.Select;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
@@ -13,49 +13,38 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Interrupts
 {
-    public class LoginInterrupt : BaseInterrupt
+    public class DeleteReplayInterrupt : BaseInterrupt
     {
         [Resolved]
-        private AWBWSessionHandler sessionHandler { get; set; }
+        private ReplayManager replayManager { get; set; }
 
-        private readonly TextBox usernameInput;
-        private readonly TextBox passwordInput;
+        private readonly ReplayInfo replayToDelete;
         private readonly TextFlowContainer errorText;
         private readonly LoadingLayer blockingLayer;
 
-        private readonly TaskCompletionSource<bool> sessionIdCallback;
-
-        public LoginInterrupt(TaskCompletionSource<bool> sessionIdCallback)
+        public DeleteReplayInterrupt(ReplayInfo replayToDelete)
         {
-            this.sessionIdCallback = sessionIdCallback;
+            this.replayToDelete = replayToDelete;
 
-            HeaderText = "Input Login Details";
+            HeaderText = "Are you sure you want to delete?";
 
-            BodyText = "Please input your login details for AWBW.";
+            BodyText = "Are you sure you want to delete the following replay:";
 
             SetInteractables(new Drawable[]
                 {
-                    usernameInput = new BasicTextBox()
+                    new Container()
                     {
-                        PlaceholderText = "Username",
-                        RelativeSizeAxes = Axes.X,
+                        Masking = true,
+                        CornerRadius = 8,
                         Anchor = Anchor.TopCentre,
                         Origin = Anchor.TopCentre,
-                        Width = 0.95f,
-                        Margin = new MarginPadding { Top = 5 },
-                        Height = 40,
-                        TabbableContentContainer = this
-                    },
-                    passwordInput = new BasicPasswordTextBox()
-                    {
-                        PlaceholderText = "Password",
                         RelativeSizeAxes = Axes.X,
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre,
-                        Width = 0.95f,
-                        Margin = new MarginPadding { Top = 5 },
-                        Height = 40,
-                        TabbableContentContainer = this
+                        Size = new Vector2(0.8f, 100),
+                        Children = new Drawable[]
+                        {
+                            new ReplayCarouselPanelBackground(replayToDelete),
+                            new ReplayCarouselPanelContent(new CarouselReplay(replayToDelete))
+                        }
                     },
                     errorText = new TextFlowContainer()
                     {
@@ -73,7 +62,7 @@ namespace AWBWApp.Game.UI.Interrupts
                         {
                             new InterruptButton
                             {
-                                Text = "Cancel",
+                                Text = "No",
                                 BackgroundColour = Color4Extensions.FromHex(@"681d1f"),
                                 HoverColour = Color4Extensions.FromHex(@"681d1f").Lighten(0.2f),
                                 Action = Cancel,
@@ -82,10 +71,10 @@ namespace AWBWApp.Game.UI.Interrupts
                             },
                             new InterruptButton
                             {
-                                Text = "Accept",
+                                Text = "Yes",
                                 BackgroundColour = Color4Extensions.FromHex(@"1d681e"),
                                 HoverColour = Color4Extensions.FromHex(@"1d681e").Lighten(0.2f),
-                                Action = scheduleLogin,
+                                Action = () => Schedule(attemptDelete),
                                 RelativePositionAxes = Axes.X,
                                 Position = new Vector2(0.25f, 0f)
                             }
@@ -100,65 +89,32 @@ namespace AWBWApp.Game.UI.Interrupts
             });
         }
 
-        private void scheduleLogin()
-        {
-            Schedule(attemptLogin);
-        }
-
-        private async void attemptLogin()
+        private async void attemptDelete()
         {
             try
             {
                 blockingLayer.Show();
-                Logger.Log("Attempting to login to awbw.");
+                Logger.Log("Attempting to delete replay.");
 
-                try
-                {
-                    var success = await sessionHandler.AttemptLogin(usernameInput.Text, passwordInput.Text);
-
-                    if (!success)
-                    {
-                        failed(sessionHandler.LoginError);
-                        return;
-                    }
-                }
-                catch (TaskCanceledException e)
-                {
-                    failed(sessionHandler.LoginError);
-                    return;
-                }
-
-                sessionIdCallback.TrySetResult(true);
+                replayManager.DeleteReplay(replayToDelete);
                 ActionInvoked();
                 Schedule(Hide);
-            }
-            catch (HttpRequestException)
-            {
-                failed("Failed to Login to server. Are you connected to the internet?");
-                return;
             }
             catch (Exception e)
             {
                 Logger.Error(e, e.Message);
                 failed("Unknown Error has occured.");
-                return;
             }
         }
 
         private void failed(string reason)
         {
-            Logger.Log("Failed to login: " + errorText, level: LogLevel.Verbose);
+            Logger.Log("Failed to delete the replay: " + errorText, level: LogLevel.Verbose);
             Schedule(() =>
             {
                 errorText.Text = reason;
                 blockingLayer.Hide();
             });
-        }
-
-        protected override void Cancel()
-        {
-            sessionIdCallback.TrySetCanceled();
-            base.Cancel();
         }
 
         private class InterruptButton : BasicButton

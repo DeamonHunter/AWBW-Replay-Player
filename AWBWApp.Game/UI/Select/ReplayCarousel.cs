@@ -17,26 +17,8 @@ namespace AWBWApp.Game.UI.Select
 {
     public class ReplayCarousel : CompositeDrawable
     {
-        /// <summary>
-        /// Height of the area above the carousel that should be treated as visible due to transparency of elements in front of it.
-        /// </summary>
-        public float BleedTop { get; set; }
-
-        /// <summary>
-        /// Height of the area below the carousel that should be treated as visible due to transparency of elements in front of it.
-        /// </summary>
-        public float BleedBottom { get; set; }
-
         public bool AllowSelection = true;
-
-        /// <summary>
-        /// Called whenever Replays are changed and fully loaded.
-        /// </summary>
         public Action ReplaysChanged;
-
-        /// <summary>
-        /// Called whenever <see cref="ReplayInfoWedge"/> is changed
-        /// </summary>
         public Action<ReplayInfo> SelectionChanged;
 
         public override bool HandleNonPositionalInput => AllowSelection;
@@ -65,24 +47,9 @@ namespace AWBWApp.Game.UI.Select
 
         private (int first, int last) displayedRange;
 
-        /// <summary>
-        /// Half the height of the visible content.
-        /// <remarks>
-        /// This is different from the height of <see cref="ScrollContainer{T}"/>.displayableContent, since
-        /// the beatmap carousel bleeds into the <see cref="FilterControl"/> and the <see cref="Footer"/>
-        /// </remarks>
-        /// </summary>
-        private float visibleHalfHeight => (DrawHeight + BleedBottom + BleedTop) / 2;
-
-        /// <summary>
-        /// The position of the lower visible bound with respect to the current scroll position.
-        /// </summary>
-        private float visibleBottomBound => Scroll.Current + DrawHeight + BleedBottom;
-
-        /// <summary>
-        /// The position of the upper visible bound with respect to the current scroll position.
-        /// </summary>
-        private float visibleUpperBound => Scroll.Current - BleedTop;
+        private float visibleHalfHeight => DrawHeight / 2;
+        private float visibleBottomBound => Scroll.Current + DrawHeight;
+        private float visibleUpperBound => Scroll.Current;
 
         private const float panel_padding = 5;
 
@@ -107,10 +74,17 @@ namespace AWBWApp.Game.UI.Select
             rootCarouselItem = new CarouselRoot(this);
             InternalChildren = new Drawable[]
             {
-                setPool,
-                Scroll = new CarouselScrollContainer
+                new AWBWContextMenuContainer()
                 {
-                    RelativeSizeAxes = Axes.Both
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new Drawable[]
+                    {
+                        setPool,
+                        Scroll = new CarouselScrollContainer
+                        {
+                            RelativeSizeAxes = Axes.Both
+                        }
+                    }
                 }
             };
         }
@@ -232,6 +206,8 @@ namespace AWBWApp.Game.UI.Select
                     {
                         if (toDisplay.Remove(panel.Item))
                         {
+                            if (revalidateItems)
+                                panel.MoveToY(panel.Item.CarouselYPosition, 300, Easing.OutCubic);
                             //panel already displayed
                             continue;
                         }
@@ -261,14 +237,14 @@ namespace AWBWApp.Game.UI.Select
                 updateItem(item);
         }
 
-        /// <summary>
-        /// Update a item's x position and multiplicative alpha based on its y position and
-        /// the current scroll position.
-        /// </summary>
-        /// <param name="item">The item to be updated.</param>
-        /// <param name="parent">For nested items, the parent of the item to be updated.</param>
         private void updateItem(DrawableCarouselItem item, DrawableCarouselItem parent = null)
         {
+            if (!item.IsPresent)
+            {
+                item.Expire();
+                return;
+            }
+
             Vector2 posInScroll = Scroll.ScrollContent.ToLocalSpace(item.Panel.ScreenSpaceDrawQuad.Centre);
             float itemDrawY = posInScroll.Y - visibleUpperBound;
             float dist = Math.Abs(1f - itemDrawY / visibleHalfHeight);
@@ -277,24 +253,6 @@ namespace AWBWApp.Game.UI.Select
             // child items (difficulties) are still visible.
             //item.Header.X = offsetX(dist, visibleHalfHeight) - (parent?.X ?? 0);
             item.ScaleTo(itemScale(dist));
-        }
-
-        /// <summary>
-        /// Computes the x-offset of currently visible items. Makes the carousel appear round.
-        /// </summary>
-        /// <param name="dist">
-        /// Vertical distance from the center of the carousel container
-        /// ranging from -1 to 1.
-        /// </param>
-        /// <param name="halfHeight">Half the height of the carousel container.</param>
-        private static float offsetX(float dist, float halfHeight)
-        {
-            // The radius of the circle the carousel moves on.
-            const float circle_radius = 3;
-            float discriminant = MathF.Max(0, circle_radius * circle_radius - dist * dist);
-            float x = (circle_radius - MathF.Sqrt(discriminant)) * halfHeight;
-
-            return 125 + x;
         }
 
         private static float itemScale(float dist)
@@ -352,7 +310,7 @@ namespace AWBWApp.Game.UI.Select
                             // scroll position at currentY makes the set panel appear at the very top of the carousel's screen space
                             // move down by half of visible height (height of the carousel's visible extent, including semi-transparent areas)
                             // then reapply the top semi-transparent area (because carousel's screen space starts below it)
-                            scrollTarget = currentY + DrawableCarouselReplay.SELECTEDHEIGHT - visibleHalfHeight + BleedTop;
+                            scrollTarget = currentY + DrawableCarouselReplay.SELECTEDHEIGHT - visibleHalfHeight;
                         }
 
                         currentY += replay.TotalHeight + panel_padding;
@@ -434,13 +392,6 @@ namespace AWBWApp.Game.UI.Select
             item.State.Value = CarouselItemState.Selected;
         }
 
-        /// <summary>
-        /// Scroll to the current <see cref="SelectedBeatmapInfo"/>.
-        /// </summary>
-        /// <param name="immediate">
-        /// Whether the scroll position should immediately be shifted to the target, delegating animation to visible panels.
-        /// This should be true for operations like filtering - where panels are changing visibility state - to avoid large jumps in animation.
-        /// </param>
         public void ScrollToSelected(bool immediate = false) => pendingScrollOperation = immediate ? PendingScrollOperation.Immediate : PendingScrollOperation.Standard;
 
         private enum PendingScrollOperation
@@ -514,9 +465,6 @@ namespace AWBWApp.Game.UI.Select
         public class UserTrackingScrollContainer<T> : BasicScrollContainer<T>
             where T : Drawable
         {
-            /// <summary>
-            /// Whether the last scroll event was user triggered, directly on the scroll container.
-            /// </summary>
             public bool UserScrolling { get; private set; }
 
             public void CancelUserScroll() => UserScrolling = false;

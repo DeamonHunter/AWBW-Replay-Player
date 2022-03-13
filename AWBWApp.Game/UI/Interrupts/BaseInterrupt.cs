@@ -174,5 +174,11 @@ namespace AWBWApp.Game.UI.Interrupts
         {
             actionWasInvoked = true;
         }
+
+        protected virtual void Cancel()
+        {
+            ActionInvoked();
+            Hide();
+        }
     }
 }
