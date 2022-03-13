@@ -415,7 +415,8 @@
     },
     "Kanbei": {
         "Name": "Kanbei",
-        "AWBWID": 3,
+        "AWBWID": 31,
+        "SecondaryAWBWId": 3,
         "DayToDayPower": {
             "UnitPriceMultiplier": 1.2,
             "PowerIncreases": [
