@@ -269,7 +269,7 @@ namespace AWBWApp.Game.IO
         public void DeleteReplay(ReplayInfo replayInfo)
         {
             _knownReplays.Remove(replayInfo.ID);
-            underlyingStorage.Delete($"{replayInfo.ID}.json");
+            underlyingStorage.Delete($"{replayInfo.ID}.zip");
             ReplayRemoved?.Invoke(replayInfo);
         }
 
