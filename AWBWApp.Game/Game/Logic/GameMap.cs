@@ -59,6 +59,8 @@ namespace AWBWApp.Game.Game.Logic
 
         private bool animatingMapStart;
 
+        private Bindable<bool> showGridlines;
+
         public GameMap()
         {
             AddRange(new Drawable[]
@@ -106,7 +108,8 @@ namespace AWBWApp.Game.Game.Logic
         private void load(AWBWConfigManager settings)
         {
             setToLoading();
-            settings.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap).BindValueChanged(x => grid.FadeTo(x.NewValue ? 1 : 0, 400, Easing.OutQuint), true);
+            showGridlines = settings.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap);
+            showGridlines.BindValueChanged(x => grid.FadeTo(x.NewValue ? 1 : 0, 400, Easing.OutQuint), true);
         }
 
         private void setToLoading()

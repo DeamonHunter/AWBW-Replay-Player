@@ -8,16 +8,16 @@ namespace AWBWApp.Game.UI.Toolbar
 {
     public class ToggleMenuItem : MenuItem
     {
-        public readonly BindableBool State = new BindableBool();
+        public readonly Bindable<bool> State;
 
         public ToggleMenuItem(LocalisableString text, Bindable<bool> bindable)
             : base(text)
         {
+            State = bindable;
             Action.Value = () =>
             {
                 State.Value = !State.Value;
             };
-            State.BindTo(bindable);
         }
 
         public ToggleMenuItem(LocalisableString text, Action<bool> action)
