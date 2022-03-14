@@ -9,6 +9,7 @@ using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.Input;
 using AWBWApp.Game.IO;
 using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Interrupts;
@@ -52,6 +53,8 @@ namespace AWBWApp.Game
 
         private InterruptDialogueOverlay interruptOverlay;
         private AWBWSessionHandler sessionHandler;
+
+        private GlobalActionContainer globalBindings;
 
         protected AWBWAppGameBase()
         {
@@ -118,6 +121,8 @@ namespace AWBWApp.Game
 
             sessionHandler = new AWBWSessionHandler();
             dependencies.Cache(sessionHandler);
+
+            base.Content.Add(globalBindings = new GlobalActionContainer(this));
         }
 
         public override void SetHost(GameHost host)
@@ -182,6 +187,12 @@ namespace AWBWApp.Game
 
             if (updateNotification != null)
                 updateNotification.State = ProgressNotificationState.Completed;
+        }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            base.Dispose(isDisposing);
+            LocalConfig?.Dispose();
         }
 
         public void GracefullyExit()

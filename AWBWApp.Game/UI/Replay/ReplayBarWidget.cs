@@ -1,14 +1,17 @@
 ﻿using AWBWApp.Game.Game.Logic;
+using AWBWApp.Game.Input;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
 
-namespace AWBWApp.Game.UI
+namespace AWBWApp.Game.UI.Replay
 {
     public class ReplayBarWidget : Container
     {
@@ -63,28 +66,28 @@ namespace AWBWApp.Game.UI
                             Anchor = Anchor.Centre,
                             Children = new[]
                             {
-                                lastTurnButton = new ReplayIconButton
+                                lastTurnButton = new ReplayIconButton(AWBWGlobalAction.PreviousTurn)
                                 {
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
                                     Action = () => replayController.GoToPreviousTurn(),
                                     Icon = FontAwesome.Solid.AngleDoubleLeft
                                 },
-                                prevButton = new ReplayIconButton
+                                prevButton = new ReplayIconButton(AWBWGlobalAction.PreviousAction)
                                 {
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
                                     //Action = () => musicController.TogglePause(),
                                     Icon = FontAwesome.Solid.AngleLeft
                                 },
-                                nextButton = new ReplayIconButton
+                                nextButton = new ReplayIconButton(AWBWGlobalAction.NextAction)
                                 {
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
                                     Action = () => replayController.GoToNextAction(),
                                     Icon = FontAwesome.Solid.AngleRight
                                 },
-                                nextTurnButton = new ReplayIconButton
+                                nextTurnButton = new ReplayIconButton(AWBWGlobalAction.NextTurn)
                                 {
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
@@ -106,11 +109,35 @@ namespace AWBWApp.Game.UI
             nextTurnButton.Enabled.Value = replayController.HasNextTurn();
         }
 
-        private class ReplayIconButton : IconButton
+        private class ReplayIconButton : IconButton, IKeyBindingHandler<AWBWGlobalAction>
         {
-            public ReplayIconButton()
+            private readonly AWBWGlobalAction triggerAction;
+
+            public ReplayIconButton(AWBWGlobalAction triggerAction)
             {
                 AutoSizeAxes = Axes.Both;
+                this.triggerAction = triggerAction;
+            }
+
+            public bool OnPressed(KeyBindingPressEvent<AWBWGlobalAction> e)
+            {
+                if (e.Repeat)
+                    return false;
+
+                if (e.Action == triggerAction)
+                {
+                    Action?.Invoke();
+                    Content.ScaleTo(0.75f, 2000, Easing.OutQuint);
+                    return true;
+                }
+
+                return false;
+            }
+
+            public void OnReleased(KeyBindingReleaseEvent<AWBWGlobalAction> e)
+            {
+                if (e.Action == triggerAction)
+                    Content.ScaleTo(1, 1000, Easing.OutElastic);
             }
 
             protected override void LoadComplete()

@@ -8,6 +8,7 @@ using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Unit;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.Input;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Replay;
 using osu.Framework.Allocation;
@@ -15,12 +16,14 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
 
 namespace AWBWApp.Game.Game.Logic
 {
-    public class GameMap : Container
+    public class GameMap : Container, IKeyBindingHandler<AWBWGlobalAction>
     {
         public Vector2I MapSize { get; private set; }
 
@@ -59,6 +62,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private bool animatingMapStart;
 
+        private Bindable<bool> showUnitsInFog;
         private Bindable<bool> showGridlines;
 
         public GameMap()
@@ -108,6 +112,7 @@ namespace AWBWApp.Game.Game.Logic
         private void load(AWBWConfigManager settings)
         {
             setToLoading();
+            showUnitsInFog = settings.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits);
             showGridlines = settings.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap);
             showGridlines.BindValueChanged(x => grid.FadeTo(x.NewValue ? 1 : 0, 400, Easing.OutQuint), true);
         }
@@ -576,6 +581,29 @@ namespace AWBWApp.Game.Game.Logic
 
             if (TryGetDrawableUnit(awbwBuilding.Position, out var unit))
                 unit.IsCapturing.Value = awbwBuilding.Capture != 20;
+        }
+
+        public bool OnPressed(KeyBindingPressEvent<AWBWGlobalAction> e)
+        {
+            if (e.Repeat)
+                return false;
+
+            switch (e.Action)
+            {
+                case AWBWGlobalAction.ShowUnitsInFog:
+                    showUnitsInFog.Value = !showUnitsInFog.Value;
+                    return true;
+
+                case AWBWGlobalAction.ShowGridLines:
+                    showGridlines.Value = !showGridlines.Value;
+                    return true;
+            }
+
+            return false;
+        }
+
+        public void OnReleased(KeyBindingReleaseEvent<AWBWGlobalAction> e)
+        {
         }
 
         private long? getPlayerIDFromCountryID(int countryID) => players.FirstOrDefault(x => x.Value.Country.Value.AWBWID == countryID).Key;
