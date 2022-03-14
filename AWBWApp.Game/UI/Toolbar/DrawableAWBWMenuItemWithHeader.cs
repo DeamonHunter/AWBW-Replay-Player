@@ -6,7 +6,7 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
 using osuTK;
 
-namespace AWBWApp.Game.UI.Replay.Toolbar
+namespace AWBWApp.Game.UI.Toolbar
 {
     public class DrawableAWBWMenuItemWithHeader : DrawableAWBWMenuItem
     {

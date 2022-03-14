@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using AWBWApp.Game.UI.Notifications;
-using AWBWApp.Game.UI.Toolbar;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -14,7 +13,7 @@ using osu.Framework.Threading;
 using osuTK;
 using osuTK.Graphics;
 
-namespace AWBWApp.Game.UI.Replay
+namespace AWBWApp.Game.UI.Toolbar
 {
     public class AWBWMenuBar : OverlayContainer
     {

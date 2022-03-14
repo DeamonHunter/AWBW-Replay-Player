@@ -4,7 +4,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Localisation;
 
-namespace AWBWApp.Game.UI.Replay.Toolbar
+namespace AWBWApp.Game.UI.Toolbar
 {
     public class ToggleMenuItem : MenuItem
     {

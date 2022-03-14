@@ -5,7 +5,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osuTK;
 
-namespace AWBWApp.Game.UI.Replay.Toolbar
+namespace AWBWApp.Game.UI.Toolbar
 {
     public class DrawableToggleMenuItem : DrawableAWBWMenuItem
     {

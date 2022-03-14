@@ -7,7 +7,7 @@ using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
 using osuTK.Graphics;
 
-namespace AWBWApp.Game.UI.Replay.Toolbar
+namespace AWBWApp.Game.UI.Toolbar
 {
     public class DrawableAWBWMenuItem : Menu.DrawableMenuItem
     {

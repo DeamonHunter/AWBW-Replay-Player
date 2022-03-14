@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.UI.Notifications;
-using AWBWApp.Game.UI.Replay;
+using AWBWApp.Game.UI.Toolbar;
 using NUnit.Framework;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
