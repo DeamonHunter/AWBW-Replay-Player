@@ -1,3 +1,4 @@
+using AWBWApp.Game.Tests.AWBWApp.Game.Tests;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Platform;
@@ -5,7 +6,7 @@ using osu.Framework.Testing;
 
 namespace AWBWApp.Game.Tests
 {
-    public class AWBWAppTestBrowser : AWBWAppGameBase
+    public class AWBWAppTestBrowser : AWBWAppTestBase
     {
         protected override void LoadComplete()
         {

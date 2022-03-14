@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
+using AWBWApp.Game.Tests.AWBWApp.Game.Tests;
 using osu.Framework.Testing;
 
 namespace AWBWApp.Game.Tests.Visual
@@ -9,7 +10,7 @@ namespace AWBWApp.Game.Tests.Visual
     {
         protected override ITestSceneTestRunner CreateRunner() => new AWBWAppTestSceneTestRunner();
 
-        private class AWBWAppTestSceneTestRunner : AWBWAppGameBase, ITestSceneTestRunner
+        private class AWBWAppTestSceneTestRunner : AWBWAppTestBase, ITestSceneTestRunner
         {
             private TestSceneTestRunner.TestRunner runner;
 

@@ -79,6 +79,7 @@ namespace AWBWApp.Game
 
             fileStorage = new ResourceStore<byte[]>(Resources);
             fileStorage.AddExtension(".json");
+            fileStorage.AddExtension(".zip");
             dependencies.Cache(fileStorage);
 
             replayStorage = new ReplayManager(HostStorage);
