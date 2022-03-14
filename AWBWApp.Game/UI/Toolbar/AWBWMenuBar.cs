@@ -114,7 +114,7 @@ namespace AWBWApp.Game.UI.Replay
                 return;
             }
 
-            if (hoverHideDelegate == null)
+            if (hoverHideDelegate == null || hoverHideDelegate.Completed)
                 hoverHideDelegate = Scheduler.AddDelayed(Hide, HideDelay);
         }
 
@@ -139,26 +139,27 @@ namespace AWBWApp.Game.UI.Replay
         protected override bool OnClick(ClickEvent e)
         {
             if (notificationOverlay.State.Value == Visibility.Visible)
-            {
                 notificationOverlay.Hide();
-                return true;
-            }
 
             return base.OnClick(e);
         }
 
         private void onHoverLost()
         {
-            if (hoverShowDelegate != null)
-            {
-                hoverShowDelegate?.Cancel();
-                hoverShowDelegate = null;
-            }
+            if (hoverShowDelegate == null)
+                return;
+
+            hoverShowDelegate?.Cancel();
+            hoverShowDelegate = null;
         }
 
         private void updateHoverShow()
         {
             hoverShowDelegate?.Cancel();
+            hoverShowDelegate = null;
+
+            hoverHideDelegate?.Cancel();
+            hoverHideDelegate = null;
 
             if (State.Value != Visibility.Visible)
                 hoverShowDelegate = Scheduler.AddDelayed(Show, HoverShowDelay);
