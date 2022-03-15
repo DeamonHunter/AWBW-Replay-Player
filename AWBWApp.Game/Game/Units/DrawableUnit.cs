@@ -307,6 +307,9 @@ namespace AWBWApp.Game.Game.Unit
 
             textureAnimation.FadeColour(colour, 250, newValue ? Easing.OutQuint : Easing.InQuint);
             textureAnimation.TransformTo("GreyscaleAmount", CanMove.Value ? 0f : 0.4f, 250, newValue ? Easing.OutQuint : Easing.InQuint);
+
+            divedAnimation.FadeColour(colour, 250, newValue ? Easing.OutQuint : Easing.InQuint);
+            divedAnimation.TransformTo("GreyscaleAmount", CanMove.Value ? 0f : 0.4f, 250, newValue ? Easing.OutQuint : Easing.InQuint);
         }
 
         private class UnitTextureAnimation : Animation<Texture>
