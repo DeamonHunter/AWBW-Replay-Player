@@ -311,10 +311,10 @@ namespace AWBWApp.Game.Game.Logic
                 turnIdx = replayData.TurnData.Count - 1;
 
             currentActionIndex = -1;
+            currentTurn = replayData.TurnData[turnIdx];
             CurrentTurnIndex.Value = turnIdx;
 
             checkPowers();
-            currentTurn = replayData.TurnData[turnIdx];
 
             Map.ScheduleUpdateToGameState(currentTurn, UpdateFogOfWar);
             ScheduleAfterChildren(() =>
