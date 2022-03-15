@@ -60,7 +60,6 @@ namespace AWBWApp.Game.Game.Unit
         public Vector2I MapPosition { get; private set; }
 
         private UnitTextureAnimation textureAnimation;
-        private UnitTextureAnimation divedAnimation;
         private TextureSpriteText healthSpriteText;
 
         private Sprite capturing;
@@ -82,12 +81,6 @@ namespace AWBWApp.Game.Game.Unit
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft
                 },
-                divedAnimation = new UnitTextureAnimation()
-                {
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft,
-                    Alpha = 0
-                },
                 capturing = new Sprite
                 {
                     Anchor = Anchor.BottomLeft,
@@ -106,8 +99,7 @@ namespace AWBWApp.Game.Game.Unit
 
             HealthPoints.BindValueChanged(UpdateHp);
             IsCapturing.BindValueChanged(updateCapturing);
-            Dived.BindValueChanged(x => updateAnimation());
-            BeingCarried.BindValueChanged(x => updateAnimation());
+            BeingCarried.BindValueChanged(_ => updateCarried());
             UpdateUnit(unit);
         }
 
@@ -162,13 +154,6 @@ namespace AWBWApp.Game.Game.Unit
                 var texture = store.Get($"{UnitData.BaseTextureByTeam[country.Code]}-0");
                 textureAnimation.Size = texture.Size;
                 textureAnimation.AddFrame(texture);
-
-                if (UnitData.DivedTextureByTeam != null)
-                {
-                    texture = store.Get($"{UnitData.DivedTextureByTeam[country.Code]}-0");
-                    divedAnimation.Size = texture.Size;
-                    divedAnimation.AddFrame(texture);
-                }
                 return;
             }
 
@@ -183,24 +168,11 @@ namespace AWBWApp.Game.Game.Unit
             }
             textureAnimation.Seek(UnitData.FrameOffset);
 
-            if (UnitData.DivedTextureByTeam != null)
-            {
-                for (var i = 0; i < UnitData.Frames.Length; i++)
-                {
-                    var texture = store.Get($"{UnitData.DivedTextureByTeam[country.Code]}-{i}");
-                    if (texture == null)
-                        throw new Exception("Improperly configured UnitData. Animation count wrong.");
-                    if (i == 0)
-                        divedAnimation.Size = texture.Size;
-                    divedAnimation.AddFrame(texture, UnitData.Frames[i]);
-                }
-                divedAnimation.Seek(UnitData.FrameOffset);
-            }
-
             showUnitInFog = configManager.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits);
             showUnitInFog.BindValueChanged(x => updateUnitColour(x.NewValue));
             CanMove.BindValueChanged(x => updateUnitColour(x.NewValue));
             FogOfWarActive.BindValueChanged(x => updateUnitColour(x.NewValue));
+            Dived.BindValueChanged(x => updateUnitColour(x.NewValue));
         }
 
         public void MoveToPosition(Vector2I position, bool updateVisual = true)
@@ -261,23 +233,12 @@ namespace AWBWApp.Game.Game.Unit
             healthSpriteText.Text = healthPoints.NewValue.ToString();
         }
 
-        private void updateAnimation()
+        private void updateCarried()
         {
             if (BeingCarried.Value)
-            {
                 textureAnimation.Hide();
-                divedAnimation.Hide();
-            }
-            else if (Dived.Value)
-            {
-                textureAnimation.Hide();
-                divedAnimation.Show();
-            }
             else
-            {
                 textureAnimation.Show();
-                divedAnimation.Hide();
-            }
         }
 
         private void updateCapturing(ValueChangedEvent<bool> isCapturing)
@@ -298,18 +259,13 @@ namespace AWBWApp.Game.Game.Unit
                 colour = Color4.White;
 
             if (!CanMove.Value)
-                colour = colour.Darken(0.2f);
-
-            var alpha = !FogOfWarActive.Value || (showUnitInFog?.Value ?? true) ? 1 : 0;
-
-            if (!UnitAnimatingIn || alpha != 1)
-                this.FadeTo(alpha, 250, Easing.OutQuint);
+                colour = colour.Darken(0.15f);
 
             textureAnimation.FadeColour(colour, 250, newValue ? Easing.OutQuint : Easing.InQuint);
             textureAnimation.TransformTo("GreyscaleAmount", CanMove.Value ? 0f : 0.4f, 250, newValue ? Easing.OutQuint : Easing.InQuint);
 
-            divedAnimation.FadeColour(colour, 250, newValue ? Easing.OutQuint : Easing.InQuint);
-            divedAnimation.TransformTo("GreyscaleAmount", CanMove.Value ? 0f : 0.4f, 250, newValue ? Easing.OutQuint : Easing.InQuint);
+            var alpha = !FogOfWarActive.Value || (showUnitInFog?.Value ?? true) ? (Dived.Value ? 0.7f : 1) : 0;
+            textureAnimation.FadeTo(alpha, 250, Easing.OutQuint);
         }
 
         private class UnitTextureAnimation : Animation<Texture>

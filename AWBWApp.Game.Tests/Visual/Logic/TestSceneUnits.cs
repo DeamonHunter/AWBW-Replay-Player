@@ -61,6 +61,17 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
                 ReplayController.RestartTurn();
             });
+
+            AddStep("Toggle Dived Status", () =>
+            {
+                foreach (var unit in baseData.TurnData[0].ReplayUnit)
+                {
+                    if (unit.Value.UnitName == "Stealth" || unit.Value.UnitName == "Sub")
+                        unit.Value.SubHasDived = !unit.Value.SubHasDived;
+                }
+
+                ReplayController.RestartTurn();
+            });
         }
     }
 }
