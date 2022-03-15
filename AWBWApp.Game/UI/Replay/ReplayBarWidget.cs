@@ -15,12 +15,14 @@ namespace AWBWApp.Game.UI.Replay
 {
     public class ReplayBarWidget : Container
     {
-        private ReplayController replayController;
+        private readonly ReplayController replayController;
 
-        private IconButton lastTurnButton;
-        private IconButton prevButton;
-        private IconButton nextButton;
-        private IconButton nextTurnButton;
+        private readonly IconButton lastTurnButton;
+        private readonly IconButton prevButton;
+        private readonly IconButton nextButton;
+        private readonly IconButton nextTurnButton;
+        private readonly SpriteText currentDayText;
+        private readonly SpriteText currentPlayerText;
 
         public ReplayBarWidget(ReplayController replayController)
         {
@@ -57,14 +59,14 @@ namespace AWBWApp.Game.UI.Replay
                             Origin = Anchor.Centre,
                             Colour = Color4.Black.Opacity(125),
                         },
-                        new FillFlowContainer<IconButton>
+                        new FillFlowContainer
                         {
                             AutoSizeAxes = Axes.Both,
                             Direction = FillDirection.Horizontal,
                             Spacing = new Vector2(5),
                             Origin = Anchor.Centre,
                             Anchor = Anchor.Centre,
-                            Children = new[]
+                            Children = new Drawable[]
                             {
                                 lastTurnButton = new ReplayIconButton(AWBWGlobalAction.PreviousTurn)
                                 {
@@ -80,6 +82,52 @@ namespace AWBWApp.Game.UI.Replay
                                     //Action = () => musicController.TogglePause(),
                                     Icon = FontAwesome.Solid.AngleLeft
                                 },
+                                new Container()
+                                {
+                                    Masking = true,
+                                    CornerRadius = 6,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    AutoSizeAxes = Axes.Both,
+                                    AutoSizeEasing = Easing.OutQuint,
+                                    AutoSizeDuration = 300,
+                                    Children = new Drawable[]
+                                    {
+                                        new Box
+                                        {
+                                            RelativeSizeAxes = Axes.Both,
+                                            Colour = Color4.Black.Opacity(0.4f)
+                                        },
+                                        new Container() //Spacer to set minimum Size
+                                        {
+                                            Anchor = Anchor.TopCentre,
+                                            Origin = Anchor.TopCentre,
+                                            Size = new Vector2(125, 35)
+                                        },
+                                        new FillFlowContainer()
+                                        {
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                            AutoSizeAxes = Axes.Both,
+                                            Direction = FillDirection.Vertical,
+                                            Padding = new MarginPadding { Horizontal = 5 },
+                                            Children = new Drawable[]
+                                            {
+                                                currentDayText = new SpriteText()
+                                                {
+                                                    Anchor = Anchor.TopCentre,
+                                                    Origin = Anchor.TopCentre,
+                                                },
+                                                currentPlayerText = new SpriteText()
+                                                {
+                                                    Anchor = Anchor.TopCentre,
+                                                    Origin = Anchor.TopCentre,
+                                                },
+                                            }
+                                        }
+                                    }
+                                },
+
                                 nextButton = new ReplayIconButton(AWBWGlobalAction.NextAction)
                                 {
                                     Anchor = Anchor.Centre,
@@ -99,6 +147,8 @@ namespace AWBWApp.Game.UI.Replay
                     }
                 }
             };
+
+            replayController.CurrentTurnIndex.BindValueChanged(_ => updateTurnText());
         }
 
         public void UpdateActions()
@@ -107,6 +157,15 @@ namespace AWBWApp.Game.UI.Replay
             prevButton.Enabled.Value = false; //replayController.HasPreviousAction(); //Todo: Implement undoing
             nextButton.Enabled.Value = replayController.HasNextAction();
             nextTurnButton.Enabled.Value = replayController.HasNextTurn();
+        }
+
+        private void updateTurnText()
+        {
+            if (!replayController.HasLoadedReplay)
+                return;
+
+            currentDayText.Text = $"Day: {replayController.CurrentDay}";
+            currentPlayerText.Text = replayController.ActivePlayer.Username;
         }
 
         private class ReplayIconButton : IconButton, IKeyBindingHandler<AWBWGlobalAction>
@@ -127,7 +186,7 @@ namespace AWBWApp.Game.UI.Replay
                 if (e.Action == triggerAction)
                 {
                     Action?.Invoke();
-                    Content.ScaleTo(0.75f, 2000, Easing.OutQuint);
+                    Content.ScaleTo(0.85f, 2000, Easing.OutQuint);
                     return true;
                 }
 

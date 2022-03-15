@@ -34,9 +34,11 @@ namespace AWBWApp.Game.Game.Logic
 
         private ReplayData replayData;
 
+        public BindableInt CurrentTurnIndex { get; private set; } = new BindableInt(-1);
+        public int CurrentDay => currentTurn.Day;
+
         private TurnData currentTurn;
         private int currentActionIndex;
-        private int currentTurnIndex;
 
         private readonly LoadingLayer loadingLayer;
         private readonly Container powerLayer;
@@ -143,7 +145,7 @@ namespace AWBWApp.Game.Game.Logic
 
             HasLoadedReplay = false;
             currentTurn = null;
-            currentTurnIndex = -1;
+            CurrentTurnIndex.SetDefault();
             currentActionIndex = -1;
             replayData = null;
         }
@@ -162,14 +164,15 @@ namespace AWBWApp.Game.Game.Logic
 
             this.replayData = replayData;
 
-            currentTurn = replayData.TurnData[0];
-            currentActionIndex = -1;
-            currentTurnIndex = 0;
-            checkPowers();
-
             Players.Clear();
             foreach (var player in replayData.ReplayInfo.Players)
                 Players.Add(player.Key, new PlayerInfo(player.Value, countryStorage.GetCountryByAWBWID(player.Value.CountryId)));
+
+            currentTurn = replayData.TurnData[0];
+            currentActionIndex = -1;
+            CurrentTurnIndex.Value = 0;
+            checkPowers();
+
             updatePlayerList(0, true);
 
             Map.ScheduleInitialGameState(this.replayData, map, Players);
@@ -182,21 +185,22 @@ namespace AWBWApp.Game.Game.Logic
                     UpdateFogOfWar();
                     cameraControllerWithGrid.FitMapToSpace();
                     HasLoadedReplay = true;
+                    CurrentTurnIndex.TriggerChange();
                     barWidget.UpdateActions();
                     loadingLayer.Hide();
                 });
             });
         }
 
-        public bool HasNextTurn() => HasLoadedReplay && currentTurnIndex + 1 < replayData.TurnData.Count;
-        public bool HasPreviousTurn() => HasLoadedReplay && currentTurnIndex > 0;
+        public bool HasNextTurn() => HasLoadedReplay && CurrentTurnIndex.Value + 1 < replayData.TurnData.Count;
+        public bool HasPreviousTurn() => HasLoadedReplay && CurrentTurnIndex.Value > 0;
 
         public bool HasNextAction()
         {
             if (!HasLoadedReplay)
                 return false;
 
-            if (currentTurnIndex + 1 < replayData.TurnData.Count)
+            if (CurrentTurnIndex.Value + 1 < replayData.TurnData.Count)
                 return true;
 
             //Todo: Should this be allowed to be null?
@@ -211,7 +215,7 @@ namespace AWBWApp.Game.Game.Logic
             if (!HasLoadedReplay)
                 return false;
 
-            if (currentTurnIndex > 0)
+            if (CurrentTurnIndex.Value > 0)
                 return true;
 
             //Todo: Should this be allowed to be null?
@@ -226,7 +230,7 @@ namespace AWBWApp.Game.Game.Logic
             if (currentTurn.Actions == null)
             {
                 //Todo: Maybe some notification to say no actions occured?
-                goToTurnWithIdx(currentTurnIndex + 1, true);
+                goToTurnWithIdx(CurrentTurnIndex.Value + 1, true);
                 return;
             }
 
@@ -250,7 +254,7 @@ namespace AWBWApp.Game.Game.Logic
 
                 if (skipEndTurnBindable.Value && action is EndTurnAction)
                 {
-                    goToTurnWithIdx(currentTurnIndex + 1, false);
+                    goToTurnWithIdx(CurrentTurnIndex.Value + 1, false);
                     return;
                 }
 
@@ -262,9 +266,9 @@ namespace AWBWApp.Game.Game.Logic
 
                 currentOngoingActions.Enqueue(action.PerformAction(this).GetEnumerator());
             }
-            else if (currentTurnIndex < replayData.TurnData.Count - 1)
+            else if (CurrentTurnIndex.Value < replayData.TurnData.Count - 1)
             {
-                goToTurnWithIdx(currentTurnIndex + 1, false);
+                goToTurnWithIdx(CurrentTurnIndex.Value + 1, false);
                 return;
             }
 
@@ -292,8 +296,8 @@ namespace AWBWApp.Game.Game.Logic
 
         public void HideLoad() => loadingLayer.Hide();
 
-        public void GoToNextTurn(bool completeActions = true) => goToTurnWithIdx(currentTurnIndex + 1, completeActions);
-        public void GoToPreviousTurn(bool completeActions = true) => goToTurnWithIdx(currentTurnIndex - 1, completeActions);
+        public void GoToNextTurn(bool completeActions = true) => goToTurnWithIdx(CurrentTurnIndex.Value + 1, completeActions);
+        public void GoToPreviousTurn(bool completeActions = true) => goToTurnWithIdx(CurrentTurnIndex.Value - 1, completeActions);
 
         private void goToTurnWithIdx(int turnIdx, bool completeActions)
         {
@@ -307,7 +311,7 @@ namespace AWBWApp.Game.Game.Logic
                 turnIdx = replayData.TurnData.Count - 1;
 
             currentActionIndex = -1;
-            currentTurnIndex = turnIdx;
+            CurrentTurnIndex.Value = turnIdx;
 
             checkPowers();
             currentTurn = replayData.TurnData[turnIdx];
