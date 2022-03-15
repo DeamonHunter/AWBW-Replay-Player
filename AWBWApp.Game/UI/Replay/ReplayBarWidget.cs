@@ -1,19 +1,22 @@
-﻿using AWBWApp.Game.Game.Logic;
+﻿using System;
+using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Input;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
 using osuTK;
 using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class ReplayBarWidget : Container
+    public class ReplayBarWidget : TooltipContainer
     {
         private readonly ReplayController replayController;
 
@@ -27,7 +30,6 @@ namespace AWBWApp.Game.UI.Replay
         public ReplayBarWidget(ReplayController replayController)
         {
             this.replayController = replayController;
-            CornerRadius = 20;
 
             Padding = new MarginPadding { Bottom = 10 };
             Width = 300;
@@ -38,7 +40,7 @@ namespace AWBWApp.Game.UI.Replay
 
             Children = new Drawable[]
             {
-                new Container
+                new Container()
                 {
                     RelativeSizeAxes = Axes.Both,
                     Masking = true,
@@ -128,7 +130,7 @@ namespace AWBWApp.Game.UI.Replay
                                     }
                                 },
 
-                                nextButton = new ReplayIconButton(AWBWGlobalAction.NextAction)
+                                nextButton = new ReplayIconButton(AWBWGlobalAction.NextAction, replayController.GetNextActionName)
                                 {
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
@@ -168,15 +170,21 @@ namespace AWBWApp.Game.UI.Replay
             currentPlayerText.Text = replayController.ActivePlayer.Username;
         }
 
-        private class ReplayIconButton : IconButton, IKeyBindingHandler<AWBWGlobalAction>
+        protected override ITooltip CreateTooltip() => new ReplayTooltip();
+
+        private class ReplayIconButton : IconButton, IKeyBindingHandler<AWBWGlobalAction>, IHasTooltip
         {
             private readonly AWBWGlobalAction triggerAction;
+            private Func<string> getToolTip;
 
-            public ReplayIconButton(AWBWGlobalAction triggerAction)
+            public ReplayIconButton(AWBWGlobalAction triggerAction, Func<string> getToolTip = null)
             {
                 AutoSizeAxes = Axes.Both;
                 this.triggerAction = triggerAction;
+                this.getToolTip = getToolTip;
             }
+
+            public LocalisableString TooltipText => getToolTip?.Invoke();
 
             public bool OnPressed(KeyBindingPressEvent<AWBWGlobalAction> e)
             {
@@ -207,6 +215,62 @@ namespace AWBWApp.Game.UI.Replay
                 Content.AutoSizeAxes = Axes.None;
                 Content.Size = new Vector2(DEFAULT_BUTTON_SIZE);
             }
+        }
+
+        /// <summary>
+        /// Recreation of <see cref="TooltipContainer.Tooltip"/> which sets the tooltip to our colours
+        /// </summary>
+        private class ReplayTooltip : VisibilityContainer, ITooltip<LocalisableString>
+        {
+            private readonly SpriteText text;
+
+            public virtual string TooltipText
+            {
+                set => SetContent(value);
+            }
+
+            public virtual void SetContent(LocalisableString content) => text.Text = content;
+
+            private const float text_size = 16;
+
+            public ReplayTooltip()
+            {
+                Alpha = 0;
+                AutoSizeAxes = Axes.Both;
+
+                Children = new Drawable[]
+                {
+                    new Box
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = new Color4(40, 40, 40, 255),
+                    },
+                    text = new SpriteText
+                    {
+                        Font = FrameworkFont.Regular.With(size: text_size),
+                        Padding = new MarginPadding(5),
+                    }
+                };
+            }
+
+            public virtual void Refresh() { }
+
+            /// <summary>
+            /// Called whenever the tooltip appears. When overriding do not forget to fade in.
+            /// </summary>
+            protected override void PopIn() => this.FadeIn();
+
+            /// <summary>
+            /// Called whenever the tooltip disappears. When overriding do not forget to fade out.
+            /// </summary>
+            protected override void PopOut() => this.FadeOut();
+
+            /// <summary>
+            /// Called whenever the position of the tooltip changes. Can be overridden to customize
+            /// easing.
+            /// </summary>
+            /// <param name="pos">The new position of the tooltip.</param>
+            public virtual void Move(Vector2 pos) => Position = pos;
         }
     }
 }

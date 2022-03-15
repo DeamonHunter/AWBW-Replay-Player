@@ -46,6 +46,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class RepairUnitAction : IReplayAction
     {
+        public string ReadibleName => "Repair";
+
         public MoveUnitAction MoveUnit;
 
         public long RepairingUnitID;

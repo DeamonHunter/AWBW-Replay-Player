@@ -44,6 +44,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class SupplyUnitAction : IReplayAction
     {
+        public string ReadibleName => "Supply";
+
         public MoveUnitAction MoveUnit;
 
         public long SupplyingUnitId;

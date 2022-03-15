@@ -47,6 +47,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class MoveUnitAction : IReplayAction
     {
+        public string ReadibleName => "Move";
+
         public ReplayUnit Unit;
         public int Distance { get; set; }
         public UnitPosition[] Path { get; set; }

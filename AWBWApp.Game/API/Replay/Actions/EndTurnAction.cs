@@ -68,6 +68,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class EndTurnAction : IReplayAction
     {
+        public string ReadibleName => "End Turn";
+
         public long NextPlayerID;
         public int NextDay;
 

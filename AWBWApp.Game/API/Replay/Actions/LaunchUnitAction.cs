@@ -43,6 +43,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class LaunchUnitAction : IReplayAction
     {
+        public string ReadibleName => "Launch";
+
         public Vector2I SiloPosition;
         public Vector2I TargetPosition;
         public float HPChange;

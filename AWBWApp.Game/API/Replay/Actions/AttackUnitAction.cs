@@ -107,6 +107,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class AttackUnitAction : IReplayAction
     {
+        public string ReadibleName => "Attack";
+
         public ReplayUnit Attacker { get; set; }
         public ReplayUnit Defender { get; set; }
         public List<COPowerChange> PowerChanges { get; set; }

@@ -38,6 +38,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class HideUnitAction : IReplayAction
     {
+        public string ReadibleName => "Hide";
+
         public long HidingUnitID { get; set; }
 
         public MoveUnitAction MoveUnit;

@@ -40,6 +40,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class JoinUnitAction : IReplayAction
     {
+        public string ReadibleName => "Join";
+
         public MoveUnitAction MoveUnit;
 
         public long JoiningUnitId { get; set; }

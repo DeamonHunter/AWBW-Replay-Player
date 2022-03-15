@@ -39,6 +39,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class LoadUnitAction : IReplayAction
     {
+        public string ReadibleName => "Load";
+
         public long LoadedID { get; set; }
         public long TransportID { get; set; }
 

@@ -38,6 +38,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class DeleteUnitAction : IReplayAction
     {
+        public string ReadibleName => "Delete";
+
         public MoveUnitAction MoveUnit;
         public long DeletedUnitId { get; set; }
 

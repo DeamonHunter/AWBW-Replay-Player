@@ -27,6 +27,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class UnloadUnitAction : IReplayAction
     {
+        public string ReadibleName => "Unload";
+
         public long TransportID { get; set; }
         public ReplayUnit UnloadedUnit { get; set; }
 

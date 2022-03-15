@@ -50,6 +50,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class GameOverAction : IReplayAction
     {
+        public string ReadibleName => "Game Over";
+
         public ReplayUnit NewUnit;
 
         public int FinishedDay;

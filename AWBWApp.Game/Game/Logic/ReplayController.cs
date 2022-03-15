@@ -210,6 +210,36 @@ namespace AWBWApp.Game.Game.Logic
             return currentActionIndex + 1 < currentTurn.Actions.Count;
         }
 
+        public string GetNextActionName()
+        {
+            if (!HasNextAction())
+                return null;
+
+            if (currentTurn?.Actions != null)
+            {
+                if (currentActionIndex >= 0 && currentActionIndex < currentTurn.Actions.Count)
+                {
+                    var currentAction = currentTurn.Actions[currentActionIndex];
+
+                    if (currentAction is EndTurnAction)
+                    {
+                        if (HasNextTurn())
+                        {
+                            var nextTurn = replayData.TurnData[CurrentTurnIndex.Value + 1];
+                            return nextTurn.Actions != null && nextTurn.Actions.Count > 0 ? nextTurn.Actions[0].ReadibleName : "Next Turn";
+                        }
+
+                        return null;
+                    }
+                }
+
+                if (currentActionIndex + 1 < currentTurn.Actions.Count)
+                    return currentTurn.Actions[currentActionIndex + 1].ReadibleName;
+            }
+
+            return "Next Turn";
+        }
+
         public bool HasPreviousAction()
         {
             if (!HasLoadedReplay)

@@ -7,6 +7,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 {
     public class EmptyAction : IReplayAction
     {
+        public string ReadibleName => "Empty";
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Empty action performed");

@@ -60,6 +60,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class EliminatedAction : IReplayAction
     {
+        public string ReadibleName => Resigned ? "Player Resigned" : "Player Eliminated";
+
         public long? CausedByPlayerID;
         public long EliminatedPlayerID;
         public string EliminationMessage;

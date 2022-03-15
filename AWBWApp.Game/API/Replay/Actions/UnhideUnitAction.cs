@@ -38,6 +38,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class UnhideUnitAction : IReplayAction
     {
+        public string ReadibleName => "Unhide";
+
         public ReplayUnit RevealingUnit { get; set; }
 
         public MoveUnitAction MoveUnit;

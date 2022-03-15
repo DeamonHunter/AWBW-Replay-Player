@@ -30,6 +30,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class BuildUnitAction : IReplayAction
     {
+        public string ReadibleName => "Build";
+
         public ReplayUnit NewUnit;
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)

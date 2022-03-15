@@ -322,6 +322,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class PowerAction : IReplayAction
     {
+        public string ReadibleName => "Power";
+
         public string CombatOfficerName;
         public string PowerName;
         public bool IsSuperPower;

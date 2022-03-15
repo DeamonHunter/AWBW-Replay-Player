@@ -41,6 +41,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class ExplodeUnitAction : IReplayAction
     {
+        public string ReadibleName => "Explode";
+
         public long ExplodedUnitId { get; set; }
 
         public float HPChange { get; set; }

@@ -64,6 +64,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class CaptureBuildingAction : IReplayAction
     {
+        public string ReadibleName => "Capture";
+
         public MoveUnitAction MoveUnit;
         public ReplayBuilding Building;
 
