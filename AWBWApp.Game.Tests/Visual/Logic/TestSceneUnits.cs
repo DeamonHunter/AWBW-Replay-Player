@@ -51,6 +51,16 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
                 ReplayController.LoadReplay(baseData, CreateBasicMap(unitIds.Count, countryIDs.Count));
             });
+
+            AddStep("Toggle Wait Status", () =>
+            {
+                foreach (var unit in baseData.TurnData[0].ReplayUnit)
+                {
+                    unit.Value.TimesMoved = unit.Value.TimesMoved == 0 ? 1 : 0;
+                }
+
+                ReplayController.RestartTurn();
+            });
         }
     }
 }

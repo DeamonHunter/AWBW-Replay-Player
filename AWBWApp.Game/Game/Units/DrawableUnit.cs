@@ -12,8 +12,11 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Animations;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.OpenGL.Vertices;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.Transforms;
 using osuTK;
 using osuTK.Graphics;
@@ -56,8 +59,8 @@ namespace AWBWApp.Game.Game.Unit
         public BindableBool Dived = new BindableBool();
         public Vector2I MapPosition { get; private set; }
 
-        private TextureAnimation textureAnimation;
-        private TextureAnimation divedAnimation;
+        private UnitTextureAnimation textureAnimation;
+        private UnitTextureAnimation divedAnimation;
         private TextureSpriteText healthSpriteText;
 
         private Sprite capturing;
@@ -74,12 +77,12 @@ namespace AWBWApp.Game.Game.Unit
             Size = BASE_SIZE;
             InternalChildren = new Drawable[]
             {
-                textureAnimation = new TextureAnimation()
+                textureAnimation = new UnitTextureAnimation()
                 {
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft
                 },
-                divedAnimation = new TextureAnimation()
+                divedAnimation = new UnitTextureAnimation()
                 {
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
@@ -303,6 +306,86 @@ namespace AWBWApp.Game.Game.Unit
                 this.FadeTo(alpha, 250, Easing.OutQuint);
 
             textureAnimation.FadeColour(colour, 250, newValue ? Easing.OutQuint : Easing.InQuint);
+            textureAnimation.TransformTo("GreyscaleAmount", CanMove.Value ? 0f : 0.4f, 250, newValue ? Easing.OutQuint : Easing.InQuint);
+        }
+
+        private class UnitTextureAnimation : Animation<Texture>
+        {
+            public float GreyscaleAmount
+            {
+                get => textureHolder.GreyscaleAmount;
+                set => textureHolder.GreyscaleAmount = value;
+            }
+
+            private GreyscaleSprite textureHolder;
+
+            public UnitTextureAnimation(bool startAtCurrentTime = true)
+                : base(startAtCurrentTime)
+            {
+            }
+
+            public override Drawable CreateContent() =>
+                textureHolder = new GreyscaleSprite
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre
+                };
+
+            protected override void DisplayFrame(Texture content) => textureHolder.Texture = content;
+
+            protected override float GetFillAspectRatio() => textureHolder.FillAspectRatio;
+
+            protected override Vector2 GetCurrentDisplaySize() => new Vector2(textureHolder.Texture?.DisplayWidth ?? 0, textureHolder.Texture?.DisplayHeight ?? 0);
+        }
+
+        private class GreyscaleSprite : Sprite
+        {
+            public float GreyscaleAmount
+            {
+                get => greyscaleAmount;
+                set
+                {
+                    greyscaleAmount = value;
+                    Invalidate(Invalidation.DrawNode);
+                }
+            }
+
+            private float greyscaleAmount;
+
+            [BackgroundDependencyLoader]
+            private void load(ShaderManager shaders)
+            {
+                TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, "GreyscaleSprite");
+                RoundedTextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, "GreyscaleSpriteRounded");
+            }
+
+            protected override DrawNode CreateDrawNode() => new GreyscaleDrawNode(this);
+
+            private class GreyscaleDrawNode : SpriteDrawNode
+            {
+                public new GreyscaleSprite Source => (GreyscaleSprite)base.Source;
+
+                private float greyScaleAmount;
+
+                public GreyscaleDrawNode(GreyscaleSprite source)
+                    : base(source)
+                {
+                }
+
+                public override void ApplyState()
+                {
+                    base.ApplyState();
+                    greyScaleAmount = Source.greyscaleAmount;
+                }
+
+                protected override void Blit(Action<TexturedVertex2D> vertexAction)
+                {
+                    Shader.GetUniform<float>("greyscaleAmount").UpdateValue(ref greyScaleAmount);
+
+                    base.Blit(vertexAction);
+                }
+            }
         }
     }
 }

@@ -298,6 +298,7 @@ namespace AWBWApp.Game.Game.Logic
 
         public void GoToNextTurn(bool completeActions = true) => goToTurnWithIdx(CurrentTurnIndex.Value + 1, completeActions);
         public void GoToPreviousTurn(bool completeActions = true) => goToTurnWithIdx(CurrentTurnIndex.Value - 1, completeActions);
+        public void RestartTurn(bool completeActions = true) => goToTurnWithIdx(CurrentTurnIndex.Value, completeActions);
 
         private void goToTurnWithIdx(int turnIdx, bool completeActions)
         {
