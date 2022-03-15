@@ -115,7 +115,7 @@ namespace AWBWApp.Game.Game.Unit
                 OwnerID = unit.PlayerID;
 
             if (unit.HitPoints.HasValue)
-                HealthPoints.Value = (int)unit.HitPoints.Value;
+                HealthPoints.Value = (int)MathF.Ceiling(unit.HitPoints.Value);
             if (unit.Fuel.HasValue)
                 Fuel.Value = unit.Fuel.Value;
             if (unit.Ammo.HasValue)
