@@ -36,7 +36,7 @@
     "Mountain": {
         "AWBWID": 2,
         "BaseDefence": 4,
-        "SightDistanceIncrease": 2,
+        "SightDistanceIncrease": 3,
         "MovementCostsPerType": {
             "LightInf": 2,
             "HeavyInf": 1,
