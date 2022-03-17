@@ -133,9 +133,11 @@ namespace AWBWApp.Game.API.Replay.Actions
             var attackerPower = controller.GetActivePowerForPlayer(attackerUnit.OwnerID.Value);
             var defenderPower = controller.GetActivePowerForPlayer(defenderUnit.OwnerID.Value);
 
+            var defenderCounters = canCounterAttack(defenderUnit, attackerUnit.MapPosition);
+
             var swapAttackOrder = (defenderPower?.COPower.AttackFirst ?? false) && !(attackerPower?.COPower.AttackFirst ?? false);
 
-            if (swapAttackOrder)
+            if (swapAttackOrder && defenderCounters)
             {
                 (attackerUnit, defenderUnit) = (defenderUnit, attackerUnit);
                 (attackerStats, defenderStats) = (defenderStats, attackerStats);
@@ -156,10 +158,11 @@ namespace AWBWApp.Game.API.Replay.Actions
             attackerUnit.CanMove.Value = false;
             defenderUnit.UpdateUnit(defenderStats);
 
-            if (defenderUnit.HealthPoints.Value <= 0)
+            if (defenderUnit.HealthPoints.Value <= 0 || !defenderCounters)
             {
                 attackerUnit.UpdateUnit(attackerStats);
-                controller.Map.DeleteUnit(defenderUnit.UnitID, true);
+                if (defenderUnit.HealthPoints.Value <= 0)
+                    controller.Map.DeleteUnit(defenderUnit.UnitID, true);
                 afterAttackChanges(controller);
 
                 //Destroying a unit can eliminate a player. i.e. They have no units left.
@@ -195,6 +198,22 @@ namespace AWBWApp.Game.API.Replay.Actions
                 foreach (var transformable in EliminatedAction.PerformAction(controller))
                     yield return transformable;
             }
+        }
+
+        private bool canCounterAttack(DrawableUnit defendingUnit, Vector2I attackerLocation)
+        {
+            //If both values are 0, then the unit cannot attack
+            if (defendingUnit.UnitData.AttackRange.X == 0 && defendingUnit.UnitData.AttackRange.Y == 0)
+                return false;
+
+            var distance = (defendingUnit.MapPosition - attackerLocation).ManhattonDistance();
+            if (distance < defendingUnit.UnitData.AttackRange.X || distance > defendingUnit.UnitData.AttackRange.Y)
+                return false;
+
+            if (defendingUnit.UnitData.SecondWeapon)
+                return true;
+
+            return defendingUnit.Ammo.Value > 0;
         }
 
         private void afterAttackChanges(ReplayController controller)

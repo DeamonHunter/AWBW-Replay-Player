@@ -3,55 +3,52 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
-using osu.Framework.Allocation;
+using NUnit.Framework;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 {
+    [TestFixture]
     public class TestSceneAttackAction : BaseActionsTestScene
     {
-        [BackgroundDependencyLoader]
-        private void load()
+        [Test]
+        public void TestDestroyUnits()
         {
-            AddLabel("Destroy Unit");
             AddStep("Setup", destroyTest);
             AddStep("Destroy Land", () => ReplayController.GoToNextAction());
             AddStep("Destroy Sea", () => ReplayController.GoToNextAction());
             AddStep("Destroy Air", () => ReplayController.GoToNextAction());
+        }
 
-            AddLabel("1 space");
-            AddStep("Setup", () => attackTest(1));
+        [TestCase(1)]
+        [TestCase(4)]
+        public void TestAttackWithRange(int range)
+        {
+            AddStep("Setup", () => attackTest(range));
             AddStep("Attack Left", () => ReplayController.GoToNextAction());
             AddStep("Attack Up", () => ReplayController.GoToNextAction());
             AddStep("Attack Right", () => ReplayController.GoToNextAction());
             AddStep("Attack Down", () => ReplayController.GoToNextAction());
+        }
 
-            AddLabel("2 spaces");
-            AddStep("Setup", () => attackTest(2));
-            AddStep("Attack Left", () => ReplayController.GoToNextAction());
-            AddStep("Attack Up", () => ReplayController.GoToNextAction());
-            AddStep("Attack Right", () => ReplayController.GoToNextAction());
-            AddStep("Attack Down", () => ReplayController.GoToNextAction());
-
-            AddLabel("3 spaces");
-            AddStep("Setup", () => attackTest(3));
-            AddStep("Attack Left", () => ReplayController.GoToNextAction());
-            AddStep("Attack Up", () => ReplayController.GoToNextAction());
-            AddStep("Attack Right", () => ReplayController.GoToNextAction());
-            AddStep("Attack Down", () => ReplayController.GoToNextAction());
-
-            AddLabel("4 spaces");
-            AddStep("Setup", () => attackTest(4));
-            AddStep("Attack Left", () => ReplayController.GoToNextAction());
-            AddStep("Attack Up", () => ReplayController.GoToNextAction());
-            AddStep("Attack Right", () => ReplayController.GoToNextAction());
-            AddStep("Attack Down", () => ReplayController.GoToNextAction());
-
-            AddLabel("Attack with Movement");
+        [Test]
+        public void TestAttackWithMovement()
+        {
             AddStep("Setup", attackWithMoveTest);
             AddStep("Perform", () => ReplayController.GoToNextAction());
         }
 
+        [Test]
+        public void CounterAttackTest()
+        {
+            AddStep("Setup", counterAttackTest);
+            AddStep("Attack Unit with Ammo", () => ReplayController.GoToNextAction());
+            AddStep("Transport", () => ReplayController.GoToNextAction());
+            AddStep("No ammo", () => ReplayController.GoToNextAction());
+            AddStep("No ammo but has secondary", () => ReplayController.GoToNextAction());
+            AddStep("Too close", () => ReplayController.GoToNextAction());
+            AddStep("Too far", () => ReplayController.GoToNextAction());
+        }
         private void destroyTest()
         {
             var replayData = CreateBasicReplayData(2);
@@ -212,6 +209,108 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             turn.Actions.Add(attackAction);
 
             ReplayController.LoadReplay(replayData, CreateBasicMap(map_size, map_size));
+        }
+
+        private void counterAttackTest()
+        {
+            var replayData = CreateBasicReplayData(2);
+
+            var turn = CreateBasicTurnData(replayData);
+            replayData.TurnData.Add(turn);
+
+            // Normal Attack
+            var attackerUnit = CreateBasicReplayUnit(0, 0, "Infantry", new Vector2I(1, 0));
+            attackerUnit.Ammo = 1;
+            turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
+
+            var defenderUnit = CreateBasicReplayUnit(1, 1, "Infantry", new Vector2I(0, 0));
+            defenderUnit.Ammo = 1;
+            turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
+
+            var attackAction = new AttackUnitAction();
+            attackAction.Attacker = new ReplayUnit { ID = attackerUnit.ID, Ammo = 0, HitPoints = 8 };
+            attackAction.Defender = new ReplayUnit { ID = defenderUnit.ID, Ammo = 0, HitPoints = 5 };
+            attackAction.PowerChanges = new List<AttackUnitAction.COPowerChange>();
+            turn.Actions.Add(attackAction);
+
+            //Attack a Transport
+            attackerUnit = CreateBasicReplayUnit(2, 0, "Infantry", new Vector2I(1, 1));
+            attackerUnit.Ammo = 1;
+            turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
+
+            defenderUnit = CreateBasicReplayUnit(3, 1, "APC", new Vector2I(0, 1));
+            defenderUnit.Ammo = 1;
+            turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
+
+            attackAction = new AttackUnitAction();
+            attackAction.Attacker = new ReplayUnit { ID = attackerUnit.ID, Ammo = 0, HitPoints = 10 };
+            attackAction.Defender = new ReplayUnit { ID = defenderUnit.ID, Ammo = 0, HitPoints = 8 };
+            attackAction.PowerChanges = new List<AttackUnitAction.COPowerChange>();
+            turn.Actions.Add(attackAction);
+
+            // No Ammo
+            attackerUnit = CreateBasicReplayUnit(4, 0, "Infantry", new Vector2I(1, 2));
+            attackerUnit.Ammo = 1;
+            turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
+
+            defenderUnit = CreateBasicReplayUnit(5, 1, "Infantry", new Vector2I(0, 2));
+            defenderUnit.Ammo = 0;
+            turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
+
+            attackAction = new AttackUnitAction();
+            attackAction.Attacker = new ReplayUnit { ID = attackerUnit.ID, Ammo = 0, HitPoints = 10 };
+            attackAction.Defender = new ReplayUnit { ID = defenderUnit.ID, Ammo = 0, HitPoints = 5 };
+            attackAction.PowerChanges = new List<AttackUnitAction.COPowerChange>();
+            turn.Actions.Add(attackAction);
+
+            // No Ammo but has secondary
+            attackerUnit = CreateBasicReplayUnit(6, 0, "Infantry", new Vector2I(1, 3));
+            attackerUnit.Ammo = 1;
+            turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
+
+            defenderUnit = CreateBasicReplayUnit(7, 1, "Mega Tank", new Vector2I(0, 3));
+            defenderUnit.Ammo = 0;
+            turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
+
+            attackAction = new AttackUnitAction();
+            attackAction.Attacker = new ReplayUnit { ID = attackerUnit.ID, Ammo = 0, HitPoints = 0 };
+            attackAction.Defender = new ReplayUnit { ID = defenderUnit.ID, Ammo = 0, HitPoints = 9 };
+            attackAction.PowerChanges = new List<AttackUnitAction.COPowerChange>();
+            turn.Actions.Add(attackAction);
+
+            // Too Close
+            attackerUnit = CreateBasicReplayUnit(8, 0, "Infantry", new Vector2I(1, 4));
+            attackerUnit.Ammo = 1;
+            turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
+
+            defenderUnit = CreateBasicReplayUnit(9, 1, "Artillery", new Vector2I(0, 4));
+            defenderUnit.Ammo = 1;
+            turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
+
+            attackAction = new AttackUnitAction();
+            attackAction.Attacker = new ReplayUnit { ID = attackerUnit.ID, Ammo = 0, HitPoints = 10 };
+            attackAction.Defender = new ReplayUnit { ID = defenderUnit.ID, Ammo = 1, HitPoints = 8 };
+            attackAction.PowerChanges = new List<AttackUnitAction.COPowerChange>();
+            turn.Actions.Add(attackAction);
+
+            // Too Far
+            attackerUnit = CreateBasicReplayUnit(10, 0, "Artillery", new Vector2I(2, 5));
+            attackerUnit.Ammo = 1;
+            turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
+
+            defenderUnit = CreateBasicReplayUnit(11, 1, "Infantry", new Vector2I(0, 5));
+            defenderUnit.Ammo = 1;
+            turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
+
+            attackAction = new AttackUnitAction();
+            attackAction.Attacker = new ReplayUnit { ID = attackerUnit.ID, Ammo = 0, HitPoints = 10 };
+            attackAction.Defender = new ReplayUnit { ID = defenderUnit.ID, Ammo = 1, HitPoints = 1 };
+            attackAction.PowerChanges = new List<AttackUnitAction.COPowerChange>();
+            turn.Actions.Add(attackAction);
+
+            var map = CreateBasicMap(3, 6);
+
+            ReplayController.LoadReplay(replayData, map);
         }
     }
 }
