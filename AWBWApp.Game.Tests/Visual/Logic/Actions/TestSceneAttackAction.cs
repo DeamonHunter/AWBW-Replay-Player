@@ -269,6 +269,15 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 
             turn.Actions.Add(createAttackUnitAction(attackerUnit, defenderUnit, 10, 1, false));
 
+            // Hidden
+            attackerUnit = CreateBasicReplayUnit(10, 0, "Stealth", new Vector2I(2, 5));
+            attackerUnit.Ammo = 1;
+            attackerUnit.SubHasDived = true;
+            turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
+            defenderUnit = CreateBasicReplayUnit(11, 1, "Infantry", new Vector2I(0, 5));
+            defenderUnit.Ammo = 1;
+            turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
+
             //Create map
             var map = CreateBasicMap(3, 6);
             ReplayController.LoadReplay(replayData, map);
@@ -353,6 +362,15 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             attackerUnit.Ammo = 1;
             turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
             defenderUnit = CreateBasicReplayUnit(11, 0, "Infantry", new Vector2I(0, 5));
+            defenderUnit.Ammo = 1;
+            turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
+
+            // Hidden
+            attackerUnit = CreateBasicReplayUnit(12, 1, "Stealth", new Vector2I(2, 5));
+            attackerUnit.Ammo = 1;
+            attackerUnit.SubHasDived = true;
+            turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
+            defenderUnit = CreateBasicReplayUnit(13, 0, "Infantry", new Vector2I(0, 5));
             defenderUnit.Ammo = 1;
             turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
 

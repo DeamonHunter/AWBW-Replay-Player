@@ -141,7 +141,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             var attackerPower = controller.GetActivePowerForPlayer(attackerUnit.OwnerID.Value);
             var defenderPower = controller.GetActivePowerForPlayer(defenderUnit.OwnerID.Value);
 
-            var defenderCounters = canCounterAttack(defenderUnit, attackerUnit.MapPosition);
+            var defenderCounters = !attackerUnit.Dived.Value && canCounterAttack(defenderUnit, attackerUnit.MapPosition);
 
             var swapAttackOrder = (defenderPower?.COPower.AttackFirst ?? false) && !(attackerPower?.COPower.AttackFirst ?? false);
 
