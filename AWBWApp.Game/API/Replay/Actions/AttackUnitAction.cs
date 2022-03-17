@@ -129,6 +129,14 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (!defenderUnit.OwnerID.HasValue)
                 throw new Exception("Defending unit doesn't have an owner id?");
 
+            if (MoveUnit != null)
+            {
+                foreach (var transformable in MoveUnit.PerformAction(controller))
+                    yield return transformable;
+
+                attackerUnit.CanMove.Value = true;
+            }
+
             //Reverse order if the defender has a power active that reverses order, but not if the attacker also has a power to reverse order.
             var attackerPower = controller.GetActivePowerForPlayer(attackerUnit.OwnerID.Value);
             var defenderPower = controller.GetActivePowerForPlayer(defenderUnit.OwnerID.Value);
@@ -141,14 +149,6 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 (attackerUnit, defenderUnit) = (defenderUnit, attackerUnit);
                 (attackerStats, defenderStats) = (defenderStats, attackerStats);
-            }
-
-            if (MoveUnit != null)
-            {
-                foreach (var transformable in MoveUnit.PerformAction(controller))
-                    yield return transformable;
-
-                attackerUnit.CanMove.Value = true;
             }
 
             //Perform Attack vs Defender
