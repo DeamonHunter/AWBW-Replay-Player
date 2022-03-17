@@ -173,6 +173,8 @@ namespace AWBWApp.Game.Game.Unit
             CanMove.BindValueChanged(x => updateUnitColour(x.NewValue));
             FogOfWarActive.BindValueChanged(x => updateUnitColour(x.NewValue));
             Dived.BindValueChanged(x => updateUnitColour(x.NewValue));
+
+            updateUnitColour(true);
         }
 
         public void MoveToPosition(Vector2I position, bool updateVisual = true)
@@ -259,10 +261,10 @@ namespace AWBWApp.Game.Game.Unit
                 colour = Color4.White;
 
             if (!CanMove.Value)
-                colour = colour.Darken(0.15f);
+                colour = colour.Darken(0.25f);
 
             textureAnimation.FadeColour(colour, 250, newValue ? Easing.OutQuint : Easing.InQuint);
-            textureAnimation.TransformTo("GreyscaleAmount", CanMove.Value ? 0f : 0.4f, 250, newValue ? Easing.OutQuint : Easing.InQuint);
+            textureAnimation.TransformTo("GreyscaleAmount", CanMove.Value ? 0f : 0.5f, 250, newValue ? Easing.OutQuint : Easing.InQuint);
 
             var alpha = !FogOfWarActive.Value || (showUnitInFog?.Value ?? true) ? (Dived.Value ? 0.7f : 1) : 0;
             textureAnimation.FadeTo(alpha, 250, Easing.OutQuint);
