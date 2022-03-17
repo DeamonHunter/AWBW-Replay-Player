@@ -218,7 +218,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             var attackerUnit = CreateBasicReplayUnit(0, 0, "Infantry", new Vector2I(1, 0));
             attackerUnit.Ammo = 1;
             turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
-            var defenderUnit = CreateBasicReplayUnit(1, 1, "Infantry", new Vector2I(0, 0));
+            var defenderUnit = CreateBasicReplayUnit(1, 1, "Fighter", new Vector2I(0, 0));
             defenderUnit.Ammo = 1;
             turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
 
@@ -238,7 +238,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             attackerUnit = CreateBasicReplayUnit(4, 0, "Infantry", new Vector2I(1, 2));
             attackerUnit.Ammo = 1;
             turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
-            defenderUnit = CreateBasicReplayUnit(5, 1, "Infantry", new Vector2I(0, 2));
+            defenderUnit = CreateBasicReplayUnit(5, 1, "Fighter", new Vector2I(0, 2));
             defenderUnit.Ammo = 0;
             turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
 
@@ -318,7 +318,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             var attackerUnit = CreateBasicReplayUnit(0, 1, "Infantry", new Vector2I(1, 0));
             attackerUnit.Ammo = 1;
             turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
-            var defenderUnit = CreateBasicReplayUnit(1, 0, "Infantry", new Vector2I(0, 0));
+            var defenderUnit = CreateBasicReplayUnit(1, 0, "Fighter", new Vector2I(0, 0));
             defenderUnit.Ammo = 1;
             turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
 
@@ -338,7 +338,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             attackerUnit = CreateBasicReplayUnit(4, 1, "Infantry", new Vector2I(1, 2));
             attackerUnit.Ammo = 1;
             turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
-            defenderUnit = CreateBasicReplayUnit(5, 0, "Infantry", new Vector2I(0, 2));
+            defenderUnit = CreateBasicReplayUnit(5, 0, "Fighter", new Vector2I(0, 2));
             defenderUnit.Ammo = 0;
             turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
 

@@ -213,7 +213,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (defendingUnit.UnitData.SecondWeapon)
                 return true;
 
-            return defendingUnit.Ammo.Value > 0;
+            return defendingUnit.UnitData.MaxAmmo <= 0 || defendingUnit.Ammo.Value > 0;
         }
 
         private void afterAttackChanges(ReplayController controller)
