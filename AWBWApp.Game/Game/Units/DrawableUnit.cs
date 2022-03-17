@@ -64,7 +64,7 @@ namespace AWBWApp.Game.Game.Unit
 
         private Sprite capturing;
 
-        private CountryData country;
+        public CountryData Country { get; private set; }
 
         public HashSet<long> Cargo = new HashSet<long>();
 
@@ -72,6 +72,7 @@ namespace AWBWApp.Game.Game.Unit
 
         public DrawableUnit(UnitData unitData, ReplayUnit unit, CountryData country)
         {
+            Country = country;
             UnitData = unitData;
             Size = BASE_SIZE;
             InternalChildren = new Drawable[]
@@ -94,8 +95,6 @@ namespace AWBWApp.Game.Game.Unit
                     Font = new FontUsage(size: 1.5f)
                 }
             };
-
-            this.country = country;
 
             HealthPoints.BindValueChanged(UpdateHp);
             IsCapturing.BindValueChanged(updateCapturing);
@@ -151,7 +150,7 @@ namespace AWBWApp.Game.Game.Unit
 
             if (UnitData.Frames == null)
             {
-                var texture = store.Get($"{UnitData.BaseTextureByTeam[country.Code]}-0");
+                var texture = store.Get($"{UnitData.BaseTextureByTeam[Country.Code]}-0");
                 textureAnimation.Size = texture.Size;
                 textureAnimation.AddFrame(texture);
                 return;
@@ -159,7 +158,7 @@ namespace AWBWApp.Game.Game.Unit
 
             for (var i = 0; i < UnitData.Frames.Length; i++)
             {
-                var texture = store.Get($"{UnitData.BaseTextureByTeam[country.Code]}-{i}");
+                var texture = store.Get($"{UnitData.BaseTextureByTeam[Country.Code]}-{i}");
                 if (texture == null)
                     throw new Exception("Improperly configured UnitData. Animation count wrong.");
                 if (i == 0)

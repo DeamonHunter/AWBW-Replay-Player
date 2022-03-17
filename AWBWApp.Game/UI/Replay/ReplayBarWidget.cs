@@ -59,7 +59,7 @@ namespace AWBWApp.Game.UI.Replay
                             Size = Vector2.One,
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            Colour = Color4.Black.Opacity(125),
+                            Colour = new Color4(25, 25, 25, 180),
                         },
                         new FillFlowContainer
                         {

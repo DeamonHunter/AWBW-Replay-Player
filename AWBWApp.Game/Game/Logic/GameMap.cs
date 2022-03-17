@@ -9,6 +9,7 @@ using AWBWApp.Game.Game.Unit;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.Input;
+using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Replay;
 using osu.Framework.Allocation;
@@ -64,6 +65,11 @@ namespace AWBWApp.Game.Game.Logic
 
         private Bindable<bool> showUnitsInFog;
         private Bindable<bool> showGridlines;
+
+        private DetailedInformationPopup infoPopup;
+
+        [Resolved]
+        private AWBWAppUserInputManager inputManager { get; set; }
 
         public GameMap()
         {
@@ -175,6 +181,11 @@ namespace AWBWApp.Game.Game.Logic
 
             gameBoardDrawable.FadeOut().FadeIn(250);
             animateStart(4);
+        }
+
+        public void SetInfoPopup(DetailedInformationPopup popup)
+        {
+            infoPopup = popup;
         }
 
         public void ScheduleInitialGameState(ReplayData gameState, ReplayMap map, Dictionary<long, PlayerInfo> players)
@@ -304,6 +315,37 @@ namespace AWBWApp.Game.Game.Logic
                     }
                 }
             }
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+
+            var cursor = inputManager.CurrentState.Mouse.Position;
+            var localSpace = ToLocalSpace(cursor);
+            localSpace.Y -= DrawableTile.BASE_SIZE.Y;
+
+            if (localSpace.X < 0 || localSpace.X >= DrawSize.X || localSpace.Y < 0 || localSpace.Y >= DrawSize.Y - DrawableTile.BASE_SIZE.Y)
+            {
+                infoPopup.ShowDetails(null, null, null);
+                return;
+            }
+
+            var position = new Vector2I((int)(localSpace.X / DrawableTile.BASE_SIZE.X), (int)(localSpace.Y / DrawableTile.BASE_SIZE.Y));
+
+            //Could be possible that autosize hasn't updated yet
+            if (position.X >= MapSize.X || position.Y >= MapSize.Y)
+            {
+                infoPopup.ShowDetails(null, null, null);
+                return;
+            }
+
+            TryGetDrawableUnit(position, out var unit);
+            buildings.TryGetValue(position, out var building);
+
+            var tile = gameBoard[position.X, position.Y];
+
+            infoPopup.ShowDetails(tile, building, unit);
         }
 
         private void updateFog(bool[,] fogOfWar)
@@ -580,6 +622,7 @@ namespace AWBWApp.Game.Game.Logic
             //Todo: Is this always the case
             if (!newTurn)
                 building.HasDoneAction.Value = false;
+            building.CaptureHealth.Value = awbwBuilding.Capture;
 
             if (TryGetDrawableUnit(awbwBuilding.Position, out var unit))
                 unit.IsCapturing.Value = awbwBuilding.Capture != 20;

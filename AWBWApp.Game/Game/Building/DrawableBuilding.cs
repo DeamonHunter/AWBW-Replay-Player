@@ -22,6 +22,8 @@ namespace AWBWApp.Game.Game.Building
         public Bindable<bool> HasDoneAction = new Bindable<bool>();
         public BindableBool FogOfWarActive = new BindableBool();
 
+        public BindableInt CaptureHealth = new BindableInt();
+
         public long? OwnerID { get; private set; }
         public Vector2I MapPosition { get; private set; }
 

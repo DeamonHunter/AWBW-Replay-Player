@@ -35,6 +35,12 @@ namespace AWBWApp.Game.UI.Replay
             set => current.Current = value;
         }
 
+        public FontUsage Font
+        {
+            get => displayedCountText.Font;
+            set => displayedCountText.Font = value;
+        }
+
         private readonly BindableWithCurrent<T> current = new BindableWithCurrent<T>();
 
         protected bool IsRollingProportionalToChange => false;
@@ -46,15 +52,14 @@ namespace AWBWApp.Game.UI.Replay
         public RollingCounter()
         {
             AutoSizeAxes = Axes.Both;
+            displayedCountText = CreateText();
+            Child = DrawableCount = displayedCountText;
         }
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            displayedCountText = CreateText();
-
             UpdateDisplay();
-            Child = DrawableCount = displayedCountText;
         }
 
         protected void UpdateDisplay()

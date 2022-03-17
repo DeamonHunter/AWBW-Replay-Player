@@ -45,6 +45,7 @@ namespace AWBWApp.Game.Game.Logic
         private readonly CameraControllerWithGrid cameraControllerWithGrid;
         private readonly ReplayBarWidget barWidget;
         private readonly ReplayPlayerList playerList;
+        private readonly DetailedInformationPopup infoPopup;
 
         private IBindable<bool> skipEndTurnBindable;
         public Dictionary<long, PlayerInfo> Players { get; private set; } = new Dictionary<long, PlayerInfo>();
@@ -86,6 +87,12 @@ namespace AWBWApp.Game.Game.Logic
                     Position = new Vector2(-100, 0),
                     RelativeSizeAxes = Axes.Both
                 },
+                infoPopup = new DetailedInformationPopup
+                {
+                    Position = new Vector2(10, -10),
+                    Origin = Anchor.BottomLeft,
+                    Anchor = Anchor.BottomLeft,
+                },
                 barWidget = new ReplayBarWidget(this),
                 playerList = new ReplayPlayerList
                 {
@@ -96,6 +103,8 @@ namespace AWBWApp.Game.Game.Logic
                 },
                 loadingLayer = new ReplayLoadingLayer()
             });
+
+            Map.SetInfoPopup(infoPopup);
 
             Map.OnLoadComplete += _ => cameraControllerWithGrid.FitMapToSpace();
 
