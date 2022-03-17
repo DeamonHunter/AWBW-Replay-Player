@@ -24,7 +24,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 {
                     CountryId = i + 1,
                     UserId = i,
-                    ID = i
+                    ID = i,
+                    ReplayIndex = i + 1
                 };
 
                 replayData.ReplayInfo.Players.Add(player.ID, player);

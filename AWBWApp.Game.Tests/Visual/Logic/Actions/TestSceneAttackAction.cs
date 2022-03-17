@@ -49,6 +49,19 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddStep("Too close", () => ReplayController.GoToNextAction());
             AddStep("Too far", () => ReplayController.GoToNextAction());
         }
+
+        [Test]
+        public void SonjaTest()
+        {
+            AddStep("Setup", sonjaCounterattackTest);
+            AddStep("Attack Unit with Ammo", () => ReplayController.GoToNextAction());
+            AddStep("Transport", () => ReplayController.GoToNextAction());
+            AddStep("No ammo", () => ReplayController.GoToNextAction());
+            AddStep("No ammo but has secondary", () => ReplayController.GoToNextAction());
+            AddStep("Too close", () => ReplayController.GoToNextAction());
+            AddStep("Too far", () => ReplayController.GoToNextAction());
+        }
+
         private void destroyTest()
         {
             var replayData = CreateBasicReplayData(2);
@@ -255,6 +268,97 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
 
             turn.Actions.Add(createAttackUnitAction(attackerUnit, defenderUnit, 10, 1, false));
+
+            //Create map
+            var map = CreateBasicMap(3, 6);
+            ReplayController.LoadReplay(replayData, map);
+        }
+
+        private void sonjaCounterattackTest()
+        {
+            var replayData = CreateBasicReplayData(2);
+            var firstTurn = CreateBasicTurnData(replayData);
+            firstTurn.Players[0].RequiredPowerForNormal = 270000;
+            firstTurn.Players[0].RequiredPowerForSuper = 450000;
+            replayData.TurnData.Add(firstTurn);
+
+            var powerAction = new PowerAction
+            {
+                CombatOfficerName = "Sonja",
+                PowerName = "Counter Break",
+                COPower = GetCOStorage().GetCOByName("Sonja").SuperPower,
+                IsSuperPower = true,
+                SightRangeIncrease = 1
+            };
+
+            firstTurn.Actions.Add(powerAction);
+
+            var turn = CreateBasicTurnData(replayData);
+            turn.Players[0].RequiredPowerForNormal = 324000;
+            turn.Players[0].RequiredPowerForSuper = 540000;
+            replayData.TurnData.Add(turn);
+
+            // Normal Attack
+            var attackerUnit = CreateBasicReplayUnit(0, 1, "Infantry", new Vector2I(1, 0));
+            attackerUnit.Ammo = 1;
+            turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
+            var defenderUnit = CreateBasicReplayUnit(1, 0, "Infantry", new Vector2I(0, 0));
+            defenderUnit.Ammo = 1;
+            turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
+
+            turn.Actions.Add(createAttackUnitAction(attackerUnit, defenderUnit, 8, 5, true));
+
+            //Attack a Transport
+            attackerUnit = CreateBasicReplayUnit(2, 1, "Infantry", new Vector2I(1, 1));
+            attackerUnit.Ammo = 1;
+            turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
+            defenderUnit = CreateBasicReplayUnit(3, 0, "APC", new Vector2I(0, 1));
+            defenderUnit.Ammo = 1;
+            turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
+
+            turn.Actions.Add(createAttackUnitAction(attackerUnit, defenderUnit, 10, 8, false));
+
+            // No Ammo
+            attackerUnit = CreateBasicReplayUnit(4, 1, "Infantry", new Vector2I(1, 2));
+            attackerUnit.Ammo = 1;
+            turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
+            defenderUnit = CreateBasicReplayUnit(5, 0, "Infantry", new Vector2I(0, 2));
+            defenderUnit.Ammo = 0;
+            turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
+
+            turn.Actions.Add(createAttackUnitAction(attackerUnit, defenderUnit, 10, 5, false));
+
+            // No Ammo but has secondary
+            attackerUnit = CreateBasicReplayUnit(6, 1, "Infantry", new Vector2I(1, 3));
+            attackerUnit.Ammo = 1;
+            turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
+            defenderUnit = CreateBasicReplayUnit(7, 0, "Mega Tank", new Vector2I(0, 3));
+            defenderUnit.Ammo = 0;
+            turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
+
+            turn.Actions.Add(createAttackUnitAction(attackerUnit, defenderUnit, 0, 10, true));
+
+            // Too Close
+            attackerUnit = CreateBasicReplayUnit(8, 1, "Infantry", new Vector2I(1, 4));
+            attackerUnit.Ammo = 1;
+            turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
+            defenderUnit = CreateBasicReplayUnit(9, 0, "Artillery", new Vector2I(0, 4));
+            defenderUnit.Ammo = 1;
+            turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
+
+            turn.Actions.Add(createAttackUnitAction(attackerUnit, defenderUnit, 10, 8, false));
+
+            // Too Far
+            attackerUnit = CreateBasicReplayUnit(10, 1, "Artillery", new Vector2I(2, 5));
+            attackerUnit.Ammo = 1;
+            turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
+            defenderUnit = CreateBasicReplayUnit(11, 0, "Infantry", new Vector2I(0, 5));
+            defenderUnit.Ammo = 1;
+            turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
+
+            turn.Actions.Add(createAttackUnitAction(attackerUnit, defenderUnit, 10, 1, false));
+
+            firstTurn.ReplayUnit = turn.ReplayUnit;
 
             //Create map
             var map = CreateBasicMap(3, 6);
