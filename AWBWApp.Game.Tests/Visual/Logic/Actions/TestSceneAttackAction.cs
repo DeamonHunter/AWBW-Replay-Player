@@ -48,18 +48,23 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddStep("No ammo but has secondary", () => ReplayController.GoToNextAction());
             AddStep("Too close", () => ReplayController.GoToNextAction());
             AddStep("Too far", () => ReplayController.GoToNextAction());
+            AddStep("Hidden", () => ReplayController.GoToNextAction());
         }
 
         [Test]
         public void SonjaTest()
         {
             AddStep("Setup", sonjaCounterattackTest);
+            AddStep("Use Power", () => ReplayController.GoToNextAction());
+            AddStep("Next Turn", () => ReplayController.GoToNextAction());
+
             AddStep("Attack Unit with Ammo", () => ReplayController.GoToNextAction());
             AddStep("Transport", () => ReplayController.GoToNextAction());
             AddStep("No ammo", () => ReplayController.GoToNextAction());
             AddStep("No ammo but has secondary", () => ReplayController.GoToNextAction());
             AddStep("Too close", () => ReplayController.GoToNextAction());
             AddStep("Too far", () => ReplayController.GoToNextAction());
+            AddStep("Hidden", () => ReplayController.GoToNextAction());
         }
 
         private void destroyTest()
@@ -270,16 +275,18 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             turn.Actions.Add(createAttackUnitAction(attackerUnit, defenderUnit, 10, 1, false));
 
             // Hidden
-            attackerUnit = CreateBasicReplayUnit(10, 0, "Stealth", new Vector2I(2, 5));
+            attackerUnit = CreateBasicReplayUnit(12, 0, "Stealth", new Vector2I(2, 6));
             attackerUnit.Ammo = 1;
             attackerUnit.SubHasDived = true;
             turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
-            defenderUnit = CreateBasicReplayUnit(11, 1, "Infantry", new Vector2I(0, 5));
+            defenderUnit = CreateBasicReplayUnit(13, 1, "Infantry", new Vector2I(0, 6));
             defenderUnit.Ammo = 1;
             turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
 
+            turn.Actions.Add(createAttackUnitAction(attackerUnit, defenderUnit, 10, 1, false));
+
             //Create map
-            var map = CreateBasicMap(3, 6);
+            var map = CreateBasicMap(3, 7);
             ReplayController.LoadReplay(replayData, map);
         }
 
@@ -365,12 +372,14 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             defenderUnit.Ammo = 1;
             turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
 
+            turn.Actions.Add(createAttackUnitAction(attackerUnit, defenderUnit, 10, 1, false));
+
             // Hidden
-            attackerUnit = CreateBasicReplayUnit(12, 1, "Stealth", new Vector2I(2, 5));
+            attackerUnit = CreateBasicReplayUnit(12, 1, "Stealth", new Vector2I(2, 6));
             attackerUnit.Ammo = 1;
             attackerUnit.SubHasDived = true;
             turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
-            defenderUnit = CreateBasicReplayUnit(13, 0, "Infantry", new Vector2I(0, 5));
+            defenderUnit = CreateBasicReplayUnit(13, 0, "Infantry", new Vector2I(0, 6));
             defenderUnit.Ammo = 1;
             turn.ReplayUnit.Add(defenderUnit.ID, defenderUnit);
 
@@ -379,7 +388,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             firstTurn.ReplayUnit = turn.ReplayUnit;
 
             //Create map
-            var map = CreateBasicMap(3, 6);
+            var map = CreateBasicMap(3, 7);
             ReplayController.LoadReplay(replayData, map);
         }
 
