@@ -91,6 +91,8 @@ namespace AWBWApp.Game.UI.Replay
             private Sprite terrainSprite;
             private StatContainer terrainStarCounter;
 
+            private DrawableTile boundToTile;
+
             [Resolved]
             private NearestNeighbourTextureStore textureStore { get; set; }
 
@@ -137,6 +139,11 @@ namespace AWBWApp.Game.UI.Replay
 
             public void BindTo(DrawableTile tile)
             {
+                if (tile == boundToTile)
+                    return;
+
+                boundToTile = tile;
+
                 terrainSprite.Texture = textureStore.Get(tile.TerrainTile.Textures[Weather.Clear]);
                 terrainSprite.Size = terrainSprite.Texture.Size * 2;
                 Show();
@@ -147,6 +154,7 @@ namespace AWBWApp.Game.UI.Replay
             {
                 Hide();
                 terrainStarCounter.SetTo(0);
+                boundToTile = null;
             }
         }
 
@@ -155,6 +163,8 @@ namespace AWBWApp.Game.UI.Replay
             private Container spriteContainer;
             private StatContainer terrainStarCounter;
             private StatContainer buildingHPCounter;
+
+            private DrawableBuilding boundToBuilding;
 
             [Resolved]
             private NearestNeighbourTextureStore textureStore { get; set; }
@@ -197,6 +207,11 @@ namespace AWBWApp.Game.UI.Replay
 
             public void BindTo(DrawableBuilding building)
             {
+                if (building == boundToBuilding)
+                    return;
+
+                boundToBuilding = building;
+
                 var unitSprite = new TextureAnimation()
                 {
                     Anchor = Anchor.Centre,
@@ -226,16 +241,18 @@ namespace AWBWApp.Game.UI.Replay
                 Hide();
                 terrainStarCounter.SetTo(0);
                 buildingHPCounter.SetTo(0);
+                boundToBuilding = null;
             }
         }
 
         private class UnitPopup : Container
         {
+            private Container spriteContainer;
             private StatContainer unitHPCounter;
             private StatContainer unitAmmoCounter;
             private StatContainer unitFuelCounter;
 
-            private Container spriteContainer;
+            private DrawableUnit boundToUnit;
 
             [Resolved]
             private NearestNeighbourTextureStore textureStore { get; set; }
@@ -279,6 +296,11 @@ namespace AWBWApp.Game.UI.Replay
 
             public void BindTo(DrawableUnit unit)
             {
+                if (unit == boundToUnit)
+                    return;
+
+                boundToUnit = unit;
+
                 var unitSprite = new TextureAnimation()
                 {
                     Anchor = Anchor.Centre,
@@ -304,6 +326,7 @@ namespace AWBWApp.Game.UI.Replay
                 unitHPCounter.SetTo(0);
                 unitAmmoCounter.SetTo(0);
                 unitFuelCounter.SetTo(0);
+                boundToUnit = null;
             }
         }
 
