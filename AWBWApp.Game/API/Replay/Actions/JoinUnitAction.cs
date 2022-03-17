@@ -62,6 +62,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                     yield return transformable;
             }
 
+            controller.ActivePlayer.Funds.Value = FundsAfterJoin;
+
             controller.Map.DeleteUnit(JoiningUnitId, false);
             var joinedUnit = controller.Map.GetDrawableUnit(JoinedUnit.ID);
             joinedUnit.UpdateUnit(JoinedUnit);

@@ -53,7 +53,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                     yield return transformable;
             }
 
-            controller.Map.DeleteUnit(DeletedUnitId, true);
+            var unit = controller.Map.DeleteUnit(DeletedUnitId, true);
+
+            controller.ActivePlayer.Funds.Value += ReplayActionHelper.CalculateUnitCost(unit, controller.ActivePlayer.ActiveCO.Value.CO.DayToDayPower, null); //Unit funds does not care about the current active powers
         }
 
         public void UndoAction(ReplayController controller, bool immediate)

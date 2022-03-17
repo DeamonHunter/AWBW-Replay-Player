@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Unit;
@@ -125,12 +124,14 @@ namespace AWBWApp.Game.API.Replay.Actions
             var attackerStats = Attacker;
             var defenderStats = Defender;
 
+            if (!attackerUnit.OwnerID.HasValue)
+                throw new Exception("Attacking unit doesn't have an owner id?");
             if (!defenderUnit.OwnerID.HasValue)
                 throw new Exception("Defending unit doesn't have an owner id?");
 
             //Reverse order if the defender has a power active that reverses order, but not if the attacker also has a power to reverse order.
-            var (_, attackerPower, _) = controller.ActivePowers.FirstOrDefault(x => x.playerID == attackerUnit.OwnerID.Value);
-            var (_, defenderPower, _) = controller.ActivePowers.FirstOrDefault(x => x.playerID == defenderUnit.OwnerID.Value);
+            var attackerPower = controller.GetActivePowerForPlayer(attackerUnit.OwnerID.Value);
+            var defenderPower = controller.GetActivePowerForPlayer(defenderUnit.OwnerID.Value);
 
             var swapAttackOrder = (defenderPower?.COPower.AttackFirst ?? false) && !(attackerPower?.COPower.AttackFirst ?? false);
 

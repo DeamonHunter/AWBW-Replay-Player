@@ -37,11 +37,23 @@ namespace AWBWApp.Game.API.Replay.Actions
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Build Action.");
+
+            if (!NewUnit.PlayerID.HasValue || !NewUnit.Cost.HasValue)
+                throw new Exception("The unit being built was not set up correctly?");
+
+            if (!NewUnit.HitPoints.HasValue || NewUnit.HitPoints != 10)
+                throw new Exception("Created unit didn't have 10 hp?");
+
             var unit = controller.Map.AddUnit(NewUnit);
             unit.CanMove.Value = false;
 
             if (controller.Map.TryGetDrawableBuilding(unit.MapPosition, out DrawableBuilding building))
                 building.HasDoneAction.Value = true;
+
+            var dayToDay = controller.ActivePlayer.ActiveCO.Value.CO.DayToDayPower;
+            var currentPower = controller.GetActivePowerForPlayer(unit.OwnerID!.Value);
+
+            controller.ActivePlayer.Funds.Value -= ReplayActionHelper.CalculateUnitCost(NewUnit, dayToDay, currentPower?.COPower);
 
             controller.UpdateFogOfWar();
             controller.Map.PlaySelectionAnimation(unit);

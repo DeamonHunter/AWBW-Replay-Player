@@ -45,7 +45,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 {
                     var playerIncomeData = (JObject)playerIncome.Value;
                     action.IncomeChanges[idx].PlayerId = (long)playerIncomeData["player"];
-                    action.IncomeChanges[idx].AmountChanged = (int)playerIncomeData["income"];
+                    action.IncomeChanges[idx].NewBuildingIncome = (int)playerIncomeData["income"];
                     idx++;
                 }
             }
@@ -95,7 +95,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (IncomeChanges != null)
             {
                 foreach (var incomeChange in IncomeChanges)
-                    controller.Players[incomeChange.PlayerId].PropertyValue.Value += incomeChange.AmountChanged;
+                    controller.Players[incomeChange.PlayerId].PropertyValue.Value = incomeChange.NewBuildingIncome;
             }
 
             //Capturing a building can eliminate a player. i.e. They have no buildings left or reached the total building goal.
@@ -114,7 +114,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public struct IncomeChanged
         {
             public long PlayerId;
-            public int AmountChanged;
+            public int NewBuildingIncome;
         }
     }
 }

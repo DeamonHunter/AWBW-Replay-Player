@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using AWBWApp.Game.Game.COs;
+using AWBWApp.Game.Game.Unit;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics.Primitives;
 
@@ -158,6 +160,31 @@ namespace AWBWApp.Game.API.Replay
                 return false;
 
             throw new Exception($"Unknown boolean value {boolean}");
+        }
+
+        public static int CalculateUnitCost(ReplayUnit unit, COPower dayToDay, COPower activePower)
+        {
+            if (unit.Cost == null)
+                throw new ArgumentException("Provided unit does not have any cost.", nameof(unit));
+
+            float priceMultiplier = 1;
+            if (activePower != null && activePower.UnitPriceMultiplier != 1)
+                priceMultiplier = activePower.UnitPriceMultiplier;
+            else if (dayToDay.UnitPriceMultiplier != 1)
+                priceMultiplier = dayToDay.UnitPriceMultiplier;
+
+            return (int)(unit.Cost.Value * priceMultiplier * (unit.HitPoints.HasValue ? Math.Ceiling(unit.HitPoints.Value) * 0.1 : 1));
+        }
+
+        public static int CalculateUnitCost(DrawableUnit unit, COPower dayToDay, COPower activePower)
+        {
+            float priceMultiplier = 1;
+            if (activePower != null && activePower.UnitPriceMultiplier != 1)
+                priceMultiplier = activePower.UnitPriceMultiplier;
+            else if (dayToDay.UnitPriceMultiplier != 1)
+                priceMultiplier = dayToDay.UnitPriceMultiplier;
+
+            return (int)(unit.UnitData.Cost * priceMultiplier * (unit.HealthPoints.Value * 0.1));
         }
     }
 }

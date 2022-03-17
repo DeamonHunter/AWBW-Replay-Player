@@ -405,10 +405,10 @@ namespace AWBWApp.Game.Game.Logic
 
         public bool TryGetDrawableBuilding(Vector2I position, out DrawableBuilding drawableBuilding) => buildings.TryGetValue(position, out drawableBuilding);
 
-        public void DeleteUnit(long unitId, bool explode)
+        public DrawableUnit DeleteUnit(long unitId, bool explode)
         {
             if (!units.Remove(unitId, out DrawableUnit unit))
-                return;
+                return null;
 
             if (explode)
                 playExplosion(unit.UnitData.MovementType, unit.MapPosition);
@@ -425,6 +425,8 @@ namespace AWBWApp.Game.Game.Logic
                     unitsDrawable.Remove(cargo);
                 }
             }
+
+            return unit;
         }
 
         private void playExplosion(MovementType type, Vector2I unitPosition)

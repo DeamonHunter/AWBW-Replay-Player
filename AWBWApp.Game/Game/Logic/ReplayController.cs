@@ -30,7 +30,7 @@ namespace AWBWApp.Game.Game.Logic
         [Resolved]
         private CountryStorage countryStorage { get; set; }
 
-        public List<(long playerID, PowerAction action, int activeDay)> ActivePowers = new List<(long, PowerAction, int)>();
+        private List<(long playerID, PowerAction action, int activeDay)> activePowers = new List<(long, PowerAction, int)>();
 
         private ReplayData replayData;
 
@@ -415,7 +415,7 @@ namespace AWBWApp.Game.Game.Logic
         {
             var dayToDayPower = Players[playerID].ActiveCO.Value.CO.DayToDayPower;
 
-            var (_, action, _) = ActivePowers.FirstOrDefault(x => x.playerID == playerID);
+            var action = GetActivePowerForPlayer(playerID);
 
             var sightRangeModifier = dayToDayPower.SightIncrease + (action?.SightRangeIncrease ?? 0);
 
@@ -427,18 +427,24 @@ namespace AWBWApp.Game.Game.Logic
 
         public void AddPowerAction(PowerAction activePower)
         {
-            ActivePowers.Add((currentTurn.ActivePlayerID, activePower, currentTurn.Day));
+            activePowers.Add((currentTurn.ActivePlayerID, activePower, currentTurn.Day));
+        }
+
+        public PowerAction GetActivePowerForPlayer(long playerID)
+        {
+            var (_, action, _) = activePowers.FirstOrDefault(x => x.playerID == playerID);
+            return action;
         }
 
         public void AddGenericActionAnimation(Drawable animatingDrawable) => powerLayer.Add(animatingDrawable);
 
         void checkPowers()
         {
-            for (int i = ActivePowers.Count - 1; i >= 0; i--)
+            for (int i = activePowers.Count - 1; i >= 0; i--)
             {
-                var activePower = ActivePowers[i];
+                var activePower = activePowers[i];
                 if (activePower.activeDay != currentTurn.Day)
-                    ActivePowers.RemoveAt(i);
+                    activePowers.RemoveAt(i);
             }
         }
     }
