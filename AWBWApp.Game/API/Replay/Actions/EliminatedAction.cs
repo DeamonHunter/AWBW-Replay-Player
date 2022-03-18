@@ -69,6 +69,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public GameOverAction GameOverAction;
 
+        public void Setup(ReplayController controller, ReplaySetupContext context)
+        {
+        }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             var powerAnimation = new EliminationPopupDrawable(controller.Players[EliminatedPlayerID], EliminationMessage, Resigned);

@@ -30,7 +30,7 @@ namespace AWBWApp.Game.Game.Logic
         [Resolved]
         private CountryStorage countryStorage { get; set; }
 
-        private List<(long playerID, PowerAction action, int activeDay)> activePowers = new List<(long, PowerAction, int)>();
+        private List<RegisteredPower> registeredPowers = new List<RegisteredPower>();
 
         private ReplayData replayData;
 
@@ -180,8 +180,8 @@ namespace AWBWApp.Game.Game.Logic
             currentTurn = replayData.TurnData[0];
             currentActionIndex = -1;
             CurrentTurnIndex.Value = 0;
-            checkPowers();
 
+            setupActions();
             updatePlayerList(0, true);
 
             Map.ScheduleInitialGameState(this.replayData, map, Players);
@@ -199,6 +199,26 @@ namespace AWBWApp.Game.Game.Logic
                     loadingLayer.Hide();
                 });
             });
+        }
+
+        private void setupActions()
+        {
+            var setupContext = new ReplaySetupContext();
+
+            for (int i = 0; i < replayData.TurnData.Count; i++)
+            {
+                var currentTurn = replayData.TurnData[i];
+                if (currentTurn.Actions == null || currentTurn.Actions.Count == 0)
+                    continue;
+
+                setupContext.SetupForTurn(currentTurn, i);
+
+                for (int j = 0; j < setupContext.CurrentTurn.Actions.Count; j++)
+                {
+                    setupContext.CurrentActionIndex = j;
+                    currentTurn.Actions[j].Setup(this, setupContext);
+                }
+            }
         }
 
         public bool HasNextTurn() => HasLoadedReplay && CurrentTurnIndex.Value + 1 < replayData.TurnData.Count;
@@ -354,8 +374,6 @@ namespace AWBWApp.Game.Game.Logic
             currentTurn = replayData.TurnData[turnIdx];
             CurrentTurnIndex.Value = turnIdx;
 
-            checkPowers();
-
             Map.ScheduleUpdateToGameState(currentTurn, UpdateFogOfWar);
             ScheduleAfterChildren(() =>
             {
@@ -440,27 +458,63 @@ namespace AWBWApp.Game.Game.Logic
             Map.UpdateFogOfWar(playerID, sightRangeModifier, action?.COPower.SeeIntoHiddenTiles ?? false, resetFog);
         }
 
-        public void AddPowerAction(PowerAction activePower)
+        public void AddGenericActionAnimation(Drawable animatingDrawable) => powerLayer.Add(animatingDrawable);
+
+        public void RegisterPower(PowerAction power, ReplaySetupContext context)
         {
-            activePowers.Add((currentTurn.ActivePlayerID, activePower, currentTurn.Day));
+            int endTurn = context.CurrentTurnIndex;
+
+            for (int i = endTurn + 1; i < replayData.TurnData.Count; i++)
+            {
+                if (replayData.TurnData[i].ActivePlayerID != context.CurrentTurn.ActivePlayerID)
+                    continue;
+
+                endTurn = i;
+                break;
+            }
+
+            //We didn't find a next turn for the player
+            if (endTurn == context.CurrentTurnIndex)
+                endTurn = ActivePlayer.EliminatedOn ?? replayData.TurnData.Count;
+
+            registeredPowers.Add(new RegisteredPower
+            {
+                PlayerID = context.CurrentTurn.ActivePlayerID,
+                TurnStart = context.CurrentTurnIndex,
+                ActionStart = context.CurrentActionIndex,
+                TurnEnd = endTurn,
+                Power = power
+            });
         }
 
         public PowerAction GetActivePowerForPlayer(long playerID)
         {
-            var (_, action, _) = activePowers.FirstOrDefault(x => x.playerID == playerID);
-            return action;
+            var power = registeredPowers.FirstOrDefault(x =>
+            {
+                if (x.PlayerID != playerID)
+                    return false;
+
+                if (CurrentTurnIndex.Value < x.TurnStart || CurrentTurnIndex.Value >= x.TurnEnd)
+                    return false;
+
+                if (CurrentTurnIndex.Value != x.TurnStart)
+                    return true;
+
+                return currentActionIndex >= x.ActionStart;
+            });
+
+            return power.Power;
         }
 
-        public void AddGenericActionAnimation(Drawable animatingDrawable) => powerLayer.Add(animatingDrawable);
-
-        void checkPowers()
+        struct RegisteredPower
         {
-            for (int i = activePowers.Count - 1; i >= 0; i--)
-            {
-                var activePower = activePowers[i];
-                if (activePower.activeDay != currentTurn.Day)
-                    activePowers.RemoveAt(i);
-            }
+            public long PlayerID;
+
+            public int TurnStart;
+            public int TurnEnd;
+            public int ActionStart;
+
+            public PowerAction Power;
         }
     }
 }

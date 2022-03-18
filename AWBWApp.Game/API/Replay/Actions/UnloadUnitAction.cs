@@ -32,6 +32,10 @@ namespace AWBWApp.Game.API.Replay.Actions
         public long TransportID { get; set; }
         public ReplayUnit UnloadedUnit { get; set; }
 
+        public void Setup(ReplayController controller, ReplaySetupContext context)
+        {
+        }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Unload Action.");

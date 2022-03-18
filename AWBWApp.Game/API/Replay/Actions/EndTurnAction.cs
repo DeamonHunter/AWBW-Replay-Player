@@ -79,6 +79,10 @@ namespace AWBWApp.Game.API.Replay.Actions
         public List<long> SuppliedUnits;
         public List<(long id, int hp)> RepairedUnits;
 
+        public void Setup(ReplayController controller, ReplaySetupContext context)
+        {
+        }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             var player = controller.Players[NextPlayerID];

@@ -116,6 +116,10 @@ namespace AWBWApp.Game.API.Replay.Actions
         public MoveUnitAction MoveUnit;
         public EliminatedAction EliminatedAction;
 
+        public void Setup(ReplayController controller, ReplaySetupContext context)
+        {
+        }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             var attackerUnit = controller.Map.GetDrawableUnit(Attacker.ID);

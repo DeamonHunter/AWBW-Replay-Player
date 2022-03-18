@@ -341,6 +341,11 @@ namespace AWBWApp.Game.API.Replay.Actions
         public List<CreateUnit> CreatedUnits;
         public List<Vector2I> MissileCoords;
 
+        public void Setup(ReplayController controller, ReplaySetupContext context)
+        {
+            controller.RegisterPower(this, context);
+        }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             var co = controller.COStorage.GetCOByName(CombatOfficerName);
@@ -349,9 +354,6 @@ namespace AWBWApp.Game.API.Replay.Actions
             var powerAnimation = new PowerDisplay(CombatOfficerName, PowerName, IsSuperPower);
             controller.AddGenericActionAnimation(powerAnimation);
             yield return ReplayWait.WaitForTransformable(powerAnimation);
-
-            //Todo: How much should this do?
-            controller.AddPowerAction(this);
 
             if (SightRangeIncrease != 0 || COPower.SeeIntoHiddenTiles)
             {

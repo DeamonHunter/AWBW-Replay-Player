@@ -54,6 +54,10 @@ namespace AWBWApp.Game.API.Replay.Actions
         public UnitPosition[] Path { get; set; }
         public bool Trapped { get; set; }
 
+        public void Setup(ReplayController controller, ReplaySetupContext context)
+        {
+        }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             if (!Unit.Position.HasValue)

@@ -20,6 +20,10 @@ namespace AWBWApp.Game.API.Replay.Actions
     {
         public string ReadibleName => "Resign";
 
+        public void Setup(ReplayController controller, ReplaySetupContext context)
+        {
+        }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             //Todo: Need to complete the win screen

@@ -61,6 +61,10 @@ namespace AWBWApp.Game.API.Replay.Actions
         public List<long> Winners;
         public List<long> Losers;
 
+        public void Setup(ReplayController controller, ReplaySetupContext context)
+        {
+        }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             var powerAnimation = new EndGamePopupDrawable(controller.Players, Winners, Losers, EndMessage);

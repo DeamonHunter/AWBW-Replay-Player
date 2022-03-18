@@ -57,6 +57,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public int FundsAfterRepair;
 
+        public void Setup(ReplayController controller, ReplaySetupContext context)
+        {
+        }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Repair Action.");

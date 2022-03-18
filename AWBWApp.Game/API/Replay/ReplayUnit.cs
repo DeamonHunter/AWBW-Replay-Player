@@ -23,7 +23,7 @@ namespace AWBWApp.Game.API.Replay
         public bool? BeingCarried;
 
         public bool? SubHasDived;
-        public bool? SecondWeapon; //Todo: What is this?
+        public bool? SecondWeapon;
 
         [CanBeNull]
         public List<long> CargoUnits;
@@ -37,40 +37,43 @@ namespace AWBWApp.Game.API.Replay
         public string MovementType; //Does this ever change?
 
         //Todo: Find a better method for this so it isn't dependent on remembering to update this
+
+        public void Copy(ReplayUnit other)
+        {
+            CargoUnits = null;
+            if (CargoUnits != null)
+                CargoUnits = new List<long>(other.CargoUnits);
+
+            ID = other.ID;
+            PlayerID = other.PlayerID;
+
+            UnitName = other.UnitName;
+            Position = other.Position;
+            HitPoints = other.HitPoints;
+            Fuel = other.Fuel;
+            FuelPerTurn = other.FuelPerTurn;
+            Ammo = other.Ammo;
+
+            TimesMoved = other.TimesMoved;
+            TimesCaptured = other.TimesCaptured;
+            TimesFired = other.TimesFired;
+            BeingCarried = other.BeingCarried;
+
+            SubHasDived = other.SubHasDived;
+            SecondWeapon = other.SecondWeapon;
+
+            MovementPoints = other.MovementPoints;
+            Vision = other.Vision;
+            Range = other.Range;
+            Cost = other.Cost;
+            MovementType = other.MovementType;
+        }
+
         public ReplayUnit Clone()
         {
-            List<long> cargoUnits = null;
-            if (CargoUnits != null)
-                cargoUnits = new List<long>(CargoUnits);
-
-            return new ReplayUnit
-            {
-                ID = ID,
-                PlayerID = PlayerID,
-
-                UnitName = UnitName,
-                Position = Position,
-                HitPoints = HitPoints,
-                Fuel = Fuel,
-                FuelPerTurn = FuelPerTurn,
-                Ammo = Ammo,
-
-                TimesMoved = TimesMoved,
-                TimesCaptured = TimesCaptured,
-                TimesFired = TimesFired,
-                BeingCarried = BeingCarried,
-
-                SubHasDived = SubHasDived,
-                SecondWeapon = SecondWeapon,
-
-                CargoUnits = cargoUnits,
-
-                MovementPoints = MovementPoints,
-                Vision = Vision,
-                Range = Range,
-                Cost = Cost,
-                MovementType = MovementType
-            };
+            var unit = new ReplayUnit();
+            unit.Copy(this);
+            return unit;
         }
     }
 }

@@ -9,12 +9,17 @@ namespace AWBWApp.Game.API.Replay.Actions
     {
         public string ReadibleName => "Empty";
 
+        public void Setup(ReplayController controller, ReplaySetupContext context) { }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Empty action performed");
             yield break;
         }
 
-        public void UndoAction(ReplayController controller, bool immediate) { }
+        public void UndoAction(ReplayController controller, bool immediate)
+        {
+            Logger.Log("Empty action Undone.");
+        }
     }
 }
