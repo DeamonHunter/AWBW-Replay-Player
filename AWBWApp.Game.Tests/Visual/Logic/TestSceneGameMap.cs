@@ -105,25 +105,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             else
                 Logger.Log($"Replay of id '{gameID}' existed locally.");
 
-            var terrainFile = mapStorage.Get(replay.ReplayInfo.MapId);
-
-            if (terrainFile == null)
-            {
-                Logger.Log($"Map of id '{replay.ReplayInfo.MapId}' doesn't exist. Requesting from AWBW.");
-                var link = "https://awbw.amarriner.com/text_map.php?maps_id=" + replay.ReplayInfo.MapId;
-
-                using (var webRequest = new WebRequest(link))
-                {
-                    await webRequest.PerformAsync().ConfigureAwait(false);
-
-                    if (webRequest.ResponseStream.Length <= 100)
-                        throw new Exception($"Unable to find the replay of game '{gameID}'. Is the session cookie correct?");
-
-                    terrainFile = mapStorage.ParseAndStoreResponseHTML(replay.ReplayInfo.MapId, webRequest.GetResponseString());
-                }
-            }
-            else
-                Logger.Log($"Replay of id '{gameID}' existed locally.");
+            var terrainFile = await mapStorage.GetOrDownloadMap(replay.ReplayInfo.MapId);
 
             terrainFile = generator.CreateCustomShoalVersion(terrainFile);
 
