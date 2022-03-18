@@ -65,7 +65,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
                 }
 
                 var playerInfo = new PlayerInfo(user, countryStorage.GetCountryByAWBWID(user.CountryId));
-                playerInfo.UpdateTurn(turn, coStorage, 1, 1, 1000, 2000);
+                playerInfo.UpdateTurn(turn, coStorage, 1, 1, 1000, 2000, ActiveCOPower.None);
                 players.Add(i, playerInfo);
 
                 if (i % 2 == 0)

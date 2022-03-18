@@ -138,6 +138,11 @@ namespace AWBWApp.Game.UI
             private Sprite tagCOSprite;
             private PowerProgress tagProgress;
 
+            private Container normalPowerBackground;
+            private Sprite normalPower;
+            private Container superPowerBackground;
+            private Sprite superPower;
+
             [Resolved]
             private NearestNeighbourTextureStore textureStore { get; set; }
 
@@ -154,46 +159,102 @@ namespace AWBWApp.Game.UI
                 Anchor = Anchor.TopCentre;
                 Origin = Anchor.TopCentre;
 
-                Masking = true;
-                EdgeEffect = new EdgeEffectParameters()
-                {
-                    Colour = Color4.Black,
-                    Type = EdgeEffectType.Shadow,
-                    Radius = 2
-                };
-
                 InternalChildren = new Drawable[]
                 {
-                    createNameAndTeamContainer(info),
                     new Container()
                     {
                         RelativeSizeAxes = Axes.X,
-                        Size = new Vector2(1, 40),
-                        Position = new Vector2(0, 20),
+                        Size = new Vector2(1, 60),
                         Masking = true,
+                        EdgeEffect = new EdgeEffectParameters()
+                        {
+                            Colour = Color4.Black.Opacity(0.8f),
+                            Type = EdgeEffectType.Shadow,
+                            Radius = 4
+                        },
                         Children = new Drawable[]
                         {
-                            new Box()
+                            createNameAndTeamContainer(info),
+                            new Container()
                             {
-                                RelativeSizeAxes = Axes.Both,
+                                RelativeSizeAxes = Axes.X,
+                                Size = new Vector2(1, 40),
+                                Position = new Vector2(0, 20),
+                                Masking = true,
+                                Children = new Drawable[]
+                                {
+                                    new Box()
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                    },
+                                    createInfoContainer(info),
+                                }
                             },
-                            createInfoContainer(info),
                         }
                     },
                     coProgress = new PowerProgress(info.ActiveCO.Value.PowerRequiredForNormal, info.ActiveCO.Value.PowerRequiredForSuper)
                     {
                         RelativeSizeAxes = Axes.X,
-                        Size = new Vector2(1, 19f),
-                        Position = new Vector2(0, 61)
+                        Size = new Vector2(1, 15f),
+                        Position = new Vector2(0, 62)
+                    },
+                    normalPowerBackground = new Container()
+                    {
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Position = new Vector2(0, 62),
+                        Masking = true,
+                        CornerRadius = 3,
+                        Width = 0.6f,
+                        Children = new Drawable[]
+                        {
+                            new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = Color4Extensions.FromHex("932213").Opacity(0.5f)
+                            },
+                            normalPower = new Sprite()
+                            {
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre
+                            },
+                        }
+                    },
+                    superPowerBackground = new Container()
+                    {
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Position = new Vector2(0, 62),
+                        Masking = true,
+                        CornerRadius = 3,
+                        Width = 0.6f,
+                        Children = new Drawable[]
+                        {
+                            new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = Color4Extensions.FromHex("191393").Opacity(0.5f)
+                            },
+                            superPower = new Sprite()
+                            {
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre
+                            },
+                        }
                     }
                 };
 
                 if (info.TagCO.Value.CO != null)
                     adjustContentForTagCO(info);
 
-                info.Eliminated.BindValueChanged(OnEliminationChange, true);
-                info.ActiveCO.BindValueChanged(x => OnCOChange(x, false), true);
-                info.TagCO.BindValueChanged(x => OnCOChange(x, true), true);
+                info.Eliminated.BindValueChanged(onEliminationChange, true);
+                info.ActiveCO.BindValueChanged(x => onCOChange(x, false), true);
+                info.TagCO.BindValueChanged(x => onCOChange(x, true), true);
+                info.ActivePower.BindValueChanged(x => onPowerActivationChange(x.NewValue), true);
             }
 
             private Drawable createNameAndTeamContainer(PlayerInfo info)
@@ -361,14 +422,12 @@ namespace AWBWApp.Game.UI
                     teamSprite.Texture = textureStore.Get($"UI/Team-{Team}");
 
                 unitValueCoin.Texture = textureStore.Get("UI/Coin");
-            }
 
-            private void OnEliminationChange(ValueChangedEvent<bool> eliminated)
-            {
-                if (eliminated.NewValue)
-                    this.FadeTo(0.6f, 100, Easing.In);
-                else
-                    this.FadeTo(1f, 100, Easing.In);
+                normalPower.Texture = textureStore.Get("UI/NormalPower");
+                normalPower.Size = normalPower.Texture.Size;
+
+                superPower.Texture = textureStore.Get("UI/SuperPower");
+                superPower.Size = superPower.Texture.Size;
             }
 
             public int CompareTo(DrawableReplayPlayer other)
@@ -376,11 +435,50 @@ namespace AWBWApp.Game.UI
                 return RoundOrder.CompareTo(other.RoundOrder);
             }
 
-            private void OnCOChange(ValueChangedEvent<COInfo> coUpdated, bool wasTagCO)
+            private void onEliminationChange(ValueChangedEvent<bool> eliminated)
+            {
+                if (eliminated.NewValue)
+                    this.FadeTo(0.6f, 100, Easing.In);
+                else
+                    this.FadeTo(1f, 100, Easing.In);
+            }
+
+            private void onPowerActivationChange(ActiveCOPower power)
+            {
+                coProgress.FadeTo(power == ActiveCOPower.None ? 1 : 0, 400);
+                tagProgress?.FadeTo(power == ActiveCOPower.None ? 1 : 0, 400);
+
+                if (power == ActiveCOPower.Super)
+                {
+                    superPowerBackground.FadeTo(1, 400, Easing.OutQuint);
+                    superPower.Loop(2400, p => p.ScaleTo(new Vector2(1.5f, 1), 1000, Easing.InOutSine).Then(200).ScaleTo(1, 1000, Easing.InOutSine));
+
+                    normalPowerBackground.FadeTo(0, 400, Easing.OutQuint);
+                    normalPower.ScaleTo(1);
+                }
+                else if (power == ActiveCOPower.Normal)
+                {
+                    normalPowerBackground.FadeTo(1, 400, Easing.OutQuint);
+                    normalPower.Loop(2400, p => p.ScaleTo(new Vector2(1.5f, 1), 1000, Easing.InOutSine).Then(200).ScaleTo(1, 1000, Easing.InOutSine));
+
+                    superPowerBackground.FadeTo(0, 400, Easing.OutQuint);
+                    superPower.ScaleTo(1);
+                }
+                else
+                {
+                    superPowerBackground.FadeTo(0, 400, Easing.OutQuint);
+                    superPower.ScaleTo(1);
+
+                    normalPowerBackground.FadeTo(0, 400, Easing.OutQuint);
+                    normalPower.ScaleTo(1);
+                }
+            }
+
+            private void onCOChange(ValueChangedEvent<COInfo> coUpdated, bool wasTagCO)
             {
                 if (LoadState != LoadState.Loaded)
                 {
-                    Schedule(() => OnCOChange(coUpdated, wasTagCO));
+                    Schedule(() => onCOChange(coUpdated, wasTagCO));
                     return;
                 }
 
@@ -414,7 +512,7 @@ namespace AWBWApp.Game.UI
 
                     coSprite.ResizeTo(new Vector2(36), 400, Easing.Out);
                     tagCOSprite.ResizeTo(new Vector2(24), 400, Easing.Out);
-                    coProgress.MoveTo(new Vector2(0, 61), 400, Easing.Out);
+                    coProgress.MoveTo(new Vector2(0, 62), 400, Easing.Out);
                     tagProgress.MoveTo(new Vector2(0, 76), 400, Easing.Out);
                     var content = tableContainer.Content;
                     var newContent = new[,] { { coSprite, tagCOSprite, content[0, 2], content[0, 3] } };
@@ -445,27 +543,39 @@ namespace AWBWApp.Game.UI
                         throw new Exception("Failed to update powers correctly");
                 }
 
-                progressBar.UpdatePower(coUpdated.NewValue.Power ?? 0);
+                progressBar.Current.Value = coUpdated.NewValue.Power ?? 0;
             }
 
-            private class PowerProgress : Container
+            private class PowerProgress : Container, IHasCurrentValue<int>
             {
-                private List<PowerSegment> segments = new List<PowerSegment>();
+                private readonly BindableWithCurrent<int> current = new BindableWithCurrent<int>();
 
-                public int PowerRequiredForSuper => segments.Count * progressPerBar;
-                public int PowerRequiredForNormal => smallBars * progressPerBar;
-
-                public int ProgressPerBar
+                public Bindable<int> Current
                 {
-                    get => progressPerBar;
+                    get => current.Current;
+                    set => current.Current = value;
+                }
+
+                private int displayedPower;
+
+                public int DisplayedValue
+                {
+                    get => displayedPower;
                     set
                     {
-                        progressPerBar = value;
-                        UpdateProgressPerBar();
+                        if (displayedPower == value)
+                            return;
+                        displayedPower = value;
+                        UpdatePower();
                     }
                 }
 
-                private int progressPerBar = 90000;
+                private List<PowerSegment> segments = new List<PowerSegment>();
+
+                public int PowerRequiredForSuper => segments.Count * ProgressPerBar;
+                public int PowerRequiredForNormal => smallBars * ProgressPerBar;
+
+                public int ProgressPerBar = 90000;
 
                 private readonly int smallBars;
 
@@ -478,15 +588,14 @@ namespace AWBWApp.Game.UI
                     if (requiredNormal == requiredSuper)
                         requiredNormal = null;
 
-                    smallBars = requiredNormal.HasValue ? requiredNormal.Value / progressPerBar : 0;
-                    var largeBars = requiredSuper.HasValue ? (requiredSuper.Value / progressPerBar) - smallBars : 0;
+                    smallBars = requiredNormal.HasValue ? requiredNormal.Value / ProgressPerBar : 0;
+                    var largeBars = requiredSuper.HasValue ? (requiredSuper.Value / ProgressPerBar) - smallBars : 0;
                     var barWidth = 1f / (smallBars + largeBars);
 
                     for (int i = 0; i < smallBars; i++)
                     {
                         var child = new PowerSegment(false)
                         {
-                            Max = progressPerBar,
                             RelativePositionAxes = Axes.X,
                             Position = new Vector2(barWidth * segments.Count, 0),
                             Width = barWidth
@@ -500,7 +609,6 @@ namespace AWBWApp.Game.UI
                     {
                         var child = new PowerSegment(true)
                         {
-                            Max = progressPerBar,
                             RelativePositionAxes = Axes.X,
                             Position = new Vector2(barWidth * segments.Count, 0),
                             Width = barWidth
@@ -509,63 +617,65 @@ namespace AWBWApp.Game.UI
                         Add(child);
                         segments.Add(child);
                     }
+
+                    Current.BindValueChanged(val => TransformPower(DisplayedValue, val.NewValue));
                 }
 
-                protected void UpdateProgressPerBar()
+                public void UpdatePower()
                 {
-                    foreach (var segment in segments)
-                        segment.Max = progressPerBar;
-                }
+                    var power = displayedPower;
 
-                public void UpdatePower(int newPower)
-                {
+                    var hasPower = power >= ProgressPerBar * smallBars;
+                    var hasSuperPower = power >= ProgressPerBar * segments.Count;
+
                     foreach (var segment in segments)
                     {
-                        var countForSegment = Math.Max(0, Math.Min(progressPerBar, newPower));
+                        var countForSegment = Math.Max(0, Math.Min(ProgressPerBar, power));
 
-                        newPower -= countForSegment;
-                        segment.Current.Value = countForSegment;
+                        power -= countForSegment;
+                        segment.SegmentProgress = (float)countForSegment / ProgressPerBar;
+
+                        segment.Pulsating = segment.Super ? hasSuperPower : hasPower;
                     }
                 }
 
-                private class PowerSegment : Container, IHasCurrentValue<int>
+                public void TransformPower(int currentValue, int newValue)
                 {
-                    public Bindable<int> Current
-                    {
-                        get => current.Current;
-                        set => current.Current = value;
-                    }
+                    this.TransformTo(nameof(DisplayedValue), newValue, 400, Easing.OutCubic);
+                }
 
-                    public int DisplayedValue
+                private class PowerSegment : Container
+                {
+                    private float progress;
+
+                    public float SegmentProgress
                     {
-                        get => displayedValue;
+                        get => progress;
                         set
                         {
-                            if (displayedValue == value)
-                                return;
-                            displayedValue = value;
+                            progress = value;
                             UpdateDisplay();
                         }
                     }
 
-                    private int displayedValue;
+                    private bool pulsating;
 
-                    public int Max
+                    public bool Pulsating
                     {
-                        get => max;
+                        get => pulsating;
                         set
                         {
-                            max = value;
-                            UpdateDisplay();
+                            pulsating = value;
+                            UpdatePulsating();
                         }
                     }
 
-                    private int max;
+                    public bool Super { get; private set; }
 
-                    private readonly BindableWithCurrent<int> current = new BindableWithCurrent<int>();
-
-                    private readonly Box background;
                     private readonly Box fill;
+                    private readonly Color4 notFilledColor = Color4Extensions.FromHex("059113");
+                    private readonly Color4 filledColor = Color4Extensions.FromHex("0eaf1e").Lighten(0.25f);
+                    private readonly Color4 filledPulsateColor = Color4Extensions.FromHex("17d129").LightenAndFade(0.6f);
 
                     public PowerSegment(bool super)
                     {
@@ -574,20 +684,27 @@ namespace AWBWApp.Game.UI
                         Anchor = Anchor.CentreLeft;
                         Origin = Anchor.CentreLeft;
 
-                        Height = super ? 1 : 0.5f;
+                        Super = super;
+
+                        Height = super ? 1 : 0.7f;
 
                         Children = new Drawable[]
                         {
+                            new Box()
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = Color4.Black.Opacity(0.4f)
+                            },
                             fill = new Box()
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                Colour = Color4.Green
+                                Colour = notFilledColor
                             },
                             new Container()
                             {
                                 Masking = true,
                                 RelativeSizeAxes = Axes.Both,
-                                BorderColour = Color4.White,
+                                BorderColour = new Color4(200, 200, 200, 255),
                                 BorderThickness = 3,
                                 Child = new Box()
                                 {
@@ -602,18 +719,30 @@ namespace AWBWApp.Game.UI
                     protected override void LoadComplete()
                     {
                         base.LoadComplete();
-
-                        Current.BindValueChanged(val => TransformBar(DisplayedValue, val.NewValue));
+                        UpdateDisplay();
                     }
 
                     protected void UpdateDisplay()
                     {
-                        fill.Width = (float)DisplayedValue / Max;
+                        fill.Width = progress;
+
+                        if (progress < 1)
+                            pulsating = false;
+
+                        FinishTransforms();
+                        fill.FadeColour(progress >= 1 ? filledColor : notFilledColor, 200, Easing.OutQuint);
                     }
 
-                    protected void TransformBar(int currentValue, int newValue)
+                    protected void UpdatePulsating()
                     {
-                        this.TransformTo(nameof(DisplayedValue), newValue, 400, Easing.OutQuint);
+                        if (!pulsating)
+                        {
+                            UpdateDisplay();
+                            return;
+                        }
+
+                        fill.FadeColour(filledColor, 200, Easing.OutQuint);
+                        fill.Delay(200).Loop(600, p => p.FadeColour(filledPulsateColor, 400, Easing.In).Then().FadeColour(filledColor, 600, Easing.In));
                     }
                 }
             }

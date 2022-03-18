@@ -389,7 +389,13 @@ namespace AWBWApp.Game.Game.Logic
                     }
                 }
 
-                player.Value.UpdateTurn(currentTurn.Players[player.Key], COStorage, turnIdx, unitCount, unitValue, propertyValue);
+                var activePower = GetActivePowerForPlayer(player.Key);
+
+                ActiveCOPower powerType = ActiveCOPower.None;
+                if (activePower != null)
+                    powerType = activePower.IsSuperPower ? ActiveCOPower.Super : ActiveCOPower.Normal;
+
+                player.Value.UpdateTurn(currentTurn.Players[player.Key], COStorage, turnIdx, unitCount, unitValue, propertyValue, powerType);
             }
 
             if (reset)

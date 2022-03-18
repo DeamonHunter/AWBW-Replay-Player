@@ -18,6 +18,7 @@ namespace AWBWApp.Game.Game.Logic
         public BindableBool Eliminated = new BindableBool();
         public Bindable<COInfo> ActiveCO = new Bindable<COInfo>();
         public Bindable<COInfo> TagCO = new Bindable<COInfo>();
+        public Bindable<ActiveCOPower> ActivePower = new Bindable<ActiveCOPower>();
 
         public BindableInt Funds = new BindableInt();
         public BindableInt UnitCount = new BindableInt();
@@ -36,7 +37,7 @@ namespace AWBWApp.Game.Game.Logic
             EliminatedOn = player.EliminatedOn;
         }
 
-        public void UpdateTurn(ReplayUserTurn turn, COStorage coStorage, int turnNumber, int unitCount, int unitValue, int propertyValue)
+        public void UpdateTurn(ReplayUserTurn turn, COStorage coStorage, int turnNumber, int unitCount, int unitValue, int propertyValue, ActiveCOPower activePower)
         {
             Eliminated.Value = EliminatedOn.HasValue && turnNumber >= EliminatedOn;
 
@@ -60,6 +61,8 @@ namespace AWBWApp.Game.Game.Logic
                 PowerRequiredForNormal = turn.TagRequiredPowerForNormal,
                 PowerRequiredForSuper = turn.TagRequiredPowerForSuper
             };
+
+            ActivePower.Value = activePower;
         }
     }
 

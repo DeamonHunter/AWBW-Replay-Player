@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Country;
@@ -6,8 +7,12 @@ using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.UI;
 using NUnit.Framework;
 using osu.Framework.Allocation;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
+using osuTK;
+using osuTK.Graphics;
 
 namespace AWBWApp.Game.Tests.Visual.Screens
 {
@@ -71,7 +76,6 @@ namespace AWBWApp.Game.Tests.Visual.Screens
             var replayPlayerTurn = new ReplayUserTurn
             {
                 ActiveCOID = 1,
-                ActiveCOPowers = ActiveCOPowers.None,
                 Eliminated = false,
                 Funds = 0,
                 Power = 0,
@@ -87,7 +91,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                 replayPlayerTurn.TagRequiredPowerForSuper = 720000;
             }
 
-            playerInfo.UpdateTurn(replayPlayerTurn, coStorage, 0, 0, 0, 0);
+            playerInfo.UpdateTurn(replayPlayerTurn, coStorage, 0, 0, 0, 0, ActiveCOPower.None);
 
             Child = new Container
             {
@@ -95,7 +99,18 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                 Width = 225,
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Child = new ReplayPlayerList.DrawableReplayPlayer(playerInfo)
+                Children = new Drawable[]
+                {
+                    new Box()
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = new Color4(42, 91, 139, 255).Lighten(0.2f),
+                        Size = new Vector2(2)
+                    },
+                    new ReplayPlayerList.DrawableReplayPlayer(playerInfo)
+                }
             };
         }
 
@@ -104,23 +119,25 @@ namespace AWBWApp.Game.Tests.Visual.Screens
             AddStep("Add money", () => updatePlayerInfo(gainMoney: 10000));
             AddStep("Add units", () => updatePlayerInfo(gainUnits: 10, gainUnitValue: 10000));
             AddStep("Add property value", () => updatePlayerInfo(gainPropertyValue: 10000));
-            AddStep("Add power", () => updatePlayerInfo(gainPower: 10000));
-            AddStep("Set Power to next value", () => updatePlayerInfo(gainPower: 10000));
+            AddStep("Add power", () => updatePlayerInfo(gainPower: 100000));
+            AddStep("Fill Power", () => updatePlayerInfo(gainPower: int.MaxValue));
+            AddStep("Activate Normal Power", () => updatePlayerInfo(activatePower: ActiveCOPower.Normal));
+            AddStep("Activate Super Power", () => updatePlayerInfo(activatePower: ActiveCOPower.Super));
+            AddStep("Deactivate Power", () => updatePlayerInfo());
 
             if (tag)
             {
                 AddStep("Swap Tag", () => updatePlayerInfo(swapTag: true));
                 AddStep("Add power", () => updatePlayerInfo(gainPower: 10000));
-                AddStep("Set Power to next value", () => updatePlayerInfo(gainPower: 10000));
+                AddStep("Fill Power", () => updatePlayerInfo(gainPower: int.MaxValue));
                 AddStep("Swap Tag", () => updatePlayerInfo(swapTag: true));
             }
         }
 
-        private void updatePlayerInfo(bool swapTag = false, int? gainMoney = null, int? gainPower = null, int? newRequiredPower = null, int? newSuperPower = null, int? gainUnits = null, int? gainUnitValue = null, int? gainPropertyValue = null)
+        private void updatePlayerInfo(bool swapTag = false, int? gainMoney = null, int? gainPower = null, int? newRequiredPower = null, int? newSuperPower = null, int? gainUnits = null, int? gainUnitValue = null, int? gainPropertyValue = null, ActiveCOPower activatePower = ActiveCOPower.None)
         {
             var replayPlayerTurn = new ReplayUserTurn
             {
-                ActiveCOPowers = ActiveCOPowers.None, //Todo: Show
                 Eliminated = playerInfo.Eliminated.Value,
                 Funds = playerInfo.Funds.Value,
 
@@ -139,7 +156,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                 replayPlayerTurn.Funds += gainMoney.Value;
 
             if (gainPower.HasValue)
-                replayPlayerTurn.Power += gainPower.Value;
+                replayPlayerTurn.Power = (int)Math.Min(replayPlayerTurn.RequiredPowerForSuper ?? 0, (long)replayPlayerTurn.Power + gainPower.Value);
 
             if (newRequiredPower.HasValue || newSuperPower.HasValue)
             {
@@ -155,11 +172,14 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                 (replayPlayerTurn.RequiredPowerForSuper, replayPlayerTurn.TagRequiredPowerForSuper) = (replayPlayerTurn.TagRequiredPowerForSuper, replayPlayerTurn.RequiredPowerForSuper);
             }
 
+            if (activatePower != null)
+                replayPlayerTurn.Power = 0;
+
             var unitCount = playerInfo.UnitCount.Value + (gainUnits ?? 0);
             var unitValue = playerInfo.UnitCount.Value + (gainUnitValue ?? 0);
             var propertyValue = playerInfo.UnitCount.Value + (gainPropertyValue ?? 0);
 
-            playerInfo.UpdateTurn(replayPlayerTurn, coStorage, 0, unitCount, unitValue, propertyValue);
+            playerInfo.UpdateTurn(replayPlayerTurn, coStorage, 0, unitCount, unitValue, propertyValue, activatePower);
         }
     }
 }

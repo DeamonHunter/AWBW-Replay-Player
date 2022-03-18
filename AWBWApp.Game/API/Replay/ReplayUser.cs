@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace AWBWApp.Game.API.Replay
 {
@@ -34,17 +33,6 @@ namespace AWBWApp.Game.API.Replay
         public int? TagRequiredPowerForNormal; //This changes every time we use a power.
         public int? TagRequiredPowerForSuper; //This changes every time we use a power.
 
-        public ActiveCOPowers ActiveCOPowers;
         public bool Eliminated;
-    }
-
-    [Flags]
-    public enum ActiveCOPowers
-    {
-        None = 0,
-        Normal = 1 << 0,
-        Super = 1 << 1,
-        TagNormal = 1 << 2,
-        TagSuper = 1 << 3,
     }
 }

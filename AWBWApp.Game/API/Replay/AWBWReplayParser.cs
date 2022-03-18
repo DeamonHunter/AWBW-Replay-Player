@@ -649,32 +649,6 @@ namespace AWBWApp.Game.API.Replay
                             break;
                         }
 
-                        case "co_power_on":
-                        {
-                            var powerActive = readString(text, ref textIndex);
-
-                            //Todo: See if this changes for Tag
-                            switch (powerActive)
-                            {
-                                case "N":
-                                    playerDataTurn.ActiveCOPowers = ActiveCOPowers.None;
-                                    break;
-
-                                case "Y":
-                                    playerDataTurn.ActiveCOPowers = ActiveCOPowers.Normal;
-                                    break;
-
-                                case "S":
-                                    playerDataTurn.ActiveCOPowers = ActiveCOPowers.Super;
-                                    break;
-
-                                default:
-                                    throw new Exception("Unknown power: " + powerActive); //Todo: Do Tag CO's trigger this.
-                            }
-
-                            break;
-                        }
-
                         case "order":
                         {
                             var turnIndex = readInteger(text, ref textIndex);
@@ -692,6 +666,13 @@ namespace AWBWApp.Game.API.Replay
                         }
 
                         #region Unneeded Values
+
+                        case "co_power_on":
+                        {
+                            //Can be "N", "Y" or "S". This is not saved as the replay player will calculate this itself.
+                            readString(text, ref textIndex);
+                            break;
+                        }
 
                         case "co_image":
                         {
