@@ -343,14 +343,14 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            var co = controller.COStorage.GetCOByName(CombatOfficerName);
+            COPower = IsSuperPower ? co.SuperPower : co.NormalPower;
+
             controller.RegisterPower(this, context);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
-            var co = controller.COStorage.GetCOByName(CombatOfficerName);
-            COPower = IsSuperPower ? co.SuperPower : co.NormalPower;
-
             var powerAnimation = new PowerDisplay(CombatOfficerName, PowerName, IsSuperPower);
             controller.AddGenericActionAnimation(powerAnimation);
             yield return ReplayWait.WaitForTransformable(powerAnimation);
@@ -363,6 +363,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             var coValue = controller.ActivePlayer.ActiveCO.Value;
             coValue.Power = LeftOverPower;
+            var co = controller.COStorage.GetCOByName(CombatOfficerName);
             if (co.NormalPower != null)
                 coValue.PowerRequiredForNormal += 18000 * co.NormalPower.PowerStars;
             if (co.SuperPower != null)
