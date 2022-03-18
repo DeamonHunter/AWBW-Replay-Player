@@ -75,14 +75,8 @@ namespace AWBWApp.Game.Game.Logic
         {
             AddRange(new Drawable[]
             {
-                gameBoardDrawable = new Container<DrawableTile>
-                {
-                    AutoSizeAxes = Axes.Both
-                },
-                buildingsDrawable = new Container<DrawableBuilding>
-                {
-                    AutoSizeAxes = Axes.Both
-                },
+                gameBoardDrawable = new Container<DrawableTile>(),
+                buildingsDrawable = new Container<DrawableBuilding>(),
                 grid = new MovingGrid
                 {
                     Position = new Vector2(-1, DrawableTile.BASE_SIZE.Y - 2),
@@ -91,10 +85,7 @@ namespace AWBWApp.Game.Game.Logic
                     LineSize = new Vector2(2),
                     GridColor = new Color4(15, 15, 15, 255),
                 },
-                unitsDrawable = new Container<DrawableUnit>
-                {
-                    AutoSizeAxes = Axes.Both
-                },
+                unitsDrawable = new Container<DrawableUnit>(),
                 effectAnimationController = new EffectAnimationController
                 {
                     Origin = Anchor.TopLeft,
@@ -176,11 +167,19 @@ namespace AWBWApp.Game.Game.Logic
             }
 
             AutoSizeAxes = Axes.Both;
-            effectAnimationController.Size = new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y);
-            grid.Size = new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y);
+            setSize(new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y));
 
             gameBoardDrawable.FadeOut().FadeIn(250);
             animateStart(4);
+        }
+
+        private void setSize(Vector2 size)
+        {
+            grid.Size = size;
+            gameBoardDrawable.Size = size;
+            buildingsDrawable.Size = size;
+            unitsDrawable.Size = size;
+            effectAnimationController.Size = size;
         }
 
         public void SetInfoPopup(DetailedInformationPopup popup)
@@ -278,8 +277,7 @@ namespace AWBWApp.Game.Game.Logic
             fogOfWarGenerator.FogOfWar.BindValueChanged(x => updateFog(x.NewValue));
 
             AutoSizeAxes = Axes.Both;
-            effectAnimationController.Size = new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y);
-            grid.Size = new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y);
+            setSize(new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, MapSize.Y * DrawableTile.BASE_SIZE.Y));
 
             CurrentWeather.Value = gameState.TurnData[0].StartWeather.Type;
             gameBoardDrawable.FadeIn();
