@@ -54,7 +54,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public UnitPosition[] Path { get; set; }
         public bool Trapped { get; set; }
 
-        public void Setup(ReplayController controller, ReplaySetupContext context)
+        public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
         }
 
@@ -149,22 +149,9 @@ namespace AWBWApp.Game.API.Replay.Actions
             });
         }
 
-        public void UndoAction(ReplayController controller, bool immediate)
+        public void UndoAction(ReplayController controller)
         {
             Logger.Log("Undoing Move Action.");
-            var unit = controller.Map.GetDrawableUnit(Unit.ID);
-
-            var transformSequence = unit.FollowPath(Path, true);
-            transformSequence.Finally(x =>
-            {
-                unit.MoveToPosition(new Vector2I(Path[0].X, Path[0].Y));
-                unit.CanMove.Value = true;
-
-                unit.CheckForDesyncs(Unit);
-            });
-
-            if (immediate)
-                unit.FinishTransforms();
         }
     }
 }

@@ -341,7 +341,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public List<CreateUnit> CreatedUnits;
         public List<Vector2I> MissileCoords;
 
-        public void Setup(ReplayController controller, ReplaySetupContext context)
+        public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
             controller.RegisterPower(this, context);
         }
@@ -517,7 +517,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
         }
 
-        public void UndoAction(ReplayController controller, bool immediate)
+        public void UndoAction(ReplayController controller)
         {
             throw new NotImplementedException("Undo Power Action is not complete");
         }

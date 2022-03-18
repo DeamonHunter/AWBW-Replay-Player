@@ -13,6 +13,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddStep("Setup", createTest);
             AddStep("Create Unit", ReplayController.GoToNextAction);
             AddAssert("Unit was created", () => ReplayController.Map.TryGetDrawableUnit(0, out _));
+            AddStep("Undo", ReplayController.UndoAction);
+            AddAssert("Unit doesn't exist", () => !ReplayController.Map.TryGetDrawableUnit(0, out _));
         }
 
         private void createTest()
@@ -34,6 +36,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             turn.Actions.Add(createUnitAction);
 
             ReplayController.LoadReplay(replayData, CreateBasicMap(5, 5));
+            ReplayController.AllowRewinding = true;
         }
     }
 }

@@ -50,7 +50,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public int FundsAfterJoin { get; set; }
 
-        public void Setup(ReplayController controller, ReplaySetupContext context)
+        public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
         }
 
@@ -73,7 +73,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             joinedUnit.UpdateUnit(JoinedUnit);
         }
 
-        public void UndoAction(ReplayController controller, bool immediate)
+        public void UndoAction(ReplayController controller)
         {
             throw new NotImplementedException("Undo Join Action is not complete");
         }

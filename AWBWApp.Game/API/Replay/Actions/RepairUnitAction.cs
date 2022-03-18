@@ -57,7 +57,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public int FundsAfterRepair;
 
-        public void Setup(ReplayController controller, ReplaySetupContext context)
+        public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
         }
 
@@ -85,7 +85,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                       .Delay(125).FadeOut());
         }
 
-        public void UndoAction(ReplayController controller, bool immediate)
+        public void UndoAction(ReplayController controller)
         {
             throw new NotImplementedException("Undo Repair Action is not complete");
         }

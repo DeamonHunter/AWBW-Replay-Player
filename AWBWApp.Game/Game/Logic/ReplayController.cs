@@ -24,6 +24,8 @@ namespace AWBWApp.Game.Game.Logic
 
         public bool HasLoadedReplay { get; private set; }
 
+        public bool AllowRewinding { get; set; }
+
         [Resolved]
         public COStorage COStorage { get; private set; }
 
@@ -216,7 +218,7 @@ namespace AWBWApp.Game.Game.Logic
                 for (int j = 0; j < setupContext.CurrentTurn.Actions.Count; j++)
                 {
                     setupContext.CurrentActionIndex = j;
-                    currentTurn.Actions[j].Setup(this, setupContext);
+                    currentTurn.Actions[j].SetupAndUpdate(this, setupContext);
                 }
             }
         }
@@ -281,7 +283,7 @@ namespace AWBWApp.Game.Game.Logic
             if (currentTurn.Actions == null)
                 return false;
 
-            return currentActionIndex > 0;
+            return currentActionIndex >= 0;
         }
 
         public void GoToNextAction()
@@ -330,6 +332,23 @@ namespace AWBWApp.Game.Game.Logic
                 goToTurnWithIdx(CurrentTurnIndex.Value + 1, false);
                 return;
             }
+
+            barWidget.UpdateActions();
+        }
+
+        public void UndoAction()
+        {
+            if (currentTurn.Actions == null || currentActionIndex < 0)
+            {
+                //Todo: Maybe some notification to say no actions occured?
+                goToTurnWithIdx(CurrentTurnIndex.Value - 1, true);
+                return;
+            }
+
+            completeAllActions();
+
+            currentTurn.Actions[currentActionIndex].UndoAction(this);
+            currentActionIndex--;
 
             barWidget.UpdateActions();
         }

@@ -43,7 +43,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public MoveUnitAction MoveUnit;
         public long DeletedUnitId { get; set; }
 
-        public void Setup(ReplayController controller, ReplaySetupContext context)
+        public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
         }
 
@@ -62,7 +62,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             controller.ActivePlayer.Funds.Value += ReplayActionHelper.CalculateUnitCost(unit, controller.ActivePlayer.ActiveCO.Value.CO.DayToDayPower, null); //Unit funds does not care about the current active powers
         }
 
-        public void UndoAction(ReplayController controller, bool immediate)
+        public void UndoAction(ReplayController controller)
         {
             throw new NotImplementedException("Undo Delete Action is not complete");
         }

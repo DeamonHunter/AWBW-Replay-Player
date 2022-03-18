@@ -9,7 +9,7 @@ namespace AWBWApp.Game.API.Replay.Actions
     {
         public string ReadibleName => "Empty";
 
-        public void Setup(ReplayController controller, ReplaySetupContext context) { }
+        public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context) { }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
@@ -17,7 +17,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             yield break;
         }
 
-        public void UndoAction(ReplayController controller, bool immediate)
+        public void UndoAction(ReplayController controller)
         {
             Logger.Log("Empty action Undone.");
         }

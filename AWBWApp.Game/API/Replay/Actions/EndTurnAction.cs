@@ -79,7 +79,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public List<long> SuppliedUnits;
         public List<(long id, int hp)> RepairedUnits;
 
-        public void Setup(ReplayController controller, ReplaySetupContext context)
+        public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
         }
 
@@ -131,7 +131,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             controller.GoToNextTurn(false);
         }
 
-        public void UndoAction(ReplayController controller, bool immediate)
+        public void UndoAction(ReplayController controller)
         {
             throw new NotImplementedException("Undo EndTurn Action is not complete");
         }

@@ -81,7 +81,7 @@ namespace AWBWApp.Game.UI.Replay
                                 {
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
-                                    //Action = () => musicController.TogglePause(),
+                                    Action = () => this.replayController.UndoAction(),
                                     Icon = FontAwesome.Solid.AngleLeft
                                 },
                                 new Container()
@@ -156,7 +156,7 @@ namespace AWBWApp.Game.UI.Replay
         public void UpdateActions()
         {
             lastTurnButton.Enabled.Value = replayController.HasPreviousTurn();
-            prevButton.Enabled.Value = false; //replayController.HasPreviousAction(); //Todo: Implement undoing
+            prevButton.Enabled.Value = replayController.AllowRewinding && replayController.HasPreviousAction();
             nextButton.Enabled.Value = replayController.HasNextAction();
             nextTurnButton.Enabled.Value = replayController.HasNextTurn();
         }

@@ -49,7 +49,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public MoveUnitAction MoveUnit;
 
-        public void Setup(ReplayController controller, ReplaySetupContext context)
+        public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
         }
 
@@ -89,7 +89,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
         }
 
-        public void UndoAction(ReplayController controller, bool immediate)
+        public void UndoAction(ReplayController controller)
         {
             throw new NotImplementedException("Undo Explode Action is not complete");
         }

@@ -61,7 +61,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public List<long> Winners;
         public List<long> Losers;
 
-        public void Setup(ReplayController controller, ReplaySetupContext context)
+        public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
         }
 
@@ -72,7 +72,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             yield return ReplayWait.WaitForTransformable(powerAnimation);
         }
 
-        public void UndoAction(ReplayController controller, bool immediate)
+        public void UndoAction(ReplayController controller)
         {
             throw new NotImplementedException("Undo Build Action is not complete");
         }

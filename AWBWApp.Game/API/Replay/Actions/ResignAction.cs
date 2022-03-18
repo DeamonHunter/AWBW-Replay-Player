@@ -20,7 +20,7 @@ namespace AWBWApp.Game.API.Replay.Actions
     {
         public string ReadibleName => "Resign";
 
-        public void Setup(ReplayController controller, ReplaySetupContext context)
+        public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
         }
 
@@ -30,7 +30,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             throw new NotImplementedException();
         }
 
-        public void UndoAction(ReplayController controller, bool immediate)
+        public void UndoAction(ReplayController controller)
         {
             throw new NotImplementedException();
         }

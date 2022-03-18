@@ -8,9 +8,9 @@ namespace AWBWApp.Game.API.Replay
     {
         string ReadibleName { get; }
 
-        void Setup(ReplayController controller, ReplaySetupContext context);
+        void SetupAndUpdate(ReplayController controller, ReplaySetupContext context);
 
         IEnumerable<ReplayWait> PerformAction(ReplayController controller);
-        void UndoAction(ReplayController controller, bool immediate);
+        void UndoAction(ReplayController controller);
     }
 }

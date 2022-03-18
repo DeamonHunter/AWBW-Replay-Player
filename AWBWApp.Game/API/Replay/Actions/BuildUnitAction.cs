@@ -34,8 +34,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public ReplayUnit NewUnit;
 
-        public void Setup(ReplayController controller, ReplaySetupContext context)
+        public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            context.Units.Add(NewUnit.ID, NewUnit.Clone());
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -64,9 +65,9 @@ namespace AWBWApp.Game.API.Replay.Actions
             yield break;
         }
 
-        public void UndoAction(ReplayController controller, bool immediate)
+        public void UndoAction(ReplayController controller)
         {
-            throw new NotImplementedException("Undo Build Action is not complete");
+            controller.Map.DeleteUnit(NewUnit.ID, false);
         }
     }
 }

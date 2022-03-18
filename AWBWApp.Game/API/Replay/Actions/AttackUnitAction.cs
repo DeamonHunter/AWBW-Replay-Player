@@ -116,8 +116,12 @@ namespace AWBWApp.Game.API.Replay.Actions
         public MoveUnitAction MoveUnit;
         public EliminatedAction EliminatedAction;
 
-        public void Setup(ReplayController controller, ReplaySetupContext context)
+        private ReplayUnit undoAttacker;
+        private ReplayUnit undoDefender;
+
+        public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            MoveUnit?.SetupAndUpdate(controller, context);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -257,7 +261,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             return effect;
         }
 
-        public void UndoAction(ReplayController controller, bool immediate)
+        public void UndoAction(ReplayController controller)
         {
             throw new NotImplementedException("Undo Attack Action is not complete");
         }

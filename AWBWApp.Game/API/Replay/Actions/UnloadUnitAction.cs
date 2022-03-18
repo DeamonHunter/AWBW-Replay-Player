@@ -32,7 +32,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public long TransportID { get; set; }
         public ReplayUnit UnloadedUnit { get; set; }
 
-        public void Setup(ReplayController controller, ReplaySetupContext context)
+        public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
         }
 
@@ -57,7 +57,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             controller.UpdateFogOfWar();
         }
 
-        public void UndoAction(ReplayController controller, bool immediate)
+        public void UndoAction(ReplayController controller)
         {
             throw new NotImplementedException("Undo Unload Action is not complete");
         }
