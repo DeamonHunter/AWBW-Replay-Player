@@ -55,7 +55,6 @@ namespace AWBWApp.Game.Game.Unit
         public BindableBool IsCapturing = new BindableBool();
         public BindableBool BeingCarried = new BindableBool();
 
-        public BindableBool CanBeSeen = new BindableBool();
         public BindableBool Dived = new BindableBool();
         public Vector2I MapPosition { get; private set; }
 

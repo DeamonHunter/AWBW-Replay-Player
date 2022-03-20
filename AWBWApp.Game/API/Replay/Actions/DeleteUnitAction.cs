@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
@@ -44,12 +45,16 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public long DeletedUnitId { get; set; }
 
-        private ReplayUnit deletedUnit;
+        private ReplayUnit originalUnit;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
-            if (!context.Units.Remove(DeletedUnitId, out deletedUnit))
-                throw new Exception("Unknown unit deleted?");
+            MoveUnit?.SetupAndUpdate(controller, context);
+
+            if (!context.Units.Remove(DeletedUnitId, out var unit))
+                throw new ReplayMissingUnitException(DeletedUnitId);
+
+            originalUnit = unit.Clone();
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -69,7 +74,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            controller.Map.AddUnit(deletedUnit);
+            controller.Map.AddUnit(originalUnit);
+            MoveUnit?.UndoAction(controller);
         }
     }
 }

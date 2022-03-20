@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
@@ -54,8 +55,15 @@ namespace AWBWApp.Game.API.Replay.Actions
         public UnitPosition[] Path { get; set; }
         public bool Trapped { get; set; }
 
+        private ReplayUnit originalUnit;
+
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            if (!context.Units.TryGetValue(Unit.ID, out var unit))
+                throw new ReplayMissingUnitException(Unit.ID);
+
+            originalUnit = unit.Clone();
+            unit.Copy(Unit);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -152,6 +160,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public void UndoAction(ReplayController controller)
         {
             Logger.Log("Undoing Move Action.");
+            controller.Map.GetDrawableUnit(Unit.ID).UpdateUnit(originalUnit);
         }
     }
 }

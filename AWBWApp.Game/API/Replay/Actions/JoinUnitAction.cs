@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
@@ -50,15 +51,30 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public int FundsAfterJoin { get; set; }
 
+        //Variables for Undoing
+        private ReplayUnit originalJoiningUnit;
+        private ReplayUnit originalJoinedUnit;
+
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            MoveUnit?.SetupAndUpdate(controller, context);
+
+            if (!context.Units.Remove(JoiningUnitId, out var unit))
+                throw new ReplayMissingUnitException(JoiningUnitId);
+
+            originalJoiningUnit = unit.Clone();
+
+            if (!context.Units.TryGetValue(JoinedUnit.ID, out unit))
+                throw new ReplayMissingUnitException(JoinedUnit.ID);
+
+            originalJoinedUnit = unit.Clone();
+            unit.Copy(JoinedUnit);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Join Action.");
             Logger.Log("Join animation not completed.");
-            Logger.Log("Income change not implemented.");
 
             if (MoveUnit != null)
             {
@@ -75,7 +91,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            throw new NotImplementedException("Undo Join Action is not complete");
+            controller.Map.AddUnit(originalJoiningUnit);
+            controller.Map.GetDrawableUnit(originalJoinedUnit.ID).UpdateUnit(originalJoinedUnit);
+
+            MoveUnit?.UndoAction(controller);
         }
     }
 }

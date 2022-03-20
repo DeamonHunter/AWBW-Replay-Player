@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.API.Replay;
-using AWBWApp.Game.Game.Unit;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Tests.Visual.Logic
@@ -113,12 +111,12 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
         protected bool HasUnit(long unitID) => ReplayController.Map.TryGetDrawableUnit(unitID, out _);
 
-        protected bool DoesUnitMeetCondition(long unitID, Func<DrawableUnit, bool> unitTest)
+        protected bool DoesUnitMatchData(long unitID, ReplayUnit unit)
         {
-            if (!ReplayController.Map.TryGetDrawableUnit(unitID, out var unit))
+            if (!ReplayController.Map.TryGetDrawableUnit(unitID, out var drawableUnit))
                 return false;
 
-            return unitTest(unit);
+            return unit.DoesDrawableUnitMatch(drawableUnit);
         }
     }
 }

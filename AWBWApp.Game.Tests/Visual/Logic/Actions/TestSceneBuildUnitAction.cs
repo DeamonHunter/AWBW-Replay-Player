@@ -1,4 +1,5 @@
-﻿using AWBWApp.Game.API.Replay.Actions;
+﻿using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.API.Replay.Actions;
 using NUnit.Framework;
 using osu.Framework.Graphics.Primitives;
 
@@ -8,6 +9,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
     public class TestSceneBuildUnitAction : BaseActionsTestScene
     {
         private static Vector2I unitPosition = new Vector2I(2, 2);
+        private ReplayUnit createdUnit;
 
         [Test]
         public void TestCreateUnit()
@@ -31,7 +33,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             var building = CreateBasicReplayBuilding(0, unitPosition, 39);
             turn.Buildings.Add(building.Position, building);
 
-            var createdUnit = CreateBasicReplayUnit(0, 1, "Infantry", unitPosition);
+            createdUnit = CreateBasicReplayUnit(0, 1, "Infantry", unitPosition);
+            createdUnit.TimesMoved = 1;
 
             var createUnitAction = new BuildUnitAction
             {

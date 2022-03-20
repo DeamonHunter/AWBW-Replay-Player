@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using AWBWApp.Game.Game.Unit;
 using JetBrains.Annotations;
 using osu.Framework.Graphics.Primitives;
 
@@ -74,6 +76,47 @@ namespace AWBWApp.Game.API.Replay
             var unit = new ReplayUnit();
             unit.Copy(this);
             return unit;
+        }
+
+        public bool DoesDrawableUnitMatch(DrawableUnit unit)
+        {
+            if (ID != unit.UnitID)
+                return false;
+            if (PlayerID.HasValue && PlayerID != unit.OwnerID)
+                return false;
+
+            if (UnitName != null && UnitName != unit.UnitData.Name)
+                return false;
+            if (Position.HasValue && Position != unit.MapPosition)
+                return false;
+            if (HitPoints.HasValue && (int)(Math.Ceiling(HitPoints.Value)) != unit.HealthPoints.Value)
+                return false;
+            if (Fuel.HasValue && Fuel != unit.Fuel.Value)
+                return false;
+            if (Ammo.HasValue && Ammo != unit.Ammo.Value)
+                return false;
+
+            if (TimesMoved.HasValue && (TimesMoved != 0) == unit.CanMove.Value)
+                return false;
+            if (TimesCaptured.HasValue && (TimesCaptured != 0) == unit.CanMove.Value)
+                return false;
+            if (TimesFired.HasValue && (TimesFired != 0) == unit.CanMove.Value)
+                return false;
+
+            if (BeingCarried.HasValue && BeingCarried != unit.BeingCarried.Value)
+                return false;
+            if (SubHasDived.HasValue && SubHasDived != unit.Dived.Value)
+                return false;
+
+            //Todo: Not Checked
+            // Second weapon
+            // Fuel Per Turn
+            // Vision
+            // Range
+            // Cost
+            // Movement Type
+
+            return true;
         }
     }
 }
