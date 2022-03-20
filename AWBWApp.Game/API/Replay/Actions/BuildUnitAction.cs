@@ -67,7 +67,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            controller.Map.DeleteUnit(NewUnit.ID, false);
+            var unit = controller.Map.DeleteUnit(NewUnit.ID, false);
+
+            if (controller.Map.TryGetDrawableBuilding(unit.MapPosition, out DrawableBuilding building))
+                building.HasDoneAction.Value = false;
         }
     }
 }
