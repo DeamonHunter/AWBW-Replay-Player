@@ -41,10 +41,15 @@ namespace AWBWApp.Game.API.Replay.Actions
         public string ReadibleName => "Delete";
 
         public MoveUnitAction MoveUnit;
+
         public long DeletedUnitId { get; set; }
+
+        private ReplayUnit deletedUnit;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            if (!context.Units.Remove(DeletedUnitId, out deletedUnit))
+                throw new Exception("Unknown unit deleted?");
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -64,7 +69,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            throw new NotImplementedException("Undo Delete Action is not complete");
+            controller.Map.AddUnit(deletedUnit);
         }
     }
 }

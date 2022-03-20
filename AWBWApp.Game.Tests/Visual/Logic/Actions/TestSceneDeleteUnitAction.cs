@@ -5,7 +5,7 @@ using osu.Framework.Graphics.Primitives;
 namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 {
     [TestFixture]
-    public class TestSceneBuildUnitAction : BaseActionsTestScene
+    public class TestSceneDeleteUnitAction : BaseActionsTestScene
     {
         private static Vector2I unitPosition = new Vector2I(2, 2);
 
@@ -14,11 +14,9 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         {
             AddStep("Setup", createTest);
             AddStep("Create Unit", ReplayController.GoToNextAction);
-            AddAssert("Unit was created", () => HasUnit(0));
-            AddAssert("Building is done", () => ReplayController.Map.TryGetDrawableBuilding(unitPosition, out var building) && building.HasDoneAction.Value);
+            AddAssert("Unit was deleted", () => !HasUnit(0));
             AddStep("Undo", ReplayController.UndoAction);
-            AddAssert("Unit doesn't exist", () => !HasUnit(0));
-            AddAssert("Building is not done", () => ReplayController.Map.TryGetDrawableBuilding(unitPosition, out var building) && !building.HasDoneAction.Value);
+            AddAssert("Unit was created", () => HasUnit(0));
         }
 
         private void createTest()
@@ -28,14 +26,12 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
 
-            var building = CreateBasicReplayBuilding(0, unitPosition, 39);
-            turn.Buildings.Add(building.Position, building);
-
             var createdUnit = CreateBasicReplayUnit(0, 1, "Infantry", unitPosition);
+            turn.ReplayUnit.Add(createdUnit.ID, createdUnit);
 
-            var createUnitAction = new BuildUnitAction
+            var createUnitAction = new DeleteUnitAction
             {
-                NewUnit = createdUnit
+                DeletedUnitId = createdUnit.ID
             };
             turn.Actions.Add(createUnitAction);
 

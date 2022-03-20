@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.Game.Unit;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Tests.Visual.Logic
@@ -107,6 +109,16 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 Position = position,
                 TerrainID = terrainId,
             };
+        }
+
+        protected bool HasUnit(long unitID) => ReplayController.Map.TryGetDrawableUnit(unitID, out _);
+
+        protected bool DoesUnitMeetCondition(long unitID, Func<DrawableUnit, bool> unitTest)
+        {
+            if (!ReplayController.Map.TryGetDrawableUnit(unitID, out var unit))
+                return false;
+
+            return unitTest(unit);
         }
     }
 }
