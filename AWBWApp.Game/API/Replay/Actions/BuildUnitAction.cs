@@ -34,6 +34,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public ReplayUnit NewUnit;
         private int unitCost;
+        private int unitValue;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
@@ -44,6 +45,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             var currentPower = controller.GetActivePowerForPlayer(NewUnit.PlayerID!.Value);
 
             unitCost = ReplayActionHelper.CalculateUnitCost(NewUnit, dayToDay, currentPower?.COPower);
+            unitValue = ReplayActionHelper.CalculateUnitCost(NewUnit, dayToDay, null); //unitValue doesn't care about active powers
 
             activePlayer.Funds -= unitCost;
         }
@@ -65,6 +67,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 building.HasDoneAction.Value = true;
 
             controller.ActivePlayer.Funds.Value -= unitCost;
+            controller.ActivePlayer.UnitValue.Value += unitValue;
 
             controller.UpdateFogOfWar();
             controller.Map.PlaySelectionAnimation(unit);
@@ -80,6 +83,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 building.HasDoneAction.Value = false;
 
             controller.ActivePlayer.Funds.Value += unitCost;
+            controller.ActivePlayer.UnitValue.Value -= unitValue;
             controller.UpdateFogOfWar();
         }
     }
