@@ -54,7 +54,9 @@ namespace AWBWApp.Game.API.Replay.Actions
         //Variables for Undoing
         private ReplayUnit originalJoiningUnit;
         private ReplayUnit originalJoinedUnit;
+        private int valueChange;
 
+        //Todo: Track funds
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
             MoveUnit?.SetupAndUpdate(controller, context);
@@ -69,6 +71,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             originalJoinedUnit = unit.Clone();
             unit.Copy(JoinedUnit);
+
+            var dayToDay = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[context.ActivePlayerID].ActiveCOID).DayToDayPower;
+            var joinedUnitValueChange = ReplayActionHelper.CalculateUnitCost(JoinedUnit, dayToDay, null) - ReplayActionHelper.CalculateUnitCost(originalJoinedUnit, dayToDay, null);
+            valueChange = joinedUnitValueChange - ReplayActionHelper.CalculateUnitCost(originalJoiningUnit, dayToDay, null);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -86,6 +92,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             controller.Map.DeleteUnit(JoiningUnitId, false);
             var joinedUnit = controller.Map.GetDrawableUnit(JoinedUnit.ID);
+
+            controller.ActivePlayer.UnitValue.Value += valueChange;
+
             joinedUnit.UpdateUnit(JoinedUnit);
         }
 
@@ -93,6 +102,9 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             controller.Map.AddUnit(originalJoiningUnit);
             controller.Map.GetDrawableUnit(originalJoinedUnit.ID).UpdateUnit(originalJoinedUnit);
+
+            controller.ActivePlayer.UnitValue.Value -= valueChange;
+            controller.ActivePlayer.Funds.Value += valueChange;
 
             MoveUnit?.UndoAction(controller);
         }

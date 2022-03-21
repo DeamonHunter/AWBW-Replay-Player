@@ -14,28 +14,47 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         private ReplayUnit joinedUnit;
 
         [Test]
-        public void TestCreateUnit()
+        public void TestJoinUnit()
         {
-            AddStep("Setup", createTest);
+            AddStep("Setup", () => joinTest(false));
             AddStep("Join Unit", ReplayController.GoToNextAction);
             AddUntilStep("Wait for Unit A to disappear", () => !HasUnit(unitA.ID));
             AddAssert("Check Joined Unit is correct", () => DoesUnitMatchData(unitB.ID, joinedUnit));
+            AddAssert("Gained no funds", () => ReplayController.ActivePlayer.Funds.Value == 1000);
+            AddAssert("Unit Value is 1000", () => ReplayController.ActivePlayer.UnitValue.Value == 1000);
             AddStep("Undo", ReplayController.UndoAction);
             AddAssert("Both units are back to original stats", () => DoesUnitMatchData(unitA.ID, unitA) && DoesUnitMatchData(unitB.ID, unitB));
+            AddAssert("Unit Value is 1000", () => ReplayController.ActivePlayer.UnitValue.Value == 1000);
         }
 
-        private void createTest()
+        [Test]
+        public void TestJoinUnitOverflow()
+        {
+            AddStep("Setup", () => joinTest(true));
+            AddStep("Join Unit", ReplayController.GoToNextAction);
+            AddUntilStep("Wait for Unit A to disappear", () => !HasUnit(unitA.ID));
+            AddAssert("Check Joined Unit is correct", () => DoesUnitMatchData(unitB.ID, joinedUnit));
+            AddAssert("Gained 600 funds", () => ReplayController.ActivePlayer.Funds.Value == 1600);
+            AddAssert("Unit Value is 1000", () => ReplayController.ActivePlayer.UnitValue.Value == 1000);
+            AddStep("Undo", ReplayController.UndoAction);
+            AddAssert("Both units are back to original stats", () => DoesUnitMatchData(unitA.ID, unitA) && DoesUnitMatchData(unitB.ID, unitB));
+            AddAssert("Funds reverted", () => ReplayController.ActivePlayer.Funds.Value == 1000);
+            AddAssert("Unit Value is 1600", () => ReplayController.ActivePlayer.UnitValue.Value == 1600);
+        }
+
+        private void joinTest(bool higherHP)
         {
             var replayData = CreateBasicReplayData(2);
             var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
+            turn.Players[0].Funds = 1000;
 
-            unitA = CreateBasicReplayUnit(0, 1, "Infantry", new Vector2I(1, 2));
-            unitA.HitPoints = 5;
+            unitA = CreateBasicReplayUnit(0, 0, "Infantry", new Vector2I(1, 2));
+            unitA.HitPoints = higherHP ? 8 : 5;
             turn.ReplayUnit.Add(unitA.ID, unitA);
 
-            unitB = CreateBasicReplayUnit(1, 1, "Infantry", new Vector2I(2, 2));
-            unitB.HitPoints = 5;
+            unitB = CreateBasicReplayUnit(1, 0, "Infantry", new Vector2I(2, 2));
+            unitB.HitPoints = higherHP ? 8 : 5;
             turn.ReplayUnit.Add(unitB.ID, unitB);
 
             joinedUnit = unitB.Clone();
@@ -57,6 +76,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 },
                 JoiningUnitId = unitA.ID,
                 JoinedUnit = joinedUnit,
+                FundsAfterJoin = higherHP ? 1600 : 1000
             };
 
             turn.Actions.Add(createUnitAction);
