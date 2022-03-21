@@ -85,6 +85,12 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             originalBuilding = building.Clone();
             building.Copy(Building);
+
+            foreach (var unit in context.Units)
+            {
+                if (unit.Value.Position == building.Position)
+                    unit.Value.TimesMoved = 1;
+            }
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -124,7 +130,10 @@ namespace AWBWApp.Game.API.Replay.Actions
             Logger.Log("Undoing Capture Action.");
             controller.Map.UpdateBuilding(originalBuilding, true);
 
-            MoveUnit?.UndoAction(controller);
+            if (MoveUnit != null)
+                MoveUnit.UndoAction(controller);
+            else
+                controller.Map.GetDrawableUnit(originalBuilding.Position).CanMove.Value = true;
         }
 
         public struct IncomeChanged
