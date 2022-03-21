@@ -9,33 +9,28 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
     [TestFixture]
     public class TestSceneMoveAction : BaseActionsTestScene
     {
-        [Test]
-        public void TestStraightLine1Space()
+        [TestCase(1)]
+        [TestCase(3)]
+        public void TestStraightLine(int spaces)
         {
-            AddStep("Setup", () => moveTestBasic(1));
+            AddStep("Setup", () => moveTestBasic(spaces));
             AddStep("Move Right", () => ReplayController.GoToNextAction());
-            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(1, 1));
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(1, spaces));
             AddStep("Attack Up", () => ReplayController.GoToNextAction());
-            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, 1));
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, spaces));
             AddStep("Attack Right", () => ReplayController.GoToNextAction());
-            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(3, 1));
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(3, spaces));
             AddStep("Attack Down", () => ReplayController.GoToNextAction());
-            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(4, 1));
-        }
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(4, spaces));
 
-        [Test]
-        public void TestStraightLine3Spaces()
-        {
-            AddLabel("Straight Line - 3 spaces");
-            AddStep("Setup", () => moveTestBasic(3));
-            AddStep("Move Right", () => ReplayController.GoToNextAction());
-            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(1, 3));
-            AddStep("Attack Up", () => ReplayController.GoToNextAction());
-            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, 3));
-            AddStep("Attack Right", () => ReplayController.GoToNextAction());
-            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(3, 3));
-            AddStep("Attack Down", () => ReplayController.GoToNextAction());
-            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(4, 3));
+            AddStep("Undo", () => ReplayController.UndoAction());
+            AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(3, spaces));
+            AddStep("Undo", () => ReplayController.UndoAction());
+            AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, spaces));
+            AddStep("Undo", () => ReplayController.UndoAction());
+            AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(1, spaces));
+            AddStep("Undo", () => ReplayController.UndoAction());
+            AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(0, 0));
         }
 
         [Test]
@@ -44,28 +39,23 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddStep("Setup", moveTestTrap);
             AddStep("Move Right", () => ReplayController.GoToNextAction());
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(4, 1));
+            AddStep("Undo", () => ReplayController.UndoAction());
+            AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(1, 1));
         }
 
-        [Test]
-        public void TestStraightDiagonal1Spaces()
+        [TestCase(1)]
+        [TestCase(3)]
+        public void TestStraightDiagonal(int spaces)
         {
-            AddLabel("Move Diagonal - 1 spaces");
-            AddStep("Setup", () => moveTestCorner(1));
+            AddStep("Setup", () => moveTestCorner(spaces));
             AddStep("Move Right", () => ReplayController.GoToNextAction());
-            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, 1));
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, spaces));
             AddStep("Attack Up", () => ReplayController.GoToNextAction());
-            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(4, 1));
-        }
-
-        [Test]
-        public void TestStraightDiagonal3Spaces()
-        {
-            AddLabel("Move Diagonal - 3 spaces");
-            AddStep("Setup", () => moveTestCorner(3));
-            AddStep("Move Right", () => ReplayController.GoToNextAction());
-            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, 3));
-            AddStep("Attack Up", () => ReplayController.GoToNextAction());
-            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(4, 3));
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(4, spaces));
+            AddStep("Undo", () => ReplayController.UndoAction());
+            AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, spaces));
+            AddStep("Undo", () => ReplayController.UndoAction());
+            AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(0, 0));
         }
 
         private void moveTestBasic(int spaces)
