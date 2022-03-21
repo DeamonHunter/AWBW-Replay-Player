@@ -210,12 +210,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private void setupActions()
         {
-            var countriesToPlayers = new Dictionary<int, long>();
-
-            foreach (var player in replayData.ReplayInfo.Players)
-                countriesToPlayers.Add(player.Value.CountryId, player.Key);
-
-            var setupContext = new ReplaySetupContext(buildingStorage, countriesToPlayers, replayData.ReplayInfo.FundsPerBuilding);
+            var setupContext = new ReplaySetupContext(buildingStorage, replayData.ReplayInfo.Players, replayData.ReplayInfo.FundsPerBuilding);
 
             for (int i = 0; i < replayData.TurnData.Count; i++)
             {

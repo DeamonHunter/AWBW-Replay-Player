@@ -64,6 +64,14 @@ namespace AWBWApp.Game.Game.Logic
 
             ActivePower.Value = activePower;
         }
+
+        public bool OnSameTeam(PlayerInfo info)
+        {
+            if (Team != null && info.Team != null)
+                return Team == info.Team;
+
+            return ID == info.ID;
+        }
     }
 
     public struct COInfo

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
@@ -49,8 +50,45 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public MoveUnitAction MoveUnit;
 
+        private List<ReplayUnit> originalUnits;
+
+        private const int explosion_range = 3;
+        private ReplayUnit originalExplodingUnit;
+
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            MoveUnit?.SetupAndUpdate(controller, context);
+
+            if (!context.Units.Remove(ExplodedUnitId, out var explodedUnit))
+                throw new ReplayMissingUnitException(ExplodedUnitId);
+
+            originalExplodingUnit = explodedUnit.Clone();
+
+            originalUnits = new List<ReplayUnit>();
+
+            var destroyedUnits = new HashSet<long>();
+            var explodingPlayer = controller.Players[originalExplodingUnit.PlayerID!.Value];
+
+            foreach (var unit in context.Units)
+            {
+                if (!unit.Value.PlayerID.HasValue || explodingPlayer.OnSameTeam(controller.Players[unit.Value.PlayerID!.Value]))
+                    continue;
+
+                var position = unit.Value.Position!.Value;
+                var distance = (position - originalExplodingUnit.Position!.Value).ManhattonDistance();
+
+                if (distance <= explosion_range)
+                {
+                    originalUnits.Add(unit.Value.Clone());
+
+                    unit.Value.HitPoints = unit.Value.HitPoints!.Value + HPChange;
+                    if (unit.Value.HitPoints <= 0)
+                        destroyedUnits.Add(unit.Key);
+                }
+            }
+
+            foreach (var unit in destroyedUnits)
+                context.Units.Remove(unit);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -71,16 +109,27 @@ namespace AWBWApp.Game.API.Replay.Actions
             controller.Map.DeleteUnit(ExplodedUnitId, false);
             controller.Map.PlayEffect("Effects/Explosion/Explosion-Land", 500, explodingUnit.MapPosition + new Vector2I(0, -1), 0, x => x.ScaleTo(3));
 
-            for (int i = 1; i <= 3; i++)
+            controller.ActivePlayer.UnitValue.Value -= ReplayActionHelper.CalculateUnitCost(explodingUnit, controller.ActivePlayer.ActiveCO.Value.CO.DayToDayPower, null);
+
+            for (int i = 1; i <= explosion_range; i++)
             {
                 foreach (var tile in Vec2IHelper.GetAllTilesWithDistance(explodingUnit.MapPosition, i))
                 {
                     if (controller.Map.TryGetDrawableUnit(tile, out var unit))
                     {
-                        if (!unit.OwnerID.HasValue || controller.Players[explodingUnit.OwnerID.Value].Team == controller.Players[unit.OwnerID.Value].Team)
+                        if (!unit.OwnerID.HasValue)
                             continue;
 
+                        var owner = controller.Players[unit.OwnerID.Value];
+                        if (controller.ActivePlayer.OnSameTeam(owner))
+                            continue;
+
+                        var originalValue = ReplayActionHelper.CalculateUnitCost(unit, owner.ActiveCO.Value.CO.DayToDayPower, null);
+
                         unit.HealthPoints.Value += (int)HPChange;
+
+                        owner.UnitValue.Value -= (originalValue - ReplayActionHelper.CalculateUnitCost(unit, owner.ActiveCO.Value.CO.DayToDayPower, null));
+
                         if (unit.HealthPoints.Value <= 0)
                             controller.Map.DeleteUnit(unit.UnitID, true);
                     }
@@ -91,7 +140,26 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            throw new NotImplementedException("Undo Explode Action is not complete");
+            foreach (var replayUnit in originalUnits)
+            {
+                var owner = controller.Players[replayUnit.PlayerID!.Value];
+                var originalValue = ReplayActionHelper.CalculateUnitCost(replayUnit, owner.ActiveCO.Value.CO.DayToDayPower, null);
+
+                if (controller.Map.TryGetDrawableUnit(replayUnit.Position!.Value, out var unit))
+                {
+                    owner.UnitValue.Value += (originalValue - ReplayActionHelper.CalculateUnitCost(unit, owner.ActiveCO.Value.CO.DayToDayPower, null));
+                    unit.UpdateUnit(replayUnit);
+                }
+                else
+                {
+                    controller.Map.AddUnit(replayUnit);
+                    owner.UnitValue.Value += originalValue;
+                }
+            }
+
+            controller.Map.AddUnit(originalExplodingUnit);
+            controller.ActivePlayer.UnitValue.Value += ReplayActionHelper.CalculateUnitCost(originalExplodingUnit, controller.ActivePlayer.ActiveCO.Value.CO.DayToDayPower, null);
+            MoveUnit?.UndoAction(controller);
         }
     }
 }

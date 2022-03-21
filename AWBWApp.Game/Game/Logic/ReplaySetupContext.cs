@@ -9,7 +9,8 @@ namespace AWBWApp.Game.Game.Logic
     {
         public Dictionary<long, ReplayUnit> Units = new Dictionary<long, ReplayUnit>();
         public Dictionary<Vector2I, ReplayBuilding> Buildings = new Dictionary<Vector2I, ReplayBuilding>();
-        public Dictionary<long, ReplayUserTurn> Players = new Dictionary<long, ReplayUserTurn>();
+        public Dictionary<long, ReplayUser> PlayerInfos = new Dictionary<long, ReplayUser>();
+        public Dictionary<long, ReplayUserTurn> PlayerTurns = new Dictionary<long, ReplayUserTurn>();
 
         //Todo: Are there other things we need to track here
         public Dictionary<long, int> PropertyValuesForPlayers = new Dictionary<long, int>();
@@ -26,11 +27,15 @@ namespace AWBWApp.Game.Game.Logic
         private Dictionary<int, long> countriesToPlayers;
         private int fundsPerBuilding;
 
-        public ReplaySetupContext(BuildingStorage buildingStorage, Dictionary<int, long> countriesToPlayers, int fundsPerBuilding)
+        public ReplaySetupContext(BuildingStorage buildingStorage, Dictionary<long, ReplayUser> playerInfos, int fundsPerBuilding)
         {
             this.buildingStorage = buildingStorage;
-            this.countriesToPlayers = countriesToPlayers;
+            PlayerInfos = playerInfos;
             this.fundsPerBuilding = fundsPerBuilding;
+
+            countriesToPlayers = new Dictionary<int, long>();
+            foreach (var player in PlayerInfos)
+                countriesToPlayers.Add(player.Value.CountryId, player.Key);
         }
 
         public void SetupForTurn(TurnData turn, int turnIndex)
@@ -41,11 +46,11 @@ namespace AWBWApp.Game.Game.Logic
             ActivePlayerID = turn.ActivePlayerID;
             ActivePlayerTeam = turn.ActiveTeam;
 
-            Players.Clear();
+            PlayerTurns.Clear();
 
             foreach (var player in turn.Players)
             {
-                Players.Add(player.Key, player.Value.Clone());
+                PlayerTurns.Add(player.Key, player.Value.Clone());
                 PropertyValuesForPlayers[player.Key] = 0;
             }
 
