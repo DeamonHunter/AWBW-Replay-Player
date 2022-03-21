@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
@@ -46,12 +47,17 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            MoveUnit?.SetupAndUpdate(controller, context);
+
+            if (!context.Units.TryGetValue(HidingUnitID, out var unit))
+                throw new ReplayMissingUnitException(HidingUnitID);
+
+            unit.SubHasDived = true;
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Hide Action.");
-            Logger.Log("Todo: Play transition effect.");
 
             if (MoveUnit != null)
             {
@@ -65,7 +71,11 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            throw new NotImplementedException("Undo Hide Action is not complete");
+            Logger.Log("Undoing Hide Action.");
+            var hidingUnit = controller.Map.GetDrawableUnit(HidingUnitID);
+            hidingUnit.Dived.Value = false;
+
+            MoveUnit?.UndoAction(controller);
         }
     }
 }

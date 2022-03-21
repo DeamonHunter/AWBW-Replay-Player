@@ -90,7 +90,6 @@ namespace AWBWApp.Game.API.Replay.Actions
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Capture Action.");
-            Logger.Log("Income change not implemented.");
 
             if (MoveUnit != null)
             {
@@ -122,6 +121,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
+            Logger.Log("Undoing Capture Action.");
             controller.Map.UpdateBuilding(originalBuilding, true);
 
             MoveUnit?.UndoAction(controller);

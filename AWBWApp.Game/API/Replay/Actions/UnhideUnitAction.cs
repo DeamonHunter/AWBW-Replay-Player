@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
@@ -44,14 +45,22 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public MoveUnitAction MoveUnit;
 
+        private ReplayUnit originalUnit;
+
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            MoveUnit?.SetupAndUpdate(controller, context);
+
+            if (!context.Units.TryGetValue(RevealingUnit.ID, out var unit))
+                throw new ReplayMissingUnitException(RevealingUnit.ID);
+
+            originalUnit = unit.Clone();
+            unit.Copy(RevealingUnit);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Unhide Action.");
-            Logger.Log("Todo: Play transition effect.");
 
             if (MoveUnit != null)
             {
@@ -65,7 +74,12 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            throw new NotImplementedException("Undo Unhide Action is not complete");
+            Logger.Log("Undoing Unhide Action.");
+
+            var hiddenUnit = controller.Map.GetDrawableUnit(originalUnit.ID);
+            hiddenUnit.UpdateUnit(originalUnit);
+
+            MoveUnit?.UndoAction(controller);
         }
     }
 }

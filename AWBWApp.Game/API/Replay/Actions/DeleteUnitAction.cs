@@ -74,7 +74,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
+            Logger.Log("Undoing Delete Action.");
             controller.Map.AddUnit(originalUnit);
+
             MoveUnit?.UndoAction(controller);
         }
     }
