@@ -36,6 +36,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         private int unitCost;
         private int unitValue;
 
+        //Todo: Track funds
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
             var activePlayer = context.PlayerTurns[context.ActivePlayerID];

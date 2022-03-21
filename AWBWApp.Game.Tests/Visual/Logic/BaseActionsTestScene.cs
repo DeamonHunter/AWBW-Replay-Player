@@ -26,6 +26,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 var player = new ReplayUser
                 {
                     CountryId = i + 1,
+                    RoundOrder = i + 1,
                     UserId = i,
                     ID = i,
                     ReplayIndex = i + 1
@@ -54,6 +55,11 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 players.Add(player.Key, playerData);
             }
 
+            var playersInOrder = data.ReplayInfo.Players.Values.ToList();
+            playersInOrder.Sort((x, y) => x.RoundOrder.CompareTo(y.RoundOrder));
+
+            var activeId = playersInOrder[0];
+
             return new TurnData
             {
                 Active = true,
@@ -61,7 +67,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
                 ReplayUnit = new Dictionary<long, ReplayUnit>(),
                 Day = 0,
-                ActivePlayerID = data.ReplayInfo.Players.First().Key,
+                ActivePlayerID = activeId.ID,
                 Players = players,
                 StartWeather = new ReplayWeather()
             };
