@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.Game.Unit;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Tests.Visual.Logic
@@ -106,6 +108,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 ID = id,
                 Position = position,
                 TerrainID = terrainId,
+                Capture = 20,
+                LastCapture = 20
             };
         }
 
@@ -117,6 +121,14 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 return false;
 
             return unit.DoesDrawableUnitMatch(drawableUnit);
+        }
+
+        protected bool DoesUnitPassTest(long unitID, Func<DrawableUnit, bool> test)
+        {
+            if (!ReplayController.Map.TryGetDrawableUnit(unitID, out var drawableUnit))
+                return false;
+
+            return test(drawableUnit);
         }
     }
 }

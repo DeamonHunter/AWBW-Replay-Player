@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
@@ -73,8 +74,17 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public EliminatedAction EliminatedAction;
 
+        private ReplayBuilding originalBuilding;
+
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            MoveUnit?.SetupAndUpdate(controller, context);
+
+            if (!context.Buildings.TryGetValue(Building.Position, out var building))
+                throw new ReplayMissingBuildingException(Building.ID);
+
+            originalBuilding = building.Clone();
+            building.Copy(Building);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -112,7 +122,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            throw new NotImplementedException("Undo Capture Action is not complete");
+            controller.Map.UpdateBuilding(originalBuilding, true);
+
+            MoveUnit?.UndoAction(controller);
         }
 
         public struct IncomeChanged
