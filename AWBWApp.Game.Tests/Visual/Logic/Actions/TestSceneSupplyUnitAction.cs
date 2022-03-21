@@ -80,7 +80,11 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                     Distance = 1,
                     Trapped = false,
                     Unit = new ReplayUnit { ID = blackBoat.ID, Position = new Vector2I(2, 2) },
-                    Path = new[] { new UnitPosition { X = 2, Y = 3, UnitVisible = true }, new UnitPosition { X = 2, Y = 2, UnitVisible = true } }
+                    Path = new[]
+                    {
+                        new UnitPosition(new Vector2I(2, 3)),
+                        new UnitPosition(new Vector2I(2, 2))
+                    }
                 }
             };
             turn.Actions.Add(supplyUnitAction);

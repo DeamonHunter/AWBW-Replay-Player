@@ -83,7 +83,11 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 captureAction.MoveUnit = new MoveUnitAction()
                 {
                     Distance = 1,
-                    Path = new[] { new UnitPosition { X = buildingPosition.X - 1, Y = buildingPosition.Y }, new UnitPosition { X = buildingPosition.X, Y = buildingPosition.Y } },
+                    Path = new[]
+                    {
+                        new UnitPosition(buildingPosition - new Vector2I(1, 0)),
+                        new UnitPosition(buildingPosition)
+                    },
                     Unit = capturingUnit.Clone()
                 };
                 captureAction.MoveUnit.Unit.Position = buildingPosition;

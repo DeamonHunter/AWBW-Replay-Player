@@ -42,7 +42,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             originalUnit = CreateBasicReplayUnit(0, 1, "Infantry", unitPosition);
             turn.ReplayUnit.Add(originalUnit.ID, originalUnit);
 
-            var createUnitAction = new DeleteUnitAction
+            var deleteUnitAction = new DeleteUnitAction
             {
                 DeletedUnitId = originalUnit.ID
             };
@@ -52,19 +52,19 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 var movedUnit = originalUnit.Clone();
                 movedUnit.Position = new Vector2I(2, 3);
 
-                createUnitAction.MoveUnit = new MoveUnitAction()
+                deleteUnitAction.MoveUnit = new MoveUnitAction()
                 {
                     Distance = 1,
                     Unit = movedUnit,
                     Path = new[]
                     {
-                        new UnitPosition { X = 2, Y = 2 },
-                        new UnitPosition { X = 2, Y = 3 },
+                        new UnitPosition(new Vector2I(2, 2)),
+                        new UnitPosition(new Vector2I(2, 3)),
                     }
                 };
             }
 
-            turn.Actions.Add(createUnitAction);
+            turn.Actions.Add(deleteUnitAction);
 
             ReplayController.LoadReplay(replayData, CreateBasicMap(5, 5));
             ReplayController.AllowRewinding = true;

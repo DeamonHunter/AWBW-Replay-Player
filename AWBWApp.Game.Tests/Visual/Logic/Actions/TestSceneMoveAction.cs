@@ -102,29 +102,29 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             if (diff.X > 0)
             {
                 for (pos.X += 1; pos.X < nextPosition.X; pos = new Vector2I(pos.X + 1, pos.Y))
-                    path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
-                path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
+                    path[pathIdx++] = new UnitPosition(pos);
+                path[pathIdx++] = new UnitPosition(pos);
             }
 
             if (diff.Y > 0)
             {
                 for (pos.Y += 1; pos.Y < nextPosition.Y; pos = new Vector2I(pos.X, pos.Y + 1))
-                    path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
-                path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
+                    path[pathIdx++] = new UnitPosition(pos);
+                path[pathIdx++] = new UnitPosition(pos);
             }
 
             if (diff.X < 0)
             {
                 for (pos.X -= 1; pos.X > nextPosition.X; pos = new Vector2I(pos.X - 1, pos.Y))
-                    path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
-                path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
+                    path[pathIdx++] = new UnitPosition(pos);
+                path[pathIdx++] = new UnitPosition(pos);
             }
 
             if (diff.Y < 0)
             {
                 for (pos.Y -= 1; pos.Y > nextPosition.Y; pos = new Vector2I(pos.X, pos.Y - 1))
-                    path[pathIdx++] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
-                path[pathIdx] = new UnitPosition { UnitVisible = true, X = pos.X, Y = pos.Y };
+                    path[pathIdx++] = new UnitPosition(pos);
+                path[pathIdx] = new UnitPosition(pos);
             }
 
             return path;
@@ -149,10 +149,10 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                     Unit = new ReplayUnit { ID = movingUnit.ID, Position = new Vector2I(4, 1) },
                     Path = new[]
                     {
-                        new UnitPosition { X = 1, Y = 1, UnitVisible = true },
-                        new UnitPosition { X = 2, Y = 1, UnitVisible = true },
-                        new UnitPosition { X = 3, Y = 1, UnitVisible = true },
-                        new UnitPosition { X = 4, Y = 1, UnitVisible = true },
+                        new UnitPosition(new Vector2I(1, 1)),
+                        new UnitPosition(new Vector2I(2, 1)),
+                        new UnitPosition(new Vector2I(3, 1)),
+                        new UnitPosition(new Vector2I(4, 1)),
                     }
                 };
                 moveUnitAction.Distance = moveUnitAction.Path.Length;

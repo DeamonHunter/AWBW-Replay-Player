@@ -48,7 +48,11 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                 MoveUnit = new MoveUnitAction()
                 {
                     Distance = 1,
-                    Path = new[] { new UnitPosition { X = 1, Y = 2 }, new UnitPosition { X = 2, Y = 2 }, },
+                    Path = new[]
+                    {
+                        new UnitPosition(new Vector2I(1, 2)),
+                        new UnitPosition(new Vector2I(2, 2))
+                    },
                     Unit = movedUnit
                 },
                 JoiningUnitId = unitA.ID,

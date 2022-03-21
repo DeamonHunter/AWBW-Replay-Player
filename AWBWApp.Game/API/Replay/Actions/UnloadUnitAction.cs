@@ -47,9 +47,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             unloadingUnit.FollowPath(new List<UnitPosition>
             {
-                new UnitPosition { UnitVisible = true, X = transportUnit.MapPosition.X, Y = transportUnit.MapPosition.Y },
-                new UnitPosition { UnitVisible = true, X = UnloadedUnit.Position.Value.X, Y = UnloadedUnit.Position.Value.Y },
+                new UnitPosition(transportUnit.MapPosition),
+                new UnitPosition(UnloadedUnit.Position.Value)
             });
+
             yield return ReplayWait.WaitForTransformable(unloadingUnit);
 
             unloadingUnit.MoveToPosition(UnloadedUnit.Position.Value);
