@@ -106,6 +106,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Capture Action.");
+            Logger.Log("Todo: Building capture animation not implemented.");
 
             if (MoveUnit != null)
             {
@@ -113,12 +114,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                     yield return transformable;
             }
 
-            var capturingUnit = MoveUnit != null ? controller.Map.GetDrawableUnit(MoveUnit.Unit.ID) : controller.Map.GetDrawableUnit(Building.Position);
+            if (controller.Map.TryGetDrawableUnit(Building.Position, out var capturingUnit))
+                capturingUnit.CanMove.Value = false;
 
-            yield return ReplayWait.WaitForTransformable(capturingUnit);
-
-            //Todo: Capture building animation
-            capturingUnit.CanMove.Value = false;
             controller.Map.UpdateBuilding(Building, false); //This will set the unit above to be capturing
 
             if (IncomeChanges != null)
@@ -148,8 +146,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (MoveUnit != null)
                 MoveUnit.UndoAction(controller);
-            else
-                controller.Map.GetDrawableUnit(originalBuilding.Position).CanMove.Value = true;
+            else if (controller.Map.TryGetDrawableUnit(originalBuilding.Position, out var capturingUnit))
+                capturingUnit.CanMove.Value = true;
         }
     }
 }

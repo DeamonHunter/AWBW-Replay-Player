@@ -1,4 +1,5 @@
 ﻿using System;
+using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Exceptions
 {
@@ -16,11 +17,18 @@ namespace AWBWApp.Game.Exceptions
     public class ReplayMissingBuildingException : Exception
     {
         public long BuildingID { get; }
+        public Vector2I BuildingPosition { get; }
 
         public ReplayMissingBuildingException(long buildingID)
             : base($"Building ID '{buildingID}' was missing")
         {
             BuildingID = buildingID;
+        }
+
+        public ReplayMissingBuildingException(Vector2I buildingPosition)
+            : base($"Building at Position '{{{buildingPosition.X},{buildingPosition.Y}}}' was missing")
+        {
+            BuildingPosition = buildingPosition;
         }
     }
 }

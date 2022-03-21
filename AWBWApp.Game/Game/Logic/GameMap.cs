@@ -558,7 +558,7 @@ namespace AWBWApp.Game.Game.Logic
 
         public DrawableTile GetDrawableTile(Vector2I position) => gameBoard[position.X, position.Y];
 
-        public void UpdateBuilding(ReplayBuilding awbwBuilding, bool setBuildingToWaiting)
+        public void UpdateBuilding(ReplayBuilding awbwBuilding, bool setBuildingToReady)
         {
             var tilePosition = awbwBuilding.Position;
 
@@ -620,7 +620,7 @@ namespace AWBWApp.Game.Game.Logic
             }
 
             //Todo: Is this always the case
-            if (!setBuildingToWaiting)
+            if (!setBuildingToReady)
                 building.HasDoneAction.Value = false;
             building.CaptureHealth.Value = awbwBuilding.Capture;
 

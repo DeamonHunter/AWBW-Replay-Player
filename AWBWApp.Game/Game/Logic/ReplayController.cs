@@ -358,6 +358,8 @@ namespace AWBWApp.Game.Game.Logic
             barWidget.UpdateActions();
         }
 
+        public bool HasOngoingAction() => currentOngoingActions.Count > 0;
+
         private void completeAllActions()
         {
             if (currentOngoingActions.Count <= 0)
