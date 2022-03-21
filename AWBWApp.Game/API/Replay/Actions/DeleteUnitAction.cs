@@ -57,7 +57,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             originalUnit = unit.Clone();
 
-            unitValue = ReplayActionHelper.CalculateUnitCost(unit, controller.COStorage.GetCOByAWBWId(context.Players[context.ActivePlayerID].ActiveCOID).DayToDayPower, null); //Unit funds does not care about the current active powers
+            unitValue = ReplayActionHelper.CalculateUnitCost(unit, controller.COStorage.GetCOByAWBWId(context.PlayerTurns[context.ActivePlayerID].ActiveCOID).DayToDayPower, null); //Unit funds does not care about the current active powers
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)

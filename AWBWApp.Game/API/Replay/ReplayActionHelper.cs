@@ -166,6 +166,11 @@ namespace AWBWApp.Game.API.Replay
         {
             if (unit.Cost == null)
                 throw new ArgumentException("Provided unit does not have any cost.", nameof(unit));
+            if (unit.HitPoints == null)
+                throw new ArgumentException("Provided unit does not have HP.", nameof(unit));
+
+            if (unit.HitPoints.Value <= 0)
+                return 0;
 
             float priceMultiplier = 1;
             if (activePower != null && activePower.UnitPriceMultiplier != 1)
@@ -173,11 +178,14 @@ namespace AWBWApp.Game.API.Replay
             else if (dayToDay.UnitPriceMultiplier != 1)
                 priceMultiplier = dayToDay.UnitPriceMultiplier;
 
-            return (int)(unit.Cost.Value * priceMultiplier * (unit.HitPoints.HasValue ? Math.Ceiling(unit.HitPoints.Value) * 0.1 : 1));
+            return (int)(unit.Cost.Value * priceMultiplier * Math.Ceiling(unit.HitPoints.Value) * 0.1);
         }
 
         public static int CalculateUnitCost(DrawableUnit unit, COPower dayToDay, COPower activePower)
         {
+            if (unit.HealthPoints.Value <= 0)
+                return 0;
+
             float priceMultiplier = 1;
             if (activePower != null && activePower.UnitPriceMultiplier != 1)
                 priceMultiplier = activePower.UnitPriceMultiplier;

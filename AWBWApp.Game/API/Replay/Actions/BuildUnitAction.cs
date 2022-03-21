@@ -38,7 +38,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
-            var activePlayer = context.Players[context.ActivePlayerID];
+            var activePlayer = context.PlayerTurns[context.ActivePlayerID];
 
             context.Units.Add(NewUnit.ID, NewUnit.Clone());
             var dayToDay = controller.COStorage.GetCOByAWBWId(activePlayer.ActiveCOID).DayToDayPower;

@@ -18,18 +18,22 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddStep("Setup", () => deleteTest(false));
             AddStep("Delete Unit", ReplayController.GoToNextAction);
             AddUntilStep("Unit was deleted", () => !HasUnit(originalUnit.ID));
+            AddAssert("Unit Value is 0", () => ReplayController.Players[0].UnitValue.Value == 0);
             AddStep("Undo", ReplayController.UndoAction);
             AddAssert("Unit reverted correctly", () => DoesUnitMatchData(originalUnit.ID, originalUnit));
+            AddAssert("Unit Value is 1000", () => ReplayController.Players[0].UnitValue.Value == 1000);
         }
 
         [Test]
         public void TestMoveThenDeleteUnit()
         {
             AddStep("Setup", () => deleteTest(true));
-            AddStep("Create Unit", ReplayController.GoToNextAction);
+            AddStep("Delete Unit", ReplayController.GoToNextAction);
             AddUntilStep("Unit was deleted", () => !HasUnit(originalUnit.ID));
+            AddAssert("Unit Value is 0", () => ReplayController.Players[0].UnitValue.Value == 0);
             AddStep("Undo", ReplayController.UndoAction);
             AddAssert("Unit reverted correctly", () => DoesUnitMatchData(originalUnit.ID, originalUnit));
+            AddAssert("Unit Value is 1000", () => ReplayController.Players[0].UnitValue.Value == 1000);
         }
 
         private void deleteTest(bool move)
@@ -39,7 +43,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
 
-            originalUnit = CreateBasicReplayUnit(0, 1, "Infantry", unitPosition);
+            originalUnit = CreateBasicReplayUnit(0, 0, "Infantry", unitPosition);
             turn.ReplayUnit.Add(originalUnit.ID, originalUnit);
 
             var deleteUnitAction = new DeleteUnitAction

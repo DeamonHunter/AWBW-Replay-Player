@@ -19,10 +19,12 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddAssert("Unit was created", () => HasUnit(0));
             AddAssert("Building is done", () => ReplayController.Map.TryGetDrawableBuilding(unitPosition, out var building) && building.HasDoneAction.Value);
             AddAssert("Funds is 0", () => ReplayController.Players[0].Funds.Value == 0);
+            AddAssert("Unit Value is 1000", () => ReplayController.Players[0].UnitValue.Value == 1000);
             AddStep("Undo", ReplayController.UndoAction);
             AddAssert("Unit doesn't exist", () => !HasUnit(0));
             AddAssert("Building is not done", () => ReplayController.Map.TryGetDrawableBuilding(unitPosition, out var building) && !building.HasDoneAction.Value);
             AddAssert("Funds is 1000", () => ReplayController.Players[0].Funds.Value == 1000);
+            AddAssert("Unit Value is 0", () => ReplayController.Players[0].UnitValue.Value == 0);
         }
 
         private void createTest()
