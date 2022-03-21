@@ -92,7 +92,7 @@ namespace AWBWApp.Game.UI
 
         protected override bool OnDragStart(DragStartEvent e)
         {
-            if (e.Button != MouseButton.Middle)
+            if (e.Button != MouseButton.Left && e.Button != MouseButton.Middle && e.Button != MouseButton.Right)
                 return base.OnDragStart(e);
 
             return true;
@@ -112,7 +112,7 @@ namespace AWBWApp.Game.UI
 
         protected override void OnDrag(DragEvent e)
         {
-            if (e.Button != MouseButton.Middle)
+            if (e.Button != MouseButton.Left && e.Button != MouseButton.Middle && e.Button != MouseButton.Right)
             {
                 base.OnDrag(e);
                 return;

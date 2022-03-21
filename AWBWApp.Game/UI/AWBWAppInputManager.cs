@@ -17,6 +17,7 @@ namespace AWBWApp.Game.UI
             switch (button)
             {
                 case MouseButton.Middle:
+                case MouseButton.Right:
                     return new DragableMouseManager(button);
             }
 
