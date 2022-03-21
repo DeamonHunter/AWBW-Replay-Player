@@ -74,6 +74,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                 if (!unit.Value.PlayerID.HasValue || explodingPlayer.OnSameTeam(controller.Players[unit.Value.PlayerID!.Value]))
                     continue;
 
+                if (unit.Value.BeingCarried.HasValue && unit.Value.BeingCarried.Value)
+                    continue;
+
                 var position = unit.Value.Position!.Value;
                 var distance = (position - originalExplodingUnit.Position!.Value).ManhattonDistance();
 
@@ -82,8 +85,23 @@ namespace AWBWApp.Game.API.Replay.Actions
                     originalUnits.Add(unit.Value.Clone());
 
                     unit.Value.HitPoints = unit.Value.HitPoints!.Value + HPChange;
+
                     if (unit.Value.HitPoints <= 0)
+                    {
                         destroyedUnits.Add(unit.Key);
+
+                        if (unit.Value.CargoUnits != null && unit.Value.CargoUnits.Count > 0)
+                        {
+                            foreach (var cargoUnitID in unit.Value.CargoUnits)
+                            {
+                                if (!context.Units.TryGetValue(cargoUnitID, out var cargoUnit))
+                                    throw new ReplayMissingUnitException(cargoUnitID);
+
+                                originalUnits.Add(cargoUnit);
+                                destroyedUnits.Add(cargoUnitID);
+                            }
+                        }
+                    }
                 }
             }
 

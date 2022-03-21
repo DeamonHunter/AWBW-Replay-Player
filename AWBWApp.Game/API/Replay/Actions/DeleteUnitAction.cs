@@ -46,6 +46,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public long DeletedUnitId { get; set; }
 
         private ReplayUnit originalUnit;
+        private List<ReplayUnit> cargoUnits;
         private int unitValue;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
@@ -57,7 +58,23 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             originalUnit = unit.Clone();
 
-            unitValue = ReplayActionHelper.CalculateUnitCost(unit, controller.COStorage.GetCOByAWBWId(context.PlayerTurns[context.ActivePlayerID].ActiveCOID).DayToDayPower, null); //Unit funds does not care about the current active powers
+            var dayToDay = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[context.ActivePlayerID].ActiveCOID).DayToDayPower;
+
+            unitValue = ReplayActionHelper.CalculateUnitCost(unit, dayToDay, null); //Unit funds does not care about the current active powers
+
+            if (unit.CargoUnits != null && unit.CargoUnits.Count > 0)
+            {
+                cargoUnits = new List<ReplayUnit>();
+
+                foreach (var cargoUnitID in unit.CargoUnits)
+                {
+                    if (!context.Units.Remove(cargoUnitID, out var cargoUnit))
+                        throw new ReplayMissingUnitException(DeletedUnitId);
+
+                    cargoUnits.Add(cargoUnit.Clone());
+                    unitValue += ReplayActionHelper.CalculateUnitCost(cargoUnit, dayToDay, null);
+                }
+            }
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -78,6 +95,10 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             Logger.Log("Undoing Delete Action.");
             controller.Map.AddUnit(originalUnit);
+
+            foreach (var cargoUnit in cargoUnits)
+                controller.Map.AddUnit(cargoUnit);
+
             controller.ActivePlayer.UnitValue.Value += unitValue;
 
             MoveUnit?.UndoAction(controller);
