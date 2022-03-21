@@ -16,7 +16,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 ReplayInfo = new ReplayInfo
                 {
                     //Create some basic players
-                    Players = new Dictionary<long, ReplayUser>(playerCount)
+                    Players = new Dictionary<long, ReplayUser>(playerCount),
+                    FundsPerBuilding = 1000
                 }
             };
 

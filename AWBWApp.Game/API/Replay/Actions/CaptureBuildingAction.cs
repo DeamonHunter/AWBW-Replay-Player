@@ -38,15 +38,13 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (incomeObj is JObject incomeData)
             {
-                action.IncomeChanges = new CaptureBuildingAction.IncomeChanged[incomeData.Count];
-
+                action.IncomeChanges = new Dictionary<long, int>();
                 var idx = 0;
 
                 foreach (var playerIncome in incomeData)
                 {
                     var playerIncomeData = (JObject)playerIncome.Value;
-                    action.IncomeChanges[idx].PlayerId = (long)playerIncomeData["player"];
-                    action.IncomeChanges[idx].NewBuildingIncome = (int)playerIncomeData["income"];
+                    action.IncomeChanges.Add((long)playerIncomeData["player"], (int)playerIncomeData["income"]);
                     idx++;
                 }
             }
@@ -70,11 +68,12 @@ namespace AWBWApp.Game.API.Replay.Actions
         public MoveUnitAction MoveUnit;
         public ReplayBuilding Building;
 
-        public IncomeChanged[] IncomeChanges;
+        public Dictionary<long, int> IncomeChanges;
 
         public EliminatedAction EliminatedAction;
 
         private ReplayBuilding originalBuilding;
+        private Dictionary<long, int> originalIncomes;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
@@ -90,6 +89,17 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 if (unit.Value.Position == building.Position)
                     unit.Value.TimesMoved = 1;
+            }
+
+            if (IncomeChanges != null)
+            {
+                originalIncomes = new Dictionary<long, int>();
+
+                foreach (var incomeChange in IncomeChanges)
+                {
+                    originalIncomes.Add(incomeChange.Key, context.PropertyValuesForPlayers[incomeChange.Key]);
+                    context.PropertyValuesForPlayers[incomeChange.Key] = incomeChange.Value;
+                }
             }
         }
 
@@ -114,7 +124,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (IncomeChanges != null)
             {
                 foreach (var incomeChange in IncomeChanges)
-                    controller.Players[incomeChange.PlayerId].PropertyValue.Value = incomeChange.NewBuildingIncome;
+                    controller.Players[incomeChange.Key].PropertyValue.Value = incomeChange.Value;
             }
 
             //Capturing a building can eliminate a player. i.e. They have no buildings left or reached the total building goal.
@@ -130,16 +140,16 @@ namespace AWBWApp.Game.API.Replay.Actions
             Logger.Log("Undoing Capture Action.");
             controller.Map.UpdateBuilding(originalBuilding, true);
 
+            if (originalIncomes != null)
+            {
+                foreach (var incomeChange in originalIncomes)
+                    controller.Players[incomeChange.Key].PropertyValue.Value = incomeChange.Value;
+            }
+
             if (MoveUnit != null)
                 MoveUnit.UndoAction(controller);
             else
                 controller.Map.GetDrawableUnit(originalBuilding.Position).CanMove.Value = true;
-        }
-
-        public struct IncomeChanged
-        {
-            public long PlayerId;
-            public int NewBuildingIncome;
         }
     }
 }

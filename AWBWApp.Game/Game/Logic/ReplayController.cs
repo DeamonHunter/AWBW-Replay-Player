@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
+using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
@@ -31,6 +32,9 @@ namespace AWBWApp.Game.Game.Logic
 
         [Resolved]
         private CountryStorage countryStorage { get; set; }
+
+        [Resolved]
+        private BuildingStorage buildingStorage { get; set; }
 
         private List<RegisteredPower> registeredPowers = new List<RegisteredPower>();
 
@@ -193,9 +197,10 @@ namespace AWBWApp.Game.Game.Logic
             {
                 ScheduleAfterChildren(() =>
                 {
-                    UpdateFogOfWar();
-                    cameraControllerWithGrid.FitMapToSpace();
                     HasLoadedReplay = true;
+                    UpdateFogOfWar();
+                    updatePlayerList(0, false);
+                    cameraControllerWithGrid.FitMapToSpace();
                     CurrentTurnIndex.TriggerChange();
                     barWidget.UpdateActions();
                     loadingLayer.Hide();
@@ -205,7 +210,12 @@ namespace AWBWApp.Game.Game.Logic
 
         private void setupActions()
         {
-            var setupContext = new ReplaySetupContext();
+            var countriesToPlayers = new Dictionary<int, long>();
+
+            foreach (var player in replayData.ReplayInfo.Players)
+                countriesToPlayers.Add(player.Value.CountryId, player.Key);
+
+            var setupContext = new ReplaySetupContext(buildingStorage, countriesToPlayers, replayData.ReplayInfo.FundsPerBuilding);
 
             for (int i = 0; i < replayData.TurnData.Count; i++)
             {
@@ -520,6 +530,27 @@ namespace AWBWApp.Game.Game.Logic
                     return true;
 
                 return currentActionIndex >= x.ActionStart;
+            });
+
+            return power.Power;
+        }
+
+        public PowerAction GetActivePowerForContext(ReplaySetupContext context)
+        {
+            var activePlayer = replayData.TurnData[context.CurrentTurnIndex].ActivePlayerID;
+
+            var power = registeredPowers.FirstOrDefault(x =>
+            {
+                if (x.PlayerID != activePlayer)
+                    return false;
+
+                if (context.CurrentTurnIndex < x.TurnStart || context.CurrentTurnIndex >= x.TurnEnd)
+                    return false;
+
+                if (context.CurrentTurnIndex != x.TurnStart)
+                    return true;
+
+                return context.CurrentActionIndex >= x.ActionStart;
             });
 
             return power.Power;

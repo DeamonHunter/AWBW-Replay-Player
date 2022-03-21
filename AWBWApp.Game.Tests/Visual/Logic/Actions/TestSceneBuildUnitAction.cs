@@ -18,9 +18,11 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddStep("Create Unit", ReplayController.GoToNextAction);
             AddAssert("Unit was created", () => HasUnit(0));
             AddAssert("Building is done", () => ReplayController.Map.TryGetDrawableBuilding(unitPosition, out var building) && building.HasDoneAction.Value);
+            AddAssert("Funds is 0", () => ReplayController.Players[0].Funds.Value == 0);
             AddStep("Undo", ReplayController.UndoAction);
             AddAssert("Unit doesn't exist", () => !HasUnit(0));
             AddAssert("Building is not done", () => ReplayController.Map.TryGetDrawableBuilding(unitPosition, out var building) && !building.HasDoneAction.Value);
+            AddAssert("Funds is 1000", () => ReplayController.Players[0].Funds.Value == 1000);
         }
 
         private void createTest()
@@ -28,12 +30,13 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             var replayData = CreateBasicReplayData(2);
 
             var turn = CreateBasicTurnData(replayData);
+            turn.Players[0].Funds = 1000;
             replayData.TurnData.Add(turn);
 
             var building = CreateBasicReplayBuilding(0, unitPosition, 39);
             turn.Buildings.Add(building.Position, building);
 
-            createdUnit = CreateBasicReplayUnit(0, 1, "Infantry", unitPosition);
+            createdUnit = CreateBasicReplayUnit(0, 0, "Infantry", unitPosition);
             createdUnit.TimesMoved = 1;
 
             var createUnitAction = new BuildUnitAction

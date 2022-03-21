@@ -161,6 +161,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             Logger.Log("Undoing Move Action.");
             controller.Map.GetDrawableUnit(Unit.ID).UpdateUnit(originalUnit);
+            controller.UpdateFogOfWar();
         }
     }
 }

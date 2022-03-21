@@ -33,10 +33,19 @@ namespace AWBWApp.Game.API.Replay.Actions
         public string ReadibleName => "Build";
 
         public ReplayUnit NewUnit;
+        private int unitCost;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            var activePlayer = context.Players[context.ActivePlayerID];
+
             context.Units.Add(NewUnit.ID, NewUnit.Clone());
+            var dayToDay = controller.COStorage.GetCOByAWBWId(activePlayer.ActiveCOID).DayToDayPower;
+            var currentPower = controller.GetActivePowerForPlayer(NewUnit.PlayerID!.Value);
+
+            unitCost = ReplayActionHelper.CalculateUnitCost(NewUnit, dayToDay, currentPower?.COPower);
+
+            activePlayer.Funds -= unitCost;
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -55,10 +64,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (controller.Map.TryGetDrawableBuilding(unit.MapPosition, out DrawableBuilding building))
                 building.HasDoneAction.Value = true;
 
-            var dayToDay = controller.ActivePlayer.ActiveCO.Value.CO.DayToDayPower;
-            var currentPower = controller.GetActivePowerForPlayer(unit.OwnerID!.Value);
-
-            controller.ActivePlayer.Funds.Value -= ReplayActionHelper.CalculateUnitCost(NewUnit, dayToDay, currentPower?.COPower);
+            controller.ActivePlayer.Funds.Value -= unitCost;
 
             controller.UpdateFogOfWar();
             controller.Map.PlaySelectionAnimation(unit);
@@ -72,6 +78,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (controller.Map.TryGetDrawableBuilding(unit.MapPosition, out DrawableBuilding building))
                 building.HasDoneAction.Value = false;
+
+            controller.ActivePlayer.Funds.Value += unitCost;
+            controller.UpdateFogOfWar();
         }
     }
 }

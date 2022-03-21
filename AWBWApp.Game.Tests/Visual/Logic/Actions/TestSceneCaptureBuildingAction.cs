@@ -1,4 +1,5 @@
-﻿using AWBWApp.Game.API.Replay;
+﻿using System.Collections.Generic;
+using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
 using NUnit.Framework;
 using osu.Framework.Graphics.Primitives;
@@ -11,28 +12,54 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
     {
         private static Vector2I buildingPosition = new Vector2I(2, 2);
 
-        private const int neutralCity = 34;
-        private const int orangeStarCity = 38;
+        private const int neutral_city = 34;
+        private const int orange_star_city = 38;
+        private const int blue_moon_city = 43;
 
         [TestCase(true)]
         [TestCase(false)]
         public void TestStartCapturingBuilding(bool movement)
         {
-            AddStep("Setup", () => captureTest(movement));
+            AddStep("Setup", () => captureTest(movement, false));
             AddStep("Start Capturing Building", ReplayController.GoToNextAction);
             AddUntilStep("Unit capturing and done move", () => DoesUnitPassTest(0, x => x.IsCapturing.Value && !x.CanMove.Value));
-            AddAssert("Building HP is 10", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == neutralCity && building.CaptureHealth.Value == 10);
+            AddAssert("Building HP is 10", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == neutral_city && building.CaptureHealth.Value == 10);
+            AddAssert("Property Value is still 0", () => ReplayController.ActivePlayer.PropertyValue.Value == 0);
             AddStep("Finish Capturing Building", ReplayController.GoToNextAction);
-            AddAssert("Building is correct", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == orangeStarCity);
+            AddAssert("Building is correct", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == orange_star_city);
             AddAssert("Unit finished capturing and done move", () => DoesUnitPassTest(0, x => !x.IsCapturing.Value && !x.CanMove.Value));
+            AddAssert("Property Value is 1000", () => ReplayController.ActivePlayer.PropertyValue.Value == 1000);
             AddStep("Undo", ReplayController.UndoAction);
-            AddAssert("Building uncaptured and 10hp", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == neutralCity && building.CaptureHealth.Value == 10);
+            AddAssert("Building uncaptured and 10hp", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == neutral_city && building.CaptureHealth.Value == 10);
             AddAssert("Unit capturing and done move", () => DoesUnitPassTest(0, x => x.IsCapturing.Value)); //Don't test can move as this is technically an illegal setup
+            AddAssert("Property Value is 0", () => ReplayController.ActivePlayer.PropertyValue.Value == 0);
             AddStep("Undo", ReplayController.UndoAction);
-            AddAssert("Building uncaptured and 20hp", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == neutralCity && building.CaptureHealth.Value == 20);
+            AddAssert("Building uncaptured and 20hp", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == neutral_city && building.CaptureHealth.Value == 20);
             AddAssert("Unit not capturing and can move", () => DoesUnitPassTest(0, x => !x.IsCapturing.Value && x.CanMove.Value));
+        }
 
-            //Todo: Test undoing to the previous turn. 
+        [Test]
+        public void TestStartCapturingOpponentBuilding()
+        {
+            AddStep("Setup", () => captureTest(false, true));
+            AddStep("Start Capturing Building", ReplayController.GoToNextAction);
+            AddUntilStep("Unit capturing and done move", () => DoesUnitPassTest(0, x => x.IsCapturing.Value && !x.CanMove.Value));
+            AddAssert("Building HP is 10", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == blue_moon_city && building.CaptureHealth.Value == 10);
+            AddAssert("Property Value is 0", () => ReplayController.ActivePlayer.PropertyValue.Value == 0);
+            AddAssert("Opponent Value is 1000", () => ReplayController.Players[1].PropertyValue.Value == 1000);
+            AddStep("Finish Capturing Building", ReplayController.GoToNextAction);
+            AddAssert("Building is correct", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == orange_star_city);
+            AddAssert("Unit finished capturing and done move", () => DoesUnitPassTest(0, x => !x.IsCapturing.Value && !x.CanMove.Value));
+            AddAssert("Property Value is 1000", () => ReplayController.ActivePlayer.PropertyValue.Value == 1000);
+            AddAssert("Opponent Value is 0", () => ReplayController.Players[1].PropertyValue.Value == 0);
+            AddStep("Undo", ReplayController.UndoAction);
+            AddAssert("Building uncaptured and 10hp", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == blue_moon_city && building.CaptureHealth.Value == 10);
+            AddAssert("Unit capturing and done move", () => DoesUnitPassTest(0, x => x.IsCapturing.Value)); //Don't test can move as this is technically an illegal setup
+            AddAssert("Property Value is 0", () => ReplayController.ActivePlayer.PropertyValue.Value == 0);
+            AddAssert("Opponent Value is 1000", () => ReplayController.Players[1].PropertyValue.Value == 1000);
+            AddStep("Undo", ReplayController.UndoAction);
+            AddAssert("Building uncaptured and 20hp", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == blue_moon_city && building.CaptureHealth.Value == 20);
+            AddAssert("Unit not capturing and can move", () => DoesUnitPassTest(0, x => !x.IsCapturing.Value && x.CanMove.Value));
         }
 
         [Test]
@@ -52,14 +79,14 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddAssert("Unit Not Capturing", () => DoesUnitPassTest(0, x => !x.IsCapturing.Value));
         }
 
-        private void captureTest(bool move)
+        private void captureTest(bool move, bool opponentBuilding)
         {
             var replayData = CreateBasicReplayData(2);
 
             var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
 
-            var building = CreateBasicReplayBuilding(0, buildingPosition, neutralCity);
+            var building = CreateBasicReplayBuilding(0, buildingPosition, opponentBuilding ? blue_moon_city : neutral_city);
             turn.Buildings.Add(building.Position, building);
 
             var capturingUnit = CreateBasicReplayUnit(0, 0, "Infantry", move ? buildingPosition - new Vector2I(1, 0) : buildingPosition);
@@ -74,7 +101,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                     LastCapture = 20,
                     Position = buildingPosition,
                     Team = null,
-                    TerrainID = neutralCity
+                    TerrainID = opponentBuilding ? blue_moon_city : neutral_city
                 },
             };
 
@@ -104,9 +131,17 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                     LastCapture = 10,
                     Position = buildingPosition,
                     Team = null,
-                    TerrainID = orangeStarCity
+                    TerrainID = orange_star_city
                 },
+                IncomeChanges = new Dictionary<long, int>
+                {
+                    { 0, replayData.ReplayInfo.FundsPerBuilding }
+                }
             };
+
+            if (opponentBuilding)
+                captureAction.IncomeChanges.Add(1, 0);
+
             turn.Actions.Add(captureAction);
 
             ReplayController.LoadReplay(replayData, CreateBasicMap(5, 5));
@@ -125,7 +160,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             replayUnit.Position = buildingPosition - new Vector2I(1, 0);
             turnB.ReplayUnit.Add(replayUnit.ID, replayUnit);
 
-            var replayBuilding = CreateBasicReplayBuilding(0, buildingPosition, neutralCity);
+            var replayBuilding = CreateBasicReplayBuilding(0, buildingPosition, neutral_city);
             turnA.Buildings.Add(replayBuilding.Position, replayBuilding.Clone());
             replayBuilding.Capture = 10;
             turnB.Buildings.Add(replayBuilding.Position, replayBuilding);

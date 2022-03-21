@@ -651,7 +651,7 @@ namespace AWBWApp.Game.Game.Logic
         {
         }
 
-        private long? getPlayerIDFromCountryID(int countryID) => players.FirstOrDefault(x => x.Value.Country.Value.AWBWID == countryID).Key;
+        private long? getPlayerIDFromCountryID(int countryID) => players.FirstOrDefault(x => x.Value.Country.Value.AWBWID == countryID).Value?.ID;
 
         public UnitData GetUnitDataForUnitName(string unitName) => unitStorage.GetUnitByCode(unitName);
     }

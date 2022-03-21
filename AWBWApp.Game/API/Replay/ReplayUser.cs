@@ -34,5 +34,30 @@ namespace AWBWApp.Game.API.Replay
         public int? TagRequiredPowerForSuper; //This changes every time we use a power.
 
         public bool Eliminated;
+
+        public void Copy(ReplayUserTurn other)
+        {
+            ID = other.ID;
+            Funds = other.Funds;
+
+            ActiveCOID = other.ActiveCOID;
+            Power = other.Power;
+            RequiredPowerForNormal = other.RequiredPowerForNormal;
+            RequiredPowerForSuper = other.RequiredPowerForSuper;
+
+            TagCOID = other.TagCOID;
+            TagPower = other.TagPower;
+            TagRequiredPowerForNormal = other.TagRequiredPowerForNormal;
+            TagRequiredPowerForSuper = other.TagRequiredPowerForSuper;
+
+            Eliminated = other.Eliminated;
+        }
+
+        public ReplayUserTurn Clone()
+        {
+            var clone = new ReplayUserTurn();
+            clone.Copy(this);
+            return clone;
+        }
     }
 }
