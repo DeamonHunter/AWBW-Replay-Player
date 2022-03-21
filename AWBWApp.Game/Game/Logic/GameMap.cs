@@ -592,9 +592,9 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     if (buildingStorage.TryGetBuildingByAWBWId(awbwBuilding.TerrainID.Value, out var buildingTile))
                     {
-                        var drawableBuilding = new DrawableBuilding(buildingTile, getPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
-                        buildings.Add(tilePosition, drawableBuilding);
-                        buildingsDrawable.Add(drawableBuilding);
+                        building = new DrawableBuilding(buildingTile, getPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
+                        buildings.Add(tilePosition, building);
+                        buildingsDrawable.Add(building);
                     }
                     else if (terrainTileStorage.TryGetTileByAWBWId(awbwBuilding.TerrainID.Value, out var terrainTile))
                     {
@@ -625,7 +625,7 @@ namespace AWBWApp.Game.Game.Logic
             building.CaptureHealth.Value = awbwBuilding.Capture;
 
             if (TryGetDrawableUnit(awbwBuilding.Position, out var unit))
-                unit.IsCapturing.Value = awbwBuilding.Capture != 20;
+                unit.IsCapturing.Value = awbwBuilding.Capture != awbwBuilding.LastCapture && awbwBuilding.Capture != 20 && awbwBuilding.Capture != 0;
         }
 
         public bool OnPressed(KeyBindingPressEvent<AWBWGlobalAction> e)
