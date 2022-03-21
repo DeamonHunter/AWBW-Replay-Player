@@ -96,8 +96,11 @@ namespace AWBWApp.Game.API.Replay.Actions
             Logger.Log("Undoing Delete Action.");
             controller.Map.AddUnit(originalUnit);
 
-            foreach (var cargoUnit in cargoUnits)
-                controller.Map.AddUnit(cargoUnit);
+            if (cargoUnits != null)
+            {
+                foreach (var cargoUnit in cargoUnits)
+                    controller.Map.AddUnit(cargoUnit);
+            }
 
             controller.ActivePlayer.UnitValue.Value += unitValue;
 
