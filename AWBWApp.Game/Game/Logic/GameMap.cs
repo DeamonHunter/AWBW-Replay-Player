@@ -386,6 +386,23 @@ namespace AWBWApp.Game.Game.Logic
         //Todo: Save this data
         void updateToGameState(TurnData gameState)
         {
+            //Do units first, then buildings as buildings need to set capture status on units.
+
+            foreach (var unit in gameState.ReplayUnit)
+            {
+                if (units.TryGetValue(unit.Value.ID, out DrawableUnit existingUnit))
+                {
+                    existingUnit.UpdateUnit(unit.Value);
+                }
+                else
+                {
+                    var unitData = unitStorage.GetUnitByCode(unit.Value.UnitName);
+                    var drawableUnit = new DrawableUnit(unitData, unit.Value, players[unit.Value.PlayerID.Value].Country.Value);
+                    units.Add(unit.Value.ID, drawableUnit);
+                    unitsDrawable.Add(drawableUnit);
+                }
+            }
+
             for (int x = 0; x < MapSize.X; x++)
             {
                 for (int y = 0; y < MapSize.Y; y++)
@@ -400,21 +417,6 @@ namespace AWBWApp.Game.Game.Logic
                     {
                         buildingsDrawable.Remove(drawableBuilding);
                     }
-                }
-            }
-
-            foreach (var unit in gameState.ReplayUnit)
-            {
-                if (units.TryGetValue(unit.Value.ID, out DrawableUnit existingUnit))
-                {
-                    existingUnit.UpdateUnit(unit.Value);
-                }
-                else
-                {
-                    var unitData = unitStorage.GetUnitByCode(unit.Value.UnitName);
-                    var drawableUnit = new DrawableUnit(unitData, unit.Value, players[unit.Value.PlayerID.Value].Country.Value);
-                    units.Add(unit.Value.ID, drawableUnit);
-                    unitsDrawable.Add(drawableUnit);
                 }
             }
 
@@ -556,7 +558,7 @@ namespace AWBWApp.Game.Game.Logic
 
         public DrawableTile GetDrawableTile(Vector2I position) => gameBoard[position.X, position.Y];
 
-        public void UpdateBuilding(ReplayBuilding awbwBuilding, bool newTurn)
+        public void UpdateBuilding(ReplayBuilding awbwBuilding, bool setBuildingToWaiting)
         {
             var tilePosition = awbwBuilding.Position;
 
@@ -618,7 +620,7 @@ namespace AWBWApp.Game.Game.Logic
             }
 
             //Todo: Is this always the case
-            if (!newTurn)
+            if (!setBuildingToWaiting)
                 building.HasDoneAction.Value = false;
             building.CaptureHealth.Value = awbwBuilding.Capture;
 
