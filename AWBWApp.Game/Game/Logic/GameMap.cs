@@ -609,7 +609,7 @@ namespace AWBWApp.Game.Game.Logic
                             tile.Expire();
                             gameBoard[tilePosition.X, tilePosition.Y] = newTile;
 
-                            newTile.Position = tile.Position;
+                            newTile.Position = GetDrawablePositionForBottomOfTile(tilePosition);
                             newTile.FogOfWarActive.Value = tile.FogOfWarActive.Value;
                             newTile.Depth = tile.Depth;
 
