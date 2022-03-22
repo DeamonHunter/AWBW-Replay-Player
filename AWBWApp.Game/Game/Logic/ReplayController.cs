@@ -51,8 +51,6 @@ namespace AWBWApp.Game.Game.Logic
         public BindableInt CurrentTurnIndex { get; private set; } = new BindableInt(-1);
         public int CurrentDay => currentTurn.Day;
 
-        public int TurnCount => replayData?.TurnData?.Count ?? 0;
-
         private TurnData currentTurn;
         private int currentActionIndex;
 
@@ -251,6 +249,17 @@ namespace AWBWApp.Game.Game.Logic
                     currentTurn.Actions[j].SetupAndUpdate(this, setupContext);
                 }
             }
+        }
+
+        public (int, int) GetLastTurnAndLastAction()
+        {
+            if (replayData == null || replayData.TurnData == null)
+                return (0, 0);
+
+            var lastTurn = replayData.TurnData.Count - 1;
+            var lastAction = (replayData.TurnData[lastTurn].Actions?.Count ?? 0) - 1;
+
+            return (lastTurn, lastAction);
         }
 
         public bool HasNextTurn() => HasLoadedReplay && CurrentTurnIndex.Value + 1 < replayData.TurnData.Count;

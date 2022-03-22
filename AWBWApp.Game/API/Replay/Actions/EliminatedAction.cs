@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Replay;
@@ -72,7 +73,14 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
-            if (GameOverAction != null || controller.TurnCount - 1 != context.CurrentTurnIndex)
+            if (GameOverAction != null)
+            {
+                GameOverAction.SetupAndUpdate(controller, context);
+                return;
+            }
+
+            (int lastTurn, int lastAction) = controller.GetLastTurnAndLastAction();
+            if (lastTurn != context.CurrentTurnIndex || lastAction != context.CurrentActionIndex)
                 return;
 
             var winners = new List<long>();
@@ -139,9 +147,61 @@ namespace AWBWApp.Game.API.Replay.Actions
             GameOverAction.FinishedDay = context.CurrentTurn.Day;
 
             if (teamsAlive.Count > 0)
-                GameOverAction.EndMessage = "";
+            {
+                var teams = teamsAlive.ToArray();
+
+                if (teamsAlive.Count > 1)
+                    GameOverAction.EndMessage = $"The game is over! Teams {createTeamWinnerString(teamsAlive)} are the winners!";
+                else
+                    GameOverAction.EndMessage = $"The game is over! Team {teams[0]} are the winners!";
+            }
+            else if (GameOverAction.Winners.Count > 1)
+                GameOverAction.EndMessage = $"The game is over! {createSoloWinnerString(context, GameOverAction.Winners)} are the winners!";
             else
-                GameOverAction.EndMessage = "";
+            {
+                var username = context.PlayerInfos[GameOverAction.Winners[0]].Username ?? $"[Unknown Username:{GameOverAction.Winners[0]}]";
+                GameOverAction.EndMessage = $"The game is over! {username} is the winner!";
+            }
+
+            GameOverAction.SetupAndUpdate(controller, context);
+        }
+
+        private string createTeamWinnerString(HashSet<string> winners)
+        {
+            var sb = new StringBuilder();
+
+            var idx = 0;
+
+            foreach (var winner in winners)
+            {
+                if (idx == winners.Count - 1)
+                    sb.Append($"and {winner}");
+                else if (idx != 0)
+                    sb.Append($", {winner}");
+                else
+                    sb.Append(winner);
+            }
+
+            return sb.ToString();
+        }
+
+        private string createSoloWinnerString(ReplaySetupContext context, List<long> winners)
+        {
+            var sb = new StringBuilder();
+
+            for (int i = 0; i < winners.Count; i++)
+            {
+                var username = context.PlayerInfos[winners[i]].Username ?? $"[Unknown Username:{winners[i]}]";
+
+                if (i == winners.Count - 1)
+                    sb.Append($"and {username}");
+                else if (i != 0)
+                    sb.Append($", {username}");
+                else
+                    sb.Append(username);
+            }
+
+            return sb.ToString();
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -161,6 +221,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
+            GameOverAction?.UndoAction(controller);
+
             controller.Players[EliminatedPlayerID].Eliminated.Value = false;
         }
     }
