@@ -108,7 +108,6 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             turn.Actions.Add(explodeUnitAction);
 
             ReplayController.LoadReplay(replayData, CreateBasicMap(explodeCenter.X * 2 + 1, explodeCenter.Y * 2 + 1));
-            ReplayController.AllowRewinding = true;
         }
     }
 }

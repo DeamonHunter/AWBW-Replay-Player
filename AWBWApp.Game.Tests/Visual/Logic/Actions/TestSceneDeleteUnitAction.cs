@@ -71,7 +71,6 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             turn.Actions.Add(deleteUnitAction);
 
             ReplayController.LoadReplay(replayData, CreateBasicMap(5, 5));
-            ReplayController.AllowRewinding = true;
         }
     }
 }

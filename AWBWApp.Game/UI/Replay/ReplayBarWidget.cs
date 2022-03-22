@@ -77,7 +77,7 @@ namespace AWBWApp.Game.UI.Replay
                                     Action = () => replayController.GoToPreviousTurn(),
                                     Icon = FontAwesome.Solid.AngleDoubleLeft
                                 },
-                                prevButton = new ReplayIconButton(AWBWGlobalAction.PreviousAction)
+                                prevButton = new ReplayIconButton(AWBWGlobalAction.PreviousAction, replayController.GetPreviousActionName)
                                 {
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
@@ -156,7 +156,7 @@ namespace AWBWApp.Game.UI.Replay
         public void UpdateActions()
         {
             lastTurnButton.Enabled.Value = replayController.HasPreviousTurn();
-            prevButton.Enabled.Value = replayController.AllowRewinding && replayController.HasPreviousAction();
+            prevButton.Enabled.Value = replayController.HasPreviousAction();
             nextButton.Enabled.Value = replayController.HasNextAction();
             nextTurnButton.Enabled.Value = replayController.HasNextTurn();
         }

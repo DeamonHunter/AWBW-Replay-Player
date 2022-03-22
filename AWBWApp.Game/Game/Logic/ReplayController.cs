@@ -7,7 +7,6 @@ using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
-using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Notifications;
@@ -26,8 +25,6 @@ namespace AWBWApp.Game.Game.Logic
         public long GameID { get; private set; }
 
         public bool HasLoadedReplay { get; private set; }
-
-        public bool AllowRewinding { get; set; }
 
         [Resolved]
         public COStorage COStorage { get; private set; }
@@ -307,19 +304,31 @@ namespace AWBWApp.Game.Game.Logic
             return "Next Turn";
         }
 
+        public string GetPreviousActionName()
+        {
+            if (!HasPreviousAction())
+                return null;
+
+            if (currentActionIndex >= 0)
+                return currentTurn.Actions[currentActionIndex].ReadibleName;
+
+            return "Previous Turn";
+        }
+
+        //Todo: Update when we can undo turns
         public bool HasPreviousAction()
         {
             if (!HasLoadedReplay)
                 return false;
 
-            if (CurrentTurnIndex.Value > 0)
-                return true;
+            if (currentActionIndex >= 0)
+            {
+                var currentAction = currentTurn.Actions[currentActionIndex];
 
-            //Todo: Should this be allowed to be null?
-            if (currentTurn.Actions == null)
-                return false;
+                return currentAction is not EndTurnAction;
+            }
 
-            return currentActionIndex >= 0;
+            return false;
         }
 
         public void GoToNextAction()

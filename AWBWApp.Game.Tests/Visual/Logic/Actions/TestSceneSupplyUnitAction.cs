@@ -64,7 +64,6 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             map.Ids[2 * 5 + 2] = 16;
 
             ReplayController.LoadReplay(replayData, map);
-            ReplayController.AllowRewinding = true;
         }
 
         private void supplyTestWithMove()
@@ -110,7 +109,6 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             map.Ids[3 * 5 + 2] = 16;
 
             ReplayController.LoadReplay(replayData, map);
-            ReplayController.AllowRewinding = true;
         }
     }
 }

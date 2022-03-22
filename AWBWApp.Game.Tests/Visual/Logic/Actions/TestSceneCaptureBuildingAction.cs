@@ -145,7 +145,6 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             turn.Actions.Add(captureAction);
 
             ReplayController.LoadReplay(replayData, CreateBasicMap(5, 5));
-            ReplayController.AllowRewinding = true;
         }
 
         private void movementTest(bool previousTurn)
@@ -177,7 +176,6 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             }
 
             ReplayController.LoadReplay(replayData, CreateBasicMap(5, 5));
-            ReplayController.AllowRewinding = true;
         }
     }
 }

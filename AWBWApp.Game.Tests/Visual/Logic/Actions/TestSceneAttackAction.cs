@@ -159,7 +159,6 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             map.Ids[defendingSea.Position.Value.Y * 5 + defendingSea.Position.Value.X] = 28; //Set the tile under the lander to be sea just so it looks more correct.
 
             ReplayController.LoadReplay(replayData, map);
-            ReplayController.AllowRewinding = true;
         }
 
         private void attackTest(int spaces)
@@ -258,7 +257,6 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             turn.Actions.Add(attackAction);
 
             ReplayController.LoadReplay(replayData, CreateBasicMap(map_size, map_size));
-            ReplayController.AllowRewinding = true;
         }
 
         private void counterAttackTest()
@@ -342,7 +340,6 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             //Create map
             var map = CreateBasicMap(3, 7);
             ReplayController.LoadReplay(replayData, map);
-            ReplayController.AllowRewinding = true;
         }
 
         private void sonjaCounterattackTest()
@@ -445,7 +442,6 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             //Create map
             var map = CreateBasicMap(3, 7);
             ReplayController.LoadReplay(replayData, map);
-            ReplayController.AllowRewinding = true;
         }
 
         private AttackUnitAction createAttackUnitAction(ReplayUnit attacker, ReplayUnit defender, int attackerHealthAfter, int defenderHealthAfter, bool counterAttack)
