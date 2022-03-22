@@ -215,6 +215,9 @@ namespace AWBWApp.Game.API.Replay.Actions
             var attackerStats = Attacker;
             var defenderStats = Defender;
 
+            var attackerValue = attackerValueLost;
+            var defenderValue = defenderValueLost;
+
             if (!attackerUnit.OwnerID.HasValue)
                 throw new Exception("Attacking unit doesn't have an owner id?");
             if (!defenderUnit.OwnerID.HasValue)
@@ -240,6 +243,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 (attackerUnit, defenderUnit) = (defenderUnit, attackerUnit);
                 (attackerStats, defenderStats) = (defenderStats, attackerStats);
+                (attackerValue, defenderValue) = (defenderValue, attackerValue);
             }
 
             //Perform Attack vs Defender
@@ -248,12 +252,14 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             attackerUnit.CanMove.Value = false;
             defenderUnit.UpdateUnit(defenderStats);
+            controller.Players[defenderUnit.OwnerID!.Value].UnitValue.Value -= defenderValue;
 
             if (defenderUnit.HealthPoints.Value <= 0 || !defenderCounters)
             {
                 attackerUnit.UpdateUnit(attackerStats);
                 if (defenderUnit.HealthPoints.Value <= 0)
                     controller.Map.DeleteUnit(defenderUnit.UnitID, true);
+                controller.Players[attackerUnit.OwnerID!.Value].UnitValue.Value -= attackerValue;
                 afterAttackChanges(controller);
 
                 //Destroying a unit can eliminate a player. i.e. They have no units left.
@@ -281,6 +287,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 controller.UpdateFogOfWar();
             }
 
+            controller.Players[attackerUnit.OwnerID!.Value].UnitValue.Value -= attackerValue;
             afterAttackChanges(controller);
 
             //Destroying a unit can eliminate a player. i.e. They have no units left.
@@ -309,9 +316,6 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         private void afterAttackChanges(ReplayController controller)
         {
-            controller.Players[Attacker.PlayerID!.Value].UnitValue.Value -= attackerValueLost;
-            controller.Players[Defender.PlayerID!.Value].UnitValue.Value -= defenderValueLost;
-
             if (GainedFunds != null)
             {
                 foreach (var (playerID, funds) in GainedFunds)
@@ -349,9 +353,6 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            controller.Players[Attacker.PlayerID!.Value].UnitValue.Value += attackerValueLost;
-            controller.Players[Defender.PlayerID!.Value].UnitValue.Value += defenderValueLost;
-
             if (controller.Map.TryGetDrawableUnit(Attacker.ID, out var attackerUnit))
                 attackerUnit.UpdateUnit(originalAttacker);
             else
@@ -360,7 +361,10 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (controller.Map.TryGetDrawableUnit(Defender.ID, out var defenderUnit))
                 defenderUnit.UpdateUnit(originalDefender);
             else
-                controller.Map.AddUnit(originalDefender);
+                defenderUnit = controller.Map.AddUnit(originalDefender);
+
+            controller.Players[attackerUnit.OwnerID!.Value].UnitValue.Value += attackerValueLost;
+            controller.Players[defenderUnit.OwnerID!.Value].UnitValue.Value += defenderValueLost;
 
             foreach (var cargoUnit in originalCargoUnits)
                 controller.Map.AddUnit(cargoUnit);
