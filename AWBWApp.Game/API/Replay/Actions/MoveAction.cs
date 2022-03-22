@@ -88,6 +88,13 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             unit.MoveToPosition(Unit.Position.Value);
+
+            if (unit.Cargo != null && unit.Cargo.Count > 0)
+            {
+                foreach (var carriedUnit in unit.Cargo)
+                    controller.Map.GetDrawableUnit(carriedUnit).MoveToPosition(Unit.Position.Value);
+            }
+
             unit.CanMove.Value = false;
             unit.CheckForDesyncs(Unit);
             controller.UpdateFogOfWar();
