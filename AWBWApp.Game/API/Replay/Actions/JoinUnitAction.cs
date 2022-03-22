@@ -108,7 +108,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             controller.Map.GetDrawableUnit(originalJoinedUnit.ID).UpdateUnit(originalJoinedUnit);
 
             controller.ActivePlayer.UnitValue.Value -= valueChange;
-            controller.ActivePlayer.Funds.Value += fundsChange;
+            controller.ActivePlayer.Funds.Value -= fundsChange;
 
             MoveUnit?.UndoAction(controller);
         }

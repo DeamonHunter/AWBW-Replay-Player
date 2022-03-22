@@ -41,7 +41,8 @@ namespace AWBWApp.Game
             Child = screenStack = new ScreenStack { RelativeSizeAxes = Axes.Both };
 
             dependencies.CacheAs(this);
-            dependencies.CacheAs(clipboard);
+            if (clipboard != null)
+                dependencies.CacheAs(clipboard);
 
             //Todo: This is gross
             loadComponentAfterOtherComponents(
