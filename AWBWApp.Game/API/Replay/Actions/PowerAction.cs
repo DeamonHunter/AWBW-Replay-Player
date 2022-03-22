@@ -100,7 +100,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 action.PlayerWideChanges = new Dictionary<long, PowerAction.PlayerWideUnitChange>();
 
-                var hpGainEntry = jObject["hpGain"];
+                var hpGainEntry = hpChange["hpGain"];
 
                 if (hpGainEntry is JObject hpGain)
                 {
@@ -130,7 +130,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                         action.PlayerWideChanges.Add((long)player, change);
                 }
 
-                var hpLossEntry = jObject["hpLoss"];
+                var hpLossEntry = hpChange["hpLoss"];
 
                 if (hpLossEntry is JObject hpLoss)
                 {
@@ -430,7 +430,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     foreach (var unit in controller.Map.GetDrawableUnitsFromPlayer(change.Key))
                     {
                         if (change.Value.HPGain.HasValue)
-                            unit.HealthPoints.Value += change.Value.HPGain.Value;
+                            unit.HealthPoints.Value = Math.Max(1, unit.HealthPoints.Value + change.Value.HPGain.Value); //Player wide changes cannot kill
                         if (change.Value.FuelGainPercentage.HasValue)
                             unit.Fuel.Value = (int)Math.Floor(unit.Fuel.Value * change.Value.FuelGainPercentage.Value);
 
