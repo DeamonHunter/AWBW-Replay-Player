@@ -168,6 +168,8 @@ namespace AWBWApp.Game.API.Replay.Actions
         private ReplayUnit originalDefender;
         private int defenderValueLost;
         private List<ReplayUnit> originalCargoUnits = new List<ReplayUnit>();
+        private Dictionary<long, int> originalPowers = new Dictionary<long, int>();
+        private Dictionary<long, int> originalFunds;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
@@ -204,6 +206,23 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 ReplayActionHelper.RemoveUnitFromSetupContext(Defender.ID, context, originalCargoUnits);
                 attackerValueLost = ReplayActionHelper.CalculateUnitCost(originalDefender, defenderCO.DayToDayPower, null);
+            }
+
+            foreach (var powerChange in PowerChanges)
+            {
+                originalPowers.Add(powerChange.PlayerID, context.PowerValuesForPlayers[powerChange.PlayerID]);
+                context.PowerValuesForPlayers[powerChange.PlayerID] = powerChange.PowerChange;
+            }
+
+            if (GainedFunds != null && GainedFunds.Count > 0)
+            {
+                originalFunds = new Dictionary<long, int>();
+
+                foreach (var funds in GainedFunds)
+                {
+                    originalFunds.Add(funds.Key, context.FundsValuesForPlayers[funds.Value]);
+                    context.FundsValuesForPlayers[funds.Key] = funds.Value;
+                }
             }
         }
 
@@ -319,7 +338,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (GainedFunds != null)
             {
                 foreach (var (playerID, funds) in GainedFunds)
-                    controller.Players[playerID].Funds.Value += funds;
+                    controller.Players[playerID].Funds.Value = funds;
             }
 
             foreach (var player in PowerChanges)
@@ -368,6 +387,19 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             foreach (var cargoUnit in originalCargoUnits)
                 controller.Map.AddUnit(cargoUnit);
+
+            foreach (var power in originalPowers)
+            {
+                var value = controller.Players[power.Key].ActiveCO.Value;
+                value.Power = power.Value;
+                controller.Players[power.Key].ActiveCO.Value = value;
+            }
+
+            if (originalFunds != null)
+            {
+                foreach (var funds in originalFunds)
+                    controller.Players[funds.Key].Funds.Value = funds.Value;
+            }
 
             if (MoveUnit != null)
                 MoveUnit.UndoAction(controller);

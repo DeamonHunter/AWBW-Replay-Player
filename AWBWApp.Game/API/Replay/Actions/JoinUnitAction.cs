@@ -55,6 +55,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         private ReplayUnit originalJoiningUnit;
         private ReplayUnit originalJoinedUnit;
         private int valueChange;
+        private int fundsChange;
 
         //Todo: Track funds
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
@@ -71,6 +72,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             originalJoinedUnit = unit.Clone();
             unit.Overwrite(JoinedUnit);
+
+            fundsChange = FundsAfterJoin - context.FundsValuesForPlayers[context.ActivePlayerID];
+            context.FundsValuesForPlayers[context.ActivePlayerID] = FundsAfterJoin;
 
             var dayToDay = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[context.ActivePlayerID].ActiveCOID).DayToDayPower;
             var joinedUnitValueChange = ReplayActionHelper.CalculateUnitCost(JoinedUnit, dayToDay, null) - ReplayActionHelper.CalculateUnitCost(originalJoinedUnit, dayToDay, null);
@@ -104,7 +108,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             controller.Map.GetDrawableUnit(originalJoinedUnit.ID).UpdateUnit(originalJoinedUnit);
 
             controller.ActivePlayer.UnitValue.Value -= valueChange;
-            controller.ActivePlayer.Funds.Value += valueChange;
+            controller.ActivePlayer.Funds.Value += fundsChange;
 
             MoveUnit?.UndoAction(controller);
         }

@@ -59,6 +59,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public int FundsAfterRepair;
 
         private ReplayUnit originalRepairedUnit;
+        private int repairValue;
         private int repairCost;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
@@ -70,13 +71,16 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             originalRepairedUnit = repairedUnit.Clone();
 
-            var unitData = context.UnitStorage.GetUnitByCode(repairedUnit.UnitName);
+            var unitData = controller.Map.GetUnitDataForUnitName(repairedUnit.UnitName);
             repairedUnit.Ammo = unitData.MaxAmmo;
             repairedUnit.Fuel = unitData.MaxFuel;
             repairedUnit.HitPoints = RepairedUnitHP;
 
+            repairCost = FundsAfterRepair - context.FundsValuesForPlayers[context.ActivePlayerID];
+            context.FundsValuesForPlayers[context.ActivePlayerID] = repairCost;
+
             var co = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[context.ActivePlayerID].ActiveCOID);
-            repairCost = ReplayActionHelper.CalculateUnitCost(repairedUnit, co.DayToDayPower, null) - ReplayActionHelper.CalculateUnitCost(originalRepairedUnit, co.DayToDayPower, null);
+            repairValue = ReplayActionHelper.CalculateUnitCost(repairedUnit, co.DayToDayPower, null) - ReplayActionHelper.CalculateUnitCost(originalRepairedUnit, co.DayToDayPower, null);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)

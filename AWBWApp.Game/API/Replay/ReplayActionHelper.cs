@@ -215,5 +215,25 @@ namespace AWBWApp.Game.API.Replay
 
             return unitToRemove;
         }
+
+        public static ReplayUnit RemoveUnitFromSetupContext(long unitID, ReplaySetupContext context, Dictionary<long, ReplayUnit> deletedCargoUnits)
+        {
+            if (!context.Units.Remove(unitID, out var unitToRemove))
+                throw new ReplayMissingUnitException(unitID);
+
+            if (unitToRemove.CargoUnits != null && unitToRemove.CargoUnits.Count > 0)
+            {
+                foreach (var cargoUnitID in unitToRemove.CargoUnits)
+                {
+                    if (!context.Units.Remove(cargoUnitID, out var cargoUnit))
+                        throw new ReplayMissingUnitException(cargoUnitID);
+
+                    if (!deletedCargoUnits.ContainsKey(cargoUnitID))
+                        deletedCargoUnits.Add(cargoUnitID, cargoUnit.Clone());
+                }
+            }
+
+            return unitToRemove;
+        }
     }
 }

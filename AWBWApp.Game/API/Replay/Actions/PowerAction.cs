@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Logic;
+using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Replay;
 using Newtonsoft.Json.Linq;
@@ -341,12 +343,96 @@ namespace AWBWApp.Game.API.Replay.Actions
         public List<CreateUnit> CreatedUnits;
         public List<Vector2I> MissileCoords;
 
+        private Dictionary<long, ReplayUnit> originalUnits = new Dictionary<long, ReplayUnit>();
+        private Dictionary<long, int> originalPowers = new Dictionary<long, int>();
+        private Dictionary<long, int> originalFunds = new Dictionary<long, int>();
+        private Weather originalWeather;
+
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
             var co = controller.COStorage.GetCOByName(CombatOfficerName);
             COPower = IsSuperPower ? co.SuperPower : co.NormalPower;
 
             controller.RegisterPower(this, context);
+
+            if (PlayerChanges != null)
+            {
+                foreach (var playerChange in PlayerChanges)
+                {
+                    if (playerChange.Value.COPower != null)
+                    {
+                        originalPowers[playerChange.Key] = context.PowerValuesForPlayers[playerChange.Key];
+                        context.PowerValuesForPlayers[playerChange.Key] = playerChange.Value.COPower.Value;
+                    }
+
+                    if (playerChange.Value.Money != null)
+                    {
+                        originalFunds[playerChange.Key] = context.FundsValuesForPlayers[playerChange.Key];
+                        context.FundsValuesForPlayers[playerChange.Key] = playerChange.Value.Money.Value;
+                    }
+                }
+            }
+
+            originalPowers[context.ActivePlayerID] = context.PowerValuesForPlayers[context.ActivePlayerID];
+            context.PowerValuesForPlayers[context.ActivePlayerID] = LeftOverPower;
+
+            if (PlayerWideChanges != null)
+            {
+                foreach (var playerWideChange in PlayerWideChanges)
+                {
+                    foreach (var unit in context.Units)
+                    {
+                        if (unit.Value.PlayerID != playerWideChange.Key)
+                            continue;
+
+                        if (!originalUnits.ContainsKey(unit.Key))
+                            originalUnits.Add(unit.Key, unit.Value.Clone());
+
+                        var unitData = controller.Map.GetUnitDataForUnitName(unit.Value.UnitName);
+
+                        if (playerWideChange.Value.HPGain.HasValue)
+                            unit.Value.HitPoints = Math.Max(1f, Math.Min(10f, unit.Value.HitPoints!.Value + playerWideChange.Value.HPGain.Value));
+                        if (playerWideChange.Value.FuelGainPercentage.HasValue)
+                            unit.Value.Fuel = Math.Max(0, Math.Min(unitData.MaxFuel, unit.Value.Fuel!.Value + (int)Math.Floor(unitData.MaxFuel * playerWideChange.Value.FuelGainPercentage.Value)));
+                    }
+                }
+            }
+
+            if (UnitChanges != null)
+            {
+                foreach (var change in UnitChanges)
+                {
+                    if (!context.Units.TryGetValue(change.Key, out var unit))
+                        throw new ReplayMissingUnitException(change.Key);
+
+                    if (!originalUnits.ContainsKey(change.Key))
+                        originalUnits.Add(change.Key, unit.Clone());
+
+                    if (change.Value.Ammo.HasValue)
+                        unit.Ammo = change.Value.Ammo.Value;
+                    if (change.Value.Fuel.HasValue)
+                        unit.Fuel = change.Value.Fuel.Value;
+                    if (change.Value.HitPoints.HasValue)
+                        unit.HitPoints = change.Value.HitPoints.Value;
+                    if (change.Value.UnitsMoved.HasValue)
+                        unit.TimesMoved = change.Value.UnitsMoved.Value;
+
+                    if (unit.HitPoints.Value <= 0)
+                        ReplayActionHelper.RemoveUnitFromSetupContext(change.Key, context, originalUnits);
+                }
+            }
+
+            if (CreatedUnits != null)
+            {
+                foreach (var unit in CreatedUnits)
+                {
+                    var unitData = controller.Map.GetUnitDataForUnitName(unit.UnitName);
+                    var newUnit = createUnit(unit, controller.ActivePlayer.ID, unitData);
+                    context.Units.Add(newUnit.ID, newUnit);
+                }
+            }
+
+            originalWeather = context.Weather;
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -430,9 +516,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                     foreach (var unit in controller.Map.GetDrawableUnitsFromPlayer(change.Key))
                     {
                         if (change.Value.HPGain.HasValue)
-                            unit.HealthPoints.Value = Math.Max(1, unit.HealthPoints.Value + change.Value.HPGain.Value); //Player wide changes cannot kill
+                            unit.HealthPoints.Value = Math.Max(1, Math.Min(10, unit.HealthPoints.Value + change.Value.HPGain.Value)); //Player wide changes cannot kill
                         if (change.Value.FuelGainPercentage.HasValue)
-                            unit.Fuel.Value = (int)Math.Floor(unit.Fuel.Value * change.Value.FuelGainPercentage.Value);
+                            unit.Fuel.Value = Math.Max(0, Math.Min(unit.UnitData.MaxFuel, unit.Fuel.Value + (int)Math.Floor(unit.UnitData.MaxFuel * change.Value.FuelGainPercentage.Value)));
 
                         //Todo: Play heal/damage animation
 
@@ -482,24 +568,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 foreach (var unit in CreatedUnits)
                 {
                     var unitData = controller.Map.GetUnitDataForUnitName(unit.UnitName);
-                    var newUnit = new ReplayUnit
-                    {
-                        ID = unit.UnitID,
-                        PlayerID = controller.ActivePlayer.ID,
-                        UnitName = unit.UnitName,
-                        Position = unit.Position,
-                        HitPoints = unit.HP,
-                        Ammo = unitData.MaxAmmo,
-                        BeingCarried = false,
-                        Cost = unitData.Cost,
-                        Fuel = unitData.MaxFuel,
-                        FuelPerTurn = unitData.FuelUsagePerTurn,
-                        MovementPoints = unitData.MovementRange,
-                        Vision = unitData.Vision,
-                        Range = unitData.AttackRange,
-                        TimesMoved = 0,
-                        MovementType = unitData.MovementType.ToString()
-                    };
+                    var newUnit = createUnit(unit, controller.ActivePlayer.ID, unitData);
 
                     var drawable = controller.Map.AddUnit(newUnit);
                     controller.Map.PlaySelectionAnimation(drawable);
@@ -507,7 +576,29 @@ namespace AWBWApp.Game.API.Replay.Actions
                 }
             }
 
-            yield break;
+            controller.UpdateFogOfWar();
+        }
+
+        private ReplayUnit createUnit(CreateUnit unit, long playerID, UnitData unitData)
+        {
+            return new ReplayUnit
+            {
+                ID = unit.UnitID,
+                PlayerID = playerID,
+                UnitName = unit.UnitName,
+                Position = unit.Position,
+                HitPoints = unit.HP,
+                Ammo = unitData.MaxAmmo,
+                BeingCarried = false,
+                Cost = unitData.Cost,
+                Fuel = unitData.MaxFuel,
+                FuelPerTurn = unitData.FuelUsagePerTurn,
+                MovementPoints = unitData.MovementRange,
+                Vision = unitData.Vision,
+                Range = unitData.AttackRange,
+                TimesMoved = 0,
+                MovementType = unitData.MovementType.ToString()
+            };
         }
 
         private void playEffectForUnitChange(ReplayController controller, Vector2I position, UnitChange change)
@@ -520,7 +611,34 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            throw new NotImplementedException("Undo Power Action is not complete");
+            if (ChangeToWeather.HasValue)
+                controller.Map.CurrentWeather.Value = originalWeather;
+
+            foreach (var power in originalPowers)
+            {
+                var value = controller.Players[power.Key].ActiveCO.Value;
+                value.Power = power.Value;
+                controller.Players[power.Key].ActiveCO.Value = value;
+            }
+
+            foreach (var funds in originalFunds)
+                controller.Players[funds.Key].Funds.Value = funds.Value;
+
+            foreach (var unit in originalUnits)
+            {
+                if (controller.Map.TryGetDrawableUnit(unit.Key, out var drawableUnit))
+                    drawableUnit.UpdateUnit(unit.Value);
+                else
+                    controller.Map.AddUnit(unit.Value);
+            }
+
+            if (CreatedUnits != null)
+            {
+                foreach (var createdUnit in CreatedUnits)
+                    controller.Map.DeleteUnit(createdUnit.UnitID, false);
+            }
+
+            controller.UpdateFogOfWar();
         }
 
         public class PlayerChange

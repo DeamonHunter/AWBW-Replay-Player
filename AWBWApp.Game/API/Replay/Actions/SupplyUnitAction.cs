@@ -65,7 +65,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                 originalUnits.Add(suppliedUnit.Clone());
 
-                var unitData = context.UnitStorage.GetUnitByCode(suppliedUnit.UnitName);
+                var unitData = controller.Map.GetUnitDataForUnitName(suppliedUnit.UnitName);
                 suppliedUnit.Ammo = unitData.MaxAmmo;
                 suppliedUnit.Fuel = unitData.MaxFuel;
             }

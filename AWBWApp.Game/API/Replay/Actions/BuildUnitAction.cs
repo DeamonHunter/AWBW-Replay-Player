@@ -46,6 +46,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             var currentPower = controller.GetActivePowerForPlayer(NewUnit.PlayerID!.Value);
 
             unitCost = ReplayActionHelper.CalculateUnitCost(NewUnit, dayToDay, currentPower?.COPower);
+            context.FundsValuesForPlayers[context.ActivePlayerID] -= unitCost;
             unitValue = ReplayActionHelper.CalculateUnitCost(NewUnit, dayToDay, null); //unitValue doesn't care about active powers
 
             activePlayer.Funds -= unitCost;

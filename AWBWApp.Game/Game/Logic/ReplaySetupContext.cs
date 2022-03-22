@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
-using AWBWApp.Game.Game.Units;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Game.Logic
@@ -15,6 +14,8 @@ namespace AWBWApp.Game.Game.Logic
 
         //Todo: Are there other things we need to track here
         public Dictionary<long, int> PropertyValuesForPlayers = new Dictionary<long, int>();
+        public Dictionary<long, int> FundsValuesForPlayers = new Dictionary<long, int>();
+        public Dictionary<long, int> PowerValuesForPlayers = new Dictionary<long, int>();
 
         public TurnData CurrentTurn;
         public int CurrentTurnIndex;
@@ -25,15 +26,14 @@ namespace AWBWApp.Game.Game.Logic
 
         //Todo: Possibly change how we calculate funds
         public BuildingStorage BuildingStorage;
-        public UnitStorage UnitStorage;
+        public Weather Weather;
 
         private Dictionary<int, long> countriesToPlayers;
         private int fundsPerBuilding;
 
-        public ReplaySetupContext(BuildingStorage buildingStorage, UnitStorage unitStorage, Dictionary<long, ReplayUser> playerInfos, int fundsPerBuilding)
+        public ReplaySetupContext(BuildingStorage buildingStorage, Dictionary<long, ReplayUser> playerInfos, int fundsPerBuilding)
         {
             BuildingStorage = buildingStorage;
-            UnitStorage = unitStorage;
             PlayerInfos = playerInfos;
             this.fundsPerBuilding = fundsPerBuilding;
 
@@ -52,10 +52,16 @@ namespace AWBWApp.Game.Game.Logic
 
             PlayerTurns.Clear();
 
+            PropertyValuesForPlayers.Clear();
+            FundsValuesForPlayers.Clear();
+            Weather = turn.StartWeather.Type;
+
             foreach (var player in turn.Players)
             {
                 PlayerTurns.Add(player.Key, player.Value.Clone());
                 PropertyValuesForPlayers[player.Key] = 0;
+                FundsValuesForPlayers[player.Key] = player.Value.Funds;
+                PowerValuesForPlayers[player.Key] = player.Value.Power;
             }
 
             Units.Clear();
