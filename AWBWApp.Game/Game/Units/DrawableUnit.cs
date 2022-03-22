@@ -173,6 +173,7 @@ namespace AWBWApp.Game.Game.Unit
             Dived.BindValueChanged(x => updateUnitColour(x.NewValue));
 
             updateUnitColour(true);
+            updateCarried();
         }
 
         public void MoveToPosition(Vector2I position, bool updateVisual = true)
