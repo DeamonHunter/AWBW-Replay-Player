@@ -220,8 +220,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                 foreach (var funds in GainedFunds)
                 {
-                    originalFunds.Add(funds.Key, context.FundsValuesForPlayers[funds.Value]);
-                    context.FundsValuesForPlayers[funds.Key] = funds.Value;
+                    originalFunds.Add(funds.Key, context.FundsValuesForPlayers[funds.Key]);
+                    context.FundsValuesForPlayers[funds.Key] += funds.Value;
                 }
             }
         }
@@ -338,7 +338,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (GainedFunds != null)
             {
                 foreach (var (playerID, funds) in GainedFunds)
-                    controller.Players[playerID].Funds.Value = funds;
+                    controller.Players[playerID].Funds.Value += funds;
             }
 
             foreach (var player in PowerChanges)
