@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.COs;
+using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Unit;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics.Primitives;
@@ -193,6 +195,25 @@ namespace AWBWApp.Game.API.Replay
                 priceMultiplier = dayToDay.UnitPriceMultiplier;
 
             return (int)(unit.UnitData.Cost * priceMultiplier * (unit.HealthPoints.Value * 0.1));
+        }
+
+        public static ReplayUnit RemoveUnitFromSetupContext(long unitID, ReplaySetupContext context, List<ReplayUnit> deletedCargoUnits)
+        {
+            if (!context.Units.Remove(unitID, out var unitToRemove))
+                throw new ReplayMissingUnitException(unitID);
+
+            if (unitToRemove.CargoUnits != null && unitToRemove.CargoUnits.Count > 0)
+            {
+                foreach (var cargoUnitID in unitToRemove.CargoUnits)
+                {
+                    if (!context.Units.Remove(cargoUnitID, out var cargoUnit))
+                        throw new ReplayMissingUnitException(cargoUnitID);
+
+                    deletedCargoUnits.Add(cargoUnit.Clone());
+                }
+            }
+
+            return unitToRemove;
         }
     }
 }

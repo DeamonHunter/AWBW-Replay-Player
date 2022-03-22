@@ -53,7 +53,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public MoveUnitAction MoveUnit;
 
-        private List<ReplayUnit> originalUnits;
+        private List<ReplayUnit> originalUnits = new List<ReplayUnit>();
         private ReplayBuilding originalBuilding;
 
         private const int explosion_range = 3;
@@ -71,8 +71,6 @@ namespace AWBWApp.Game.API.Replay.Actions
                 launchingUnit.TimesMoved = 1;
 
             originalBuilding = launchingBuilding.Clone();
-
-            originalUnits = new List<ReplayUnit>();
 
             var destroyedUnits = new HashSet<long>();
             var explodingPlayer = controller.Players[context.ActivePlayerID];
@@ -95,26 +93,12 @@ namespace AWBWApp.Game.API.Replay.Actions
                     unit.Value.HitPoints = unit.Value.HitPoints!.Value + HPChange;
 
                     if (unit.Value.HitPoints <= 0)
-                    {
                         destroyedUnits.Add(unit.Key);
-
-                        if (unit.Value.CargoUnits != null && unit.Value.CargoUnits.Count > 0)
-                        {
-                            foreach (var cargoUnitID in unit.Value.CargoUnits)
-                            {
-                                if (!context.Units.TryGetValue(cargoUnitID, out var cargoUnit))
-                                    throw new ReplayMissingUnitException(cargoUnitID);
-
-                                originalUnits.Add(cargoUnit);
-                                destroyedUnits.Add(cargoUnitID);
-                            }
-                        }
-                    }
                 }
             }
 
             foreach (var unit in destroyedUnits)
-                context.Units.Remove(unit);
+                ReplayActionHelper.RemoveUnitFromSetupContext(unit, context, originalUnits);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
