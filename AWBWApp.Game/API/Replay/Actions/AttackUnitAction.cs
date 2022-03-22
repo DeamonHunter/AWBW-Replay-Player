@@ -164,7 +164,9 @@ namespace AWBWApp.Game.API.Replay.Actions
         public EliminatedAction EliminatedAction;
 
         private ReplayUnit originalAttacker;
+        private int attackerValueLost;
         private ReplayUnit originalDefender;
+        private int defenderValueLost;
         private List<ReplayUnit> originalCargoUnits = new List<ReplayUnit>();
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
@@ -179,15 +181,30 @@ namespace AWBWApp.Game.API.Replay.Actions
             originalAttacker = attacker.Clone();
             originalDefender = defender.Clone();
 
+            var attackerCO = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[attacker.PlayerID!.Value].ActiveCOID);
+            var defenderCO = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[defender.PlayerID!.Value].ActiveCOID);
+
             if (Attacker.HitPoints!.Value > 0)
+            {
                 attacker.Overwrite(Attacker);
+                attackerValueLost = ReplayActionHelper.CalculateUnitCost(originalAttacker, attackerCO.DayToDayPower, null) - ReplayActionHelper.CalculateUnitCost(attacker, attackerCO.DayToDayPower, null);
+            }
             else
+            {
                 ReplayActionHelper.RemoveUnitFromSetupContext(Attacker.ID, context, originalCargoUnits);
+                attackerValueLost = ReplayActionHelper.CalculateUnitCost(originalAttacker, attackerCO.DayToDayPower, null);
+            }
 
             if (Defender.HitPoints!.Value > 0)
+            {
                 defender.Overwrite(Defender);
+                defenderValueLost = ReplayActionHelper.CalculateUnitCost(originalDefender, defenderCO.DayToDayPower, null) - ReplayActionHelper.CalculateUnitCost(defender, defenderCO.DayToDayPower, null);
+            }
             else
+            {
                 ReplayActionHelper.RemoveUnitFromSetupContext(Defender.ID, context, originalCargoUnits);
+                attackerValueLost = ReplayActionHelper.CalculateUnitCost(originalDefender, defenderCO.DayToDayPower, null);
+            }
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -292,6 +309,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         private void afterAttackChanges(ReplayController controller)
         {
+            controller.Players[Attacker.PlayerID!.Value].UnitValue.Value -= attackerValueLost;
+            controller.Players[Defender.PlayerID!.Value].UnitValue.Value -= defenderValueLost;
+
             if (GainedFunds != null)
             {
                 foreach (var (playerID, funds) in GainedFunds)
@@ -329,6 +349,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
+            controller.Players[Attacker.PlayerID!.Value].UnitValue.Value += attackerValueLost;
+            controller.Players[Defender.PlayerID!.Value].UnitValue.Value += defenderValueLost;
+
             if (controller.Map.TryGetDrawableUnit(Attacker.ID, out var attackerUnit))
                 attackerUnit.UpdateUnit(originalAttacker);
             else
