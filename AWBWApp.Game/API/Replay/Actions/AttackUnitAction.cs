@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Unit;
@@ -36,59 +37,92 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (attackData == null)
                 throw new Exception("Capture Replay Action did not contain information about Capture.");
 
-            var combatInfoVision = attackData["combatInfoVision"];
-            var combatInfoVisionData = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)combatInfoVision, turnData.ActiveTeam, turnData.ActivePlayerID);
+            var copValues = (JObject)attackData["copValues"];
+            if (copValues == null)
+                throw new Exception("COP Values were null");
 
-            var hasVision = (bool)combatInfoVisionData["hasVision"]; //Todo: What does this entail?
+            long? defenderID = null;
 
-            if (!hasVision)
-                throw new Exception("Replay contains fight that player has no vision on."); //Is this meant to be for team battles.
+            action.PowerChanges = new List<AttackUnitAction.COPowerChange>();
 
-            var combatInfo = (JObject)combatInfoVisionData["combatInfo"];
-
-            if (combatInfo["attacker"].Type == JTokenType.String)
+            foreach (var player in copValues)
             {
-                //Todo: What is a "?" attacker when the player attacked with it. A dead unit?
+                var powerChange = new AttackUnitAction.COPowerChange
+                {
+                    PlayerID = (long)player.Value["playerId"],
+                    PowerChange = (int)player.Value["copValue"],
+                    TagPowerChange = (int?)player.Value["tagValue"]
+                };
+                action.PowerChanges.Add(powerChange);
+
+                if (player.Key == "defender")
+                    defenderID = powerChange.PlayerID;
+            }
+
+            if (defenderID == null)
+                throw new Exception("Unknown defender ID.");
+
+            var defendingTeam = replayData.ReplayInfo.Players[defenderID.Value].TeamName;
+
+            var combatInfoVision = attackData["combatInfoVision"];
+
+            var attackerInfoVisionData = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)combatInfoVision, turnData.ActiveTeam, turnData.ActivePlayerID);
+            var attackerCombatInfo = attackerInfoVisionData["combatInfo"];
+
+            var defenderInfoVisionData = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)combatInfoVision, defendingTeam, defenderID.Value);
+            var defenderCombatInfo = defenderInfoVisionData["combatInfo"];
+
+            if (!(bool)attackerInfoVisionData["hasVision"] || !(bool)defenderInfoVisionData["hasVision"])
+                throw new Exception("Replay contains fight that player has no vision on.");
+
+            action.Attacker = parseInfoIntoUnit(attackerCombatInfo["attacker"], defenderCombatInfo["attacker"]);
+            action.Defender = parseInfoIntoUnit(defenderCombatInfo["defender"], attackerCombatInfo["defender"]);
+
+            if (action.Attacker == null)
+            {
                 Logger.Log("Attack action didn't have information on the player attacking?");
                 action.Attacker = action.MoveUnit?.Unit;
                 if (action.Attacker != null)
                     action.Attacker.HitPoints = 0;
             }
-            else
-                action.Attacker = ReplayActionHelper.ParseJObjectIntoReplayUnit((JObject)combatInfo["attacker"]);
 
-            action.Defender = ReplayActionHelper.ParseJObjectIntoReplayUnit((JObject)combatInfo["defender"]);
+            if (action.Attacker == null || action.Defender == null)
+                throw new Exception("Unknown attacker or defender?");
 
-            var copValues = (JObject)attackData["copValues"];
+            var attackerGainedFunds = (JObject)attackerCombatInfo["gainedFunds"];
 
-            if (copValues != null)
+            if (attackerGainedFunds != null)
             {
-                action.PowerChanges = new List<AttackUnitAction.COPowerChange>();
+                action.GainedFunds ??= new Dictionary<long, int>();
 
-                foreach (var player in copValues)
-                {
-                    var powerChange = new AttackUnitAction.COPowerChange
-                    {
-                        PlayerID = (long)player.Value["playerId"],
-                        PowerChange = (int)player.Value["copValue"],
-                        TagPowerChange = (int?)player.Value["tagValue"]
-                    };
-                    action.PowerChanges.Add(powerChange);
-                }
-            }
-
-            var gainedFunds = (JObject)combatInfo["gainedFunds"];
-
-            if (gainedFunds != null)
-            {
-                action.GainedFunds = new List<(long, int)>();
-
-                foreach (var player in gainedFunds)
+                foreach (var player in attackerGainedFunds)
                 {
                     if (player.Value.Type == JTokenType.Null)
                         continue;
 
-                    action.GainedFunds.Add((long.Parse(player.Key), (int)player.Value));
+                    var key = long.Parse(player.Key);
+                    if (action.GainedFunds.ContainsKey(key))
+                        continue;
+
+                    action.GainedFunds.Add(key, (int)player.Value);
+                }
+            }
+            var defenderGainedFunds = (JObject)defenderCombatInfo["gainedFunds"];
+
+            if (defenderGainedFunds != null)
+            {
+                action.GainedFunds ??= new Dictionary<long, int>();
+
+                foreach (var player in defenderGainedFunds)
+                {
+                    if (player.Value.Type == JTokenType.Null)
+                        continue;
+
+                    var key = long.Parse(player.Key);
+                    if (action.GainedFunds.ContainsKey(key))
+                        continue;
+
+                    action.GainedFunds.Add(key, (int)player.Value);
                 }
             }
 
@@ -102,6 +136,19 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             return action;
         }
+
+        private ReplayUnit parseInfoIntoUnit(JToken owner, JToken other)
+        {
+            if (owner == null || owner.Type == JTokenType.Null || owner.Type == JTokenType.String)
+            {
+                if (other == null || other.Type == JTokenType.Null || other.Type == JTokenType.String)
+                    return null;
+
+                return ReplayActionHelper.ParseJObjectIntoReplayUnit((JObject)other);
+            }
+
+            return ReplayActionHelper.ParseJObjectIntoReplayUnit((JObject)owner);
+        }
     }
 
     public class AttackUnitAction : IReplayAction
@@ -111,17 +158,36 @@ namespace AWBWApp.Game.API.Replay.Actions
         public ReplayUnit Attacker { get; set; }
         public ReplayUnit Defender { get; set; }
         public List<COPowerChange> PowerChanges { get; set; }
-        public List<(long playerID, int funds)> GainedFunds { get; set; }
+        public Dictionary<long, int> GainedFunds { get; set; }
 
         public MoveUnitAction MoveUnit;
         public EliminatedAction EliminatedAction;
 
-        private ReplayUnit undoAttacker;
-        private ReplayUnit undoDefender;
+        private ReplayUnit originalAttacker;
+        private ReplayUnit originalDefender;
+        private List<ReplayUnit> originalCargoUnits = new List<ReplayUnit>();
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
             MoveUnit?.SetupAndUpdate(controller, context);
+
+            if (!context.Units.TryGetValue(Attacker.ID, out var attacker))
+                throw new ReplayMissingUnitException(Attacker.ID);
+            if (!context.Units.TryGetValue(Defender.ID, out var defender))
+                throw new ReplayMissingUnitException(Defender.ID);
+
+            originalAttacker = attacker.Clone();
+            originalDefender = defender.Clone();
+
+            if (Attacker.HitPoints!.Value > 0)
+                attacker.Overwrite(Attacker);
+            else
+                ReplayActionHelper.RemoveUnitFromSetupContext(Attacker.ID, context, originalCargoUnits);
+
+            if (Defender.HitPoints!.Value > 0)
+                defender.Overwrite(Defender);
+            else
+                ReplayActionHelper.RemoveUnitFromSetupContext(Defender.ID, context, originalCargoUnits);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -263,7 +329,20 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            throw new NotImplementedException("Undo Attack Action is not complete");
+            if (controller.Map.TryGetDrawableUnit(Attacker.ID, out var attackerUnit))
+                attackerUnit.UpdateUnit(originalAttacker);
+            else
+                controller.Map.AddUnit(originalAttacker);
+
+            if (controller.Map.TryGetDrawableUnit(Defender.ID, out var defenderUnit))
+                defenderUnit.UpdateUnit(originalDefender);
+            else
+                controller.Map.AddUnit(originalDefender);
+
+            foreach (var cargoUnit in originalCargoUnits)
+                controller.Map.AddUnit(cargoUnit);
+
+            MoveUnit?.UndoAction(controller);
         }
 
         public class COPowerChange

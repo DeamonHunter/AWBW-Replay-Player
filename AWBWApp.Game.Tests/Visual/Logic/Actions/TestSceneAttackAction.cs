@@ -16,8 +16,23 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         {
             AddStep("Setup", destroyTest);
             AddStep("Destroy Land", () => ReplayController.GoToNextAction());
+            AddUntilStep("Land Destroyed", () => !HasUnit(1));
             AddStep("Destroy Sea", () => ReplayController.GoToNextAction());
+            AddUntilStep("Sea Destroyed", () => !HasUnit(2));
             AddStep("Destroy Air", () => ReplayController.GoToNextAction());
+            AddUntilStep("Air Destroyed", () => !HasUnit(3));
+            AddStep("Destroy Transport carrying Unit", () => ReplayController.GoToNextAction());
+            AddUntilStep("Transport Destroyed", () => !HasUnit(4));
+            AddAssert("Transport Cargo Destroyed", () => !HasUnit(5));
+            AddStep("Undo", ReplayController.UndoAction);
+            AddUntilStep("Transport Exists", () => HasUnit(4));
+            AddUntilStep("Transport Cargo Exists", () => HasUnit(5));
+            AddStep("Undo", ReplayController.UndoAction);
+            AddUntilStep("Air Exists", () => HasUnit(3));
+            AddStep("Undo", ReplayController.UndoAction);
+            AddUntilStep("Sea Exists", () => HasUnit(2));
+            AddStep("Undo", ReplayController.UndoAction);
+            AddUntilStep("Land Exists", () => HasUnit(1));
         }
 
         [TestCase(1)]
@@ -26,9 +41,30 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         {
             AddStep("Setup", () => attackTest(range));
             AddStep("Attack Left", () => ReplayController.GoToNextAction());
+            AddUntilStep("Defender HP is 8", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 8));
+            AddUntilStep("Attacker HP is 9", () => DoesUnitPassTest(1, x => x.HealthPoints.Value == 9));
             AddStep("Attack Up", () => ReplayController.GoToNextAction());
+            AddUntilStep("Defender HP is 6", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 6));
+            AddUntilStep("Attacker HP is 9", () => DoesUnitPassTest(2, x => x.HealthPoints.Value == 9));
             AddStep("Attack Right", () => ReplayController.GoToNextAction());
+            AddUntilStep("Defender HP is 4", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 4));
+            AddUntilStep("Attacker HP is 9", () => DoesUnitPassTest(3, x => x.HealthPoints.Value == 9));
             AddStep("Attack Down", () => ReplayController.GoToNextAction());
+            AddUntilStep("Defender HP is 2", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 2));
+            AddUntilStep("Attacker HP is 9", () => DoesUnitPassTest(4, x => x.HealthPoints.Value == 9));
+
+            AddStep("Undo", ReplayController.UndoAction);
+            AddAssert("Defender HP is 4", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 4));
+            AddAssert("Attacker HP is 10", () => DoesUnitPassTest(4, x => x.HealthPoints.Value == 10));
+            AddStep("Undo", ReplayController.UndoAction);
+            AddAssert("Defender HP is 6", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 6));
+            AddAssert("Attacker HP is 10", () => DoesUnitPassTest(3, x => x.HealthPoints.Value == 10));
+            AddStep("Undo", ReplayController.UndoAction);
+            AddAssert("Defender HP is 8", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 8));
+            AddAssert("Attacker HP is 10", () => DoesUnitPassTest(2, x => x.HealthPoints.Value == 10));
+            AddStep("Undo", ReplayController.UndoAction);
+            AddAssert("Defender HP is 10", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 10));
+            AddAssert("Attacker HP is 10", () => DoesUnitPassTest(1, x => x.HealthPoints.Value == 10));
         }
 
         [Test]
@@ -36,6 +72,12 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         {
             AddStep("Setup", attackWithMoveTest);
             AddStep("Perform", () => ReplayController.GoToNextAction());
+            AddUntilStep("Defender HP is 5", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 5));
+            AddUntilStep("Attacker HP is 8", () => DoesUnitPassTest(1, x => x.HealthPoints.Value == 8));
+            AddStep("Undo", ReplayController.UndoAction);
+            AddAssert("Defender HP is 10", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 10));
+            AddAssert("Attacker HP is 10", () => DoesUnitPassTest(1, x => x.HealthPoints.Value == 10));
+            AddAssert("Attacker Position is start", () => DoesUnitPassTest(1, x => x.MapPosition == Vector2I.Zero));
         }
 
         [Test]
@@ -75,7 +117,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             replayData.TurnData.Add(turn);
 
             var attackerUnit = CreateBasicReplayUnit(0, 0, "Artillery", new Vector2I(2, 2));
-            attackerUnit.Ammo = 1;
+            attackerUnit.Ammo = 4;
             turn.ReplayUnit.Add(attackerUnit.ID, attackerUnit);
 
             //Test Land Explosion
@@ -99,12 +141,25 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 
             turn.Actions.Add(createAttackUnitAction(attackerUnit, defendingAir, 10, 0, false));
 
+            var defendingTransport = CreateBasicReplayUnit(4, 1, "APC", new Vector2I(0, 2));
+            defendingTransport.Ammo = 0;
+            defendingTransport.CargoUnits = new List<long> { 5 };
+            turn.ReplayUnit.Add(defendingTransport.ID, defendingTransport);
+
+            var defendingTransportCargo = CreateBasicReplayUnit(5, 1, "Infantry", new Vector2I(0, 2));
+            defendingTransportCargo.Ammo = 0;
+            defendingTransportCargo.BeingCarried = true;
+            turn.ReplayUnit.Add(defendingTransportCargo.ID, defendingTransportCargo);
+
+            turn.Actions.Add(createAttackUnitAction(attackerUnit, defendingTransport, 10, 0, false));
+
             Debug.Assert(defendingSea.Position.HasValue, "Sea Unit does not have position somehow.");
 
             var map = CreateBasicMap(5, 5);
             map.Ids[defendingSea.Position.Value.Y * 5 + defendingSea.Position.Value.X] = 28; //Set the tile under the lander to be sea just so it looks more correct.
 
             ReplayController.LoadReplay(replayData, map);
+            ReplayController.AllowRewinding = true;
         }
 
         private void attackTest(int spaces)
@@ -195,16 +250,15 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                     new UnitPosition(new Vector2I(1, 2)),
                 },
                 Trapped = false,
-                Unit = new ReplayUnit
-                {
-                    ID = 1,
-                    Position = new Vector2I(1, 2)
-                }
+                Unit = attackerUnit.Clone()
             };
+            attackAction.MoveUnit.Unit.Position = new Vector2I(1, 2);
+            attackAction.Attacker.Position = new Vector2I(1, 2);
 
             turn.Actions.Add(attackAction);
 
             ReplayController.LoadReplay(replayData, CreateBasicMap(map_size, map_size));
+            ReplayController.AllowRewinding = true;
         }
 
         private void counterAttackTest()
@@ -288,6 +342,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             //Create map
             var map = CreateBasicMap(3, 7);
             ReplayController.LoadReplay(replayData, map);
+            ReplayController.AllowRewinding = true;
         }
 
         private void sonjaCounterattackTest()
@@ -390,6 +445,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             //Create map
             var map = CreateBasicMap(3, 7);
             ReplayController.LoadReplay(replayData, map);
+            ReplayController.AllowRewinding = true;
         }
 
         private AttackUnitAction createAttackUnitAction(ReplayUnit attacker, ReplayUnit defender, int attackerHealthAfter, int defenderHealthAfter, bool counterAttack)
@@ -397,12 +453,20 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             var attackerAmmo = attacker.Ammo ?? 0;
             var defenderAmmo = defender.Ammo ?? 0;
 
-            return new AttackUnitAction
+            var attack = new AttackUnitAction
             {
-                Attacker = new ReplayUnit { ID = attacker.ID, Ammo = Math.Max(0, attackerAmmo - 1), HitPoints = attackerHealthAfter },
-                Defender = new ReplayUnit { ID = defender.ID, Ammo = Math.Max(0, (counterAttack ? defenderAmmo - 1 : defenderAmmo)), HitPoints = defenderHealthAfter },
+                Attacker = attacker.Clone(),
+                Defender = defender.Clone(),
                 PowerChanges = new List<AttackUnitAction.COPowerChange>()
             };
+
+            attack.Attacker.Ammo = Math.Max(0, attackerAmmo - 1);
+            attack.Attacker.HitPoints = attackerHealthAfter;
+
+            attack.Defender.Ammo = Math.Max(0, (counterAttack ? defenderAmmo - 1 : defenderAmmo));
+            attack.Defender.HitPoints = defenderHealthAfter;
+
+            return attack;
         }
     }
 }
