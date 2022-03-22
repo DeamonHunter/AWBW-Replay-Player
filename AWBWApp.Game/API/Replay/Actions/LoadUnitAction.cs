@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
@@ -46,8 +47,22 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public MoveUnitAction MoveUnit;
 
+        protected ReplayUnit originalLoadedUnit;
+
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            MoveUnit?.SetupAndUpdate(controller, context);
+
+            if (!context.Units.TryGetValue(LoadedID, out var loadedUnit))
+                throw new ReplayMissingUnitException(LoadedID);
+
+            if (!context.Units.TryGetValue(TransportID, out var transportUnit))
+                throw new ReplayMissingUnitException(TransportID);
+
+            originalLoadedUnit = loadedUnit.Clone();
+            loadedUnit.BeingCarried = true;
+            transportUnit.CargoUnits ??= new List<long>();
+            transportUnit.CargoUnits.Add(LoadedID);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -65,13 +80,18 @@ namespace AWBWApp.Game.API.Replay.Actions
             var transportUnit = controller.Map.GetDrawableUnit(TransportID);
 
             loadingUnit.BeingCarried.Value = true;
-            loadingUnit.IsCapturing.Value = false;
             transportUnit.Cargo.Add(loadingUnit.UnitID);
         }
 
         public void UndoAction(ReplayController controller)
         {
-            throw new NotImplementedException("Undo Load Action is not complete");
+            var loadingUnit = controller.Map.GetDrawableUnit(LoadedID);
+            var transportUnit = controller.Map.GetDrawableUnit(TransportID);
+
+            loadingUnit.UpdateUnit(originalLoadedUnit);
+            transportUnit.Cargo.Remove(loadingUnit.UnitID);
+
+            MoveUnit?.UndoAction(controller);
         }
     }
 }

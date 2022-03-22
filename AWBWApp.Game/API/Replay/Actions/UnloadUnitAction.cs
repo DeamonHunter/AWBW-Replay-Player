@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
@@ -17,6 +18,16 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             var action = new UnloadUnitAction();
 
+            var moveObj = jObject["Move"];
+
+            if (moveObj is JObject moveData)
+            {
+                var moveAction = Database.ParseJObjectIntoReplayAction(moveData, replayData, turnData);
+                action.MoveUnit = moveAction as MoveUnitAction;
+                if (moveAction == null)
+                    throw new Exception("Capture action was expecting a movement action.");
+            }
+
             var unit = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)jObject["unit"], turnData.ActiveTeam, turnData.ActivePlayerID);
 
             action.UnloadedUnit = ReplayActionHelper.ParseJObjectIntoReplayUnit(unit);
@@ -29,16 +40,38 @@ namespace AWBWApp.Game.API.Replay.Actions
     {
         public string ReadibleName => "Unload";
 
+        public MoveUnitAction MoveUnit;
+
         public long TransportID { get; set; }
         public ReplayUnit UnloadedUnit { get; set; }
 
+        private ReplayUnit originalLoadedUnit;
+
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            MoveUnit?.SetupAndUpdate(controller, context);
+
+            if (!context.Units.TryGetValue(UnloadedUnit.ID, out var unloadedUnit))
+                throw new ReplayMissingUnitException(UnloadedUnit.ID);
+
+            if (!context.Units.TryGetValue(TransportID, out var transportUnit))
+                throw new ReplayMissingUnitException(TransportID);
+
+            originalLoadedUnit = unloadedUnit.Clone();
+            unloadedUnit.Copy(UnloadedUnit);
+            transportUnit.CargoUnits?.Remove(UnloadedUnit.ID);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Unload Action.");
+
+            if (MoveUnit != null)
+            {
+                foreach (var transformable in MoveUnit.PerformAction(controller))
+                    yield return transformable;
+            }
+
             var transportUnit = controller.Map.GetDrawableUnit(TransportID);
             var unloadingUnit = controller.Map.GetDrawableUnit(UnloadedUnit.ID);
 
@@ -48,7 +81,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             unloadingUnit.FollowPath(new List<UnitPosition>
             {
                 new UnitPosition(transportUnit.MapPosition),
-                new UnitPosition(UnloadedUnit.Position.Value)
+                new UnitPosition(UnloadedUnit.Position!.Value)
             });
 
             yield return ReplayWait.WaitForTransformable(unloadingUnit);
@@ -60,7 +93,14 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            throw new NotImplementedException("Undo Unload Action is not complete");
+            var unloadingUnit = controller.Map.GetDrawableUnit(UnloadedUnit.ID);
+            var transportUnit = controller.Map.GetDrawableUnit(TransportID);
+
+            unloadingUnit.BeingCarried.Value = true;
+            transportUnit.Cargo ??= new HashSet<long>();
+            transportUnit.Cargo.Remove(unloadingUnit.UnitID);
+
+            MoveUnit?.UndoAction(controller);
         }
     }
 }
