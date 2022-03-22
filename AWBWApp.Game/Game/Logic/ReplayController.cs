@@ -9,6 +9,7 @@ using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI;
+using AWBWApp.Game.UI.Notifications;
 using AWBWApp.Game.UI.Replay;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -35,6 +36,9 @@ namespace AWBWApp.Game.Game.Logic
 
         [Resolved]
         private BuildingStorage buildingStorage { get; set; }
+
+        [Resolved(CanBeNull = true)]
+        private NotificationOverlay notificationOverlay { get; set; }
 
         private List<RegisteredPower> registeredPowers = new List<RegisteredPower>();
 
@@ -140,8 +144,23 @@ namespace AWBWApp.Game.Game.Logic
 
                 while (true)
                 {
-                    if (!ongoingAction.MoveNext())
+                    try
+                    {
+                        if (!ongoingAction.MoveNext())
+                        {
+                            ongoingAction.Dispose();
+                            break;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        if (notificationOverlay == null)
+                            throw;
+
+                        notificationOverlay.Post(new SimpleErrorNotification("Error occured when starting action: " + e.Message, e));
+                        ongoingAction.Dispose();
                         break;
+                    }
 
                     if (ongoingAction.Current == null || ongoingAction.Current.IsComplete(Time.Elapsed))
                         continue;
@@ -330,7 +349,18 @@ namespace AWBWApp.Game.Game.Logic
                     return;
                 }
 
-                currentOngoingActions.Enqueue(action.PerformAction(this).GetEnumerator());
+                try
+                {
+                    var performAction = action.PerformAction(this).GetEnumerator();
+                    currentOngoingActions.Enqueue(performAction);
+                }
+                catch (Exception e)
+                {
+                    if (notificationOverlay == null)
+                        throw;
+
+                    notificationOverlay.Post(new SimpleErrorNotification("Error occured when starting action: " + e.Message, e));
+                }
             }
             else if (CurrentTurnIndex.Value < replayData.TurnData.Count - 1)
             {
@@ -553,7 +583,7 @@ namespace AWBWApp.Game.Game.Logic
             return power.Power;
         }
 
-        struct RegisteredPower
+        private struct RegisteredPower
         {
             public long PlayerID;
 

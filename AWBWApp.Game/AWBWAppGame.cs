@@ -41,6 +41,7 @@ namespace AWBWApp.Game
             Child = screenStack = new ScreenStack { RelativeSizeAxes = Axes.Both };
 
             dependencies.CacheAs(this);
+            dependencies.CacheAs(clipboard);
 
             //Todo: This is gross
             loadComponentAfterOtherComponents(
@@ -173,20 +174,7 @@ namespace AWBWApp.Game
                         else
                             message += entry.Message;
 
-                        var truncatedMessage = !string.IsNullOrEmpty(message) ? (message.Length > 256 ? message[..256] : message) : "";
-                        var appendedMessage = clipboard != null ? "\n\nPlease click this to copy the error and give that to the devs." : "";
-
-                        Schedule(() => notificationOverlay.Post(new SimpleErrorNotification()
-                        {
-                            Text = truncatedMessage + appendedMessage,
-                            Activated = () =>
-                            {
-                                if (entry.Exception != null)
-                                    clipboard?.SetText(entry.Exception.ToString());
-
-                                return false;
-                            }
-                        }));
+                        Schedule(() => notificationOverlay.Post(new SimpleErrorNotification(message, entry.Exception)));
                     }
                     else if (entry.Level != LogLevel.Important)
                     {
