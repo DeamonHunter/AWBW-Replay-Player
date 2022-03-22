@@ -40,41 +40,40 @@ namespace AWBWApp.Game.API.Replay
 
         //Todo: Find a better method for this so it isn't dependent on remembering to update this
 
-        public void Copy(ReplayUnit other)
+        public void Overwrite(ReplayUnit other)
         {
-            CargoUnits = null;
-            if (CargoUnits != null)
+            if (other.CargoUnits != null)
                 CargoUnits = new List<long>(other.CargoUnits);
 
             ID = other.ID;
-            PlayerID = other.PlayerID;
+            PlayerID = other.PlayerID ?? PlayerID;
 
-            UnitName = other.UnitName;
-            Position = other.Position;
-            HitPoints = other.HitPoints;
-            Fuel = other.Fuel;
-            FuelPerTurn = other.FuelPerTurn;
-            Ammo = other.Ammo;
+            UnitName = other.UnitName ?? UnitName;
+            Position = other.Position ?? Position;
+            HitPoints = other.HitPoints ?? HitPoints;
+            Fuel = other.Fuel ?? Fuel;
+            FuelPerTurn = other.FuelPerTurn ?? FuelPerTurn;
+            Ammo = other.Ammo ?? Ammo;
 
-            TimesMoved = other.TimesMoved;
-            TimesCaptured = other.TimesCaptured;
-            TimesFired = other.TimesFired;
-            BeingCarried = other.BeingCarried;
+            TimesMoved = other.TimesMoved ?? TimesMoved;
+            TimesCaptured = other.TimesCaptured ?? TimesCaptured;
+            TimesFired = other.TimesFired ?? TimesFired;
+            BeingCarried = other.BeingCarried ?? BeingCarried;
 
-            SubHasDived = other.SubHasDived;
-            SecondWeapon = other.SecondWeapon;
+            SubHasDived = other.SubHasDived ?? SubHasDived;
+            SecondWeapon = other.SecondWeapon ?? SecondWeapon;
 
-            MovementPoints = other.MovementPoints;
-            Vision = other.Vision;
-            Range = other.Range;
-            Cost = other.Cost;
-            MovementType = other.MovementType;
+            MovementPoints = other.MovementPoints ?? MovementPoints;
+            Vision = other.Vision ?? Vision;
+            Range = other.Range ?? Range;
+            Cost = other.Cost ?? Cost;
+            MovementType = other.MovementType ?? MovementType;
         }
 
         public ReplayUnit Clone()
         {
             var unit = new ReplayUnit();
-            unit.Copy(this);
+            unit.Overwrite(this);
             return unit;
         }
 

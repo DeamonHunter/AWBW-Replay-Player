@@ -70,7 +70,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 throw new ReplayMissingUnitException(JoinedUnit.ID);
 
             originalJoinedUnit = unit.Clone();
-            unit.Copy(JoinedUnit);
+            unit.Overwrite(JoinedUnit);
 
             var dayToDay = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[context.ActivePlayerID].ActiveCOID).DayToDayPower;
             var joinedUnitValueChange = ReplayActionHelper.CalculateUnitCost(JoinedUnit, dayToDay, null) - ReplayActionHelper.CalculateUnitCost(originalJoinedUnit, dayToDay, null);

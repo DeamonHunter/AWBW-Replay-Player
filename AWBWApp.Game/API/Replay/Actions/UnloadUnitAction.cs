@@ -58,7 +58,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 throw new ReplayMissingUnitException(TransportID);
 
             originalLoadedUnit = unloadedUnit.Clone();
-            unloadedUnit.Copy(UnloadedUnit);
+            unloadedUnit.Overwrite(UnloadedUnit);
             transportUnit.CargoUnits?.Remove(UnloadedUnit.ID);
         }
 

@@ -63,7 +63,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 throw new ReplayMissingUnitException(Unit.ID);
 
             originalUnit = unit.Clone();
-            unit.Copy(Unit);
+            unit.Overwrite(Unit);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
