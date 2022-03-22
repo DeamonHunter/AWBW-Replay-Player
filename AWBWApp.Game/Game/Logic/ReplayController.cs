@@ -51,6 +51,8 @@ namespace AWBWApp.Game.Game.Logic
         public BindableInt CurrentTurnIndex { get; private set; } = new BindableInt(-1);
         public int CurrentDay => currentTurn.Day;
 
+        public int TurnCount => replayData?.TurnData?.Count ?? 0;
+
         private TurnData currentTurn;
         private int currentActionIndex;
 

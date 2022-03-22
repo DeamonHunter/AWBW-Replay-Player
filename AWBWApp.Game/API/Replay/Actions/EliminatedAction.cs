@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Replay;
@@ -71,6 +72,76 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            if (GameOverAction != null || controller.TurnCount - 1 != context.CurrentTurnIndex)
+                return;
+
+            var winners = new List<long>();
+            var losers = new List<long>();
+
+            var teamsAlive = new HashSet<string>();
+
+            foreach (var player in context.PlayerTurns)
+            {
+                if (player.Value.Eliminated || player.Key == EliminatedPlayerID)
+                    continue;
+
+                var team = context.PlayerInfos[player.Key].TeamName;
+
+                if (team == null || team == player.Key.ToString())
+                    continue;
+
+                teamsAlive.Add(team);
+            }
+
+            foreach (var player in context.PlayerTurns)
+            {
+                var team = context.PlayerInfos[player.Key].TeamName;
+
+                if (teamsAlive.Count > 0)
+                {
+                    if (teamsAlive.Contains(team))
+                        winners.Add(player.Key);
+                    else
+                        losers.Add(player.Key);
+                }
+                else if (!player.Value.Eliminated && player.Key != EliminatedPlayerID)
+                    winners.Add(player.Key);
+                else
+                    losers.Add(player.Key);
+            }
+
+            var compareTo = new Comparison<long>((x, y) =>
+            {
+                var xEliminated = context.PlayerInfos[x].EliminatedOn;
+                var yEliminated = context.PlayerInfos[y].EliminatedOn;
+
+                if (x == EliminatedPlayerID)
+                    xEliminated = context.CurrentTurnIndex;
+                else if (y == EliminatedPlayerID)
+                    yEliminated = context.CurrentTurnIndex;
+
+                if (xEliminated == null && yEliminated == null)
+                    return context.PlayerInfos[x].RoundOrder.CompareTo(context.PlayerInfos[y].RoundOrder);
+                if (xEliminated == null)
+                    return -1;
+                if (yEliminated == null)
+                    return 1;
+
+                return -1 * xEliminated.Value.CompareTo(yEliminated.Value);
+            });
+
+            GameOverAction = new GameOverAction();
+            GameOverAction.Winners = winners.ToList();
+            GameOverAction.Winners.Sort(compareTo);
+            GameOverAction.Losers = losers.ToList();
+            GameOverAction.Losers.Sort(compareTo);
+
+            GameOverAction.FinishedDay = context.CurrentTurn.Day;
+
+            if (teamsAlive.Count > 0)
+                GameOverAction.EndMessage = "";
+            else
+                GameOverAction.EndMessage = "";
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -78,6 +149,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             var powerAnimation = new EliminationPopupDrawable(controller.Players[EliminatedPlayerID], EliminationMessage, Resigned);
             controller.AddGenericActionAnimation(powerAnimation);
             yield return ReplayWait.WaitForTransformable(powerAnimation);
+
+            controller.ActivePlayer.Eliminated.Value = true;
 
             if (GameOverAction != null)
             {
@@ -88,7 +161,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            throw new NotImplementedException("Undo Build Action is not complete");
+            controller.Players[EliminatedPlayerID].Eliminated.Value = false;
         }
     }
 }
