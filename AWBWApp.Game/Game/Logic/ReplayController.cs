@@ -403,7 +403,18 @@ namespace AWBWApp.Game.Game.Logic
 
             completeAllActions();
 
-            currentTurn.Actions[currentActionIndex].UndoAction(this);
+            try
+            {
+                currentTurn.Actions[currentActionIndex].UndoAction(this);
+            }
+            catch (Exception e)
+            {
+                if (notificationOverlay == null)
+                    throw;
+
+                notificationOverlay.Post(new SimpleErrorNotification("Error occured when undoing action: " + e.Message, e));
+            }
+
             currentActionIndex--;
 
             barWidget.UpdateActions();
