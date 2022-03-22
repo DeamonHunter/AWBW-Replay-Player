@@ -64,8 +64,10 @@ namespace AWBWApp.Game.Game.Logic
             {
                 Buildings.Add(building.Key, building.Value.Clone());
 
+                if (!buildingStorage.TryGetBuildingByAWBWId(building.Value.TerrainID!.Value, out var buildingData))
+                    continue;
+
                 //Todo: Probably a better way to do this.
-                var buildingData = buildingStorage.GetBuildingByAWBWId(building.Value.TerrainID!.Value);
                 if (buildingData.CountryID == 0 || !buildingData.GivesMoneyWhenCaptured)
                     continue;
 
