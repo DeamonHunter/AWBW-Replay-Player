@@ -84,7 +84,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             controller.ActivePlayer.UnitValue.Value += unitValue;
 
-            MoveUnit?.UndoAction(controller);
+            if (MoveUnit != null)
+                MoveUnit.UndoAction(controller);
+            else
+                controller.UpdateFogOfWar();
         }
     }
 }

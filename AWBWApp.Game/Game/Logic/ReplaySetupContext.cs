@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.Units;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Game.Logic
@@ -23,13 +24,16 @@ namespace AWBWApp.Game.Game.Logic
         public string ActivePlayerTeam;
 
         //Todo: Possibly change how we calculate funds
-        private BuildingStorage buildingStorage;
+        public BuildingStorage BuildingStorage;
+        public UnitStorage UnitStorage;
+
         private Dictionary<int, long> countriesToPlayers;
         private int fundsPerBuilding;
 
-        public ReplaySetupContext(BuildingStorage buildingStorage, Dictionary<long, ReplayUser> playerInfos, int fundsPerBuilding)
+        public ReplaySetupContext(BuildingStorage buildingStorage, UnitStorage unitStorage, Dictionary<long, ReplayUser> playerInfos, int fundsPerBuilding)
         {
-            this.buildingStorage = buildingStorage;
+            BuildingStorage = buildingStorage;
+            UnitStorage = unitStorage;
             PlayerInfos = playerInfos;
             this.fundsPerBuilding = fundsPerBuilding;
 
@@ -64,7 +68,7 @@ namespace AWBWApp.Game.Game.Logic
             {
                 Buildings.Add(building.Key, building.Value.Clone());
 
-                if (!buildingStorage.TryGetBuildingByAWBWId(building.Value.TerrainID!.Value, out var buildingData))
+                if (!BuildingStorage.TryGetBuildingByAWBWId(building.Value.TerrainID!.Value, out var buildingData))
                     continue;
 
                 //Todo: Probably a better way to do this.

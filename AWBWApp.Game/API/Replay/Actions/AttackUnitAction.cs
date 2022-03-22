@@ -332,7 +332,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (controller.Map.TryGetDrawableUnit(Attacker.ID, out var attackerUnit))
                 attackerUnit.UpdateUnit(originalAttacker);
             else
-                controller.Map.AddUnit(originalAttacker);
+                attackerUnit = controller.Map.AddUnit(originalAttacker);
 
             if (controller.Map.TryGetDrawableUnit(Defender.ID, out var defenderUnit))
                 defenderUnit.UpdateUnit(originalDefender);
@@ -342,7 +342,13 @@ namespace AWBWApp.Game.API.Replay.Actions
             foreach (var cargoUnit in originalCargoUnits)
                 controller.Map.AddUnit(cargoUnit);
 
-            MoveUnit?.UndoAction(controller);
+            if (MoveUnit != null)
+                MoveUnit.UndoAction(controller);
+            else
+            {
+                attackerUnit.CanMove.Value = true;
+                controller.UpdateFogOfWar();
+            }
         }
 
         public class COPowerChange

@@ -7,6 +7,7 @@ using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
+using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Notifications;
@@ -36,6 +37,9 @@ namespace AWBWApp.Game.Game.Logic
 
         [Resolved]
         private BuildingStorage buildingStorage { get; set; }
+
+        [Resolved]
+        private UnitStorage unitStorage { get; set; }
 
         [Resolved(CanBeNull = true)]
         private NotificationOverlay notificationOverlay { get; set; }
@@ -229,7 +233,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private void setupActions()
         {
-            var setupContext = new ReplaySetupContext(buildingStorage, replayData.ReplayInfo.Players, replayData.ReplayInfo.FundsPerBuilding);
+            var setupContext = new ReplaySetupContext(buildingStorage, unitStorage, replayData.ReplayInfo.Players, replayData.ReplayInfo.FundsPerBuilding);
 
             for (int i = 0; i < replayData.TurnData.Count; i++)
             {

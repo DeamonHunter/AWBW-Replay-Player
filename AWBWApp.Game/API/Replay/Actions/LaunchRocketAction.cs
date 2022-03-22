@@ -73,11 +73,10 @@ namespace AWBWApp.Game.API.Replay.Actions
             originalBuilding = launchingBuilding.Clone();
 
             var destroyedUnits = new HashSet<long>();
-            var explodingPlayer = controller.Players[context.ActivePlayerID];
 
             foreach (var unit in context.Units)
             {
-                if (!unit.Value.PlayerID.HasValue || explodingPlayer.OnSameTeam(controller.Players[unit.Value.PlayerID!.Value]))
+                if (!unit.Value.PlayerID.HasValue)
                     continue;
 
                 if (unit.Value.BeingCarried.HasValue && unit.Value.BeingCarried.Value)
@@ -148,9 +147,6 @@ namespace AWBWApp.Game.API.Replay.Actions
                             continue;
 
                         var owner = controller.Players[unit.OwnerID.Value];
-                        if (controller.ActivePlayer.OnSameTeam(owner))
-                            continue;
-
                         var originalValue = ReplayActionHelper.CalculateUnitCost(unit, owner.ActiveCO.Value.CO.DayToDayPower, null);
                         unit.HealthPoints.Value += (int)HPChange;
                         owner.UnitValue.Value -= (originalValue - ReplayActionHelper.CalculateUnitCost(unit, owner.ActiveCO.Value.CO.DayToDayPower, null));
@@ -187,7 +183,10 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (MoveUnit != null)
                 MoveUnit?.UndoAction(controller);
             else if (controller.Map.TryGetDrawableUnit(SiloPosition, out var launchingUnit))
+            {
                 launchingUnit.CanMove.Value = true;
+                controller.UpdateFogOfWar();
+            }
         }
     }
 }
