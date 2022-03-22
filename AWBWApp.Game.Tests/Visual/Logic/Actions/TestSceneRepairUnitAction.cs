@@ -13,6 +13,12 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         {
             AddStep("Setup", supplyTest);
             AddStep("Repair Unit", ReplayController.GoToNextAction);
+            AddUntilStep("Repaired", () => !ReplayController.HasOngoingAction());
+            AddAssert("Unit HP is 9", () => DoesUnitPassTest(1, x => x.HealthPoints.Value == 9));
+            AddAssert("Funds is 0", () => ReplayController.ActivePlayer.Funds.Value == 0);
+            AddStep("Undo", ReplayController.UndoAction);
+            AddAssert("Unit HP is 8", () => DoesUnitPassTest(1, x => x.HealthPoints.Value == 8));
+            AddAssert("Funds is 100", () => ReplayController.ActivePlayer.Funds.Value == 100);
         }
 
         [Test]
@@ -20,6 +26,12 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         {
             AddStep("Setup", supplyTestWithMove);
             AddStep("Repair Unit", ReplayController.GoToNextAction);
+            AddUntilStep("Repaired", () => !ReplayController.HasOngoingAction());
+            AddAssert("Unit HP is 9", () => DoesUnitPassTest(1, x => x.HealthPoints.Value == 9));
+            AddAssert("Funds is 0", () => ReplayController.ActivePlayer.Funds.Value == 0);
+            AddStep("Undo", ReplayController.UndoAction);
+            AddAssert("Unit HP is 8", () => DoesUnitPassTest(1, x => x.HealthPoints.Value == 8));
+            AddAssert("Funds is 100", () => ReplayController.ActivePlayer.Funds.Value == 100);
         }
 
         private void supplyTest()
@@ -27,11 +39,12 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             var replayData = CreateBasicReplayData(2);
             var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
+            turn.Players[0].Funds = 100;
 
-            var blackBoat = CreateBasicReplayUnit(0, 1, "Black Boat", new Vector2I(2, 2));
+            var blackBoat = CreateBasicReplayUnit(0, 0, "Black Boat", new Vector2I(2, 2));
             turn.ReplayUnit.Add(blackBoat.ID, blackBoat);
 
-            var repairedUnit = CreateBasicReplayUnit(1, 1, "Infantry", new Vector2I(2, 1));
+            var repairedUnit = CreateBasicReplayUnit(1, 0, "Infantry", new Vector2I(2, 1));
             repairedUnit.HitPoints = 8;
             turn.ReplayUnit.Add(repairedUnit.ID, repairedUnit);
 
@@ -47,6 +60,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             map.Ids[2 * 5 + 2] = 28;
 
             ReplayController.LoadReplay(replayData, map);
+            ReplayController.AllowRewinding = true;
         }
 
         private void supplyTestWithMove()
@@ -54,11 +68,12 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             var replayData = CreateBasicReplayData(2);
             var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
+            turn.Players[0].Funds = 100;
 
-            var blackBoat = CreateBasicReplayUnit(0, 1, "Black Boat", new Vector2I(2, 3));
+            var blackBoat = CreateBasicReplayUnit(0, 0, "Black Boat", new Vector2I(2, 3));
             turn.ReplayUnit.Add(blackBoat.ID, blackBoat);
 
-            var repairedUnit = CreateBasicReplayUnit(1, 1, "Infantry", new Vector2I(2, 1));
+            var repairedUnit = CreateBasicReplayUnit(1, 0, "Infantry", new Vector2I(2, 1));
             repairedUnit.HitPoints = 8;
             turn.ReplayUnit.Add(repairedUnit.ID, repairedUnit);
 
@@ -87,6 +102,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             map.Ids[3 * 5 + 2] = 28;
 
             ReplayController.LoadReplay(replayData, map);
+            ReplayController.AllowRewinding = true;
         }
     }
 }

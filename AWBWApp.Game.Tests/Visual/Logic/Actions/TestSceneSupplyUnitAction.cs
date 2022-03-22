@@ -37,19 +37,19 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
 
-            var blackBoat = CreateBasicReplayUnit(0, 1, "APC", new Vector2I(2, 2));
+            var blackBoat = CreateBasicReplayUnit(0, 0, "APC", new Vector2I(2, 2));
             turn.ReplayUnit.Add(blackBoat.ID, blackBoat);
 
-            var suppliedUnit = CreateBasicReplayUnit(1, 1, "Infantry", new Vector2I(2, 1));
+            var suppliedUnit = CreateBasicReplayUnit(1, 0, "Infantry", new Vector2I(2, 1));
             suppliedUnit.Fuel = 0;
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
-            suppliedUnit = CreateBasicReplayUnit(2, 1, "Infantry", new Vector2I(1, 2));
+            suppliedUnit = CreateBasicReplayUnit(2, 0, "Infantry", new Vector2I(1, 2));
             suppliedUnit.Fuel = 0;
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
-            suppliedUnit = CreateBasicReplayUnit(3, 1, "Infantry", new Vector2I(3, 2));
+            suppliedUnit = CreateBasicReplayUnit(3, 0, "Infantry", new Vector2I(3, 2));
             suppliedUnit.Fuel = 0;
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
-            suppliedUnit = CreateBasicReplayUnit(4, 1, "Infantry", new Vector2I(2, 3));
+            suppliedUnit = CreateBasicReplayUnit(4, 0, "Infantry", new Vector2I(2, 3));
             suppliedUnit.Fuel = 0;
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
 
@@ -73,16 +73,16 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
 
-            var blackBoat = CreateBasicReplayUnit(0, 1, "APC", new Vector2I(2, 3));
+            var blackBoat = CreateBasicReplayUnit(0, 0, "APC", new Vector2I(2, 3));
             turn.ReplayUnit.Add(blackBoat.ID, blackBoat);
 
-            var suppliedUnit = CreateBasicReplayUnit(1, 1, "Infantry", new Vector2I(2, 1));
+            var suppliedUnit = CreateBasicReplayUnit(1, 0, "Infantry", new Vector2I(2, 1));
             suppliedUnit.Fuel = 0;
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
-            suppliedUnit = CreateBasicReplayUnit(2, 1, "Infantry", new Vector2I(1, 2));
+            suppliedUnit = CreateBasicReplayUnit(2, 0, "Infantry", new Vector2I(1, 2));
             suppliedUnit.Fuel = 0;
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
-            suppliedUnit = CreateBasicReplayUnit(3, 1, "Infantry", new Vector2I(3, 2));
+            suppliedUnit = CreateBasicReplayUnit(3, 0, "Infantry", new Vector2I(3, 2));
             suppliedUnit.Fuel = 0;
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
@@ -57,8 +58,25 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public int FundsAfterRepair;
 
+        private ReplayUnit originalRepairedUnit;
+        private int repairCost;
+
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            MoveUnit?.SetupAndUpdate(controller, context);
+
+            if (!context.Units.TryGetValue(RepairedUnitID, out var repairedUnit))
+                throw new ReplayMissingUnitException(RepairedUnitID);
+
+            originalRepairedUnit = repairedUnit.Clone();
+
+            var unitData = context.UnitStorage.GetUnitByCode(repairedUnit.UnitName);
+            repairedUnit.Ammo = unitData.MaxAmmo;
+            repairedUnit.Fuel = unitData.MaxFuel;
+            repairedUnit.HitPoints = RepairedUnitHP;
+
+            var co = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[context.ActivePlayerID].ActiveCOID);
+            repairCost = ReplayActionHelper.CalculateUnitCost(repairedUnit, co.DayToDayPower, null) - ReplayActionHelper.CalculateUnitCost(originalRepairedUnit, co.DayToDayPower, null);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -77,6 +95,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             unit.Ammo.Value = unit.UnitData.MaxAmmo;
 
             controller.ActivePlayer.Funds.Value = FundsAfterRepair;
+            controller.ActivePlayer.UnitValue.Value += repairCost;
 
             controller.Map.PlayEffect("Effects/Supplied", 600, unit.MapPosition, 0,
                 x => x.ScaleTo(new Vector2(0, 1))
@@ -87,7 +106,11 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            throw new NotImplementedException("Undo Repair Action is not complete");
+            controller.Map.GetDrawableUnit(RepairedUnitID).UpdateUnit(originalRepairedUnit);
+            controller.ActivePlayer.Funds.Value += repairCost;
+            controller.ActivePlayer.UnitValue.Value -= repairCost;
+
+            MoveUnit?.UndoAction(controller);
         }
     }
 }

@@ -56,6 +56,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            MoveUnit?.SetupAndUpdate(controller, context);
+
             foreach (var unitID in SuppliedUnitIds)
             {
                 if (!context.Units.TryGetValue(unitID, out var suppliedUnit))
@@ -98,6 +100,8 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             foreach (var unit in originalUnits)
                 controller.Map.GetDrawableUnit(unit.ID).UpdateUnit(unit);
+
+            MoveUnit?.UndoAction(controller);
         }
     }
 }
