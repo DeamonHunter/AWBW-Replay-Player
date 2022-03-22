@@ -47,7 +47,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public MoveUnitAction MoveUnit;
 
-        protected ReplayUnit originalLoadedUnit;
+        private ReplayUnit originalLoadedUnit;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

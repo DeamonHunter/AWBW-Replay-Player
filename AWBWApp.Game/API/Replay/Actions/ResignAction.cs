@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using AWBWApp.Game.Game.Logic;
-using AWBWApp.Game.Helpers;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace AWBWApp.Game.API.Replay.Actions
 {
@@ -12,27 +8,6 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public ReplayActionDatabase Database { get; set; }
 
-        //Todo: Figure out if anything of this is needed.
         public IReplayAction ParseJObjectIntoReplayAction(JObject jObject, ReplayData replayData, TurnData turnData) => Database.GetActionBuilder("Eliminated").ParseJObjectIntoReplayAction((JObject)jObject["Resign"], replayData, turnData);
-    }
-
-    public class ResignAction : IReplayAction
-    {
-        public string ReadibleName => "Resign";
-
-        public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
-        {
-        }
-
-        public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
-        {
-            //Todo: Need to complete the win screen
-            throw new NotImplementedException();
-        }
-
-        public void UndoAction(ReplayController controller)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
