@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
@@ -51,8 +52,21 @@ namespace AWBWApp.Game.API.Replay.Actions
         public long SupplyingUnitId;
         public List<long> SuppliedUnitIds;
 
+        private List<ReplayUnit> originalUnits = new List<ReplayUnit>();
+
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            foreach (var unitID in SuppliedUnitIds)
+            {
+                if (!context.Units.TryGetValue(unitID, out var suppliedUnit))
+                    throw new ReplayMissingUnitException(unitID);
+
+                originalUnits.Add(suppliedUnit.Clone());
+
+                var unitData = context.UnitStorage.GetUnitByCode(suppliedUnit.UnitName);
+                suppliedUnit.Ammo = unitData.MaxAmmo;
+                suppliedUnit.Fuel = unitData.MaxFuel;
+            }
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -82,7 +96,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            throw new NotImplementedException("Undo Supply Action is not complete");
+            foreach (var unit in originalUnits)
+                controller.Map.GetDrawableUnit(unit.ID).UpdateUnit(unit);
         }
     }
 }

@@ -14,6 +14,10 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         {
             AddStep("Setup", supplyTest);
             AddStep("Supply Units", ReplayController.GoToNextAction);
+            AddUntilStep("Supplied", () => !ReplayController.HasOngoingAction());
+            AddAssert("All units supplied", () => DoesUnitPassTest(1, x => x.Fuel.Value == 99) && DoesUnitPassTest(2, x => x.Fuel.Value == 99) && DoesUnitPassTest(1, x => x.Fuel.Value == 99) && DoesUnitPassTest(4, x => x.Fuel.Value == 99));
+            AddStep("Undo", ReplayController.UndoAction);
+            AddAssert("All units have no fuel", () => DoesUnitPassTest(1, x => x.Fuel.Value == 0) && DoesUnitPassTest(2, x => x.Fuel.Value == 0) && DoesUnitPassTest(1, x => x.Fuel.Value == 0) && DoesUnitPassTest(4, x => x.Fuel.Value == 0));
         }
 
         [Test]
@@ -21,6 +25,10 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         {
             AddStep("Setup", supplyTestWithMove);
             AddStep("Supply Units", ReplayController.GoToNextAction);
+            AddUntilStep("Supplied", () => !ReplayController.HasOngoingAction());
+            AddAssert("All units supplied", () => DoesUnitPassTest(1, x => x.Fuel.Value == 99) && DoesUnitPassTest(2, x => x.Fuel.Value == 99) && DoesUnitPassTest(1, x => x.Fuel.Value == 99));
+            AddStep("Undo", ReplayController.UndoAction);
+            AddAssert("All units have no fuel", () => DoesUnitPassTest(1, x => x.Fuel.Value == 0) && DoesUnitPassTest(2, x => x.Fuel.Value == 0) && DoesUnitPassTest(1, x => x.Fuel.Value == 0));
         }
 
         private void supplyTest()
@@ -33,12 +41,16 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             turn.ReplayUnit.Add(blackBoat.ID, blackBoat);
 
             var suppliedUnit = CreateBasicReplayUnit(1, 1, "Infantry", new Vector2I(2, 1));
+            suppliedUnit.Fuel = 0;
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
             suppliedUnit = CreateBasicReplayUnit(2, 1, "Infantry", new Vector2I(1, 2));
+            suppliedUnit.Fuel = 0;
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
             suppliedUnit = CreateBasicReplayUnit(3, 1, "Infantry", new Vector2I(3, 2));
+            suppliedUnit.Fuel = 0;
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
             suppliedUnit = CreateBasicReplayUnit(4, 1, "Infantry", new Vector2I(2, 3));
+            suppliedUnit.Fuel = 0;
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
 
             var supplyUnitAction = new SupplyUnitAction
@@ -52,6 +64,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             map.Ids[2 * 5 + 2] = 16;
 
             ReplayController.LoadReplay(replayData, map);
+            ReplayController.AllowRewinding = true;
         }
 
         private void supplyTestWithMove()
@@ -64,10 +77,13 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             turn.ReplayUnit.Add(blackBoat.ID, blackBoat);
 
             var suppliedUnit = CreateBasicReplayUnit(1, 1, "Infantry", new Vector2I(2, 1));
+            suppliedUnit.Fuel = 0;
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
             suppliedUnit = CreateBasicReplayUnit(2, 1, "Infantry", new Vector2I(1, 2));
+            suppliedUnit.Fuel = 0;
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
             suppliedUnit = CreateBasicReplayUnit(3, 1, "Infantry", new Vector2I(3, 2));
+            suppliedUnit.Fuel = 0;
             turn.ReplayUnit.Add(suppliedUnit.ID, suppliedUnit);
 
             var supplyUnitAction = new SupplyUnitAction
@@ -94,6 +110,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             map.Ids[3 * 5 + 2] = 16;
 
             ReplayController.LoadReplay(replayData, map);
+            ReplayController.AllowRewinding = true;
         }
     }
 }
