@@ -65,6 +65,20 @@ namespace AWBWApp.Game.Game.Logic
             ActivePower.Value = activePower;
         }
 
+        public void UpdateUndo(ReplayUserTurn turn, COStorage coStorage, int turnNumber, int unitCount, int unitValue, int propertyValue, ActiveCOPower activePower)
+        {
+            Eliminated.Value = EliminatedOn.HasValue && turnNumber >= EliminatedOn;
+
+            UnitCount.Value = unitCount;
+            UnitValue.Value = unitValue;
+            PropertyValue.Value = propertyValue;
+
+            if (ActiveCO.Value.CO.AWBWId != turn.ActiveCOID)
+                (ActiveCO.Value, TagCO.Value) = (TagCO.Value, ActiveCO.Value);
+
+            ActivePower.Value = activePower;
+        }
+
         public bool OnSameTeam(PlayerInfo info)
         {
             if (Team != null && info.Team != null)

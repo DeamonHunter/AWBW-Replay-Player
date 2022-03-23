@@ -208,7 +208,7 @@ namespace AWBWApp.Game.Game.Logic
             CurrentTurnIndex.Value = 0;
 
             setupActions();
-            updatePlayerList(0, true);
+            updatePlayerList(0, true, false);
 
             Map.ScheduleInitialGameState(this.replayData, map, Players);
 
@@ -219,7 +219,7 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     HasLoadedReplay = true;
                     UpdateFogOfWar();
-                    updatePlayerList(0, false);
+                    updatePlayerList(0, false, false);
                     cameraControllerWithGrid.FitMapToSpace();
                     CurrentTurnIndex.TriggerChange();
                     barWidget.UpdateActions();
@@ -440,7 +440,7 @@ namespace AWBWApp.Game.Game.Logic
 
                 ScheduleAfterChildren(() =>
                 {
-                    playerList.SortList(currentTurn.ActivePlayerID, previousTurnIndex);
+                    updatePlayerList(previousTurnIndex, false, true);
                     barWidget.UpdateActions();
                 });
 
@@ -512,12 +512,12 @@ namespace AWBWApp.Game.Game.Logic
             Map.ScheduleUpdateToGameState(currentTurn, UpdateFogOfWar);
             ScheduleAfterChildren(() =>
             {
-                updatePlayerList(turnIdx, false);
+                updatePlayerList(turnIdx, false, false);
                 barWidget.UpdateActions();
             });
         }
 
-        private void updatePlayerList(int turnIdx, bool reset)
+        private void updatePlayerList(int turnIdx, bool reset, bool undo)
         {
             foreach (var player in Players)
             {
@@ -548,7 +548,10 @@ namespace AWBWApp.Game.Game.Logic
                 if (activePower != null)
                     powerType = activePower.IsSuperPower ? ActiveCOPower.Super : ActiveCOPower.Normal;
 
-                player.Value.UpdateTurn(currentTurn.Players[player.Key], COStorage, turnIdx, unitCount, unitValue, propertyValue, powerType);
+                if (undo)
+                    player.Value.UpdateUndo(currentTurn.Players[player.Key], COStorage, turnIdx, unitCount, unitValue, propertyValue, powerType);
+                else
+                    player.Value.UpdateTurn(currentTurn.Players[player.Key], COStorage, turnIdx, unitCount, unitValue, propertyValue, powerType);
             }
 
             if (reset)

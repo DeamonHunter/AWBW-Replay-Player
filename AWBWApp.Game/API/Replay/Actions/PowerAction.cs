@@ -643,6 +643,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (co.SuperPower != null)
                 coValue.PowerRequiredForSuper -= 18000 * co.SuperPower.PowerStars;
             controller.ActivePlayer.ActiveCO.Value = coValue;
+            controller.ActivePlayer.ActivePower.Value = ActiveCOPower.None;
 
             foreach (var power in originalPowers)
             {
