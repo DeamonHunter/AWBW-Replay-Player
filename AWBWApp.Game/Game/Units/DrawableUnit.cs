@@ -265,7 +265,12 @@ namespace AWBWApp.Game.Game.Unit
             textureAnimation.FadeColour(colour, 250, newValue ? Easing.OutQuint : Easing.InQuint);
             textureAnimation.TransformTo("GreyscaleAmount", CanMove.Value ? 0f : 0.5f, 250, newValue ? Easing.OutQuint : Easing.InQuint);
 
-            var alpha = !FogOfWarActive.Value || (showUnitInFog?.Value ?? true) ? (Dived.Value ? 0.7f : 1) : 0;
+            float alpha = 1;
+            if (BeingCarried.Value || (FogOfWarActive.Value && !(showUnitInFog?.Value ?? true)))
+                alpha = 0f;
+            else if (Dived.Value)
+                alpha = 0.7f;
+
             textureAnimation.FadeTo(alpha, 250, Easing.OutQuint);
         }
 
