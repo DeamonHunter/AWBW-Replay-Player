@@ -554,10 +554,10 @@ namespace AWBWApp.Game.API.Replay
                         case "countries_id":
                         {
                             var id = readInteger(text, ref textIndex);
-                            if (!firstTurn && playerData.CountryId != id)
+                            if (!firstTurn && playerData.CountryID != id)
                                 throw new Exception("Player 'countries_id' changed per turn when not expected.");
 
-                            playerData.CountryId = id;
+                            playerData.CountryID = id;
                             break;
                         }
 

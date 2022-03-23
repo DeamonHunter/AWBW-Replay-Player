@@ -62,7 +62,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                 ID = 0,
                 UserId = 0,
                 Username = "This is a really long name",
-                CountryId = 1,
+                CountryID = 1,
                 RoundOrder = 0,
                 TeamName = addTeam ? "A" : null,
                 COsUsedByPlayer = new HashSet<int>(1)

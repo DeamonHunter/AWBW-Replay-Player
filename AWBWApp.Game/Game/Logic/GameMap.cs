@@ -266,7 +266,7 @@ namespace AWBWApp.Game.Game.Logic
                 foreach (var unit in replayUnits)
                 {
                     var unitData = unitStorage.GetUnitByCode(unit.Value.UnitName);
-                    var country = countryStorage.GetCountryByAWBWID(gameState.ReplayInfo.Players[unit.Value.PlayerID.Value].CountryId);
+                    var country = countryStorage.GetCountryByAWBWID(gameState.ReplayInfo.Players[unit.Value.PlayerID.Value].CountryID);
                     var drawableUnit = new DrawableUnit(unitData, unit.Value, country);
                     units.Add(unit.Value.ID, drawableUnit);
                     unitsDrawable.Add(drawableUnit);

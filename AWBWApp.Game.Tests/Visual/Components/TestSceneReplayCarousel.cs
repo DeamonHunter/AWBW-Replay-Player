@@ -74,7 +74,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
                         players[j] = new ReplayUser
                         {
                             ID = j,
-                            CountryId = j + 1,
+                            CountryID = j + 1,
                             Username = Guid.NewGuid().ToString()
                         };
                     }

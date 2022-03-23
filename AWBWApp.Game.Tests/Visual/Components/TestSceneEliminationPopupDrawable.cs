@@ -24,7 +24,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
         {
             var user = new ReplayUser
             {
-                CountryId = 3,
+                CountryID = 3,
                 ID = 1,
                 UserId = 1,
                 Username = "DeamonHunter"
@@ -46,7 +46,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
                 TagRequiredPowerForSuper = 180000
             };
 
-            var playerInfo = new PlayerInfo(user, countryStorage.GetCountryByAWBWID(user.CountryId));
+            var playerInfo = new PlayerInfo(user, countryStorage.GetCountryByAWBWID(user.CountryID));
             playerInfo.UpdateTurn(turn, coStorage, 1, 1, 1000, 2000, ActiveCOPower.None);
 
             AddStep("Create", () =>

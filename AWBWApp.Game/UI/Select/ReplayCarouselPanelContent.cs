@@ -40,7 +40,7 @@ namespace AWBWApp.Game.UI.Select
                     Text = player.Value.Username ?? "[Unknown Username: " + player.Value.UserId + "]",
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
-                    Colour = Color4Extensions.FromHex(countryStorage.GetCountryByAWBWID(player.Value.CountryId).Colours["replayList"]).Lighten(0.5f), //Todo: Fix config
+                    Colour = Color4Extensions.FromHex(countryStorage.GetCountryByAWBWID(player.Value.CountryID).Colours["replayList"]).Lighten(0.5f), //Todo: Fix config
                     Font = FontUsage.Default.With(size: 20, italics: true)
                 });
 

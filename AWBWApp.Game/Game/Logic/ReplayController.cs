@@ -198,7 +198,7 @@ namespace AWBWApp.Game.Game.Logic
 
             Players.Clear();
             foreach (var player in replayData.ReplayInfo.Players)
-                Players.Add(player.Key, new PlayerInfo(player.Value, countryStorage.GetCountryByAWBWID(player.Value.CountryId)));
+                Players.Add(player.Key, new PlayerInfo(player.Value, countryStorage.GetCountryByAWBWID(player.Value.CountryID)));
 
             currentTurn = replayData.TurnData[0];
             currentActionIndex = -1;

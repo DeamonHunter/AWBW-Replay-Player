@@ -9,7 +9,7 @@ namespace AWBWApp.Game.API.Replay
         public string Username; //This needs to be filled in by asking AWBW
 
         public string TeamName;
-        public int CountryId;
+        public int CountryID;
 
         public HashSet<int> COsUsedByPlayer = new HashSet<int>();
 

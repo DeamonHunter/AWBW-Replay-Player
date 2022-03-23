@@ -25,7 +25,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             {
                 var player = new ReplayUser
                 {
-                    CountryId = i + 1,
+                    CountryID = i + 1,
                     RoundOrder = i + 1,
                     UserId = i,
                     ID = i,
@@ -47,7 +47,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             {
                 var playerData = new ReplayUserTurn
                 {
-                    ActiveCOID = player.Value.CountryId == 4 || player.Value.CountryId == 6 ? 17 : player.Value.CountryId, //Skip over 4/6 as those are not valid
+                    ActiveCOID = player.Value.CountryID == 4 || player.Value.CountryID == 6 ? 17 : player.Value.CountryID, //Skip over 4/6 as those are not valid
                     RequiredPowerForNormal = 90000,
                     RequiredPowerForSuper = 180000
                 };

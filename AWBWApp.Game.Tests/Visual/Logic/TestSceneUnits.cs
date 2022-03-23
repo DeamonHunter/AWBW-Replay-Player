@@ -31,7 +31,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                     {
                         ID = countryID,
                         UserId = countryID,
-                        CountryId = countryID
+                        CountryID = countryID
                     };
                 }
 
