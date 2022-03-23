@@ -51,6 +51,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             AddStep("Load Map", () => Task.Run(downloadReplayFile));
             AddUntilStep("Wait Until Map is loaded", () => ReplayController.HasLoadedReplay);
             AddRepeatUntilStep("Finish replay", 3000, () => ReplayController.GoToNextAction(), () => !ReplayController.HasNextAction());
+            AddRepeatUntilStep("Undo replay", 3000, ReplayController.UndoAction, () => !ReplayController.HasPreviousAction());
 
             AddStep("Parse All Maps", () =>
             {

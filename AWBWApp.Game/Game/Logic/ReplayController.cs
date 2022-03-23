@@ -236,25 +236,26 @@ namespace AWBWApp.Game.Game.Logic
 
             for (int i = 0; i < replayData.TurnData.Count; i++)
             {
-                var currentTurn = replayData.TurnData[i];
-                if (currentTurn.Actions == null || currentTurn.Actions.Count == 0)
-                    continue;
+                var nextTurn = replayData.TurnData[i];
 
                 if (i != 0)
                 {
-                    var desync = setupContext.MakeDesync(currentTurn);
+                    var desync = setupContext.MakeDesync(nextTurn);
                     endTurnDesyncs.Add(i - 1, desync);
                     var log = desync.WriteDesyncReport();
                     if (!string.IsNullOrEmpty(log))
                         Logger.Log(log);
                 }
 
-                setupContext.SetupForTurn(currentTurn, i);
+                setupContext.SetupForTurn(nextTurn, i);
+
+                if (nextTurn.Actions == null || nextTurn.Actions.Count == 0)
+                    continue;
 
                 for (int j = 0; j < setupContext.CurrentTurn.Actions.Count; j++)
                 {
                     setupContext.CurrentActionIndex = j;
-                    currentTurn.Actions[j].SetupAndUpdate(this, setupContext);
+                    nextTurn.Actions[j].SetupAndUpdate(this, setupContext);
                 }
             }
         }
