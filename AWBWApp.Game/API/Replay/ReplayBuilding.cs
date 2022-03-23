@@ -7,25 +7,40 @@ namespace AWBWApp.Game.API.Replay
         public long ID;
         public int? TerrainID;
         public Vector2I Position;
-        public int Capture;
-        public int LastCapture;
+        public int? Capture;
+        public int? LastCapture;
         public string Team;
 
-        public void Copy(ReplayBuilding other)
+        public void Overwrite(ReplayBuilding other)
         {
             ID = other.ID;
-            TerrainID = other.TerrainID;
             Position = other.Position;
-            Capture = other.Capture;
-            LastCapture = other.LastCapture;
-            Team = other.Team;
+
+            TerrainID = other.TerrainID ?? TerrainID;
+            Capture = other.Capture ?? Capture;
+            LastCapture = other.LastCapture ?? LastCapture;
+            Team = other.Team ?? Team;
         }
 
         public ReplayBuilding Clone()
         {
             var building = new ReplayBuilding();
-            building.Copy(this);
+            building.Overwrite(this);
             return building;
+        }
+
+        public bool DoesBuildingMatch(ReplayBuilding other)
+        {
+            if (ID != other.ID)
+                return false;
+            if (TerrainID != other.TerrainID)
+                return false;
+            if (Position != other.Position)
+                return false;
+            if (Capture != other.Capture)
+                return false;
+
+            return true;
         }
     }
 }

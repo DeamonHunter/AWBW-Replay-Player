@@ -83,7 +83,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 throw new ReplayMissingBuildingException(Building.ID);
 
             originalBuilding = building.Clone();
-            building.Copy(Building);
+            building.Overwrite(Building);
 
             foreach (var unit in context.Units)
             {
