@@ -429,7 +429,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 foreach (var unit in CreatedUnits)
                 {
                     var unitData = controller.Map.GetUnitDataForUnitName(unit.UnitName);
-                    var newUnit = createUnit(unit, controller.ActivePlayer.ID, unitData);
+                    var newUnit = createUnit(unit, context.ActivePlayerID, unitData);
                     context.Units.Add(newUnit.ID, newUnit);
                 }
             }
