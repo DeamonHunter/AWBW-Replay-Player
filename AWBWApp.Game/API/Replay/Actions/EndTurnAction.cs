@@ -86,9 +86,12 @@ namespace AWBWApp.Game.API.Replay.Actions
         private HashSet<long> waitUnits = new HashSet<long>();
         private int repairCost;
         private int repairValue;
+        private int currentDay;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            currentDay = context.CurrentDay;
+
             repairCost = context.FundsValuesForPlayers[NextPlayerID] - (FundsAfterTurnStart - context.PropertyValuesForPlayers[NextPlayerID]);
             context.FundsValuesForPlayers[NextPlayerID] -= repairCost;
 
@@ -233,6 +236,14 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             controller.Players[NextPlayerID].Funds.Value += repairCost;
             controller.Players[NextPlayerID].UnitValue.Value -= repairValue;
+
+            if (!controller.SkipEndTurnPopup())
+            {
+                var endTurnPopup = new EndTurnPopupDrawable(controller.ActivePlayer, currentDay);
+                controller.AddGenericActionAnimation(endTurnPopup);
+            }
+
+            controller.UpdateFogOfWar();
         }
     }
 }

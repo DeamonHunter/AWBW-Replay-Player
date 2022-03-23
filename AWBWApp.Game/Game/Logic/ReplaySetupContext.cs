@@ -42,9 +42,9 @@ namespace AWBWApp.Game.Game.Logic
             this.fundsPerBuilding = fundsPerBuilding;
         }
 
-        public DesyncTurn MakeDesync(TurnData nextTurn)
+        public EndTurnDesync MakeDesync(TurnData nextTurn)
         {
-            var desync = new DesyncTurn();
+            var desync = new EndTurnDesync();
             desync.TurnIndex = CurrentTurnIndex;
             desync.NextPlayerID = nextTurn.ActivePlayerID;
 
@@ -167,7 +167,7 @@ namespace AWBWApp.Game.Game.Logic
         }
     }
 
-    public class DesyncTurn
+    public class EndTurnDesync
     {
         public long DesyncChangedUnitCount;
         public long DesyncRemovedUnitCount;

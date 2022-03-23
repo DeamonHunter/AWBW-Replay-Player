@@ -62,6 +62,8 @@ namespace AWBWApp.Game.Game.Logic
 
         private readonly Queue<IEnumerator<ReplayWait>> currentOngoingActions = new Queue<IEnumerator<ReplayWait>>();
 
+        private Dictionary<int, EndTurnDesync> endTurnDesyncs;
+
         public ReplayController()
         {
             //Offset so the centered position would be half the bar to the right, and half a tile up. Chosen to look nice.
@@ -230,6 +232,8 @@ namespace AWBWApp.Game.Game.Logic
         {
             var setupContext = new ReplaySetupContext(buildingStorage, COStorage, replayData.ReplayInfo.Players, replayData.ReplayInfo.FundsPerBuilding);
 
+            endTurnDesyncs = new Dictionary<int, EndTurnDesync>();
+
             for (int i = 0; i < replayData.TurnData.Count; i++)
             {
                 var currentTurn = replayData.TurnData[i];
@@ -239,6 +243,7 @@ namespace AWBWApp.Game.Game.Logic
                 if (i != 0)
                 {
                     var desync = setupContext.MakeDesync(currentTurn);
+                    endTurnDesyncs.Add(i - 1, desync);
                     var log = desync.WriteDesyncReport();
                     if (!string.IsNullOrEmpty(log))
                         Logger.Log(log);
@@ -331,13 +336,9 @@ namespace AWBWApp.Game.Game.Logic
                 return false;
 
             if (currentActionIndex >= 0)
-            {
-                var currentAction = currentTurn.Actions[currentActionIndex];
+                return true;
 
-                return currentAction is not EndTurnAction;
-            }
-
-            return false;
+            return CurrentTurnIndex.Value > 0;
         }
 
         public void GoToNextAction()
@@ -403,14 +404,50 @@ namespace AWBWApp.Game.Game.Logic
 
         public void UndoAction()
         {
+            completeAllActions();
+
             if (currentTurn.Actions == null || currentActionIndex < 0)
             {
-                //Todo: Maybe some notification to say no actions occured?
-                goToTurnWithIdx(CurrentTurnIndex.Value - 1, true);
-                return;
-            }
+                if (CurrentTurnIndex.Value == 0)
+                    return;
 
-            completeAllActions();
+                var previousTurnIndex = CurrentTurnIndex.Value - 1;
+                var turn = replayData.TurnData[previousTurnIndex];
+
+                if (turn.Actions == null || turn.Actions.Count == 0)
+                {
+                    goToTurnWithIdx(previousTurnIndex, true);
+                    return;
+                }
+
+                CurrentTurnIndex.Value -= 1;
+                currentTurn = turn;
+                currentActionIndex = turn.Actions.Count - 1;
+
+                try
+                {
+                    if (endTurnDesyncs.TryGetValue(previousTurnIndex, out var desync))
+                        desync.UndoDesync(this);
+                }
+                catch (Exception e)
+                {
+                    if (notificationOverlay == null)
+                        throw;
+
+                    notificationOverlay.Post(new SimpleErrorNotification($"Error occured when undoing turn: {CurrentTurnIndex.Value + 1}", e));
+                }
+
+                ScheduleAfterChildren(() =>
+                {
+                    updatePlayerList(CurrentTurnIndex.Value, false);
+                    barWidget.UpdateActions();
+                });
+
+                var lastAction = turn.Actions[^1];
+
+                if (lastAction is not EndTurnAction)
+                    return;
+            }
 
             try
             {
@@ -556,6 +593,8 @@ namespace AWBWApp.Game.Game.Logic
         }
 
         public void AddGenericActionAnimation(Drawable animatingDrawable) => powerLayer.Add(animatingDrawable);
+
+        public bool SkipEndTurnPopup() => skipEndTurnBindable.Value;
 
         public void RegisterPower(PowerAction power, ReplaySetupContext context)
         {
