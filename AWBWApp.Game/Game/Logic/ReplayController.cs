@@ -440,7 +440,7 @@ namespace AWBWApp.Game.Game.Logic
 
                 ScheduleAfterChildren(() =>
                 {
-                    updatePlayerList(CurrentTurnIndex.Value, false);
+                    playerList.SortList(currentTurn.ActivePlayerID, previousTurnIndex);
                     barWidget.UpdateActions();
                 });
 
