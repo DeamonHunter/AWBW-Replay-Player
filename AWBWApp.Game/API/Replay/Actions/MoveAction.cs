@@ -56,6 +56,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public bool Trapped { get; set; }
 
         private ReplayUnit originalUnit;
+        private int? belowBuildingHP;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
@@ -64,6 +65,12 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             originalUnit = unit.Clone();
             unit.Overwrite(Unit);
+
+            if (context.Buildings.TryGetValue(originalUnit.Position!.Value, out var belowBuilding) && belowBuilding.Capture != 20)
+            {
+                belowBuildingHP = belowBuilding.Capture;
+                belowBuilding.Capture = 20;
+            }
 
             ReplayActionHelper.UpdateUnitCargoPositions(context, unit, unit.Position!.Value);
         }
@@ -75,7 +82,13 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             Logger.Log("Performing Move Action.");
             var unit = controller.Map.GetDrawableUnit(Unit.ID);
-            unit.IsCapturing.Value = false;
+
+            if (belowBuildingHP != null)
+            {
+                if (controller.Map.TryGetDrawableBuilding(unit.MapPosition, out var drawableBuilding))
+                    drawableBuilding.CaptureHealth.Value = 20;
+                unit.IsCapturing.Value = false;
+            }
 
             var effect = controller.Map.PlaySelectionAnimation(unit);
             if (Path.Length > 1)
@@ -89,16 +102,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                 yield return ReplayWait.WaitForTransformable(unit);
             }
 
-            unit.MoveToPosition(Unit.Position.Value);
-
-            if (unit.Cargo != null && unit.Cargo.Count > 0)
-            {
-                foreach (var carriedUnit in unit.Cargo)
-                    controller.Map.GetDrawableUnit(carriedUnit).MoveToPosition(Unit.Position.Value);
-            }
+            unit.UpdateUnit(Unit);
 
             unit.CanMove.Value = false;
-            unit.CheckForDesyncs(Unit);
             controller.UpdateFogOfWar();
 
             if (Trapped)
@@ -169,7 +175,16 @@ namespace AWBWApp.Game.API.Replay.Actions
         public void UndoAction(ReplayController controller)
         {
             Logger.Log("Undoing Move Action.");
-            controller.Map.GetDrawableUnit(Unit.ID).UpdateUnit(originalUnit);
+            var unit = controller.Map.GetDrawableUnit(Unit.ID);
+            unit.UpdateUnit(originalUnit);
+
+            if (belowBuildingHP != null)
+            {
+                if (controller.Map.TryGetDrawableBuilding(unit.MapPosition, out var drawableBuilding))
+                    drawableBuilding.CaptureHealth.Value = belowBuildingHP.Value;
+                unit.IsCapturing.Value = true;
+            }
+
             controller.UpdateFogOfWar();
         }
     }
