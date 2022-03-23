@@ -53,6 +53,9 @@ namespace AWBWApp.Game.Game.COs
         public int PowerStars;
 
         [JsonProperty]
+        public int AirFuelUsageDecrease;
+
+        [JsonProperty]
         public float CounterAttackPower = 1;
 
         [JsonProperty]

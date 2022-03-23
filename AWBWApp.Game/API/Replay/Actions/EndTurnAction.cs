@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Replay;
@@ -43,7 +44,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 var supplied = (JArray)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)suppliedData, nextTeam, action.NextPlayerID);
 
-                action.SuppliedUnits = new List<long>();
+                action.SuppliedUnits = new HashSet<long>();
 
                 foreach (var suppliedUnit in supplied)
                     action.SuppliedUnits.Add((long)suppliedUnit);
@@ -54,12 +55,14 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 var repaired = (JArray)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)repairedData, nextTeam, action.NextPlayerID);
 
-                action.RepairedUnits = new List<(long, int)>();
+                action.RepairedUnits = new Dictionary<long, int>();
 
                 foreach (var repairedUnit in repaired)
                 {
                     var repairedUnitData = (JObject)repairedUnit;
-                    action.RepairedUnits.Add(((long)repairedUnitData["units_id"], (int)repairedUnitData["units_hit_points"]));
+                    var id = (long)repairedUnitData["units_id"];
+                    if (!action.RepairedUnits.ContainsKey(id))
+                        action.RepairedUnits.Add(id, (int)repairedUnitData["units_hit_points"]);
                 }
             }
             return action;
@@ -76,11 +79,97 @@ namespace AWBWApp.Game.API.Replay.Actions
         public int FundsAfterTurnStart;
         public Weather NextWeather;
 
-        public List<long> SuppliedUnits;
-        public List<(long id, int hp)> RepairedUnits;
+        public HashSet<long> SuppliedUnits;
+        public Dictionary<long, int> RepairedUnits;
+
+        private Dictionary<long, ReplayUnit> originalUnits = new Dictionary<long, ReplayUnit>();
+        private HashSet<long> waitUnits = new HashSet<long>();
+        private int repairCost;
+        private int repairValue;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
+            repairCost = context.FundsValuesForPlayers[NextPlayerID] - (FundsAfterTurnStart - context.PropertyValuesForPlayers[NextPlayerID]);
+            context.FundsValuesForPlayers[NextPlayerID] -= repairCost;
+
+            if (SuppliedUnits != null)
+            {
+                foreach (var suppliedID in SuppliedUnits)
+                {
+                    if (!context.Units.TryGetValue(suppliedID, out var supplied))
+                        throw new ReplayMissingUnitException(suppliedID);
+
+                    if (!originalUnits.ContainsKey(suppliedID))
+                        originalUnits.Add(suppliedID, supplied.Clone());
+
+                    var unitData = controller.Map.GetUnitDataForUnitName(supplied.UnitName);
+                    supplied.Ammo = unitData.MaxAmmo;
+                    supplied.Fuel = unitData.MaxFuel;
+                }
+            }
+
+            if (RepairedUnits != null)
+            {
+                foreach (var repairedPair in RepairedUnits)
+                {
+                    if (!context.Units.TryGetValue(repairedPair.Key, out var repaired))
+                        throw new ReplayMissingUnitException(repairedPair.Key);
+
+                    if (!originalUnits.ContainsKey(repairedPair.Key))
+                        originalUnits.Add(repairedPair.Key, repaired.Clone());
+
+                    var dayToDay = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[repaired.PlayerID!.Value].ActiveCOID).DayToDayPower;
+
+                    var originalValue = ReplayActionHelper.CalculateUnitCost(repaired, dayToDay, null);
+
+                    var unitData = controller.Map.GetUnitDataForUnitName(repaired.UnitName);
+                    repaired.Ammo = unitData.MaxAmmo;
+                    repaired.Fuel = unitData.MaxFuel;
+                    repaired.HitPoints = repairedPair.Value;
+
+                    repairValue += ReplayActionHelper.CalculateUnitCost(repaired, dayToDay, null) - originalValue;
+                }
+            }
+
+            foreach (var unit in context.Units)
+            {
+                if (!unit.Value.PlayerID.HasValue)
+                    continue;
+
+                if (unit.Value.PlayerID == NextPlayerID)
+                {
+                    var unitData = controller.Map.GetUnitDataForUnitName(unit.Value.UnitName);
+
+                    int fuelUsage = unitData.FuelUsagePerTurn;
+
+                    if (unitData.MovementType == MovementType.Air)
+                    {
+                        var dayToDay = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[unit.Value.PlayerID!.Value].ActiveCOID).DayToDayPower;
+                        fuelUsage -= dayToDay.AirFuelUsageDecrease;
+                    }
+
+                    if (fuelUsage > 0 && NextDay > 1)
+                    {
+                        //If Original Units contains this unit, then they were supplied with fuel/ammo
+                        if (!originalUnits.ContainsKey(unit.Key))
+                        {
+                            originalUnits.Add(unit.Key, unit.Value.Clone());
+
+                            unit.Value.Fuel = Math.Max(0, unit.Value.Fuel!.Value - fuelUsage);
+                            if (unit.Value.Fuel <= 0 && unitData.MovementType is MovementType.Air or MovementType.Lander or MovementType.Sea)
+                                ReplayActionHelper.RemoveUnitFromSetupContext(unit.Key, context, originalUnits);
+                        }
+                    }
+                }
+                else if (unit.Value.PlayerID == context.ActivePlayerID)
+                {
+                    if (unit.Value.TimesMoved != 0)
+                    {
+                        unit.Value.TimesMoved = 0;
+                        waitUnits.Add(unit.Key);
+                    }
+                }
+            }
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -93,10 +182,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (RepairedUnits != null)
             {
-                foreach (var (unitID, unitHP) in RepairedUnits)
+                foreach (var repairedUnit in RepairedUnits)
                 {
-                    var unit = controller.Map.GetDrawableUnit(unitID);
-                    unit.HealthPoints.Value = unitHP;
+                    var unit = controller.Map.GetDrawableUnit(repairedUnit.Key);
+                    unit.HealthPoints.Value = repairedUnit.Value;
                     unit.Ammo.Value = unit.UnitData.MaxAmmo;
                     unit.Fuel.Value = unit.UnitData.MaxFuel;
 
@@ -108,6 +197,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                     yield return ReplayWait.WaitForMilliseconds(50);
                 }
             }
+
+            controller.Players[NextPlayerID].Funds.Value -= repairCost;
+            controller.Players[NextPlayerID].UnitValue.Value += repairValue;
 
             if (SuppliedUnits != null)
             {
@@ -133,7 +225,14 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            throw new NotImplementedException("Undo EndTurn Action is not complete");
+            foreach (var unit in originalUnits)
+                controller.Map.GetDrawableUnit(unit.Key).UpdateUnit(unit.Value);
+
+            foreach (var unit in waitUnits)
+                controller.Map.GetDrawableUnit(unit).CanMove.Value = false;
+
+            controller.Players[NextPlayerID].Funds.Value += repairCost;
+            controller.Players[NextPlayerID].UnitValue.Value -= repairValue;
         }
     }
 }

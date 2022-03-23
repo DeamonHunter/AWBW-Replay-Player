@@ -296,6 +296,7 @@
         "Name": "Eagle",
         "AWBWID": 10,
         "DayToDayPower": {
+            "AirFuelUsageDecrease": 2,
             "PowerIncreases": [
                 {
                     "AffectedUnits": [ "B-Copter", "Bomber", "Fighter", "Stealth", "T-Copter" ],

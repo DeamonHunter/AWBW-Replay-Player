@@ -117,5 +117,42 @@ namespace AWBWApp.Game.API.Replay
 
             return true;
         }
+
+        public bool DoesUnitMatch(ReplayUnit unit)
+        {
+            if (ID != unit.ID)
+                return false;
+            if (PlayerID != unit.PlayerID)
+                return false;
+
+            if (UnitName != unit.UnitName)
+                return false;
+            if (Position != unit.Position)
+                return false;
+
+            if (HitPoints.HasValue != unit.HitPoints.HasValue)
+                return false;
+            if (HitPoints.HasValue && (MathF.Ceiling(HitPoints.Value) != MathF.Ceiling(unit.HitPoints.Value)))
+                return false;
+            if (Fuel != unit.Fuel)
+                return false;
+            if (Ammo != unit.Ammo)
+                return false;
+
+            if (BeingCarried != unit.BeingCarried)
+                return false;
+            if ((SubHasDived == null && unit.SubHasDived.HasValue && unit.SubHasDived.Value) || (SubHasDived != null && SubHasDived != unit.SubHasDived))
+                return false;
+
+            //Todo: Not Checked
+            // Second weapon
+            // Fuel Per Turn
+            // Vision
+            // Range
+            // Cost
+            // Movement Type
+
+            return true;
+        }
     }
 }

@@ -15,6 +15,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Logging;
 using osuTK;
 
 namespace AWBWApp.Game.Game.Logic
@@ -227,13 +228,21 @@ namespace AWBWApp.Game.Game.Logic
 
         private void setupActions()
         {
-            var setupContext = new ReplaySetupContext(buildingStorage, replayData.ReplayInfo.Players, replayData.ReplayInfo.FundsPerBuilding);
+            var setupContext = new ReplaySetupContext(buildingStorage, COStorage, replayData.ReplayInfo.Players, replayData.ReplayInfo.FundsPerBuilding);
 
             for (int i = 0; i < replayData.TurnData.Count; i++)
             {
                 var currentTurn = replayData.TurnData[i];
                 if (currentTurn.Actions == null || currentTurn.Actions.Count == 0)
                     continue;
+
+                if (i != 0)
+                {
+                    var desync = setupContext.MakeDesync(currentTurn);
+                    var log = desync.WriteDesyncReport();
+                    if (!string.IsNullOrEmpty(log))
+                        Logger.Log(log);
+                }
 
                 setupContext.SetupForTurn(currentTurn, i);
 
