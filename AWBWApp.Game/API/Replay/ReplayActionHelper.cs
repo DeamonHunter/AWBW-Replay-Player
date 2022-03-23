@@ -235,5 +235,20 @@ namespace AWBWApp.Game.API.Replay
 
             return unitToRemove;
         }
+
+        public static void UpdateUnitCargoPositions(ReplaySetupContext context, ReplayUnit unit, Vector2I position)
+        {
+            if (unit.CargoUnits == null || unit.CargoUnits.Count == 0)
+                return;
+
+            foreach (var cargoID in unit.CargoUnits)
+            {
+                if (!context.Units.TryGetValue(cargoID, out var cargoUnit))
+                    throw new ReplayMissingUnitException(cargoID);
+
+                cargoUnit.Position = position;
+                UpdateUnitCargoPositions(context, cargoUnit, position);
+            }
+        }
     }
 }

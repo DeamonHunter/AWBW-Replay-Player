@@ -64,6 +64,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             originalUnit = unit.Clone();
             unit.Overwrite(Unit);
+
+            ReplayActionHelper.UpdateUnitCargoPositions(context, unit, unit.Position!.Value);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)

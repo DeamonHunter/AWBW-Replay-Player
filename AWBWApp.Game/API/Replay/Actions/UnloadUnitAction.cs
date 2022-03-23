@@ -59,6 +59,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             originalLoadedUnit = unloadedUnit.Clone();
             unloadedUnit.Overwrite(UnloadedUnit);
+            ReplayActionHelper.UpdateUnitCargoPositions(context, unloadedUnit, unloadedUnit.Position!.Value);
             transportUnit.CargoUnits?.Remove(UnloadedUnit.ID);
         }
 
