@@ -117,7 +117,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                                 break;
 
                             case "units_fuel":
-                                change.FuelGainPercentage = (double)entry.Value;
+                                var value = (double)entry.Value;
+                                change.FuelGainPercentage = value == 1 ? null : value;
                                 break;
 
                             case "players":
@@ -147,7 +148,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                                 break;
 
                             case "units_fuel":
-                                change.FuelGainPercentage = (double)entry.Value;
+                                var value = (double)entry.Value;
+                                change.FuelGainPercentage = value == 1 ? null : value;
                                 break;
 
                             case "players":
@@ -382,7 +384,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 {
                     foreach (var unit in context.Units)
                     {
-                        if (unit.Value.PlayerID != playerWideChange.Key)
+                        if (unit.Value.PlayerID != playerWideChange.Key || (unit.Value.BeingCarried ?? false))
                             continue;
 
                         if (!originalUnits.ContainsKey(unit.Key))
@@ -393,7 +395,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                         if (playerWideChange.Value.HPGain.HasValue)
                             unit.Value.HitPoints = Math.Max(1f, Math.Min(10f, unit.Value.HitPoints!.Value + playerWideChange.Value.HPGain.Value));
                         if (playerWideChange.Value.FuelGainPercentage.HasValue)
-                            unit.Value.Fuel = Math.Max(0, Math.Min(unitData.MaxFuel, unit.Value.Fuel!.Value + (int)Math.Floor(unitData.MaxFuel * playerWideChange.Value.FuelGainPercentage.Value)));
+                            unit.Value.Fuel = Math.Max(0, Math.Min(unitData.MaxFuel, (int)Math.Ceiling(unit.Value.Fuel!.Value * playerWideChange.Value.FuelGainPercentage.Value)));
                     }
                 }
             }
@@ -515,10 +517,13 @@ namespace AWBWApp.Game.API.Replay.Actions
                 {
                     foreach (var unit in controller.Map.GetDrawableUnitsFromPlayer(change.Key))
                     {
+                        if (unit.BeingCarried.Value)
+                            continue;
+
                         if (change.Value.HPGain.HasValue)
                             unit.HealthPoints.Value = Math.Max(1, Math.Min(10, unit.HealthPoints.Value + change.Value.HPGain.Value)); //Player wide changes cannot kill
                         if (change.Value.FuelGainPercentage.HasValue)
-                            unit.Fuel.Value = Math.Max(0, Math.Min(unit.UnitData.MaxFuel, unit.Fuel.Value + (int)Math.Floor(unit.UnitData.MaxFuel * change.Value.FuelGainPercentage.Value)));
+                            unit.Fuel.Value = Math.Max(0, Math.Min(unit.UnitData.MaxFuel, (int)Math.Ceiling(unit.Fuel.Value * change.Value.FuelGainPercentage.Value)));
 
                         //Todo: Play heal/damage animation
 
