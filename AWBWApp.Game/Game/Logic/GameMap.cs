@@ -435,9 +435,10 @@ namespace AWBWApp.Game.Game.Logic
         public DrawableUnit AddUnit(ReplayUnit unit)
         {
             var unitData = unitStorage.GetUnitByCode(unit.UnitName);
-            var drawableUnit = new DrawableUnit(unitData, unit, players[unit.PlayerID.Value].Country.Value);
+            var drawableUnit = new DrawableUnit(unitData, unit, players[unit.PlayerID!.Value].Country.Value);
             units.Add(unit.ID, drawableUnit);
             Schedule(() => unitsDrawable.Add(drawableUnit));
+            players[unit.PlayerID!.Value].UnitCount.Value++;
             return drawableUnit;
         }
 
@@ -456,16 +457,13 @@ namespace AWBWApp.Game.Game.Logic
                 playExplosion(unit.UnitData.MovementType, unit.MapPosition);
 
             unitsDrawable.Remove(unit);
+            if (unit.OwnerID.HasValue)
+                players[unit.OwnerID.Value].UnitCount.Value--;
 
             if (unit.Cargo != null)
             {
                 foreach (var cargoId in unit.Cargo)
-                {
-                    if (!units.Remove(cargoId, out DrawableUnit cargo))
-                        continue;
-
-                    unitsDrawable.Remove(cargo);
-                }
+                    DeleteUnit(cargoId, false);
             }
 
             return unit;
