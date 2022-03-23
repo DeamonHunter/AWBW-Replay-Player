@@ -615,7 +615,7 @@ namespace AWBWApp.Game.Game.Logic
 
             //We didn't find a next turn for the player
             if (endTurn == context.CurrentTurnIndex)
-                endTurn = ActivePlayer.EliminatedOn ?? replayData.TurnData.Count;
+                endTurn = Players[context.ActivePlayerID].EliminatedOn ?? replayData.TurnData.Count;
 
             registeredPowers.Add(new RegisteredPower
             {
