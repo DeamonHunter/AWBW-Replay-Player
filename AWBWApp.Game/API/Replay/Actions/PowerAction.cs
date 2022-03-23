@@ -619,6 +619,14 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (ChangeToWeather.HasValue)
                 controller.Map.CurrentWeather.Value = originalWeather;
 
+            var co = controller.COStorage.GetCOByName(CombatOfficerName);
+            var coValue = controller.ActivePlayer.ActiveCO.Value;
+            if (co.NormalPower != null)
+                coValue.PowerRequiredForNormal -= 18000 * co.NormalPower.PowerStars;
+            if (co.SuperPower != null)
+                coValue.PowerRequiredForSuper -= 18000 * co.SuperPower.PowerStars;
+            controller.ActivePlayer.ActiveCO.Value = coValue;
+
             foreach (var power in originalPowers)
             {
                 var value = controller.Players[power.Key].ActiveCO.Value;
