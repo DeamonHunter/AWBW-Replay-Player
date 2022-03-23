@@ -622,7 +622,7 @@ namespace AWBWApp.Game.Game.Logic
             //Todo: Is this always the case
             if (!setBuildingToReady)
                 building.HasDoneAction.Value = false;
-            building.CaptureHealth.Value = awbwBuilding.Capture;
+            building.CaptureHealth.Value = awbwBuilding.Capture ?? 20;
 
             if (TryGetDrawableUnit(awbwBuilding.Position, out var unit))
                 unit.IsCapturing.Value = awbwBuilding.Capture != awbwBuilding.LastCapture && awbwBuilding.Capture != 20 && awbwBuilding.Capture != 0;
