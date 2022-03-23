@@ -323,7 +323,7 @@ namespace AWBWApp.Game.Game.Logic
             var localSpace = ToLocalSpace(cursor);
             localSpace.Y -= DrawableTile.BASE_SIZE.Y;
 
-            if (localSpace.X < 0 || localSpace.X >= DrawSize.X || localSpace.Y < 0 || localSpace.Y >= DrawSize.Y - DrawableTile.BASE_SIZE.Y)
+            if (localSpace.X < 0 || localSpace.X >= DrawSize.X || localSpace.Y < DrawableTile.BASE_SIZE.Y || localSpace.Y >= DrawSize.Y)
             {
                 infoPopup.ShowDetails(null, null, null);
                 return;
