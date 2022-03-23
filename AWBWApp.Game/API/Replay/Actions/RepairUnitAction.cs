@@ -77,7 +77,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             repairedUnit.HitPoints = RepairedUnitHP;
 
             repairCost = FundsAfterRepair - context.FundsValuesForPlayers[context.ActivePlayerID];
-            context.FundsValuesForPlayers[context.ActivePlayerID] = repairCost;
+            context.FundsValuesForPlayers[context.ActivePlayerID] = FundsAfterRepair;
 
             var co = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[context.ActivePlayerID].ActiveCOID);
             repairValue = ReplayActionHelper.CalculateUnitCost(repairedUnit, co.DayToDayPower, null) - ReplayActionHelper.CalculateUnitCost(originalRepairedUnit, co.DayToDayPower, null);
