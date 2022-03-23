@@ -160,7 +160,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                             unit.Value.Fuel = Math.Max(0, unit.Value.Fuel!.Value - fuelUsage);
                             if (unit.Value.Fuel <= 0 && unitData.MovementType is MovementType.Air or MovementType.Lander or MovementType.Sea)
-                                ReplayActionHelper.RemoveUnitFromSetupContext(unit.Key, context, originalUnits);
+                                context.RemoveUnitFromSetupContext(unit.Key, originalUnits, out _);
                         }
                     }
                 }

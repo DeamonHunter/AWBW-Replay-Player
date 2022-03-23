@@ -167,8 +167,8 @@ namespace AWBWApp.Game.API.Replay.Actions
         private int attackerValueLost;
         private ReplayUnit originalDefender;
         private int defenderValueLost;
-        private List<ReplayUnit> originalCargoUnits = new List<ReplayUnit>();
-        private Dictionary<long, int> originalPowers = new Dictionary<long, int>();
+        private readonly Dictionary<long, ReplayUnit> originalUnits = new Dictionary<long, ReplayUnit>();
+        private readonly Dictionary<long, int> originalPowers = new Dictionary<long, int>();
         private Dictionary<long, int> originalFunds;
 
         private Dictionary<Vector2I, int> buildingsHP = new Dictionary<Vector2I, int>();
@@ -195,8 +195,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
             else
             {
-                ReplayActionHelper.RemoveUnitFromSetupContext(Attacker.ID, context, originalCargoUnits);
-                attackerValueLost = ReplayActionHelper.CalculateUnitCost(originalAttacker, attackerCO.DayToDayPower, null);
+                context.RemoveUnitFromSetupContext(Attacker.ID, originalUnits, out attackerValueLost);
+                originalUnits.Remove(originalAttacker.ID);
 
                 if (context.Buildings.TryGetValue(attacker.Position!.Value, out var buildingBelow) && buildingBelow.Capture != 20)
                 {
@@ -212,8 +212,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
             else
             {
-                ReplayActionHelper.RemoveUnitFromSetupContext(Defender.ID, context, originalCargoUnits);
-                attackerValueLost = ReplayActionHelper.CalculateUnitCost(originalDefender, defenderCO.DayToDayPower, null);
+                context.RemoveUnitFromSetupContext(Defender.ID, originalUnits, out defenderValueLost);
+                originalUnits.Remove(originalDefender.ID);
 
                 if (context.Buildings.TryGetValue(defender.Position!.Value, out var buildingBelow) && buildingBelow.Capture != 20)
                 {
@@ -392,6 +392,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
+            foreach (var cargoUnit in originalUnits)
+                controller.Map.AddUnit(cargoUnit.Value);
+
             if (controller.Map.TryGetDrawableUnit(Attacker.ID, out var attackerUnit))
                 attackerUnit.UpdateUnit(originalAttacker);
             else
@@ -404,9 +407,6 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             controller.Players[attackerUnit.OwnerID!.Value].UnitValue.Value += attackerValueLost;
             controller.Players[defenderUnit.OwnerID!.Value].UnitValue.Value += defenderValueLost;
-
-            foreach (var cargoUnit in originalCargoUnits)
-                controller.Map.AddUnit(cargoUnit);
 
             foreach (var power in originalPowers)
             {

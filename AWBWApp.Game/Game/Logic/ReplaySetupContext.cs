@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.COs;
 using osu.Framework.Graphics.Primitives;
@@ -164,6 +165,28 @@ namespace AWBWApp.Game.Game.Logic
             }
 
             return funds;
+        }
+
+        public ReplayUnit RemoveUnitFromSetupContext(long unitID, Dictionary<long, ReplayUnit> deletedUnits, out int value)
+        {
+            if (!Units.Remove(unitID, out var unitToRemove))
+                throw new ReplayMissingUnitException(unitID);
+
+            if (!deletedUnits.ContainsKey(unitID))
+                deletedUnits.Add(unitID, unitToRemove.Clone());
+
+            value = ReplayActionHelper.CalculateUnitCost(unitToRemove, coStorage.GetCOByAWBWId(PlayerTurns[unitToRemove.PlayerID!.Value].ActiveCOID).DayToDayPower, null);
+
+            if (unitToRemove.CargoUnits != null && unitToRemove.CargoUnits.Count > 0)
+            {
+                foreach (var cargoUnitID in unitToRemove.CargoUnits)
+                {
+                    RemoveUnitFromSetupContext(cargoUnitID, deletedUnits, out var cargoValue);
+                    value += cargoValue;
+                }
+            }
+
+            return unitToRemove;
         }
     }
 

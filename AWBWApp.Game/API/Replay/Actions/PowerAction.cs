@@ -420,7 +420,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                         unit.TimesMoved = change.Value.UnitsMoved.Value;
 
                     if (unit.HitPoints.Value <= 0)
-                        ReplayActionHelper.RemoveUnitFromSetupContext(change.Key, context, originalUnits);
+                        context.RemoveUnitFromSetupContext(change.Key, originalUnits, out _);
                 }
             }
 
@@ -521,16 +521,19 @@ namespace AWBWApp.Game.API.Replay.Actions
                             continue;
 
                         if (change.Value.HPGain.HasValue)
+                        {
+                            var dayToDay = controller.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+                            var originalValue = ReplayActionHelper.CalculateUnitCost(unit, dayToDay, null);
+
                             unit.HealthPoints.Value = Math.Max(1, Math.Min(10, unit.HealthPoints.Value + change.Value.HPGain.Value)); //Player wide changes cannot kill
+
+                            controller.Players[unit.OwnerID!.Value].UnitValue.Value += ReplayActionHelper.CalculateUnitCost(unit, dayToDay, null) - originalValue;
+                        }
                         if (change.Value.FuelGainPercentage.HasValue)
                             unit.Fuel.Value = Math.Max(0, Math.Min(unit.UnitData.MaxFuel, (int)Math.Ceiling(unit.Fuel.Value * change.Value.FuelGainPercentage.Value)));
 
                         //Todo: Play heal/damage animation
-
-                        if (unit.HealthPoints.Value <= 0)
-                            controller.Map.DeleteUnit(unit.UnitID, true);
-                        else
-                            playEffectForUnitChange(controller, unit.MapPosition, change.Value);
+                        playEffectForUnitChange(controller, unit.MapPosition, change.Value);
 
                         yield return ReplayWait.WaitForMilliseconds(50);
                     }
@@ -547,8 +550,16 @@ namespace AWBWApp.Game.API.Replay.Actions
                             unit.Ammo.Value = change.Value.Ammo.Value;
                         if (change.Value.Fuel.HasValue)
                             unit.Fuel.Value = change.Value.Fuel.Value;
+
                         if (change.Value.HitPoints.HasValue)
+                        {
+                            var dayToDay = controller.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+                            var originalValue = ReplayActionHelper.CalculateUnitCost(unit, dayToDay, null);
+
                             unit.HealthPoints.Value = change.Value.HitPoints.Value;
+
+                            controller.Players[unit.OwnerID!.Value].UnitValue.Value += ReplayActionHelper.CalculateUnitCost(unit, dayToDay, null) - originalValue;
+                        }
                         if (change.Value.UnitsMoved.HasValue)
                             unit.CanMove.Value = change.Value.UnitsMoved.Value == 0;
 
@@ -556,6 +567,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                             Logger.Log("Unit Movement Change not implemented yet.");
                         if (change.Value.Range.HasValue)
                             Logger.Log("Unit Range Change not implemented yet.");
+
                         if (unit.HealthPoints.Value <= 0)
                             controller.Map.DeleteUnit(unit.UnitID, true);
                         else
@@ -570,13 +582,18 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (CreatedUnits != null)
             {
+                var dayToDay = controller.ActivePlayer.ActiveCO.Value.CO.DayToDayPower;
+
                 foreach (var unit in CreatedUnits)
                 {
                     var unitData = controller.Map.GetUnitDataForUnitName(unit.UnitName);
                     var newUnit = createUnit(unit, controller.ActivePlayer.ID, unitData);
 
-                    var drawable = controller.Map.AddUnit(newUnit);
-                    controller.Map.PlaySelectionAnimation(drawable);
+                    var drawableUnit = controller.Map.AddUnit(newUnit);
+
+                    controller.ActivePlayer.UnitValue.Value += ReplayActionHelper.CalculateUnitCost(drawableUnit, dayToDay, null);
+
+                    controller.Map.PlaySelectionAnimation(drawableUnit);
                     yield return ReplayWait.WaitForMilliseconds(50);
                 }
             }
@@ -639,16 +656,30 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             foreach (var unit in originalUnits)
             {
+                var dayToDay = controller.Players[unit.Value.PlayerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+
                 if (controller.Map.TryGetDrawableUnit(unit.Key, out var drawableUnit))
+                {
+                    var originalValue = ReplayActionHelper.CalculateUnitCost(drawableUnit, dayToDay, null);
                     drawableUnit.UpdateUnit(unit.Value);
+                    controller.Players[unit.Value.PlayerID!.Value].UnitValue.Value += ReplayActionHelper.CalculateUnitCost(drawableUnit, dayToDay, null) - originalValue;
+                }
                 else
+                {
                     controller.Map.AddUnit(unit.Value);
+                    controller.Players[unit.Value.PlayerID!.Value].UnitValue.Value += ReplayActionHelper.CalculateUnitCost(unit.Value, dayToDay, null);
+                }
             }
 
             if (CreatedUnits != null)
             {
+                var dayToDay = controller.ActivePlayer.ActiveCO.Value.CO.DayToDayPower;
+
                 foreach (var createdUnit in CreatedUnits)
-                    controller.Map.DeleteUnit(createdUnit.UnitID, false);
+                {
+                    var drawableUnit = controller.Map.DeleteUnit(createdUnit.UnitID, false);
+                    controller.ActivePlayer.UnitValue.Value += ReplayActionHelper.CalculateUnitCost(drawableUnit, dayToDay, null);
+                }
             }
 
             controller.UpdateFogOfWar();

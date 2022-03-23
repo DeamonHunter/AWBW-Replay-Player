@@ -53,7 +53,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public MoveUnitAction MoveUnit;
 
-        private List<ReplayUnit> originalUnits = new List<ReplayUnit>();
+        private readonly Dictionary<long, ReplayUnit> originalUnits = new Dictionary<long, ReplayUnit>();
         private ReplayBuilding originalBuilding;
 
         private const int explosion_range = 3;
@@ -87,7 +87,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                 if (distance <= explosion_range)
                 {
-                    originalUnits.Add(unit.Value.Clone());
+                    originalUnits.Add(unit.Key, unit.Value.Clone());
 
                     unit.Value.HitPoints = unit.Value.HitPoints!.Value + HPChange;
 
@@ -97,7 +97,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             foreach (var unit in destroyedUnits)
-                ReplayActionHelper.RemoveUnitFromSetupContext(unit, context, originalUnits);
+                context.RemoveUnitFromSetupContext(unit, originalUnits, out _);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -163,17 +163,17 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             foreach (var replayUnit in originalUnits)
             {
-                var owner = controller.Players[replayUnit.PlayerID!.Value];
-                var originalValue = ReplayActionHelper.CalculateUnitCost(replayUnit, owner.ActiveCO.Value.CO.DayToDayPower, null);
+                var owner = controller.Players[replayUnit.Value.PlayerID!.Value];
+                var originalValue = ReplayActionHelper.CalculateUnitCost(replayUnit.Value, owner.ActiveCO.Value.CO.DayToDayPower, null);
 
-                if (controller.Map.TryGetDrawableUnit(replayUnit.Position!.Value, out var unit))
+                if (controller.Map.TryGetDrawableUnit(replayUnit.Key, out var unit))
                 {
                     owner.UnitValue.Value += (originalValue - ReplayActionHelper.CalculateUnitCost(unit, owner.ActiveCO.Value.CO.DayToDayPower, null));
-                    unit.UpdateUnit(replayUnit);
+                    unit.UpdateUnit(replayUnit.Value);
                 }
                 else
                 {
-                    controller.Map.AddUnit(replayUnit);
+                    controller.Map.AddUnit(replayUnit.Value);
                     owner.UnitValue.Value += originalValue;
                 }
             }
