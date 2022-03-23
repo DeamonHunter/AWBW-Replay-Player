@@ -483,7 +483,7 @@ namespace AWBWApp.Game.Game.Logic
                     foreach (var unit in Map.GetDrawableUnitsFromPlayer(player.Key))
                     {
                         unitCount++;
-                        unitValue += (int)Math.Floor((unit.HealthPoints.Value / 10.0) * unit.UnitData.Cost);
+                        unitValue += ReplayActionHelper.CalculateUnitCost(unit, player.Value.ActiveCO.Value.CO.DayToDayPower, null);
                     }
 
                     foreach (var building in Map.GetDrawableBuildingsForPlayer(player.Key))
@@ -491,7 +491,7 @@ namespace AWBWApp.Game.Game.Logic
                         if (!building.BuildingTile.GivesMoneyWhenCaptured)
                             continue;
 
-                        propertyValue += replayData.ReplayInfo.FundsPerBuilding;
+                        propertyValue += replayData.ReplayInfo.FundsPerBuilding + player.Value.ActiveCO.Value.CO.DayToDayPower.PropertyFundIncrease;
                     }
                 }
 
