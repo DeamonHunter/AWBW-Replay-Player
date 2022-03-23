@@ -171,6 +171,8 @@ namespace AWBWApp.Game.API.Replay.Actions
         private Dictionary<long, int> originalPowers = new Dictionary<long, int>();
         private Dictionary<long, int> originalFunds;
 
+        private Dictionary<Vector2I, int> buildingsHP = new Dictionary<Vector2I, int>();
+
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
             MoveUnit?.SetupAndUpdate(controller, context);
@@ -195,6 +197,12 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 ReplayActionHelper.RemoveUnitFromSetupContext(Attacker.ID, context, originalCargoUnits);
                 attackerValueLost = ReplayActionHelper.CalculateUnitCost(originalAttacker, attackerCO.DayToDayPower, null);
+
+                if (context.Buildings.TryGetValue(attacker.Position!.Value, out var buildingBelow) && buildingBelow.Capture != 20)
+                {
+                    buildingsHP.Add(attacker.Position.Value, buildingBelow.Capture!.Value);
+                    buildingBelow.Capture = 20;
+                }
             }
 
             if (Defender.HitPoints!.Value > 0)
@@ -206,6 +214,12 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 ReplayActionHelper.RemoveUnitFromSetupContext(Defender.ID, context, originalCargoUnits);
                 attackerValueLost = ReplayActionHelper.CalculateUnitCost(originalDefender, defenderCO.DayToDayPower, null);
+
+                if (context.Buildings.TryGetValue(defender.Position!.Value, out var buildingBelow) && buildingBelow.Capture != 20)
+                {
+                    buildingsHP.Add(attacker.Position.Value, buildingBelow.Capture!.Value);
+                    buildingBelow.Capture = 20;
+                }
             }
 
             foreach (var powerChange in PowerChanges)
@@ -341,6 +355,12 @@ namespace AWBWApp.Game.API.Replay.Actions
                     controller.Players[playerID].Funds.Value += funds;
             }
 
+            foreach (var building in buildingsHP)
+            {
+                if (controller.Map.TryGetDrawableBuilding(building.Key, out var drawableBuilding))
+                    drawableBuilding.CaptureHealth.Value = 20;
+            }
+
             foreach (var player in PowerChanges)
             {
                 var playerData = controller.Players[player.PlayerID];
@@ -393,6 +413,12 @@ namespace AWBWApp.Game.API.Replay.Actions
                 var value = controller.Players[power.Key].ActiveCO.Value;
                 value.Power = power.Value;
                 controller.Players[power.Key].ActiveCO.Value = value;
+            }
+
+            foreach (var building in buildingsHP)
+            {
+                if (controller.Map.TryGetDrawableBuilding(building.Key, out var drawableBuilding))
+                    drawableBuilding.CaptureHealth.Value = building.Value;
             }
 
             if (originalFunds != null)
