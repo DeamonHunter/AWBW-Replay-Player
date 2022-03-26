@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
@@ -38,6 +39,8 @@ namespace AWBWApp.Game.Game.Logic
 
         private readonly Container<DrawableUnit> unitsDrawable;
         private Dictionary<long, DrawableUnit> units;
+
+        private readonly UnitRangeIndicator rangeIndicator;
 
         [Resolved]
         private TerrainTileStorage terrainTileStorage { get; set; }
@@ -86,6 +89,7 @@ namespace AWBWApp.Game.Game.Logic
                     GridColor = new Color4(15, 15, 15, 255),
                 },
                 unitsDrawable = new Container<DrawableUnit>(),
+                rangeIndicator = new UnitRangeIndicator(),
                 effectAnimationController = new EffectAnimationController
                 {
                     Origin = Anchor.TopLeft,
@@ -264,13 +268,7 @@ namespace AWBWApp.Game.Game.Logic
             if (replayUnits != null)
             {
                 foreach (var unit in replayUnits)
-                {
-                    var unitData = unitStorage.GetUnitByCode(unit.Value.UnitName);
-                    var country = countryStorage.GetCountryByAWBWID(gameState.ReplayInfo.Players[unit.Value.PlayerID.Value].CountryID);
-                    var drawableUnit = new DrawableUnit(unitData, unit.Value, country);
-                    units.Add(unit.Value.ID, drawableUnit);
-                    unitsDrawable.Add(drawableUnit);
-                }
+                    AddUnit(unit.Value, false);
             }
 
             fogOfWarGenerator = new FogOfWarGenerator(this);
@@ -320,30 +318,14 @@ namespace AWBWApp.Game.Game.Logic
             base.Update();
 
             var cursor = inputManager.CurrentState.Mouse.Position;
-            var localSpace = ToLocalSpace(cursor);
-            localSpace.Y -= DrawableTile.BASE_SIZE.Y;
 
-            if (localSpace.X < 0 || localSpace.X >= DrawSize.X || localSpace.Y < DrawableTile.BASE_SIZE.Y || localSpace.Y >= DrawSize.Y)
-            {
+            if (getUnitAndTileFromMousePosition(ToLocalSpace(cursor), out var tile, out var building, out var unit))
+                infoPopup.ShowDetails(tile, building, unit);
+            else
                 infoPopup.ShowDetails(null, null, null);
-                return;
-            }
 
-            var position = new Vector2I((int)(localSpace.X / DrawableTile.BASE_SIZE.X), (int)(localSpace.Y / DrawableTile.BASE_SIZE.Y));
-
-            //Could be possible that autosize hasn't updated yet
-            if (position.X >= MapSize.X || position.Y >= MapSize.Y)
-            {
-                infoPopup.ShowDetails(null, null, null);
-                return;
-            }
-
-            TryGetDrawableUnit(position, out var unit);
-            buildings.TryGetValue(position, out var building);
-
-            var tile = gameBoard[position.X, position.Y];
-
-            infoPopup.ShowDetails(tile, building, unit);
+            if (unit != selectedUnit)
+                SetUnitAsSelected(null);
         }
 
         private void updateFog(bool[,] fogOfWar)
@@ -432,12 +414,17 @@ namespace AWBWApp.Game.Game.Logic
         public void ClearFog(bool makeFoggy, bool triggerChange) => fogOfWarGenerator.ClearFog(makeFoggy, triggerChange);
         public void UpdateFogOfWar(long playerId, int rangeIncrease, bool canSeeIntoHiddenTiles, bool resetFog = true) => fogOfWarGenerator.GenerateFogForPlayer(playerId, rangeIncrease, canSeeIntoHiddenTiles, resetFog);
 
-        public DrawableUnit AddUnit(ReplayUnit unit)
+        public DrawableUnit AddUnit(ReplayUnit unit, bool schedule = true)
         {
             var unitData = unitStorage.GetUnitByCode(unit.UnitName);
             var drawableUnit = new DrawableUnit(unitData, unit, players[unit.PlayerID!.Value].Country.Value);
             units.Add(unit.ID, drawableUnit);
-            Schedule(() => unitsDrawable.Add(drawableUnit));
+
+            if (schedule)
+                Schedule(() => unitsDrawable.Add(drawableUnit));
+            else
+                unitsDrawable.Add(drawableUnit);
+
             players[unit.PlayerID!.Value].UnitCount.Value++;
             return drawableUnit;
         }
@@ -647,6 +634,206 @@ namespace AWBWApp.Game.Game.Logic
 
         public void OnReleased(KeyBindingReleaseEvent<AWBWGlobalAction> e)
         {
+        }
+
+        private DrawableUnit selectedUnit;
+        private int drawMode;
+
+        public bool SetUnitAsSelected(DrawableUnit unit)
+        {
+            if (unit == null)
+            {
+                drawMode = 0;
+                selectedUnit = null;
+                rangeIndicator.FadeOut(500, Easing.OutQuint);
+                return false;
+            }
+
+            if (unit.BeingCarried.Value)
+                return false;
+            if (!showUnitsInFog.Value && unit.FogOfWarActive.Value)
+                return false;
+
+            if (unit != selectedUnit)
+            {
+                drawMode = 0;
+                selectedUnit = unit;
+            }
+            else if (drawMode >= 2)
+            {
+                drawMode = 0;
+                selectedUnit = null;
+                rangeIndicator.FadeOut(500, Easing.OutCubic);
+                return false;
+            }
+            else
+                drawMode++;
+
+            //PlaySelectionAnimation(unit);
+
+            var tileList = new List<Vector2I>();
+
+            Color4 colour;
+            Color4 outlineColour;
+
+            switch (drawMode)
+            {
+                case 0:
+                    getMovementTiles(unit, tileList);
+                    colour = new Color4(50, 200, 50, 100);
+                    outlineColour = new Color4(100, 150, 100, 255);
+                    break;
+
+                case 1:
+                {
+                    for (int i = unit.UnitData.AttackRange.X; i <= unit.UnitData.AttackRange.Y; i++)
+                    {
+                        foreach (var tile in Vec2IHelper.GetAllTilesWithDistance(unit.MapPosition, i))
+                        {
+                            if (tile.X < 0 || tile.Y < 0 || tile.X >= MapSize.X || tile.Y >= MapSize.Y)
+                                continue;
+
+                            tileList.Add(tile);
+                        }
+                    }
+
+                    colour = new Color4(200, 50, 50, 100);
+                    outlineColour = new Color4(150, 100, 100, 255);
+                    break;
+                }
+
+                case 2:
+                {
+                    for (int i = 1; i <= unit.UnitData.Vision; i++)
+                    {
+                        foreach (var tile in Vec2IHelper.GetAllTilesWithDistance(unit.MapPosition, i))
+                        {
+                            if (tile.X < 0 || tile.Y < 0 || tile.X >= MapSize.X || tile.Y >= MapSize.Y)
+                                continue;
+
+                            var distance = gameBoard[tile.X, tile.Y].TerrainTile.LimitFogOfWarSightDistance;
+                            if (distance > 0 && distance < i)
+                                continue;
+
+                            tileList.Add(tile);
+                        }
+                    }
+
+                    colour = new Color4(50, 50, 200, 100);
+                    outlineColour = new Color4(100, 100, 150, 255);
+                    break;
+                }
+
+                default:
+                    throw new ArgumentException("Out of range", nameof(drawMode));
+            }
+
+            rangeIndicator.ShowNewRange(tileList, unit.MapPosition, colour, outlineColour);
+
+            return true;
+        }
+
+        protected override bool OnClick(ClickEvent e)
+        {
+            if (getUnitAndTileFromMousePosition(e.MousePosition, out _, out _, out var unit) && unit != null)
+                return SetUnitAsSelected(unit);
+
+            return base.OnClick(e);
+        }
+
+        private bool getUnitAndTileFromMousePosition(Vector2 cursor, out DrawableTile tile, out DrawableBuilding building, out DrawableUnit unit)
+        {
+            tile = null;
+            building = null;
+            unit = null;
+
+            if (cursor.X < 0 || cursor.X >= DrawSize.X)
+                return false;
+            if (cursor.Y < DrawableTile.BASE_SIZE.Y || cursor.Y >= DrawSize.Y)
+                return false;
+
+            cursor.Y -= DrawableTile.BASE_SIZE.Y;
+
+            //Doubly make sure that we aren't trying to get a tile outside of what we have.
+            var tilePosition = new Vector2I((int)(cursor.X / DrawableTile.BASE_SIZE.X), (int)(cursor.Y / DrawableTile.BASE_SIZE.Y));
+            if (tilePosition.X < 0 || tilePosition.X >= MapSize.X || tilePosition.Y < 0 || tilePosition.Y >= MapSize.Y)
+                return false;
+
+            TryGetDrawableUnit(tilePosition, out unit);
+            buildings.TryGetValue(tilePosition, out building);
+            tile = gameBoard[tilePosition.X, tilePosition.Y];
+            Debug.Assert(tile != null);
+
+            return true;
+        }
+
+        private void getMovementTiles(DrawableUnit unit, List<Vector2I> positions)
+        {
+            var visited = new HashSet<Vector2I>();
+            var queue = new PriorityQueue<Vector2I, int>();
+
+            queue.Enqueue(unit.MapPosition, 0);
+
+            while (queue.TryDequeue(out var tilePos, out var movement))
+            {
+                if (visited.Contains(tilePos))
+                    continue;
+
+                visited.Add(tilePos);
+                positions.Add(tilePos);
+
+                var nextTile = tilePos + new Vector2I(1, 0);
+
+                if (tilePos.X < MapSize.X && !visited.Contains(nextTile))
+                {
+                    var moveCosts = gameBoard[nextTile.X, nextTile.Y].TerrainTile.MovementCostsPerType;
+
+                    if (moveCosts.TryGetValue(unit.UnitData.MovementType, out var cost))
+                    {
+                        if (movement + cost <= unit.UnitData.MovementRange)
+                            queue.Enqueue(nextTile, movement + cost);
+                    }
+                }
+
+                nextTile = tilePos + new Vector2I(-1, 0);
+
+                if (tilePos.X >= 0 && !visited.Contains(nextTile))
+                {
+                    var moveCosts = gameBoard[nextTile.X, nextTile.Y].TerrainTile.MovementCostsPerType;
+
+                    if (moveCosts.TryGetValue(unit.UnitData.MovementType, out var cost))
+                    {
+                        if (movement + cost <= unit.UnitData.MovementRange)
+                            queue.Enqueue(nextTile, movement + cost);
+                    }
+                }
+
+                nextTile = tilePos + new Vector2I(0, 1);
+
+                if (tilePos.Y < MapSize.X && !visited.Contains(nextTile))
+                {
+                    var moveCosts = gameBoard[nextTile.X, nextTile.Y].TerrainTile.MovementCostsPerType;
+
+                    if (moveCosts.TryGetValue(unit.UnitData.MovementType, out var cost))
+                    {
+                        if (movement + cost <= unit.UnitData.MovementRange)
+                            queue.Enqueue(nextTile, movement + cost);
+                    }
+                }
+
+                nextTile = tilePos + new Vector2I(0, -1);
+
+                if (tilePos.Y >= 0 && !visited.Contains(nextTile))
+                {
+                    var moveCosts = gameBoard[nextTile.X, nextTile.Y].TerrainTile.MovementCostsPerType;
+
+                    if (moveCosts.TryGetValue(unit.UnitData.MovementType, out var cost))
+                    {
+                        if (movement + cost <= unit.UnitData.MovementRange)
+                            queue.Enqueue(nextTile, movement + cost);
+                    }
+                }
+            }
         }
 
         private long? getPlayerIDFromCountryID(int countryID) => players.FirstOrDefault(x => x.Value.Country.Value.AWBWID == countryID).Value?.ID;
