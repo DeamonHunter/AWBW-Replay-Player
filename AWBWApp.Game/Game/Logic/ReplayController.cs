@@ -421,8 +421,8 @@ namespace AWBWApp.Game.Game.Logic
                     return;
                 }
 
-                CurrentTurnIndex.Value -= 1;
                 currentTurn = turn;
+                CurrentTurnIndex.Value -= 1;
                 currentActionIndex = turn.Actions.Count - 1;
 
                 try
