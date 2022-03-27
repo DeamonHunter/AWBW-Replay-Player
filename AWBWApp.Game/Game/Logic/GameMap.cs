@@ -72,7 +72,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private DetailedInformationPopup infoPopup;
 
-        private const int unitDeselectDelay = 300;
+        private const int unit_deselect_delay = 500;
         private ScheduledDelegate unitDeselectDelegate;
 
         [Resolved]
@@ -331,8 +331,8 @@ namespace AWBWApp.Game.Game.Logic
 
             if (unit != selectedUnit)
             {
-                if (unitDeselectDelegate != null)
-                    unitDeselectDelegate = Scheduler.AddDelayed(() => SetUnitAsSelected(null), unitDeselectDelay);
+                if (unitDeselectDelegate == null)
+                    unitDeselectDelegate = Scheduler.AddDelayed(() => SetUnitAsSelected(null), unit_deselect_delay);
             }
             else if (unitDeselectDelegate != null)
             {
@@ -729,6 +729,7 @@ namespace AWBWApp.Game.Game.Logic
                     var dayToDayPower = replayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
                     var action = replayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
                     var sightRangeModifier = dayToDayPower.SightIncrease + (action?.SightRangeIncrease ?? 0);
+                    sightRangeModifier += unit.UnitData.MovementType != MovementType.Air ? gameBoard[unit.MapPosition.X, unit.MapPosition.Y].TerrainTile.SightDistanceIncrease : 0;
 
                     for (int i = 0; i <= unit.UnitData.Vision + sightRangeModifier; i++)
                     {
