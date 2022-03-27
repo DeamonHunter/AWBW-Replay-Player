@@ -45,7 +45,8 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                     {
                         new ToggleMenuItem("Show Grid", localConfig.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap)),
                         new ToggleMenuItem("Show Hidden Units", localConfig.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits)),
-                        new ToggleMenuItem("Skip End Turn", localConfig.GetBindable<bool>(AWBWSetting.ReplaySkipEndTurn))
+                        new ToggleMenuItem("Skip End Turn", localConfig.GetBindable<bool>(AWBWSetting.ReplaySkipEndTurn)),
+                        new ToggleMenuItem("Short Action Tooltips", localConfig.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips))
                     }
                 }
             }, notificationOverlay));

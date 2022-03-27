@@ -57,6 +57,7 @@ namespace AWBWApp.Game.Game.Logic
         private readonly DetailedInformationPopup infoPopup;
 
         private IBindable<bool> skipEndTurnBindable;
+        private IBindable<bool> shortenActionTooltipsBindable;
         public Dictionary<long, PlayerInfo> Players { get; private set; } = new Dictionary<long, PlayerInfo>();
         public PlayerInfo ActivePlayer => currentTurn != null ? Players[currentTurn.ActivePlayerID] : null;
 
@@ -126,6 +127,7 @@ namespace AWBWApp.Game.Game.Logic
         private void load(AWBWConfigManager configManager)
         {
             skipEndTurnBindable = configManager.GetBindable<bool>(AWBWSetting.ReplaySkipEndTurn);
+            shortenActionTooltipsBindable = configManager.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips);
         }
 
         protected override void Update()
@@ -305,7 +307,7 @@ namespace AWBWApp.Game.Game.Logic
                         if (HasNextTurn())
                         {
                             var nextTurn = replayData.TurnData[CurrentTurnIndex.Value + 1];
-                            return nextTurn.Actions != null && nextTurn.Actions.Count > 0 ? nextTurn.Actions[0].GetReadibleName(this, false) : "Next Turn";
+                            return nextTurn.Actions != null && nextTurn.Actions.Count > 0 ? nextTurn.Actions[0].GetReadibleName(this, shortenActionTooltipsBindable.Value) : "Next Turn";
                         }
 
                         return null;
@@ -313,7 +315,7 @@ namespace AWBWApp.Game.Game.Logic
                 }
 
                 if (currentActionIndex + 1 < currentTurn.Actions.Count)
-                    return currentTurn.Actions[currentActionIndex + 1].GetReadibleName(this, false);
+                    return currentTurn.Actions[currentActionIndex + 1].GetReadibleName(this, shortenActionTooltipsBindable.Value);
             }
 
             return "Next Turn";
@@ -325,7 +327,7 @@ namespace AWBWApp.Game.Game.Logic
                 return null;
 
             if (currentActionIndex >= 0)
-                return currentTurn.Actions[currentActionIndex].GetReadibleName(this, false);
+                return currentTurn.Actions[currentActionIndex].GetReadibleName(this, shortenActionTooltipsBindable.Value);
 
             return "Previous Turn";
         }
