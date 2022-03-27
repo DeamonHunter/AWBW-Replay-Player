@@ -4,7 +4,9 @@ using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
+using osu.Framework.Graphics;
 using osu.Framework.Logging;
+using osuTK;
 
 namespace AWBWApp.Game.API.Replay.Actions
 {
@@ -73,6 +75,8 @@ namespace AWBWApp.Game.API.Replay.Actions
         private ReplayBuilding originalBuilding;
         private Dictionary<long, int> originalIncomes;
 
+        private ReplayUnit originalUnit;
+
         public string GetReadibleName(ReplayController controller, bool shortName)
         {
             if (shortName || !controller.Map.TryGetDrawableBuilding(originalBuilding.Position, out var building))
@@ -81,8 +85,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             string moveUnitString;
             if (MoveUnit != null && controller.Map.TryGetDrawableUnit(MoveUnit.Unit.ID, out var moveUnit))
                 moveUnitString = $"{moveUnit.UnitData.Name} Moves + ";
-            else if (controller.Map.TryGetDrawableUnit(originalBuilding.Position, out var unit))
-                moveUnitString = $"{unit.UnitData.Name} ";
+            else if (originalUnit != null)
+                moveUnitString = $"{originalUnit.UnitName} ";
             else
                 moveUnitString = "";
 
@@ -104,7 +108,10 @@ namespace AWBWApp.Game.API.Replay.Actions
             foreach (var unit in context.Units)
             {
                 if (unit.Value.Position == building.Position)
+                {
+                    originalUnit = unit.Value.Clone();
                     unit.Value.TimesMoved = 1;
+                }
             }
 
             if (IncomeChanges != null)
@@ -122,7 +129,6 @@ namespace AWBWApp.Game.API.Replay.Actions
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Capture Action.");
-            Logger.Log("Todo: Building capture animation not implemented.");
 
             if (MoveUnit != null)
             {
@@ -131,7 +137,27 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             if (controller.Map.TryGetDrawableUnit(Building.Position, out var capturingUnit))
+            {
+                capturingUnit.FadeTo(0.5f, 250, Easing.OutCubic);
+                var anim = controller.Map.PlaySelectionAnimation(capturingUnit);
+
+                yield return ReplayWait.WaitForTransformable(anim);
+
                 capturingUnit.CanMove.Value = false;
+            }
+
+            if (controller.Map.TryGetDrawableBuilding(Building.Position, out var capturingBuilding))
+            {
+                if (capturingUnit == null)
+                {
+                    var anim = controller.Map.PlaySelectionAnimation(capturingBuilding);
+                    yield return ReplayWait.WaitForTransformable(anim);
+                }
+
+                capturingBuilding.MoveToOffset(new Vector2(3, 0), 30).Then().MoveToOffset(new Vector2(-6, 0), 60).Then().MoveToOffset(new Vector2(3, 0), 30);
+
+                yield return ReplayWait.WaitForTransformable(capturingBuilding);
+            }
 
             controller.Map.UpdateBuilding(Building, false); //This will set the unit above to be capturing
 
@@ -139,6 +165,27 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 foreach (var incomeChange in IncomeChanges)
                     controller.Players[incomeChange.Key].PropertyValue.Value = incomeChange.Value;
+            }
+
+            if (controller.Map.TryGetDrawableBuilding(Building.Position, out capturingBuilding))
+            {
+                capturingBuilding.MoveToOffset(new Vector2(3, 0), 30).Then().MoveToOffset(new Vector2(-6, 0), 60).Then().MoveToOffset(new Vector2(3, 0), 30);
+
+                if (Building.TerrainID.HasValue && Building.TerrainID != originalBuilding.TerrainID)
+                {
+                    capturingBuilding.ScaleTo(new Vector2(1.25f), 200, Easing.InOutSine).MoveToOffset(new Vector2(-2, -4), 200, Easing.InOutSine)
+                                     .Then().ScaleTo(new Vector2(1f), 200, Easing.InOutSine).MoveToOffset(new Vector2(2, 4), 200, Easing.InOutSine);
+                }
+                else
+                    capturingBuilding.MoveToOffset(new Vector2(3, 0), 30).Then().MoveToOffset(new Vector2(-6, 0), 60).Then().MoveToOffset(new Vector2(3, 0), 30);
+
+                yield return ReplayWait.WaitForTransformable(capturingBuilding);
+            }
+
+            if (capturingUnit != null)
+            {
+                capturingUnit?.FadeTo(capturingUnit.Dived.Value ? 0.7f : 1, 250, Easing.OutCubic);
+                yield return ReplayWait.WaitForTransformable(capturingUnit);
             }
 
             //Capturing a building can eliminate a player. i.e. They have no buildings left or reached the total building goal.

@@ -499,6 +499,14 @@ namespace AWBWApp.Game.Game.Logic
             return effect;
         }
 
+        public EffectAnimation PlaySelectionAnimation(DrawableBuilding building)
+        {
+            var effect = PlayEffect("Effects/Select", 100, building.MapPosition, 0,
+                x => x.FadeTo(0.5f).ScaleTo(0.5f)
+                      .FadeTo(1, 150, Easing.In).ScaleTo(1, 300, Easing.OutBounce).Then().Expire());
+            return effect;
+        }
+
         public DrawableUnit GetDrawableUnit(Vector2I unitPosition)
         {
             //Todo: query by position rather than iterate over everything
