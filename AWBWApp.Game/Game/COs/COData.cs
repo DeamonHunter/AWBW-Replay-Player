@@ -14,9 +14,6 @@ namespace AWBWApp.Game.Game.COs
         public int AWBWId { get; set; }
 
         [JsonProperty]
-        public int? SecondaryAWBWId { get; set; }
-
-        [JsonProperty]
         public COPower DayToDayPower;
 
         [JsonProperty]
