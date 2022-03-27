@@ -13,13 +13,13 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
-            Logger.Log("Empty action performed");
+            Logger.Log("Performing Empty Action.");
             yield break;
         }
 
         public void UndoAction(ReplayController controller)
         {
-            Logger.Log("Empty action Undone.");
+            Logger.Log("Undoing Empty Action.");
         }
     }
 }

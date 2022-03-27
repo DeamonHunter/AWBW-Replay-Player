@@ -78,7 +78,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
-            Logger.Log("Performing Supply Action.");
+            Logger.Log("Performing Load Action.");
             Logger.Log("Load animation not completed.");
 
             if (MoveUnit != null)
@@ -96,6 +96,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
+            Logger.Log("Undoing Load Action.");
+
             var loadingUnit = controller.Map.GetDrawableUnit(LoadedID);
             var transportUnit = controller.Map.GetDrawableUnit(TransportID);
 

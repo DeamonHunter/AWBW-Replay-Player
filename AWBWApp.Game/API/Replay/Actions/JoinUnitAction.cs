@@ -113,6 +113,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
+            Logger.Log("Undoing Join Action.");
+
             controller.Map.AddUnit(originalJoiningUnit);
             controller.Map.GetDrawableUnit(originalJoinedUnit.ID).UpdateUnit(originalJoinedUnit);
 

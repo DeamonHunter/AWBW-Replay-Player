@@ -106,6 +106,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
+            Logger.Log("Undoing Unload Action.");
+
             var unloadingUnit = controller.Map.GetDrawableUnit(UnloadedUnit.ID);
             var transportUnit = controller.Map.GetDrawableUnit(TransportID);
 

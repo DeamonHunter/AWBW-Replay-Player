@@ -84,10 +84,11 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
+            Logger.Log("Performing Move Action.");
+
             if (!Unit.Position.HasValue)
                 throw new Exception("Improperly made Move Unit Action. Final outcome missing position.");
 
-            Logger.Log("Performing Move Action.");
             var unit = controller.Map.GetDrawableUnit(Unit.ID);
 
             if (belowBuildingHP != null)
@@ -182,6 +183,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public void UndoAction(ReplayController controller)
         {
             Logger.Log("Undoing Move Action.");
+
             var unit = controller.Map.GetDrawableUnit(Unit.ID);
             unit.UpdateUnit(originalUnit);
 

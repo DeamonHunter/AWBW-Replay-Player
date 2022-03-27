@@ -445,6 +445,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
+            Logger.Log("Performing Power Action.");
+
             var powerAnimation = new PowerDisplay(CombatOfficerName, PowerName, IsSuperPower);
             controller.AddGenericActionAnimation(powerAnimation);
             yield return ReplayWait.WaitForTransformable(powerAnimation);
@@ -642,6 +644,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
+            Logger.Log("Undoing Power Action.");
+
             if (ChangeToWeather.HasValue)
                 controller.Map.CurrentWeather.Value = originalWeather;
 

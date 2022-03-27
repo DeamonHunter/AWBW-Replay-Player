@@ -6,6 +6,7 @@ using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Replay;
 using Newtonsoft.Json.Linq;
+using osu.Framework.Logging;
 
 namespace AWBWApp.Game.API.Replay.Actions
 {
@@ -212,6 +213,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
+            Logger.Log("Performing Elimination Action.");
+
             var powerAnimation = new EliminationPopupDrawable(controller.Players[EliminatedPlayerID], EliminationMessage, Resigned);
             controller.AddGenericActionAnimation(powerAnimation);
             yield return ReplayWait.WaitForTransformable(powerAnimation);
@@ -227,8 +230,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
-            GameOverAction?.UndoAction(controller);
+            Logger.Log("Undoing Elimination Action.");
 
+            GameOverAction?.UndoAction(controller);
             controller.Players[EliminatedPlayerID].Eliminated.Value = false;
         }
     }

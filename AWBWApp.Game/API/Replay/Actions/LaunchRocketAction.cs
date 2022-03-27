@@ -176,6 +176,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
+            Logger.Log("Undoing Launch Action.");
+
             foreach (var replayUnit in originalUnits)
             {
                 var owner = controller.Players[replayUnit.Value.PlayerID!.Value];

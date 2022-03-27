@@ -251,6 +251,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
+            Logger.Log("Performing Attack Action.");
+
             var attackerUnit = controller.Map.GetDrawableUnit(Attacker.ID);
             var defenderUnit = controller.Map.GetDrawableUnit(Defender.ID);
 
@@ -401,6 +403,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
+            Logger.Log("Undoing Attack Action.");
+
             foreach (var cargoUnit in originalUnits)
                 controller.Map.AddUnit(cargoUnit.Value);
 

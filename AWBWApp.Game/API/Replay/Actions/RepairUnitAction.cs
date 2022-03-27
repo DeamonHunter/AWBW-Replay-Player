@@ -122,6 +122,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
+            Logger.Log("Undoing Repair Action.");
+
             controller.Map.GetDrawableUnit(RepairedUnitID).UpdateUnit(originalRepairedUnit);
             controller.ActivePlayer.Funds.Value -= repairCost;
             controller.ActivePlayer.UnitValue.Value -= repairValue;

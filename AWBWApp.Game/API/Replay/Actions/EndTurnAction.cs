@@ -6,6 +6,7 @@ using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Replay;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics;
+using osu.Framework.Logging;
 using osuTK;
 
 namespace AWBWApp.Game.API.Replay.Actions
@@ -177,6 +178,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
+            Logger.Log("Performing End Turn Action.");
+
             var player = controller.Players[NextPlayerID];
 
             var endTurnPopup = new EndTurnPopupDrawable(player, NextDay);
@@ -228,6 +231,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
+            Logger.Log("Undoing End Turn Action.");
+
             foreach (var unit in originalUnits)
                 controller.Map.GetDrawableUnit(unit.Key).UpdateUnit(unit.Value);
 

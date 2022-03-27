@@ -109,6 +109,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void UndoAction(ReplayController controller)
         {
+            Logger.Log("Undoing Supply Action.");
+
             foreach (var unit in originalUnits)
                 controller.Map.GetDrawableUnit(unit.ID).UpdateUnit(unit);
 

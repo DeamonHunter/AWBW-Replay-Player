@@ -4,6 +4,7 @@ using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Replay;
 using Newtonsoft.Json.Linq;
+using osu.Framework.Logging;
 
 namespace AWBWApp.Game.API.Replay.Actions
 {
@@ -63,11 +64,16 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
+            Logger.Log("Performing Game Over Action.");
+
             var powerAnimation = new EndGamePopupDrawable(controller.Players, Winners, Losers, EndMessage);
             controller.AddGenericActionAnimation(powerAnimation);
             yield return ReplayWait.WaitForTransformable(powerAnimation);
         }
 
-        public void UndoAction(ReplayController controller) { }
+        public void UndoAction(ReplayController controller)
+        {
+            Logger.Log("Undoing Game Over Action.");
+        }
     }
 }
