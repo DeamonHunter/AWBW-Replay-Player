@@ -472,16 +472,19 @@ namespace AWBWApp.Game.API.Replay.Actions
                 for (int i = 0; i < MissileCoords.Count; i++)
                 {
                     var coord = MissileCoords[i];
-                    var target = controller.Map.PlayEffect("Effects/Target", 1500, coord, i * 250, x =>
+
+                    var isSturm = CombatOfficerName == "Sturm";
+
+                    var target = controller.Map.PlayEffect(isSturm ? "Effects/Meteor" : "Effects/Target", 1500, coord, i * 250, x =>
                     {
-                        x.ScaleTo(10).ScaleTo(1, 1000, Easing.In)
+                        x.ScaleTo(8 * (isSturm ? 0.5f : 1f)).ScaleTo(1, 1000, Easing.In)
                          .FadeTo(1, 500)
                          .RotateTo(0).RotateTo(90 * 4, 1200, Easing.Out).Then().Expire();
                     });
 
                     waitForEffects.Add(target);
 
-                    var explosion = controller.Map.PlayEffect("Effects/Explosion/Explosion-Land", 500, coord + new Vector2I(0, -1), 1350 + i * 250, x => x.ScaleTo(3));
+                    var explosion = controller.Map.PlayEffect("Effects/Explosion/Explosion-Land", 500, coord + new Vector2I(0, -1), isSturm ? 1100 + i * 250 : 1350 + i * 250, x => x.ScaleTo(3));
                     waitForEffects.Add(explosion);
                 }
 
@@ -642,6 +645,13 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (ChangeToWeather.HasValue)
                 controller.Map.CurrentWeather.Value = originalWeather;
 
+            var co = controller.COStorage.GetCOByName(CombatOfficerName);
+            var coValue = controller.ActivePlayer.ActiveCO.Value;
+            if (co.NormalPower != null)
+                coValue.PowerRequiredForNormal -= 18000 * co.NormalPower.PowerStars;
+            if (co.SuperPower != null)
+                coValue.PowerRequiredForSuper -= 18000 * co.SuperPower.PowerStars;
+            controller.ActivePlayer.ActiveCO.Value = coValue;
             controller.ActivePlayer.ActivePower.Value = ActiveCOPower.None;
 
             foreach (var power in originalPowers)
