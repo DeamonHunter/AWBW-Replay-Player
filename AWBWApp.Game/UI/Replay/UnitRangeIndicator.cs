@@ -57,9 +57,6 @@ namespace AWBWApp.Game.UI.Replay
 
             foreach (var position in positions)
             {
-                if (position == center)
-                    continue;
-
                 var x = position.X - center.X;
                 var y = position.Y - center.Y;
 

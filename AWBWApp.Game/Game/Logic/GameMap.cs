@@ -690,7 +690,8 @@ namespace AWBWApp.Game.Game.Logic
             else
                 drawMode++;
 
-            //PlaySelectionAnimation(unit);
+            if (drawMode == 1 && unit.UnitData.AttackRange == Vector2I.Zero)
+                drawMode++;
 
             var tileList = new List<Vector2I>();
 
@@ -729,7 +730,7 @@ namespace AWBWApp.Game.Game.Logic
                     var action = replayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
                     var sightRangeModifier = dayToDayPower.SightIncrease + (action?.SightRangeIncrease ?? 0);
 
-                    for (int i = 1; i <= unit.UnitData.Vision + sightRangeModifier; i++)
+                    for (int i = 0; i <= unit.UnitData.Vision + sightRangeModifier; i++)
                     {
                         foreach (var tile in Vec2IHelper.GetAllTilesWithDistance(unit.MapPosition, i))
                         {
@@ -803,7 +804,11 @@ namespace AWBWApp.Game.Game.Logic
 
             void addTileIfCanMoveTo(Vector2I position, int movement)
             {
-                var moveCosts = gameBoard[position.X, position.Y].TerrainTile.MovementCostsPerType;
+                Dictionary<MovementType, int> moveCosts;
+                if (TryGetDrawableBuilding(position, out var building))
+                    moveCosts = building.BuildingTile.MovementCostsPerType;
+                else
+                    moveCosts = gameBoard[position.X, position.Y].TerrainTile.MovementCostsPerType;
 
                 if (moveCosts.TryGetValue(unit.UnitData.MovementType, out var cost))
                 {
@@ -821,19 +826,19 @@ namespace AWBWApp.Game.Game.Logic
                 positions.Add(tilePos);
 
                 var nextTile = tilePos + new Vector2I(1, 0);
-                if (tilePos.X < MapSize.X && !visited.Contains(nextTile))
+                if (nextTile.X < MapSize.X && !visited.Contains(nextTile))
                     addTileIfCanMoveTo(nextTile, movement);
 
                 nextTile = tilePos + new Vector2I(-1, 0);
-                if (tilePos.X >= 0 && !visited.Contains(nextTile))
+                if (nextTile.X >= 0 && !visited.Contains(nextTile))
                     addTileIfCanMoveTo(nextTile, movement);
 
                 nextTile = tilePos + new Vector2I(0, 1);
-                if (tilePos.Y < MapSize.Y && !visited.Contains(nextTile))
+                if (nextTile.Y < MapSize.Y && !visited.Contains(nextTile))
                     addTileIfCanMoveTo(nextTile, movement);
 
                 nextTile = tilePos + new Vector2I(0, -1);
-                if (tilePos.Y >= 0 && !visited.Contains(nextTile))
+                if (nextTile.Y >= 0 && !visited.Contains(nextTile))
                     addTileIfCanMoveTo(nextTile, movement);
             }
         }
