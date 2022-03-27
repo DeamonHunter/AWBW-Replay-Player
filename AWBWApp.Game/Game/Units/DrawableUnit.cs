@@ -55,6 +55,9 @@ namespace AWBWApp.Game.Game.Unit
         public BindableBool IsCapturing = new BindableBool();
         public BindableBool BeingCarried = new BindableBool();
 
+        public BindableInt MovementRange = new BindableInt();
+        public Bindable<Vector2I> AttackRange = new Bindable<Vector2I>();
+
         public BindableBool Dived = new BindableBool();
         public Vector2I MapPosition { get; private set; }
 
@@ -95,6 +98,9 @@ namespace AWBWApp.Game.Game.Unit
                 }
             };
 
+            MovementRange.Value = unitData.MovementRange;
+            AttackRange.Value = unitData.AttackRange;
+
             HealthPoints.BindValueChanged(UpdateHp);
             IsCapturing.BindValueChanged(updateCapturing);
             BeingCarried.BindValueChanged(_ => updateCarried());
@@ -124,6 +130,12 @@ namespace AWBWApp.Game.Game.Unit
 
             if (unit.Position.HasValue)
                 MoveToPosition(unit.Position.Value);
+
+            if (unit.MovementPoints.HasValue)
+                MovementRange.Value = unit.MovementPoints.Value;
+
+            if (unit.Range.HasValue && unit.Range != Vector2I.Zero)
+                AttackRange.Value = unit.Range.Value;
 
             Cargo.Clear();
 

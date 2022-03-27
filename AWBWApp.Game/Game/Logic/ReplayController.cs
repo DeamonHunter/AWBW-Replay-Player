@@ -91,7 +91,7 @@ namespace AWBWApp.Game.Game.Logic
                     MapSpace = mapPadding,
                     MovementRegion = safeMovement,
                     RelativeSizeAxes = Axes.Both,
-                    Child = Map = new GameMap(),
+                    Child = Map = new GameMap(this),
                 },
                 powerLayer = new Container
                 {
@@ -210,7 +210,7 @@ namespace AWBWApp.Game.Game.Logic
             setupActions();
             updatePlayerList(0, true, false);
 
-            Map.ScheduleInitialGameState(this.replayData, map, Players);
+            Map.ScheduleInitialGameState(this.replayData, map);
 
             //Todo: Ew
             ScheduleAfterChildren(() =>
@@ -585,9 +585,7 @@ namespace AWBWApp.Game.Game.Logic
         private void calculateFogForPlayer(long playerID, bool resetFog)
         {
             var dayToDayPower = Players[playerID].ActiveCO.Value.CO.DayToDayPower;
-
             var action = GetActivePowerForPlayer(playerID);
-
             var sightRangeModifier = dayToDayPower.SightIncrease + (action?.SightRangeIncrease ?? 0);
 
             if (currentTurn.StartWeather.Type == Weather.Rain)

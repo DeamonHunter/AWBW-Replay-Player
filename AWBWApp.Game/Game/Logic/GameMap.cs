@@ -20,6 +20,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
+using osu.Framework.Threading;
 using osuTK;
 using osuTK.Graphics;
 
@@ -60,7 +61,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private readonly EffectAnimationController effectAnimationController;
 
-        private Dictionary<long, PlayerInfo> players;
+        private ReplayController replayController;
 
         private readonly MovingGrid grid;
 
@@ -71,11 +72,16 @@ namespace AWBWApp.Game.Game.Logic
 
         private DetailedInformationPopup infoPopup;
 
+        private const int unitDeselectDelay = 300;
+        private ScheduledDelegate unitDeselectDelegate;
+
         [Resolved]
         private AWBWAppUserInputManager inputManager { get; set; }
 
-        public GameMap()
+        public GameMap(ReplayController controller)
         {
+            replayController = controller;
+
             AddRange(new Drawable[]
             {
                 gameBoardDrawable = new Container<DrawableTile>(),
@@ -191,9 +197,8 @@ namespace AWBWApp.Game.Game.Logic
             infoPopup = popup;
         }
 
-        public void ScheduleInitialGameState(ReplayData gameState, ReplayMap map, Dictionary<long, PlayerInfo> players)
+        public void ScheduleInitialGameState(ReplayData gameState, ReplayMap map)
         {
-            this.players = players;
             Schedule(() =>
             {
                 setToInitialGameState(gameState, map);
@@ -325,7 +330,15 @@ namespace AWBWApp.Game.Game.Logic
                 infoPopup.ShowDetails(null, null, null);
 
             if (unit != selectedUnit)
-                SetUnitAsSelected(null);
+            {
+                if (unitDeselectDelegate != null)
+                    unitDeselectDelegate = Scheduler.AddDelayed(() => SetUnitAsSelected(null), unitDeselectDelay);
+            }
+            else if (unitDeselectDelegate != null)
+            {
+                unitDeselectDelegate.Cancel();
+                unitDeselectDelegate = null;
+            }
         }
 
         private void updateFog(bool[,] fogOfWar)
@@ -379,7 +392,7 @@ namespace AWBWApp.Game.Game.Logic
                 else
                 {
                     var unitData = unitStorage.GetUnitByCode(unit.Value.UnitName);
-                    var drawableUnit = new DrawableUnit(unitData, unit.Value, players[unit.Value.PlayerID.Value].Country.Value);
+                    var drawableUnit = new DrawableUnit(unitData, unit.Value, replayController.Players[unit.Value.PlayerID.Value].Country.Value);
                     units.Add(unit.Value.ID, drawableUnit);
                     unitsDrawable.Add(drawableUnit);
                 }
@@ -417,7 +430,7 @@ namespace AWBWApp.Game.Game.Logic
         public DrawableUnit AddUnit(ReplayUnit unit, bool schedule = true)
         {
             var unitData = unitStorage.GetUnitByCode(unit.UnitName);
-            var drawableUnit = new DrawableUnit(unitData, unit, players[unit.PlayerID!.Value].Country.Value);
+            var drawableUnit = new DrawableUnit(unitData, unit, replayController.Players[unit.PlayerID!.Value].Country.Value);
             units.Add(unit.ID, drawableUnit);
 
             if (schedule)
@@ -425,7 +438,7 @@ namespace AWBWApp.Game.Game.Logic
             else
                 unitsDrawable.Add(drawableUnit);
 
-            players[unit.PlayerID!.Value].UnitCount.Value++;
+            replayController.Players[unit.PlayerID!.Value].UnitCount.Value++;
             return drawableUnit;
         }
 
@@ -445,7 +458,7 @@ namespace AWBWApp.Game.Game.Logic
 
             unitsDrawable.Remove(unit);
             if (unit.OwnerID.HasValue)
-                players[unit.OwnerID.Value].UnitCount.Value--;
+                replayController.Players[unit.OwnerID.Value].UnitCount.Value--;
 
             if (unit.Cargo != null)
             {
@@ -694,7 +707,7 @@ namespace AWBWApp.Game.Game.Logic
 
                 case 1:
                 {
-                    for (int i = unit.UnitData.AttackRange.X; i <= unit.UnitData.AttackRange.Y; i++)
+                    for (int i = unit.AttackRange.Value.X; i <= unit.AttackRange.Value.Y; i++)
                     {
                         foreach (var tile in Vec2IHelper.GetAllTilesWithDistance(unit.MapPosition, i))
                         {
@@ -712,7 +725,11 @@ namespace AWBWApp.Game.Game.Logic
 
                 case 2:
                 {
-                    for (int i = 1; i <= unit.UnitData.Vision; i++)
+                    var dayToDayPower = replayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+                    var action = replayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
+                    var sightRangeModifier = dayToDayPower.SightIncrease + (action?.SightRangeIncrease ?? 0);
+
+                    for (int i = 1; i <= unit.UnitData.Vision + sightRangeModifier; i++)
                     {
                         foreach (var tile in Vec2IHelper.GetAllTilesWithDistance(unit.MapPosition, i))
                         {
@@ -782,6 +799,19 @@ namespace AWBWApp.Game.Game.Logic
 
             queue.Enqueue(unit.MapPosition, 0);
 
+            var movementRange = unit.MovementRange.Value;
+
+            void addTileIfCanMoveTo(Vector2I position, int movement)
+            {
+                var moveCosts = gameBoard[position.X, position.Y].TerrainTile.MovementCostsPerType;
+
+                if (moveCosts.TryGetValue(unit.UnitData.MovementType, out var cost))
+                {
+                    if (movement + cost <= movementRange)
+                        queue.Enqueue(position, movement + cost);
+                }
+            }
+
             while (queue.TryDequeue(out var tilePos, out var movement))
             {
                 if (visited.Contains(tilePos))
@@ -791,60 +821,24 @@ namespace AWBWApp.Game.Game.Logic
                 positions.Add(tilePos);
 
                 var nextTile = tilePos + new Vector2I(1, 0);
-
                 if (tilePos.X < MapSize.X && !visited.Contains(nextTile))
-                {
-                    var moveCosts = gameBoard[nextTile.X, nextTile.Y].TerrainTile.MovementCostsPerType;
-
-                    if (moveCosts.TryGetValue(unit.UnitData.MovementType, out var cost))
-                    {
-                        if (movement + cost <= unit.UnitData.MovementRange)
-                            queue.Enqueue(nextTile, movement + cost);
-                    }
-                }
+                    addTileIfCanMoveTo(nextTile, movement);
 
                 nextTile = tilePos + new Vector2I(-1, 0);
-
                 if (tilePos.X >= 0 && !visited.Contains(nextTile))
-                {
-                    var moveCosts = gameBoard[nextTile.X, nextTile.Y].TerrainTile.MovementCostsPerType;
-
-                    if (moveCosts.TryGetValue(unit.UnitData.MovementType, out var cost))
-                    {
-                        if (movement + cost <= unit.UnitData.MovementRange)
-                            queue.Enqueue(nextTile, movement + cost);
-                    }
-                }
+                    addTileIfCanMoveTo(nextTile, movement);
 
                 nextTile = tilePos + new Vector2I(0, 1);
-
-                if (tilePos.Y < MapSize.X && !visited.Contains(nextTile))
-                {
-                    var moveCosts = gameBoard[nextTile.X, nextTile.Y].TerrainTile.MovementCostsPerType;
-
-                    if (moveCosts.TryGetValue(unit.UnitData.MovementType, out var cost))
-                    {
-                        if (movement + cost <= unit.UnitData.MovementRange)
-                            queue.Enqueue(nextTile, movement + cost);
-                    }
-                }
+                if (tilePos.Y < MapSize.Y && !visited.Contains(nextTile))
+                    addTileIfCanMoveTo(nextTile, movement);
 
                 nextTile = tilePos + new Vector2I(0, -1);
-
                 if (tilePos.Y >= 0 && !visited.Contains(nextTile))
-                {
-                    var moveCosts = gameBoard[nextTile.X, nextTile.Y].TerrainTile.MovementCostsPerType;
-
-                    if (moveCosts.TryGetValue(unit.UnitData.MovementType, out var cost))
-                    {
-                        if (movement + cost <= unit.UnitData.MovementRange)
-                            queue.Enqueue(nextTile, movement + cost);
-                    }
-                }
+                    addTileIfCanMoveTo(nextTile, movement);
             }
         }
 
-        private long? getPlayerIDFromCountryID(int countryID) => players.FirstOrDefault(x => x.Value.Country.Value.AWBWID == countryID).Value?.ID;
+        private long? getPlayerIDFromCountryID(int countryID) => replayController.Players.FirstOrDefault(x => x.Value.Country.Value.AWBWID == countryID).Value?.ID;
 
         public UnitData GetUnitDataForUnitName(string unitName) => unitStorage.GetUnitByCode(unitName);
     }
