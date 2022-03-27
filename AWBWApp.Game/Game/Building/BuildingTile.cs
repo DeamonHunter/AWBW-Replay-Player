@@ -26,5 +26,7 @@ namespace AWBWApp.Game.Game.Building
         public double[] Frames { get; set; }
 
         public double FrameOffset { get; set; }
+
+        public string Name { get; set; }
     }
 }

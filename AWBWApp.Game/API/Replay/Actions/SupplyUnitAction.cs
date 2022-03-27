@@ -45,14 +45,25 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class SupplyUnitAction : IReplayAction
     {
-        public string ReadibleName => "Supply";
-
         public MoveUnitAction MoveUnit;
 
         public long SupplyingUnitId;
         public List<long> SuppliedUnitIds;
 
         private List<ReplayUnit> originalUnits = new List<ReplayUnit>();
+
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName)
+                return MoveUnit != null ? "Move + Supply" : "Supply";
+
+            var supplyingUnit = controller.Map.GetDrawableUnit(SupplyingUnitId);
+
+            if (MoveUnit == null)
+                return $"{supplyingUnit.UnitData.Name} Supplies";
+
+            return $"{supplyingUnit.UnitData.Name} Moves + Supplies";
+        }
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

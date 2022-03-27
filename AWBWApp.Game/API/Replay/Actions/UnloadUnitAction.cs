@@ -38,14 +38,26 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class UnloadUnitAction : IReplayAction
     {
-        public string ReadibleName => "Unload";
-
         public MoveUnitAction MoveUnit;
 
         public long TransportID { get; set; }
         public ReplayUnit UnloadedUnit { get; set; }
 
         private ReplayUnit originalLoadedUnit;
+
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName)
+                return MoveUnit != null ? "Move + Delete" : "Delete";
+
+            var unloadedUnit = controller.Map.GetDrawableUnit(UnloadedUnit.ID);
+            var transportUnit = controller.Map.GetDrawableUnit(TransportID);
+
+            if (MoveUnit == null)
+                return $"{transportUnit.UnitData.Name} Unloads {unloadedUnit.UnitData.Name}";
+
+            return $"{transportUnit.UnitData.Name} Moves + Unloads {unloadedUnit.UnitData.Name}";
+        }
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

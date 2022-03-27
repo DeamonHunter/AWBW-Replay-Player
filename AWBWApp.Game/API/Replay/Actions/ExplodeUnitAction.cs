@@ -55,6 +55,17 @@ namespace AWBWApp.Game.API.Replay.Actions
         private const int explosion_range = 3;
         private ReplayUnit originalExplodingUnit;
 
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName)
+                return MoveUnit != null ? "Move + Explode" : "Explode";
+
+            if (MoveUnit == null)
+                return $"{originalExplodingUnit.UnitName} Explodes";
+
+            return $"{originalExplodingUnit.UnitName} Moves + Explodes";
+        }
+
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
             MoveUnit?.SetupAndUpdate(controller, context);

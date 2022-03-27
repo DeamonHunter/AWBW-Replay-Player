@@ -38,14 +38,23 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class DeleteUnitAction : IReplayAction
     {
-        public string ReadibleName => "Delete";
-
         public MoveUnitAction MoveUnit;
 
         public long DeletedUnitId { get; set; }
 
         private readonly Dictionary<long, ReplayUnit> originalUnits = new Dictionary<long, ReplayUnit>();
         private int unitValue;
+
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName)
+                return MoveUnit != null ? "Move + Delete" : "Delete";
+
+            if (MoveUnit == null)
+                return $"{originalUnits[DeletedUnitId].UnitName} Deleted";
+
+            return $"{originalUnits[DeletedUnitId].UnitName} Moves + Deleted";
+        }
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

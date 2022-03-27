@@ -153,8 +153,6 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class AttackUnitAction : IReplayAction
     {
-        public string ReadibleName => "Attack";
-
         public ReplayUnit Attacker { get; set; }
         public ReplayUnit Defender { get; set; }
         public List<COPowerChange> PowerChanges { get; set; }
@@ -172,6 +170,17 @@ namespace AWBWApp.Game.API.Replay.Actions
         private Dictionary<long, int> originalFunds;
 
         private Dictionary<Vector2I, int> buildingsHP = new Dictionary<Vector2I, int>();
+
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName)
+                return MoveUnit != null ? "Move + Attack" : "Attack";
+
+            if (MoveUnit == null)
+                return $"{originalAttacker.UnitName} Attacks {originalDefender.UnitName}";
+
+            return $"{originalAttacker.UnitName} Moves + Attacks {originalDefender.UnitName}";
+        }
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

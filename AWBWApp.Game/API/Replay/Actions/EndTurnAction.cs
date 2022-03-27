@@ -71,8 +71,6 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class EndTurnAction : IReplayAction
     {
-        public string ReadibleName => "End Turn";
-
         public long NextPlayerID;
         public int NextDay;
 
@@ -87,6 +85,8 @@ namespace AWBWApp.Game.API.Replay.Actions
         private int repairCost;
         private int repairValue;
         private int currentDay;
+
+        public string GetReadibleName(ReplayController controller, bool shortName) => "End Turn";
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

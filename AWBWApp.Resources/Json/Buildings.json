@@ -3,6 +3,7 @@
         "AWBWID": 34,
         "BaseDefence": 3,
         "Colour": "#f0f0f0",
+        "Name": "Neutral City",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -20,6 +21,7 @@
         "AWBWID": 35,
         "BaseDefence": 3,
         "Colour": "#f0f0f0",
+        "Name": "Neutral Base",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -38,6 +40,7 @@
         "AWBWID": 36,
         "BaseDefence": 3,
         "Colour": "#f0f0f0",
+        "Name": "Neutral Airport",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -55,6 +58,7 @@
         "AWBWID": 37,
         "BaseDefence": 3,
         "Colour": "#f0f0f0",
+        "Name": "Neutral Port",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -74,6 +78,7 @@
         "AWBWID": 133,
         "BaseDefence": 3,
         "Colour": "#f0f0f0",
+        "Name": "Neutral Com Tower",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -92,6 +97,7 @@
         "AWBWID": 145,
         "BaseDefence": 3,
         "Colour": "#f0f0f0",
+        "Name": "Neutral Lab",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -110,6 +116,7 @@
         "AWBWID": 111,
         "BaseDefence": 3,
         "Colour": "#ffffff",
+        "Name": "Missile Silo",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -127,6 +134,7 @@
         "AWBWID": 113,
         "BaseDefence": 0,
         "Colour": "#a88080",
+        "Name": "Pipe Seam",
         "MovementCostsPerType": {
             "Pipe": 1
         },
@@ -140,6 +148,7 @@
         "AWBWID": 114,
         "BaseDefence": 0,
         "Colour": "#a88080",
+        "Name": "Pipe Seam",
         "MovementCostsPerType": {
             "Pipe": 1
         },
@@ -156,6 +165,7 @@
         "AWBWID": 40,
         "BaseDefence": 3,
         "CountryID": 1, //os
+        "Name": "Orange Star Airport",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -178,6 +188,7 @@
         "AWBWID": 39,
         "BaseDefence": 3,
         "CountryID": 1, //os
+        "Name": "Orange Star Base",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -204,6 +215,7 @@
         "AWBWID": 38,
         "BaseDefence": 3,
         "CountryID": 1, //os
+        "Name": "Orange Star City",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -226,6 +238,7 @@
         "AWBWID": 42,
         "BaseDefence": 4,
         "CountryID": 1, //os
+        "Name": "Orange Star HQ",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -248,6 +261,7 @@
         "AWBWID": 41,
         "BaseDefence": 3,
         "CountryID": 1, //os
+        "Name": "Orange Star Port",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -272,6 +286,7 @@
         "AWBWID": 134,
         "BaseDefence": 3,
         "CountryID": 1, //os
+        "Name": "Orange Star Com Tower",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -302,6 +317,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "Name": "Orange Star Lab",
         "GivesMoneyWhenCaptured": false,
         "frames": [
             300,
@@ -321,6 +337,7 @@
         "AWBWID": 45,
         "BaseDefence": 3,
         "CountryID": 2, //bm
+        "Name": "Blue Moon Airport",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -343,6 +360,7 @@
         "AWBWID": 44,
         "BaseDefence": 3,
         "CountryID": 2, //bm
+        "Name": "Blue Moon Base",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -369,6 +387,7 @@
         "AWBWID": 43,
         "BaseDefence": 3,
         "CountryID": 2, //bm
+        "Name": "Blue Moon City",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -391,6 +410,7 @@
         "AWBWID": 47,
         "BaseDefence": 4,
         "CountryID": 2, //bm
+        "Name": "Blue Moon HQ",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -413,6 +433,7 @@
         "AWBWID": 46,
         "BaseDefence": 3,
         "CountryID": 2, //bm
+        "Name": "Blue Moon Port",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -437,6 +458,7 @@
         "AWBWID": 129,
         "BaseDefence": 3,
         "CountryID": 2, //bm
+        "Name": "Blue Moon Com Tower",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,
@@ -460,6 +482,7 @@
         "AWBWID": 140,
         "BaseDefence": 3,
         "CountryID": 2, //bm
+        "Name": "Blue Moon Lab",
         "MovementCostsPerType": {
             "LightInf": 1,
             "HeavyInf": 1,

@@ -47,8 +47,6 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class RepairUnitAction : IReplayAction
     {
-        public string ReadibleName => "Repair";
-
         public MoveUnitAction MoveUnit;
 
         public long RepairingUnitID;
@@ -61,6 +59,20 @@ namespace AWBWApp.Game.API.Replay.Actions
         private ReplayUnit originalRepairedUnit;
         private int repairValue;
         private int repairCost;
+
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName)
+                return MoveUnit != null ? "Move + Repair" : "Repair";
+
+            var repairedUnit = controller.Map.GetDrawableUnit(RepairedUnitID);
+            var repairingUnit = controller.Map.GetDrawableUnit(RepairingUnitID);
+
+            if (MoveUnit == null)
+                return $"{repairingUnit.UnitData.Name} Repairs {repairedUnit.UnitData.Name}";
+
+            return $"{repairingUnit.UnitData.Name} Moves + Repairs {repairedUnit.UnitData.Name}";
+        }
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

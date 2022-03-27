@@ -326,8 +326,6 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class PowerAction : IReplayAction
     {
-        public string ReadibleName => "Power";
-
         public string CombatOfficerName;
         public string PowerName;
         public bool IsSuperPower;
@@ -349,6 +347,14 @@ namespace AWBWApp.Game.API.Replay.Actions
         private Dictionary<long, int> originalPowers = new Dictionary<long, int>();
         private Dictionary<long, int> originalFunds = new Dictionary<long, int>();
         private Weather originalWeather;
+
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName)
+                return "Power";
+
+            return $"Activate {(IsSuperPower ? "SCOP" : "COP")} '{PowerName}'";
+        }
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

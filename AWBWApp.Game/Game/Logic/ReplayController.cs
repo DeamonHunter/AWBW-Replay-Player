@@ -305,7 +305,7 @@ namespace AWBWApp.Game.Game.Logic
                         if (HasNextTurn())
                         {
                             var nextTurn = replayData.TurnData[CurrentTurnIndex.Value + 1];
-                            return nextTurn.Actions != null && nextTurn.Actions.Count > 0 ? nextTurn.Actions[0].ReadibleName : "Next Turn";
+                            return nextTurn.Actions != null && nextTurn.Actions.Count > 0 ? nextTurn.Actions[0].GetReadibleName(this, false) : "Next Turn";
                         }
 
                         return null;
@@ -313,7 +313,7 @@ namespace AWBWApp.Game.Game.Logic
                 }
 
                 if (currentActionIndex + 1 < currentTurn.Actions.Count)
-                    return currentTurn.Actions[currentActionIndex + 1].ReadibleName;
+                    return currentTurn.Actions[currentActionIndex + 1].GetReadibleName(this, false);
             }
 
             return "Next Turn";
@@ -325,7 +325,7 @@ namespace AWBWApp.Game.Game.Logic
                 return null;
 
             if (currentActionIndex >= 0)
-                return currentTurn.Actions[currentActionIndex].ReadibleName;
+                return currentTurn.Actions[currentActionIndex].GetReadibleName(this, false);
 
             return "Previous Turn";
         }

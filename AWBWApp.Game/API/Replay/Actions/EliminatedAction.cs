@@ -62,14 +62,20 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class EliminatedAction : IReplayAction
     {
-        public string ReadibleName => Resigned ? "Player Resigned" : "Player Eliminated";
-
         public long? CausedByPlayerID;
         public long EliminatedPlayerID;
         public string EliminationMessage;
         public bool Resigned;
 
         public GameOverAction GameOverAction;
+
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName)
+                return Resigned ? "Resigned" : "Eliminated";
+
+            return $"{controller.Players[EliminatedPlayerID].Username} {(Resigned ? "Resigned" : "Eliminated")}";
+        }
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

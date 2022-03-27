@@ -74,7 +74,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
                     },
                     Unit = movedUnit
                 },
-                JoiningUnitId = unitA.ID,
+                JoiningUnitID = unitA.ID,
                 JoinedUnit = joinedUnit,
                 FundsAfterJoin = higherHP ? 1600 : 1000
             };

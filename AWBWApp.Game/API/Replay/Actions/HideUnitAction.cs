@@ -39,11 +39,22 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class HideUnitAction : IReplayAction
     {
-        public string ReadibleName => "Hide";
-
         public long HidingUnitID { get; set; }
 
         public MoveUnitAction MoveUnit;
+
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName)
+                return MoveUnit != null ? "Move + Hide" : "Hide";
+
+            var hidingUnit = controller.Map.GetDrawableUnit(HidingUnitID);
+
+            if (MoveUnit == null)
+                return $"{hidingUnit.UnitData.Name} Hides";
+
+            return $"{hidingUnit.UnitData.Name} Moves + Hides";
+        }
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

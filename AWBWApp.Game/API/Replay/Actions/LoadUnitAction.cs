@@ -40,14 +40,24 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class LoadUnitAction : IReplayAction
     {
-        public string ReadibleName => "Load";
-
         public long LoadedID { get; set; }
         public long TransportID { get; set; }
 
         public MoveUnitAction MoveUnit;
 
         private ReplayUnit originalLoadedUnit;
+        private ReplayUnit originalTransportUnit;
+
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName)
+                return MoveUnit != null ? "Move + Loads" : "Loads";
+
+            if (MoveUnit == null)
+                return $"{originalLoadedUnit.UnitName} Loads Into {originalTransportUnit.UnitName}";
+
+            return $"{originalLoadedUnit.UnitName} Moves + Loads Into {originalTransportUnit.UnitName}";
+        }
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
@@ -60,6 +70,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 throw new ReplayMissingUnitException(TransportID);
 
             originalLoadedUnit = loadedUnit.Clone();
+            originalTransportUnit = transportUnit.Clone();
             loadedUnit.BeingCarried = true;
             transportUnit.CargoUnits ??= new List<long>();
             transportUnit.CargoUnits.Add(LoadedID);
@@ -89,7 +100,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             var transportUnit = controller.Map.GetDrawableUnit(TransportID);
 
             loadingUnit.UpdateUnit(originalLoadedUnit);
-            transportUnit.Cargo.Remove(loadingUnit.UnitID);
+            transportUnit.UpdateUnit(originalTransportUnit);
 
             MoveUnit?.UndoAction(controller);
         }

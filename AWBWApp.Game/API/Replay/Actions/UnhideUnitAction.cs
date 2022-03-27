@@ -39,13 +39,24 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class UnhideUnitAction : IReplayAction
     {
-        public string ReadibleName => "Unhide";
-
         public ReplayUnit RevealingUnit { get; set; }
 
         public MoveUnitAction MoveUnit;
 
         private ReplayUnit originalUnit;
+
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName)
+                return MoveUnit != null ? "Move + Unhides" : "Unhides";
+
+            var revealedUnit = controller.Map.GetDrawableUnit(RevealingUnit.ID);
+
+            if (MoveUnit == null)
+                return $"{revealedUnit.UnitData.Name} Unhides";
+
+            return $"{revealedUnit.UnitData.Name} Moves + Unhides";
+        }
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

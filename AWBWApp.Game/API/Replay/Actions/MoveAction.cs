@@ -48,8 +48,6 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class MoveUnitAction : IReplayAction
     {
-        public string ReadibleName => "Move";
-
         public ReplayUnit Unit;
         public int Distance { get; set; }
         public UnitPosition[] Path { get; set; }
@@ -57,6 +55,15 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         private ReplayUnit originalUnit;
         private int? belowBuildingHP;
+
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName)
+                return "Move";
+
+            var moveUnit = controller.Map.GetDrawableUnit(Unit.ID);
+            return $"{moveUnit.UnitData.Name} Moves";
+        }
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

@@ -63,8 +63,6 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class CaptureBuildingAction : IReplayAction
     {
-        public string ReadibleName => "Capture";
-
         public MoveUnitAction MoveUnit;
         public ReplayBuilding Building;
 
@@ -74,6 +72,24 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         private ReplayBuilding originalBuilding;
         private Dictionary<long, int> originalIncomes;
+
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName || !controller.Map.TryGetDrawableBuilding(originalBuilding.Position, out var building))
+                return MoveUnit != null ? "Move + Capture" : "Capture";
+
+            string moveUnitString;
+            if (MoveUnit != null && controller.Map.TryGetDrawableUnit(MoveUnit.Unit.ID, out var moveUnit))
+                moveUnitString = $"{moveUnit.UnitData.Name} Moves + ";
+            else if (controller.Map.TryGetDrawableUnit(originalBuilding.Position, out var unit))
+                moveUnitString = $"{unit.UnitData.Name} ";
+            else
+                moveUnitString = "";
+
+            var captureState = Building.TerrainID != originalBuilding.TerrainID ? "Captures " : (Building.LastCapture == 20 ? "Begins Capturing " : "Capturing ");
+
+            return moveUnitString + captureState + building.BuildingTile.Name;
+        }
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

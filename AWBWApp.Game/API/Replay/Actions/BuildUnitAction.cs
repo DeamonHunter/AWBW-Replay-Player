@@ -30,13 +30,18 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class BuildUnitAction : IReplayAction
     {
-        public string ReadibleName => "Build";
-
         public ReplayUnit NewUnit;
         private int unitCost;
         private int unitValue;
 
-        //Todo: Track funds
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName)
+                return "Build";
+
+            return $"Build {NewUnit.UnitName}";
+        }
+
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
             var activePlayer = context.PlayerTurns[context.ActivePlayerID];

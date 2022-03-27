@@ -50,14 +50,14 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class GameOverAction : IReplayAction
     {
-        public string ReadibleName => "Game Over";
-
         public int FinishedDay;
         public string GameEndDate;
         public string EndMessage;
 
         public List<long> Winners;
         public List<long> Losers;
+
+        public string GetReadibleName(ReplayController controller, bool shortName) => "Game Over";
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context) { }
 

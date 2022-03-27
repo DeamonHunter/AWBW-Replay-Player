@@ -45,8 +45,6 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class LaunchRocketAction : IReplayAction
     {
-        public string ReadibleName => "Launch";
-
         public Vector2I SiloPosition;
         public Vector2I TargetPosition;
         public float HPChange;
@@ -58,6 +56,23 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         private const int explosion_range = 3;
         private const int used_silo_id = 112; //TODO: Remove this hardcoded value
+
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName)
+                return MoveUnit != null ? "Move + Launch" : "Launch";
+
+            if (MoveUnit == null)
+            {
+                if (controller.Map.TryGetDrawableUnit(SiloPosition, out var launchUnit))
+                    return $"{launchUnit.UnitData.Name} Launches Rocket";
+
+                return "Launches Rocket";
+            }
+
+            var moveUnit = controller.Map.GetDrawableUnit(MoveUnit.Unit.ID);
+            return $"{moveUnit.UnitData.Name} Moves + Launches Rocket";
+        }
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

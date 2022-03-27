@@ -32,7 +32,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (joinData == null)
                 throw new Exception("Join Replay Action did not contain information about Join.");
 
-            action.JoiningUnitId = (long)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)joinData["joinID"], turnData.ActiveTeam, turnData.ActivePlayerID);
+            action.JoiningUnitID = (long)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)joinData["joinID"], turnData.ActiveTeam, turnData.ActivePlayerID);
             action.JoinedUnit = ReplayActionHelper.ParseJObjectIntoReplayUnit((JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)joinData["unit"], turnData.ActiveTeam, turnData.ActivePlayerID));
             action.FundsAfterJoin = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)joinData["newFunds"], turnData.ActiveTeam, turnData.ActivePlayerID);
             return action;
@@ -41,11 +41,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class JoinUnitAction : IReplayAction
     {
-        public string ReadibleName => "Join";
-
         public MoveUnitAction MoveUnit;
 
-        public long JoiningUnitId { get; set; }
+        public long JoiningUnitID { get; set; }
 
         public ReplayUnit JoinedUnit { get; set; }
 
@@ -57,13 +55,24 @@ namespace AWBWApp.Game.API.Replay.Actions
         private int valueChange;
         private int fundsChange;
 
+        public string GetReadibleName(ReplayController controller, bool shortName)
+        {
+            if (shortName)
+                return MoveUnit != null ? "Move + Join" : "Join";
+
+            if (MoveUnit == null)
+                return $"{originalJoiningUnit.UnitName} Joins {originalJoinedUnit.UnitName}";
+
+            return $"{originalJoiningUnit.UnitName} Moves + Joins {originalJoinedUnit.UnitName}";
+        }
+
         //Todo: Track funds
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
             MoveUnit?.SetupAndUpdate(controller, context);
 
-            if (!context.Units.Remove(JoiningUnitId, out var unit))
-                throw new ReplayMissingUnitException(JoiningUnitId);
+            if (!context.Units.Remove(JoiningUnitID, out var unit))
+                throw new ReplayMissingUnitException(JoiningUnitID);
 
             originalJoiningUnit = unit.Clone();
 
@@ -94,7 +103,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             controller.ActivePlayer.Funds.Value = FundsAfterJoin;
 
-            controller.Map.DeleteUnit(JoiningUnitId, false);
+            controller.Map.DeleteUnit(JoiningUnitID, false);
             var joinedUnit = controller.Map.GetDrawableUnit(JoinedUnit.ID);
 
             controller.ActivePlayer.UnitValue.Value += valueChange;
