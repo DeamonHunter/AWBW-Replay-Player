@@ -26,7 +26,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddAssert("Building HP is 10", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == neutral_city && building.CaptureHealth.Value == 10);
             AddAssert("Property Value is still 0", () => ReplayController.ActivePlayer.PropertyValue.Value == 0);
             AddStep("Finish Capturing Building", ReplayController.GoToNextAction);
-            AddAssert("Building is correct", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == orange_star_city);
+            AddUntilStep("Building is correct", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == orange_star_city);
             AddAssert("Unit finished capturing and done move", () => DoesUnitPassTest(0, x => !x.IsCapturing.Value && !x.CanMove.Value));
             AddAssert("Property Value is 1000", () => ReplayController.ActivePlayer.PropertyValue.Value == 1000);
             AddStep("Undo", ReplayController.UndoAction);
@@ -48,7 +48,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddAssert("Property Value is 0", () => ReplayController.ActivePlayer.PropertyValue.Value == 0);
             AddAssert("Opponent Value is 1000", () => ReplayController.Players[1].PropertyValue.Value == 1000);
             AddStep("Finish Capturing Building", ReplayController.GoToNextAction);
-            AddAssert("Building is correct", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == orange_star_city);
+            AddUntilStep("Building is correct", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == orange_star_city);
             AddAssert("Unit finished capturing and done move", () => DoesUnitPassTest(0, x => !x.IsCapturing.Value && !x.CanMove.Value));
             AddAssert("Property Value is 1000", () => ReplayController.ActivePlayer.PropertyValue.Value == 1000);
             AddAssert("Opponent Value is 0", () => ReplayController.Players[1].PropertyValue.Value == 0);

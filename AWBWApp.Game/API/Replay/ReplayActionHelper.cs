@@ -191,7 +191,7 @@ namespace AWBWApp.Game.API.Replay
             float priceMultiplier = 1;
             if (activePower != null && activePower.UnitPriceMultiplier != 1)
                 priceMultiplier = activePower.UnitPriceMultiplier;
-            else if (dayToDay.UnitPriceMultiplier != 1)
+            else if (dayToDay != null && dayToDay.UnitPriceMultiplier != 1)
                 priceMultiplier = dayToDay.UnitPriceMultiplier;
 
             return (int)(unit.UnitData.Cost * priceMultiplier * (unit.HealthPoints.Value * 0.1));
