@@ -254,6 +254,7 @@ namespace AWBWApp.Game.Game.Logic
                     cameraControllerWithGrid.FitMapToSpace();
                     CurrentTurnIndex.TriggerChange();
                     barWidget.UpdateActions();
+                    barWidget.UpdateTurns(replayData.TurnData);
                     loadingLayer.Hide();
                 });
             }
@@ -538,6 +539,7 @@ namespace AWBWApp.Game.Game.Logic
         public void GoToNextTurn(bool completeActions = true) => goToTurnWithIdx(CurrentTurnIndex.Value + 1, completeActions);
         public void GoToPreviousTurn(bool completeActions = true) => goToTurnWithIdx(CurrentTurnIndex.Value - 1, completeActions);
         public void RestartTurn(bool completeActions = true) => goToTurnWithIdx(CurrentTurnIndex.Value, completeActions);
+        public void GoToTurn(int turnIdx, bool completeActions = true) => goToTurnWithIdx(turnIdx, completeActions);
 
         private void goToTurnWithIdx(int turnIdx, bool completeActions)
         {

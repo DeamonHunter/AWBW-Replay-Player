@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Input;
 using osu.Framework.Extensions.Color4Extensions;
@@ -24,8 +26,7 @@ namespace AWBWApp.Game.UI.Replay
         private readonly IconButton prevButton;
         private readonly IconButton nextButton;
         private readonly IconButton nextTurnButton;
-        private readonly SpriteText currentDayText;
-        private readonly SpriteText currentPlayerText;
+        private readonly ReplayBarWidgetDropdown dropdown;
 
         public ReplayBarWidget(ReplayController replayController)
         {
@@ -38,8 +39,18 @@ namespace AWBWApp.Game.UI.Replay
             Origin = Anchor.BottomCentre;
             Anchor = Anchor.BottomCentre;
 
+            dropdown = new ReplayBarWidgetDropdown()
+            {
+                Anchor = Anchor.TopCentre,
+                Origin = Anchor.BottomCentre,
+                Width = 300
+            };
+
+            var dropDownHeader = dropdown.GetDetachedHeader();
+
             Children = new Drawable[]
             {
+                dropdown,
                 new Container()
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -84,52 +95,7 @@ namespace AWBWApp.Game.UI.Replay
                                     Action = () => this.replayController.UndoAction(),
                                     Icon = FontAwesome.Solid.AngleLeft
                                 },
-                                new Container()
-                                {
-                                    Masking = true,
-                                    CornerRadius = 6,
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    AutoSizeAxes = Axes.Both,
-                                    AutoSizeEasing = Easing.OutQuint,
-                                    AutoSizeDuration = 300,
-                                    Children = new Drawable[]
-                                    {
-                                        new Box
-                                        {
-                                            RelativeSizeAxes = Axes.Both,
-                                            Colour = Color4.Black.Opacity(0.4f)
-                                        },
-                                        new Container() //Spacer to set minimum Size
-                                        {
-                                            Anchor = Anchor.TopCentre,
-                                            Origin = Anchor.TopCentre,
-                                            Size = new Vector2(125, 35)
-                                        },
-                                        new FillFlowContainer()
-                                        {
-                                            Anchor = Anchor.Centre,
-                                            Origin = Anchor.Centre,
-                                            AutoSizeAxes = Axes.Both,
-                                            Direction = FillDirection.Vertical,
-                                            Padding = new MarginPadding { Horizontal = 5 },
-                                            Children = new Drawable[]
-                                            {
-                                                currentDayText = new SpriteText()
-                                                {
-                                                    Anchor = Anchor.TopCentre,
-                                                    Origin = Anchor.TopCentre,
-                                                },
-                                                currentPlayerText = new SpriteText()
-                                                {
-                                                    Anchor = Anchor.TopCentre,
-                                                    Origin = Anchor.TopCentre,
-                                                },
-                                            }
-                                        }
-                                    }
-                                },
-
+                                dropDownHeader,
                                 nextButton = new ReplayIconButton(AWBWGlobalAction.NextAction, replayController.GetNextActionName)
                                 {
                                     Anchor = Anchor.Centre,
@@ -151,6 +117,25 @@ namespace AWBWApp.Game.UI.Replay
             };
 
             replayController.CurrentTurnIndex.BindValueChanged(_ => updateTurnText());
+            dropdown.Current.ValueChanged += x => changeTurn(x.NewValue);
+        }
+
+        public void UpdateTurns(List<TurnData> turns)
+        {
+            var items = new Turn[turns.Count];
+
+            for (int i = 0; i < turns.Count; i++)
+            {
+                var turn = turns[i];
+                items[i] = new Turn
+                {
+                    Day = turn.Day,
+                    Player = replayController.Players[turn.ActivePlayerID].Username,
+                    TurnIndex = i
+                };
+            }
+
+            dropdown.Items = items;
         }
 
         public void UpdateActions()
@@ -166,8 +151,20 @@ namespace AWBWApp.Game.UI.Replay
             if (!replayController.HasLoadedReplay)
                 return;
 
-            currentDayText.Text = $"Day: {replayController.CurrentDay}";
-            currentPlayerText.Text = replayController.ActivePlayer.Username;
+            dropdown.Current.Value = new Turn()
+            {
+                TurnIndex = replayController.CurrentTurnIndex.Value,
+                Day = replayController.CurrentDay,
+                Player = replayController.ActivePlayer.Username
+            };
+        }
+
+        private void changeTurn(Turn turn)
+        {
+            if (replayController.CurrentTurnIndex.Value == turn.TurnIndex)
+                return;
+
+            replayController.GoToTurn(turn.TurnIndex);
         }
 
         protected override ITooltip CreateTooltip() => new ReplayTooltip();
