@@ -110,7 +110,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
             terrainFile = generator.CreateCustomShoalVersion(terrainFile);
 
-            ReplayController.LoadReplay(replay, terrainFile);
+            ReplayController.ScheduleLoadReplay(replay, terrainFile);
         }
     }
 }
