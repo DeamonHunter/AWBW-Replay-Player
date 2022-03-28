@@ -42,7 +42,6 @@ namespace AWBWApp.Game.Game.Building
             MapPosition = tilePosition;
 
             Size = BASE_SIZE;
-            Position = GameMap.GetDrawablePositionForBottomOfTile(tilePosition);
             HasDoneAction.BindValueChanged(x => updateBuildingColour(x.NewValue));
             FogOfWarActive.BindValueChanged(x => updateBuildingColour(x.NewValue));
         }

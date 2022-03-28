@@ -7,16 +7,22 @@ using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
 using Newtonsoft.Json;
+using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.IO.Stores;
 
 namespace AWBWApp.Game.Tests.Visual.Logic
 {
+    [TestFixture]
     public class TestSceneTerrain : BaseGameMapTestScene
     {
         private const int max_awbw_id = 194;
         private const int grass_terrain_id = 1;
+
+        private const int orange_star_hq_id = 42;
+        private const int pipe_seam_id = 113;
+        private const int pipe_rubble_id = 115;
 
         private ResourceStore<byte[]> storage;
 
@@ -26,41 +32,59 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         private void load(ResourceStore<byte[]> store)
         {
             storage = store;
-
-            AddLabel("Basic Rendering");
-            AddStep("Render Small Map", () => RenderBasicMap(8, 8));
-            AddStep("Render Tall Map", () => RenderBasicMap(8, 24));
-            AddStep("Render Wide Map", () => RenderBasicMap(24, 8));
-            AddStep("Render Large Map", () => RenderBasicMap(64, 64));
-
-            AddLabel("Random Rendering");
-            AddStep("Render Small Map", () => RenderRandomMap(8, 8));
-            AddStep("Render Tall Map", () => RenderRandomMap(8, 24));
-            AddStep("Render Wide Map", () => RenderRandomMap(24, 8));
-            AddStep("Render Large Map", () => RenderRandomMap(64, 64));
-
-            AddLabel("Building Test");
-            AddStep("Render All IDs", () => RenderMapWithAllIDs(16, 16));
-            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
-            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
-
-            AddLabel("Shoals Test");
-            AddStep("Map: Sea Test", () => LoadMapFromFile("Json/Maps/SeaTest"));
-            AddStep("Map: Shoal Test", () => LoadMapFromFile("Json/Maps/ShoalTest"));
-            AddStep("Map: Shoal Alt Test A", () => LoadMapFromFile("Json/Maps/ShoalAltTestA"));
-            AddStep("Map: Shoal Alt Test B", () => LoadMapFromFile("Json/Maps/ShoalAltTestB"));
-            AddStep("Map: Custom Shoals", () => LoadMapFromFile("Json/Maps/98331"));
-
             generator = new CustomShoalGenerator(GetTileStorage(), GetBuildingStorage());
         }
 
-        public void RenderBasicMap(int xSize, int ySize)
+        [Test]
+        public void TestBasicMaps()
+        {
+            AddStep("Render Small Map", () => renderBasicMap(8, 8));
+            AddStep("Render Tall Map", () => renderBasicMap(8, 24));
+            AddStep("Render Wide Map", () => renderBasicMap(24, 8));
+            AddStep("Render Large Map", () => renderBasicMap(64, 64));
+        }
+
+        [Test]
+        public void TestRandomMaps()
+        {
+            AddStep("Render Small Map", () => renderRandomMap(8, 8));
+            AddStep("Render Tall Map", () => renderRandomMap(8, 24));
+            AddStep("Render Wide Map", () => renderRandomMap(24, 8));
+            AddStep("Render Large Map", () => renderRandomMap(64, 64));
+        }
+
+        [Test]
+        public void TestBuildings()
+        {
+            AddStep("Render All IDs", () => renderMapWithAllIDs(16, 16));
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+        }
+
+        [Test]
+        public void TestCustomShoalRendering()
+        {
+            AddStep("Map: Sea Test", () => loadMapFromFile("Json/Maps/SeaTest"));
+            AddStep("Map: Shoal Test", () => loadMapFromFile("Json/Maps/ShoalTest"));
+            AddStep("Map: Shoal Alt Test A", () => loadMapFromFile("Json/Maps/ShoalAltTestA"));
+            AddStep("Map: Shoal Alt Test B", () => loadMapFromFile("Json/Maps/ShoalAltTestB"));
+            AddStep("Map: Custom Shoals", () => loadMapFromFile("Json/Maps/98331"));
+        }
+
+        [Test]
+        public void TestOrderOfDrawablesWhenChanging()
+        {
+            AddStep("Setup", createBuildingChangeOrderingTest);
+            AddStep("Change To Rubble", () => ReplayController.Map.UpdateBuilding(new ReplayBuilding { Position = new Vector2I(2, 1), TerrainID = pipe_rubble_id }, false));
+        }
+
+        private void renderBasicMap(int xSize, int ySize)
         {
             var replayData = createEmptyReplayWithWeatherChanges();
             ReplayController.LoadReplay(replayData, CreateBasicMap(xSize, ySize));
         }
 
-        public void RenderRandomMap(int xSize, int ySize)
+        private void renderRandomMap(int xSize, int ySize)
         {
             var replayData = createEmptyReplayWithWeatherChanges();
             var gameMap = new ReplayMap
@@ -85,7 +109,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             ReplayController.LoadReplay(replayData, gameMap);
         }
 
-        public void RenderMapWithAllIDs(int xSize, int ySize)
+        private void renderMapWithAllIDs(int xSize, int ySize)
         {
             var replay = CreateEmptyReplay();
             var turn = replay.TurnData[0];
@@ -150,7 +174,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             ReplayController.LoadReplay(replay, gameMap);
         }
 
-        public void LoadMapFromFile(string mapPath)
+        private void loadMapFromFile(string mapPath)
         {
             var replay = CreateEmptyReplay();
             var turn = replay.TurnData[0];
@@ -181,6 +205,29 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             var shoal = generator.CreateCustomShoalVersion(gameMap);
 
             ReplayController.LoadReplay(replay, shoal);
+        }
+
+        private void createBuildingChangeOrderingTest()
+        {
+            var replayData = createEmptyReplayWithWeatherChanges();
+
+            var map = CreateBasicMap(5, 5);
+
+            var buildings = replayData.TurnData[0].Buildings;
+            buildings.Add(new Vector2I(2, 2), new ReplayBuilding
+            {
+                ID = 0,
+                TerrainID = orange_star_hq_id,
+                Position = new Vector2I(2, 2)
+            });
+            buildings.Add(new Vector2I(2, 1), new ReplayBuilding
+            {
+                ID = 1,
+                TerrainID = pipe_seam_id,
+                Position = new Vector2I(2, 1)
+            });
+
+            ReplayController.LoadReplay(replayData, map);
         }
 
         private ReplayData createEmptyReplayWithWeatherChanges()
