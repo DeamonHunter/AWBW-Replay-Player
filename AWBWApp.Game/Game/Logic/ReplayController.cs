@@ -9,14 +9,19 @@ using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI;
+using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Notifications;
 using AWBWApp.Game.UI.Replay;
+using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Development;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Logging;
 using osuTK;
+using osuTK.Graphics;
 
 namespace AWBWApp.Game.Game.Logic
 {
@@ -55,6 +60,7 @@ namespace AWBWApp.Game.Game.Logic
         private readonly ReplayBarWidget barWidget;
         private readonly ReplayPlayerList playerList;
         private readonly DetailedInformationPopup infoPopup;
+        private readonly Container errorContainer;
 
         private IBindable<bool> skipEndTurnBindable;
         private IBindable<bool> shortenActionTooltipsBindable;
@@ -113,6 +119,31 @@ namespace AWBWApp.Game.Game.Logic
                     RelativeSizeAxes = Axes.Y,
                     Size = new Vector2(225, 1)
                 },
+                errorContainer = new BlockingLayer
+                {
+                    BlockKeyEvents = false,
+                    Size = new Vector2(300, 100),
+                    Origin = Anchor.Centre,
+                    Anchor = Anchor.Centre,
+                    Masking = true,
+                    CornerRadius = 10,
+                    Children = new Drawable[]
+                    {
+                        new Box()
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = new Color4(30, 30, 30, 200)
+                        },
+                        new TextFlowContainer()
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            TextAnchor = Anchor.Centre,
+                            Text = "An error has occurred.\nPlease press Esc to head back to the replay select screen."
+                        }
+                    }
+                },
                 loadingLayer = new ReplayLoadingLayer()
             });
 
@@ -121,6 +152,7 @@ namespace AWBWApp.Game.Game.Logic
             Map.OnLoadComplete += _ => cameraControllerWithGrid.FitMapToSpace();
 
             loadingLayer.Show();
+            errorContainer.Hide();
         }
 
         [BackgroundDependencyLoader]
@@ -187,36 +219,33 @@ namespace AWBWApp.Game.Game.Logic
             replayData = null;
         }
 
+        public void ScheduleLoadReplay(ReplayData replayData, ReplayMap map) => Schedule(() => LoadReplay(replayData, map));
+
         public void LoadReplay(ReplayData replayData, ReplayMap map)
         {
-            if (this.replayData != null)
+            Assert.IsTrue(ThreadSafety.IsUpdateThread, "loadReplay was not called on update thread.");
+
+            try
             {
-                Schedule(() =>
-                {
+                if (this.replayData != null || HasLoadedReplay)
                     ClearReplay();
-                    LoadReplay(replayData, map);
-                });
-                return;
-            }
 
-            this.replayData = replayData;
+                this.replayData = replayData;
 
-            Players.Clear();
-            foreach (var player in replayData.ReplayInfo.Players)
-                Players.Add(player.Key, new PlayerInfo(player.Value, countryStorage.GetCountryByAWBWID(player.Value.CountryID)));
+                Players.Clear();
+                foreach (var player in replayData.ReplayInfo.Players)
+                    Players.Add(player.Key, new PlayerInfo(player.Value, countryStorage.GetCountryByAWBWID(player.Value.CountryID)));
 
-            currentTurn = replayData.TurnData[0];
-            currentActionIndex = -1;
-            CurrentTurnIndex.Value = 0;
+                currentTurn = replayData.TurnData[0];
+                currentActionIndex = -1;
+                CurrentTurnIndex.Value = 0;
 
-            setupActions();
-            updatePlayerList(0, true, false);
+                setupActions();
+                updatePlayerList(0, true, false);
 
-            Map.ScheduleInitialGameState(this.replayData, map);
+                Map.SetToInitialGameState(this.replayData, map);
 
-            //Todo: Ew
-            ScheduleAfterChildren(() =>
-            {
+                //Schedule after children in order to ensure things have been processed.
                 ScheduleAfterChildren(() =>
                 {
                     HasLoadedReplay = true;
@@ -227,6 +256,20 @@ namespace AWBWApp.Game.Game.Logic
                     barWidget.UpdateActions();
                     loadingLayer.Hide();
                 });
+            }
+            catch (Exception e)
+            {
+                ShowError(e);
+            }
+        }
+
+        public void ShowError(Exception e)
+        {
+            Schedule(() =>
+            {
+                loadingLayer.Hide();
+                errorContainer.Show();
+                notificationOverlay.Post(new SimpleErrorNotification("Failed to load replay: " + e.Message, e));
             });
         }
 
@@ -532,7 +575,7 @@ namespace AWBWApp.Game.Game.Logic
                     foreach (var unit in Map.GetDrawableUnitsFromPlayer(player.Key))
                     {
                         unitCount++;
-                        unitValue += ReplayActionHelper.CalculateUnitCost(unit, player.Value.ActiveCO.Value.CO.DayToDayPower, null);
+                        unitValue += ReplayActionHelper.CalculateUnitCost(unit, player.Value.ActiveCO.Value.CO?.DayToDayPower, null);
                     }
 
                     foreach (var building in Map.GetDrawableBuildingsForPlayer(player.Key))

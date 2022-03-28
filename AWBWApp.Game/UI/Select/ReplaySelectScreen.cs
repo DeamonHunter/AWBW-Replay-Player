@@ -179,12 +179,24 @@ namespace AWBWApp.Game.UI.Select
 
                 Task.Run(async () =>
                 {
-                    var data = await replayManager.GetReplayData(Carousel.SelectedReplayData);
-                    var terrainFile = await mapStorage.GetOrDownloadMap(data.ReplayInfo.MapId);
-                    if (cancellationToken.IsCancellationRequested)
-                        return;
+                    try
+                    {
+                        var data = await replayManager.GetReplayData(Carousel.SelectedReplayData);
 
-                    replayController.LoadReplay(data, terrainFile);
+                        if (data == null)
+                            throw new Exception($"Replay `{Carousel.SelectedReplayData.ID}` was not found. Was the file deleted?");
+
+                        var map = await mapStorage.GetOrDownloadMap(data.ReplayInfo.MapId);
+
+                        if (cancellationToken.IsCancellationRequested)
+                            return;
+
+                        replayController.ScheduleLoadReplay(data, map);
+                    }
+                    catch (Exception e)
+                    {
+                        replayController.ShowError(e);
+                    }
                 }, cancellationToken);
             }, cancellationToken);
 

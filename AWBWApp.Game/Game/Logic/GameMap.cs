@@ -13,8 +13,10 @@ using AWBWApp.Game.Input;
 using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Replay;
+using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Development;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
@@ -74,6 +76,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private const int unit_deselect_delay = 500;
         private ScheduledDelegate unitDeselectDelegate;
+        private bool hasLoadedMap = false;
 
         [Resolved]
         private AWBWAppUserInputManager inputManager { get; set; }
@@ -197,16 +200,11 @@ namespace AWBWApp.Game.Game.Logic
             infoPopup = popup;
         }
 
-        public void ScheduleInitialGameState(ReplayData gameState, ReplayMap map)
+        public void SetToInitialGameState(ReplayData gameState, ReplayMap map)
         {
-            Schedule(() =>
-            {
-                setToInitialGameState(gameState, map);
-            });
-        }
+            Assert.IsTrue(ThreadSafety.IsUpdateThread, "SetToInitialGameState was called off update thread.");
+            hasLoadedMap = false;
 
-        private void setToInitialGameState(ReplayData gameState, ReplayMap map)
-        {
             if (shoalGenerator == null)
                 shoalGenerator = new CustomShoalGenerator(terrainTileStorage, buildingStorage);
 
@@ -284,6 +282,7 @@ namespace AWBWApp.Game.Game.Logic
 
             CurrentWeather.Value = gameState.TurnData[0].StartWeather.Type;
             gameBoardDrawable.FadeIn();
+            hasLoadedMap = true;
             animateStart(1.5f);
         }
 
@@ -321,6 +320,9 @@ namespace AWBWApp.Game.Game.Logic
         protected override void Update()
         {
             base.Update();
+
+            if (!hasLoadedMap)
+                return;
 
             var cursor = inputManager.CurrentState.Mouse.Position;
 
@@ -762,6 +764,9 @@ namespace AWBWApp.Game.Game.Logic
 
         protected override bool OnClick(ClickEvent e)
         {
+            if (!hasLoadedMap)
+                return base.OnClick(e);
+
             if (getUnitAndTileFromMousePosition(e.MousePosition, out _, out _, out var unit) && unit != null)
                 return SetUnitAsSelected(unit);
 
