@@ -63,7 +63,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         }
     }
 
-    public class CaptureBuildingAction : IReplayAction
+    public class CaptureBuildingAction : IReplayAction, IActionCanEndGame
     {
         public MoveUnitAction MoveUnit;
         public ReplayBuilding Building;
@@ -94,6 +94,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             return moveUnitString + captureState + building.BuildingTile.Name;
         }
+
+        public bool EndsGame() => EliminatedAction?.EndsGame() ?? false;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

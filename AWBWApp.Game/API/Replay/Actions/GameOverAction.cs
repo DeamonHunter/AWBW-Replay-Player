@@ -49,7 +49,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         }
     }
 
-    public class GameOverAction : IReplayAction
+    public class GameOverAction : IReplayAction, IActionCanEndGame
     {
         public int FinishedDay;
         public string GameEndDate;
@@ -59,6 +59,8 @@ namespace AWBWApp.Game.API.Replay.Actions
         public List<long> Losers;
 
         public string GetReadibleName(ReplayController controller, bool shortName) => "Game Over";
+
+        public bool EndsGame() => true;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context) { }
 

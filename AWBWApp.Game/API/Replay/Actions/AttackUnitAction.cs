@@ -151,7 +151,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         }
     }
 
-    public class AttackUnitAction : IReplayAction
+    public class AttackUnitAction : IReplayAction, IActionCanEndGame
     {
         public ReplayUnit Attacker { get; set; }
         public ReplayUnit Defender { get; set; }
@@ -181,6 +181,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             return $"{originalAttacker.UnitName} Moves + Attacks {originalDefender.UnitName}";
         }
+
+        public bool EndsGame() => EliminatedAction?.EndsGame() ?? false;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {

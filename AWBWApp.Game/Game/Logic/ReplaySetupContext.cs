@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.API.Replay.Actions;
 using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.COs;
@@ -143,6 +145,30 @@ namespace AWBWApp.Game.Game.Logic
 
             foreach (var building in turn.Buildings)
                 Buildings.Add(building.Key, building.Value.Clone());
+        }
+
+        public void FinishSetup()
+        {
+            //Adds in some draw handling
+
+            CurrentTurn.Actions ??= new List<IReplayAction>();
+
+            if (CurrentTurn.Actions.Count != 0)
+            {
+                if (CurrentTurn.Actions[^1] is IActionCanEndGame lastAction && lastAction.EndsGame())
+                    return;
+            }
+
+            var gameOverAction = new GameOverAction
+            {
+                FinishedDay = CurrentDay,
+                GameEndDate = null,
+                EndMessage = "Match ended in Draw!",
+                Winners = PlayerInfos.Select(x => x.Key).ToList(),
+                Losers = null
+            };
+
+            CurrentTurn.Actions.Add(gameOverAction);
         }
 
         private int getPropertyValueForPlayer(long playerID, TurnData turn)

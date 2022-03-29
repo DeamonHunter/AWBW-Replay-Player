@@ -61,7 +61,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         }
     }
 
-    public class EliminatedAction : IReplayAction
+    public class EliminatedAction : IReplayAction, IActionCanEndGame
     {
         public long? CausedByPlayerID;
         public long EliminatedPlayerID;
@@ -77,6 +77,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             return $"{controller.Players[EliminatedPlayerID].Username} {(Resigned ? "Resigned" : "Eliminated")}";
         }
+
+        public bool EndsGame() => GameOverAction != null;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
@@ -145,13 +147,15 @@ namespace AWBWApp.Game.API.Replay.Actions
                 return -1 * xEliminated.Value.CompareTo(yEliminated.Value);
             });
 
-            GameOverAction = new GameOverAction();
-            GameOverAction.Winners = winners.ToList();
-            GameOverAction.Winners.Sort(compareTo);
-            GameOverAction.Losers = losers.ToList();
-            GameOverAction.Losers.Sort(compareTo);
+            GameOverAction = new GameOverAction
+            {
+                FinishedDay = context.CurrentTurn.Day,
+                Winners = winners.ToList(),
+                Losers = losers.ToList()
+            };
 
-            GameOverAction.FinishedDay = context.CurrentTurn.Day;
+            GameOverAction.Winners.Sort(compareTo);
+            GameOverAction.Losers.Sort(compareTo);
 
             if (teamsAlive.Count > 0)
             {

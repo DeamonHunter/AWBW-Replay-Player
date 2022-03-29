@@ -325,6 +325,8 @@ namespace AWBWApp.Game.Game.Logic
                     nextTurn.Actions[j].SetupAndUpdate(this, setupContext);
                 }
             }
+
+            setupContext.FinishSetup();
         }
 
         public (int, int) GetLastTurnAndLastAction()

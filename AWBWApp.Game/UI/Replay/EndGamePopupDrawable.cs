@@ -27,126 +27,141 @@ namespace AWBWApp.Game.UI.Replay
 
             var borderColour = new Color4(20, 20, 20, 255);
 
-            InternalChildren = new Drawable[]
+            InternalChild = new Container()
             {
-                new Container()
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+                Masking = true,
+                BorderColour = borderColour,
+                BorderThickness = 4,
+                Children = new Drawable[]
                 {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
-                    Masking = true,
-                    BorderColour = borderColour,
-                    BorderThickness = 4,
-                    Children = new Drawable[]
+                    new Box()
                     {
-                        new Box()
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = new Color4(240, 240, 240, 255)
+                    },
+                    new CloseButton()
+                    {
+                        Anchor = Anchor.TopRight,
+                        Origin = Anchor.TopRight,
+                        Padding = new MarginPadding { Top = 5, Right = 5 },
+                        Action = () =>
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = new Color4(240, 240, 240, 255)
-                        },
-                        new CloseButton()
-                        {
-                            Anchor = Anchor.TopRight,
-                            Origin = Anchor.TopRight,
-                            Padding = new MarginPadding { Top = 5, Right = 5 },
-                            Action = () =>
-                            {
-                                FinishTransforms(true);
-                                Expire();
-                            }
-                        },
-                        new FillFlowContainer()
-                        {
-                            Anchor = Anchor.TopCentre,
-                            Origin = Anchor.TopCentre,
-                            Direction = FillDirection.Vertical,
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Spacing = new Vector2(0, 3),
-                            Padding = new MarginPadding { Bottom = 5 },
-                            Children = new Drawable[]
-                            {
-                                createTitleTextFlow(gameOverMessage),
-                                new Container()
-                                {
-                                    RelativeSizeAxes = Axes.X,
-                                    Anchor = Anchor.TopCentre,
-                                    Origin = Anchor.TopCentre,
-                                    Size = new Vector2(0.9f, 30f),
-                                    Position = new Vector2(0, 20),
-                                    Masking = true,
-                                    CornerRadius = 3,
-                                    Children = new Drawable[]
-                                    {
-                                        new Box()
-                                        {
-                                            RelativeSizeAxes = Axes.Both,
-                                            Colour = borderColour.Opacity(0.35f),
-                                        },
-                                        new SpriteText()
-                                        {
-                                            Anchor = Anchor.CentreLeft,
-                                            Origin = Anchor.CentreLeft,
-                                            Padding = new MarginPadding { Left = 30 },
-                                            Colour = borderColour,
-                                            Font = new FontUsage("Roboto", weight: "Bold"),
-                                            Text = "Victory"
-                                        },
-                                        new SpriteIcon()
-                                        {
-                                            Anchor = Anchor.CentreLeft,
-                                            Origin = Anchor.CentreLeft,
-                                            Position = new Vector2(90, 0),
-                                            Icon = FontAwesome.Solid.Check,
-                                            Colour = new Color4(20, 125, 20, 255),
-                                            Size = new Vector2(20)
-                                        }
-                                    }
-                                },
-                                winnersContainer = createPlayersFlow(players, winners, false),
-                                new Container()
-                                {
-                                    RelativeSizeAxes = Axes.X,
-                                    Anchor = Anchor.TopCentre,
-                                    Origin = Anchor.TopCentre,
-                                    Size = new Vector2(0.9f, 30f),
-                                    Position = new Vector2(0, 20),
-                                    Masking = true,
-                                    CornerRadius = 3,
-                                    Children = new Drawable[]
-                                    {
-                                        new Box()
-                                        {
-                                            RelativeSizeAxes = Axes.Both,
-                                            Colour = borderColour.Opacity(0.35f),
-                                        },
-                                        new SpriteText()
-                                        {
-                                            Anchor = Anchor.CentreRight,
-                                            Origin = Anchor.CentreRight,
-                                            Padding = new MarginPadding { Right = 30 },
-                                            Colour = borderColour,
-                                            Font = new FontUsage("Roboto", weight: "Bold"),
-                                            Text = "Defeat"
-                                        },
-                                        new SpriteIcon()
-                                        {
-                                            Anchor = Anchor.CentreRight,
-                                            Origin = Anchor.CentreRight,
-                                            Position = new Vector2(-90, 0),
-                                            Icon = FontAwesome.Solid.Times,
-                                            Colour = new Color4(142, 19, 19, 255),
-                                            Size = new Vector2(20)
-                                        }
-                                    }
-                                },
-                                losersContainer = createPlayersFlow(players, losers, true),
-                            }
+                            FinishTransforms(true);
+                            Expire();
                         }
+                    },
+                    new FillFlowContainer()
+                    {
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        Direction = FillDirection.Vertical,
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Spacing = new Vector2(0, 3),
+                        Padding = new MarginPadding { Bottom = 5 },
+                        Children = createFillFlowChildren(gameOverMessage, players, winners, losers, borderColour)
                     }
                 }
             };
 
             this.FadeOut();
+        }
+
+        private Drawable[] createFillFlowChildren(string gameOverMessage, Dictionary<long, PlayerInfo> players, List<long> winners, List<long> losers, Color4 borderColour)
+        {
+            if (winners == null || winners.Count == 0)
+            {
+                winners = losers;
+                losers = null;
+            }
+
+            var drawables = new Drawable[losers == null || losers.Count <= 0 ? 3 : 5];
+            drawables[0] = createTitleTextFlow(gameOverMessage);
+
+            drawables[1] = new Container()
+            {
+                RelativeSizeAxes = Axes.X,
+                Anchor = Anchor.TopCentre,
+                Origin = Anchor.TopCentre,
+                Size = new Vector2(0.9f, 30f),
+                Position = new Vector2(0, 20),
+                Masking = true,
+                CornerRadius = 3,
+                Children = new Drawable[]
+                {
+                    new Box()
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = borderColour.Opacity(0.35f),
+                    },
+                    new SpriteText()
+                    {
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        Padding = new MarginPadding { Left = 30 },
+                        Colour = borderColour,
+                        Font = new FontUsage("Roboto", weight: "Bold"),
+                        Text = "Victory"
+                    },
+                    new SpriteIcon()
+                    {
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        Position = new Vector2(90, 0),
+                        Icon = FontAwesome.Solid.Check,
+                        Colour = new Color4(20, 125, 20, 255),
+                        Size = new Vector2(20)
+                    }
+                }
+            };
+
+            drawables[2] = winnersContainer = createPlayersFlow(players, winners, false);
+
+            if (losers == null || losers.Count <= 0)
+                return drawables;
+
+            drawables[3] = new Container()
+            {
+                RelativeSizeAxes = Axes.X,
+                Anchor = Anchor.TopCentre,
+                Origin = Anchor.TopCentre,
+                Size = new Vector2(0.9f, 30f),
+                Position = new Vector2(0, 20),
+                Masking = true,
+                CornerRadius = 3,
+                Children = new Drawable[]
+                {
+                    new Box()
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = borderColour.Opacity(0.35f),
+                    },
+                    new SpriteText()
+                    {
+                        Anchor = Anchor.CentreRight,
+                        Origin = Anchor.CentreRight,
+                        Padding = new MarginPadding { Right = 30 },
+                        Colour = borderColour,
+                        Font = new FontUsage("Roboto", weight: "Bold"),
+                        Text = "Defeat"
+                    },
+                    new SpriteIcon()
+                    {
+                        Anchor = Anchor.CentreRight,
+                        Origin = Anchor.CentreRight,
+                        Position = new Vector2(-90, 0),
+                        Icon = FontAwesome.Solid.Times,
+                        Colour = new Color4(142, 19, 19, 255),
+                        Size = new Vector2(20)
+                    }
+                }
+            };
+
+            drawables[4] = losersContainer = createPlayersFlow(players, losers, true);
+
+            return drawables;
         }
 
         private TextFlowContainer createTitleTextFlow(string gameOverMessage)
@@ -208,10 +223,13 @@ namespace AWBWApp.Game.UI.Replay
                 index++;
             }
 
-            foreach (var child in losersContainer.Children)
+            if (losersContainer != null)
             {
-                child.FadeOut().ScaleTo(new Vector2(0, 1)).Delay(index * 100).FadeIn(200).ScaleTo(1, 400, Easing.OutQuint);
-                index++;
+                foreach (var child in losersContainer.Children)
+                {
+                    child.FadeOut().ScaleTo(new Vector2(0, 1)).Delay(index * 100).FadeIn(200).ScaleTo(1, 400, Easing.OutQuint);
+                    index++;
+                }
             }
         }
 
