@@ -223,7 +223,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             controller.AddGenericActionAnimation(powerAnimation);
             yield return ReplayWait.WaitForTransformable(powerAnimation);
 
-            controller.ActivePlayer.Eliminated.Value = true;
+            controller.Players[EliminatedPlayerID].Eliminated.Value = true;
 
             if (GameOverAction != null)
             {
