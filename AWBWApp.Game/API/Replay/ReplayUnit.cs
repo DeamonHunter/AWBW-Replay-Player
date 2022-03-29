@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using AWBWApp.Game.Game.Unit;
+using AWBWApp.Game.Game.Units;
 using JetBrains.Annotations;
 using osu.Framework.Graphics.Primitives;
 

@@ -1,7 +1,7 @@
 ﻿using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
-using AWBWApp.Game.Game.Unit;
+using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;

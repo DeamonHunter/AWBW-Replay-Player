@@ -4,7 +4,6 @@ using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
-using AWBWApp.Game.Game.Unit;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.UI.Replay;
 using NUnit.Framework;
@@ -110,11 +109,11 @@ namespace AWBWApp.Game.Tests.Visual.Components
                     {
                         Alpha = 0
                     },
-                    infantry = new DrawableUnit(infantryData, infantryUnit, countryStorage.GetCountryByCode("os"))
+                    infantry = new DrawableUnit(infantryData, infantryUnit, countryStorage.GetCountryByCode("os"), null)
                     {
                         Alpha = 0
                     },
-                    tank = new DrawableUnit(tankData, tankUnit, countryStorage.GetCountryByCode("os"))
+                    tank = new DrawableUnit(tankData, tankUnit, countryStorage.GetCountryByCode("os"), null)
                     {
                         Alpha = 0
                     },

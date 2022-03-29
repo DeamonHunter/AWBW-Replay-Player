@@ -6,6 +6,11 @@ namespace AWBWApp.Game.UI
 {
     public class AWBWContextMenuContainer : ContextMenuContainer
     {
-        protected override Menu CreateMenu() => new AWBWSubMenu(null, null);
+        protected override Menu CreateMenu() =>
+            new AWBWSubMenu(null, null)
+            {
+                HideSubMenuIfUnHovered = false,
+                HideIfUnHovered = false
+            };
     }
 }

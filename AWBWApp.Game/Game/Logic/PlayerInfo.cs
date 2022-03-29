@@ -14,6 +14,7 @@ namespace AWBWApp.Game.Game.Logic
         public int? EliminatedOn { get; }
 
         public Bindable<CountryData> Country = new Bindable<CountryData>();
+        public Bindable<FaceDirection> UnitFaceDirection = new Bindable<FaceDirection>();
 
         public BindableBool Eliminated = new BindableBool();
         public Bindable<COInfo> ActiveCO = new Bindable<COInfo>();
@@ -33,6 +34,7 @@ namespace AWBWApp.Game.Game.Logic
             RoundOrder = player.RoundOrder;
 
             Country.Value = country;
+            UnitFaceDirection.Value = country.FaceDirection;
 
             EliminatedOn = player.EliminatedOn;
         }

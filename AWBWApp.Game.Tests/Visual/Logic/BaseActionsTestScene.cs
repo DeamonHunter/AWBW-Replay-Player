@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.API.Replay;
-using AWBWApp.Game.Game.Unit;
+using AWBWApp.Game.Game.Units;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Tests.Visual.Logic

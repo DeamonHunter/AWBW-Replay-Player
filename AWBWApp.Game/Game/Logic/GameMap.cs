@@ -6,7 +6,6 @@ using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
-using AWBWApp.Game.Game.Unit;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.Input;
@@ -390,7 +389,9 @@ namespace AWBWApp.Game.Game.Logic
                 else
                 {
                     var unitData = unitStorage.GetUnitByCode(unit.Value.UnitName);
-                    var drawableUnit = new DrawableUnit(unitData, unit.Value, replayController.Players[unit.Value.PlayerID.Value].Country.Value);
+
+                    var player = replayController.Players[unit.Value.PlayerID!.Value];
+                    var drawableUnit = new DrawableUnit(unitData, unit.Value, player.Country.Value, player.UnitFaceDirection);
                     units.Add(unit.Value.ID, drawableUnit);
                     unitsDrawable.Add(drawableUnit);
                 }
@@ -426,7 +427,8 @@ namespace AWBWApp.Game.Game.Logic
         public DrawableUnit AddUnit(ReplayUnit unit, bool schedule = true)
         {
             var unitData = unitStorage.GetUnitByCode(unit.UnitName);
-            var drawableUnit = new DrawableUnit(unitData, unit, replayController.Players[unit.PlayerID!.Value].Country.Value);
+            var player = replayController.Players[unit.PlayerID!.Value];
+            var drawableUnit = new DrawableUnit(unitData, unit, player.Country.Value, player.UnitFaceDirection);
             units.Add(unit.ID, drawableUnit);
 
             if (schedule)

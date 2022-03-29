@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Logic;
-using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Replay;
 using osu.Framework.Allocation;
@@ -21,7 +20,7 @@ using osu.Framework.Graphics.Transforms;
 using osuTK;
 using osuTK.Graphics;
 
-namespace AWBWApp.Game.Game.Unit
+namespace AWBWApp.Game.Game.Units
 {
     public class DrawableUnit : CompositeDrawable, IHasMapPosition
     {
@@ -72,11 +71,12 @@ namespace AWBWApp.Game.Game.Unit
 
         private IBindable<bool> showUnitInFog;
 
-        public DrawableUnit(UnitData unitData, ReplayUnit unit, CountryData country)
+        public DrawableUnit(UnitData unitData, ReplayUnit unit, CountryData country, IBindable<FaceDirection> unitFaceDirection)
         {
             Country = country;
             UnitData = unitData;
             Size = BASE_SIZE;
+
             InternalChildren = new Drawable[]
             {
                 textureAnimation = new UnitTextureAnimation()
@@ -101,9 +101,10 @@ namespace AWBWApp.Game.Game.Unit
             MovementRange.Value = unitData.MovementRange;
             AttackRange.Value = unitData.AttackRange;
 
-            HealthPoints.BindValueChanged(UpdateHp);
+            HealthPoints.BindValueChanged(updateHp);
             IsCapturing.BindValueChanged(updateCapturing);
             BeingCarried.BindValueChanged(_ => updateCarried());
+            unitFaceDirection?.BindValueChanged(x => updateFaceDirection(x.NewValue));
             UpdateUnit(unit);
         }
 
@@ -232,7 +233,13 @@ namespace AWBWApp.Game.Game.Unit
             return transformSequence;
         }
 
-        private void UpdateHp(ValueChangedEvent<int> healthPoints)
+        private void updateFaceDirection(FaceDirection faceDirection)
+        {
+            textureAnimation.Scale = new Vector2(faceDirection == Country.FaceDirection ? 1 : -1, 1);
+            textureAnimation.Anchor = faceDirection == Country.FaceDirection ? Anchor.BottomLeft : Anchor.BottomRight;
+        }
+
+        private void updateHp(ValueChangedEvent<int> healthPoints)
         {
             if (healthPoints.NewValue >= 10)
             {

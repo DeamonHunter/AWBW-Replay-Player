@@ -1,4 +1,5 @@
-﻿using AWBWApp.Game.UI.Notifications;
+﻿using AWBWApp.Game.UI.Components.Menu;
+using AWBWApp.Game.UI.Notifications;
 using AWBWApp.Game.UI.Toolbar;
 using NUnit.Framework;
 using osu.Framework.Allocation;

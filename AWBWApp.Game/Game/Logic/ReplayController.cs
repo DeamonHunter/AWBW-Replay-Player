@@ -90,61 +90,65 @@ namespace AWBWApp.Game.Game.Logic
                 Right = mapPadding.Right + DrawableTile.BASE_SIZE.X * 4,
             };
 
-            AddRangeInternal(new Drawable[]
+            AddInternal(new AWBWContextMenuContainer()
             {
-                cameraControllerWithGrid = new CameraControllerWithGrid()
+                RelativeSizeAxes = Axes.Both,
+                Children = new Drawable[]
                 {
-                    MaxScale = 8,
-                    MapSpace = mapPadding,
-                    MovementRegion = safeMovement,
-                    RelativeSizeAxes = Axes.Both,
-                    Child = Map = new GameMap(this),
-                },
-                powerLayer = new Container
-                {
-                    Position = new Vector2(-100, 0),
-                    RelativeSizeAxes = Axes.Both
-                },
-                infoPopup = new DetailedInformationPopup
-                {
-                    Position = new Vector2(10, -10),
-                    Origin = Anchor.BottomLeft,
-                    Anchor = Anchor.BottomLeft,
-                },
-                barWidget = new ReplayBarWidget(this),
-                playerList = new ReplayPlayerList
-                {
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                    RelativeSizeAxes = Axes.Y,
-                    Size = new Vector2(225, 1)
-                },
-                errorContainer = new BlockingLayer
-                {
-                    BlockKeyEvents = false,
-                    Size = new Vector2(300, 100),
-                    Origin = Anchor.Centre,
-                    Anchor = Anchor.Centre,
-                    Masking = true,
-                    CornerRadius = 10,
-                    Children = new Drawable[]
+                    cameraControllerWithGrid = new CameraControllerWithGrid()
                     {
-                        new Box()
+                        MaxScale = 8,
+                        MapSpace = mapPadding,
+                        MovementRegion = safeMovement,
+                        RelativeSizeAxes = Axes.Both,
+                        Child = Map = new GameMap(this),
+                    },
+                    powerLayer = new Container
+                    {
+                        Position = new Vector2(-100, 0),
+                        RelativeSizeAxes = Axes.Both
+                    },
+                    infoPopup = new DetailedInformationPopup
+                    {
+                        Position = new Vector2(10, -10),
+                        Origin = Anchor.BottomLeft,
+                        Anchor = Anchor.BottomLeft,
+                    },
+                    barWidget = new ReplayBarWidget(this),
+                    playerList = new ReplayPlayerList
+                    {
+                        Anchor = Anchor.TopRight,
+                        Origin = Anchor.TopRight,
+                        RelativeSizeAxes = Axes.Y,
+                        Size = new Vector2(225, 1)
+                    },
+                    errorContainer = new BlockingLayer
+                    {
+                        BlockKeyEvents = false,
+                        Size = new Vector2(300, 100),
+                        Origin = Anchor.Centre,
+                        Anchor = Anchor.Centre,
+                        Masking = true,
+                        CornerRadius = 10,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = new Color4(30, 30, 30, 200)
-                        },
-                        new TextFlowContainer()
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            TextAnchor = Anchor.Centre,
-                            Text = "An error has occurred.\nPlease press Esc to head back to the replay select screen."
+                            new Box()
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = new Color4(30, 30, 30, 200)
+                            },
+                            new TextFlowContainer()
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                TextAnchor = Anchor.Centre,
+                                Text = "An error has occurred.\nPlease press Esc to head back to the replay select screen."
+                            }
                         }
-                    }
-                },
-                loadingLayer = new ReplayLoadingLayer()
+                    },
+                    loadingLayer = new ReplayLoadingLayer()
+                }
             });
 
             Map.SetInfoPopup(infoPopup);

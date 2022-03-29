@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.UI.Components.Menu;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
@@ -14,6 +15,9 @@ namespace AWBWApp.Game.UI.Toolbar
 
         private readonly Action<bool, Drawable> baseOnHoverChange;
         private readonly HashSet<Drawable> hoveredDrawables = new HashSet<Drawable>();
+
+        public bool HideSubMenuIfUnHovered = true;
+        public bool HideIfUnHovered = true;
 
         public AWBWSubMenu(Menu parentMenu, Action<bool, Drawable> onHoverChange)
             : base(Direction.Vertical)
@@ -47,7 +51,7 @@ namespace AWBWApp.Game.UI.Toolbar
         {
             base.Update();
 
-            if (State != MenuState.Open || parentMenu == null)
+            if (!HideIfUnHovered || State != MenuState.Open || parentMenu == null)
                 return;
 
             if (parentMenu.IsHovered || IsHovered || hoveredDrawables.Count > 0 || InternalChildren[1].Size != Vector2.Zero)
@@ -72,14 +76,21 @@ namespace AWBWApp.Game.UI.Toolbar
             this.FadeOut(300, Easing.OutQuint);
         }
 
-        protected override Menu CreateSubMenu() => new AWBWSubMenu(this, onHoverChange);
+        protected override Menu CreateSubMenu() =>
+            new AWBWSubMenu(this, onHoverChange)
+            {
+                HideIfUnHovered = HideSubMenuIfUnHovered
+            };
 
         protected override DrawableMenuItem CreateDrawableMenuItem(MenuItem item)
         {
             switch (item)
             {
-                case ToggleMenuItem toggle:
-                    return new DrawableToggleMenuItem(toggle, onHoverChange);
+                case StatefulMenuItem:
+                    return new DrawableStatefulMenuItem(item, onHoverChange);
+
+                case ToggleMenuItem:
+                    return new DrawableToggleMenuItem(item, onHoverChange);
             }
 
             return new DrawableAWBWMenuItem(item, onHoverChange);

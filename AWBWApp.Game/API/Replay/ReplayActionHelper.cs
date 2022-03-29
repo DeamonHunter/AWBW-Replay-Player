@@ -4,7 +4,7 @@ using System.Diagnostics;
 using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Logic;
-using AWBWApp.Game.Game.Unit;
+using AWBWApp.Game.Game.Units;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics.Primitives;
 
