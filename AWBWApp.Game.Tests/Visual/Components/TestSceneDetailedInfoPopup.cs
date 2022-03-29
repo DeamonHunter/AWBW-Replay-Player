@@ -101,19 +101,19 @@ namespace AWBWApp.Game.Tests.Visual.Components
                     {
                         Alpha = 0
                     },
-                    baseBuilding = new DrawableBuilding(buildingStorage.GetBuildingByAWBWId(39), null, Vector2I.Zero)
+                    baseBuilding = new DrawableBuilding(buildingStorage.GetBuildingByAWBWId(39), Vector2I.Zero, null, null)
                     {
                         Alpha = 0
                     },
-                    hqBuilding = new DrawableBuilding(buildingStorage.GetBuildingByAWBWId(42), null, Vector2I.Zero)
+                    hqBuilding = new DrawableBuilding(buildingStorage.GetBuildingByAWBWId(42), Vector2I.Zero, null, null)
                     {
                         Alpha = 0
                     },
-                    infantry = new DrawableUnit(infantryData, infantryUnit, countryStorage.GetCountryByCode("os"), null)
+                    infantry = new DrawableUnit(infantryData, infantryUnit, new Bindable<CountryData>(countryStorage.GetCountryByCode("os")), null)
                     {
                         Alpha = 0
                     },
-                    tank = new DrawableUnit(tankData, tankUnit, countryStorage.GetCountryByCode("os"), null)
+                    tank = new DrawableUnit(tankData, tankUnit, new Bindable<CountryData>(countryStorage.GetCountryByCode("os")), null)
                     {
                         Alpha = 0
                     },

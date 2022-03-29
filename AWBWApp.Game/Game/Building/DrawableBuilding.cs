@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using osu.Framework.Allocation;
@@ -33,13 +34,30 @@ namespace AWBWApp.Game.Game.Building
         private Dictionary<Weather, List<Texture>> texturesByWeather;
 
         [Resolved]
+        private NearestNeighbourTextureStore textureStore { get; set; }
+
+        [Resolved]
+        private BuildingStorage buildingStorage { get; set; }
+
+        [Resolved]
         private IBindable<Weather> currentWeather { get; set; }
 
-        public DrawableBuilding(BuildingTile buildingTile, long? ownerID, Vector2I tilePosition)
+        private IBindable<CountryData> countryBindindable;
+
+        public DrawableBuilding(BuildingTile buildingTile, Vector2I tilePosition, long? ownerID, IBindable<CountryData> country)
         {
             BuildingTile = buildingTile;
             OwnerID = ownerID;
             MapPosition = tilePosition;
+
+            InternalChild = textureAnimation = new TextureAnimation()
+            {
+                Anchor = Anchor.BottomLeft,
+                Origin = Anchor.BottomLeft,
+                Loop = true
+            };
+
+            countryBindindable = country?.GetBoundCopy();
 
             Size = BASE_SIZE;
             HasDoneAction.BindValueChanged(x => updateBuildingColour(x.NewValue));
@@ -47,19 +65,35 @@ namespace AWBWApp.Game.Game.Building
         }
 
         [BackgroundDependencyLoader]
-        private void load(NearestNeighbourTextureStore store)
+        private void load()
+        {
+            countryBindindable?.BindValueChanged(_ => updateAnimation());
+            currentWeather.BindValueChanged(x => changeWeather(x.NewValue));
+
+            updateAnimation();
+        }
+
+        private void updateAnimation()
         {
             texturesByWeather = new Dictionary<Weather, List<Texture>>();
 
-            foreach (var texturePair in BuildingTile.Textures)
+            var buildingTile = BuildingTile;
+
+            if (countryBindindable != null)
+            {
+                var country = countryBindindable.Value;
+                buildingTile = buildingStorage.GetBuildingByTypeAndCountry(buildingTile.BuildingType, country.AWBWID);
+            }
+
+            foreach (var texturePair in buildingTile.Textures)
             {
                 var textureList = new List<Texture>();
 
-                var frameLength = BuildingTile.Frames?.Length ?? 1;
+                var frameLength = buildingTile.Frames?.Length ?? 1;
 
                 for (int i = 0; i < frameLength; i++)
                 {
-                    var texture = store.Get($"{texturePair.Value}-{i}");
+                    var texture = textureStore.Get($"{texturePair.Value}-{i}");
                     if (texture == null)
                         throw new Exception($"Improperly configured BuildingTile. Animation count wrong or image missing: {texturePair.Value}-{i}");
 
@@ -69,7 +103,7 @@ namespace AWBWApp.Game.Game.Building
                 texturesByWeather.Add(texturePair.Key, textureList);
             }
 
-            currentWeather.BindValueChanged(x => changeWeather(x.NewValue), true);
+            changeWeather(currentWeather.Value);
         }
 
         private void changeWeather(Weather weather)
@@ -77,29 +111,35 @@ namespace AWBWApp.Game.Game.Building
             if (!texturesByWeather.TryGetValue(weather, out var weatherTextures))
                 weatherTextures = texturesByWeather[Weather.Clear];
 
-            //Todo: I don't particular like creating a new texture animation like this. This is caused by a need to invalidate the cache so that it doesn't take 1 second to change weather.
+            var playbackPosition = textureAnimation.PlaybackPosition;
+            if (double.IsNaN(playbackPosition))
+                playbackPosition = 0;
 
-            var playbackPosition = textureAnimation?.PlaybackPosition ?? BuildingTile.FrameOffset;
+            textureAnimation.ClearFrames();
+            textureAnimation.ClearAnimationCache();
 
-            InternalChild = textureAnimation = new TextureAnimation()
+            textureAnimation.Size = weatherTextures[0].Size;
+
+            var buildingTile = BuildingTile;
+
+            if (countryBindindable != null)
             {
-                Anchor = Anchor.BottomLeft,
-                Origin = Anchor.BottomLeft,
-                Size = weatherTextures[0].Size
-            };
+                var country = countryBindindable.Value;
+                buildingTile = buildingStorage.GetBuildingByTypeAndCountry(buildingTile.BuildingType, country.AWBWID);
+            }
 
-            if (BuildingTile.Frames != null)
+            if (buildingTile.Frames != null)
             {
-                for (int i = 0; i < BuildingTile.Frames.Length; i++)
-                    textureAnimation.AddFrame(weatherTextures[i], BuildingTile.Frames[i]);
+                for (int i = 0; i < buildingTile.Frames.Length; i++)
+                    textureAnimation.AddFrame(weatherTextures[i], buildingTile.Frames[i]);
             }
             else
                 textureAnimation.AddFrame(weatherTextures[0]);
 
             textureAnimation.Seek(playbackPosition);
+            textureAnimation.Play();
 
             updateBuildingColour(false);
-            textureAnimation.FinishTransforms();
         }
 
         private void updateBuildingColour(bool fadeOut)

@@ -65,15 +65,20 @@ namespace AWBWApp.Game.Game.Units
 
         private Sprite capturing;
 
-        public CountryData Country { get; private set; }
+        public CountryData Country => country.Value;
 
         public HashSet<long> Cargo = new HashSet<long>();
 
         private IBindable<bool> showUnitInFog;
+        private IBindable<CountryData> country;
+        private FaceDirection faceDirection;
 
-        public DrawableUnit(UnitData unitData, ReplayUnit unit, CountryData country, IBindable<FaceDirection> unitFaceDirection)
+        [Resolved]
+        private NearestNeighbourTextureStore textureStore { get; set; }
+
+        public DrawableUnit(UnitData unitData, ReplayUnit unit, IBindable<CountryData> country, IBindable<FaceDirection> unitFaceDirection)
         {
-            Country = country;
+            this.country = country.GetBoundCopy();
             UnitData = unitData;
             Size = BASE_SIZE;
 
@@ -155,32 +160,16 @@ namespace AWBWApp.Game.Game.Units
         }
 
         [BackgroundDependencyLoader]
-        private void load(NearestNeighbourTextureStore store, AWBWConfigManager configManager)
+        private void load(AWBWConfigManager configManager)
         {
-            capturing.Texture = store.Get("UI/Capturing");
+            capturing.Texture = textureStore.Get("UI/Capturing");
             capturing.Size = capturing.Texture.Size;
 
-            if (UnitData.Frames == null)
-            {
-                var texture = store.Get($"{UnitData.BaseTextureByTeam[Country.Code]}-0");
-                textureAnimation.Size = texture.Size;
-                textureAnimation.AddFrame(texture);
-                return;
-            }
-
-            for (var i = 0; i < UnitData.Frames.Length; i++)
-            {
-                var texture = store.Get($"{UnitData.BaseTextureByTeam[Country.Code]}-{i}");
-                if (texture == null)
-                    throw new Exception("Improperly configured UnitData. Animation count wrong.");
-                if (i == 0)
-                    textureAnimation.Size = texture.Size;
-                textureAnimation.AddFrame(texture, UnitData.Frames[i]);
-            }
-            textureAnimation.Seek(UnitData.FrameOffset);
+            country.BindValueChanged(x => updateAnimation(), true);
 
             showUnitInFog = configManager.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits);
             showUnitInFog.BindValueChanged(x => updateUnitColour(x.NewValue));
+
             CanMove.BindValueChanged(x => updateUnitColour(x.NewValue));
             FogOfWarActive.BindValueChanged(x => updateUnitColour(x.NewValue));
             Dived.BindValueChanged(x => updateUnitColour(x.NewValue));
@@ -233,10 +222,38 @@ namespace AWBWApp.Game.Game.Units
             return transformSequence;
         }
 
+        private void updateAnimation()
+        {
+            textureAnimation.ClearFrames();
+            textureAnimation.ClearAnimationCache();
+
+            if (UnitData.Frames == null)
+            {
+                var texture = textureStore.Get($"{UnitData.BaseTextureByTeam[Country.Code]}-0");
+                textureAnimation.Size = texture.Size;
+                textureAnimation.AddFrame(texture);
+                return;
+            }
+
+            for (var i = 0; i < UnitData.Frames.Length; i++)
+            {
+                var texture = textureStore.Get($"{UnitData.BaseTextureByTeam[Country.Code]}-{i}");
+                if (texture == null)
+                    throw new Exception("Improperly configured UnitData. Animation count wrong.");
+
+                if (i == 0)
+                    textureAnimation.Size = texture.Size;
+                textureAnimation.AddFrame(texture, UnitData.Frames[i]);
+            }
+            textureAnimation.Seek(UnitData.FrameOffset);
+            updateFaceDirection(faceDirection);
+        }
+
         private void updateFaceDirection(FaceDirection faceDirection)
         {
             textureAnimation.Scale = new Vector2(faceDirection == Country.FaceDirection ? 1 : -1, 1);
             textureAnimation.Anchor = faceDirection == Country.FaceDirection ? Anchor.BottomLeft : Anchor.BottomRight;
+            this.faceDirection = faceDirection;
         }
 
         private void updateHp(ValueChangedEvent<int> healthPoints)

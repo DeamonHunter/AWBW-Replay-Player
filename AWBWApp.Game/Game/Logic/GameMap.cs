@@ -257,7 +257,9 @@ namespace AWBWApp.Game.Game.Logic
                 }
                 var position = awbwBuilding.Value.Position;
 
-                var drawableBuilding = new DrawableBuilding(building, getPlayerIDFromCountryID(building.CountryID), position);
+                var playerID = getPlayerIDFromCountryID(building.CountryID);
+                var country = playerID.HasValue ? replayController.Players[playerID.Value].Country : null;
+                var drawableBuilding = new DrawableBuilding(building, position, playerID, country);
                 buildingGrid.AddTile(drawableBuilding, position);
             }
 
@@ -391,7 +393,7 @@ namespace AWBWApp.Game.Game.Logic
                     var unitData = unitStorage.GetUnitByCode(unit.Value.UnitName);
 
                     var player = replayController.Players[unit.Value.PlayerID!.Value];
-                    var drawableUnit = new DrawableUnit(unitData, unit.Value, player.Country.Value, player.UnitFaceDirection);
+                    var drawableUnit = new DrawableUnit(unitData, unit.Value, player.Country, player.UnitFaceDirection);
                     units.Add(unit.Value.ID, drawableUnit);
                     unitsDrawable.Add(drawableUnit);
                 }
@@ -428,7 +430,7 @@ namespace AWBWApp.Game.Game.Logic
         {
             var unitData = unitStorage.GetUnitByCode(unit.UnitName);
             var player = replayController.Players[unit.PlayerID!.Value];
-            var drawableUnit = new DrawableUnit(unitData, unit, player.Country.Value, player.UnitFaceDirection);
+            var drawableUnit = new DrawableUnit(unitData, unit, player.Country, player.UnitFaceDirection);
             units.Add(unit.ID, drawableUnit);
 
             if (schedule)
@@ -573,7 +575,9 @@ namespace AWBWApp.Game.Game.Logic
 
                 if (buildingStorage.TryGetBuildingByAWBWId(awbwBuilding.TerrainID.Value, out var buildingTile))
                 {
-                    var drawableBuilding = new DrawableBuilding(buildingTile, getPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
+                    var playerID = getPlayerIDFromCountryID(buildingTile.CountryID);
+                    var country = playerID.HasValue ? replayController.Players[playerID.Value].Country : null;
+                    var drawableBuilding = new DrawableBuilding(buildingTile, tilePosition, playerID, country);
                     buildingGrid.AddTile(drawableBuilding, tilePosition);
                     return;
                 }
@@ -594,7 +598,9 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     if (buildingStorage.TryGetBuildingByAWBWId(awbwBuilding.TerrainID.Value, out var buildingTile))
                     {
-                        building = new DrawableBuilding(buildingTile, getPlayerIDFromCountryID(buildingTile.CountryID), tilePosition);
+                        var playerID = getPlayerIDFromCountryID(buildingTile.CountryID);
+                        var country = playerID.HasValue ? replayController.Players[playerID.Value].Country : null;
+                        building = new DrawableBuilding(buildingTile, tilePosition, playerID, country);
                         buildingGrid.AddTile(building, tilePosition);
                     }
                     else if (terrainTileStorage.TryGetTileByAWBWId(awbwBuilding.TerrainID.Value, out var terrainTile))
@@ -841,7 +847,7 @@ namespace AWBWApp.Game.Game.Logic
             }
         }
 
-        private long? getPlayerIDFromCountryID(int countryID) => replayController.Players.FirstOrDefault(x => x.Value.Country.Value.AWBWID == countryID).Value?.ID;
+        private long? getPlayerIDFromCountryID(int countryID) => replayController.Players.FirstOrDefault(x => x.Value.OriginalCountryID == countryID).Value?.ID;
 
         public UnitData GetUnitDataForUnitName(string unitName) => unitStorage.GetUnitByCode(unitName);
     }

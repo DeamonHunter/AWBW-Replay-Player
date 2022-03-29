@@ -28,5 +28,7 @@ namespace AWBWApp.Game.Game.Building
         public double FrameOffset { get; set; }
 
         public string Name { get; set; }
+
+        public string BuildingType { get; set; }
     }
 }

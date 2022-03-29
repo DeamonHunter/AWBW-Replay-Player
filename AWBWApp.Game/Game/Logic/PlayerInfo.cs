@@ -12,6 +12,7 @@ namespace AWBWApp.Game.Game.Logic
         public int RoundOrder { get; }
         public string Team { get; }
         public int? EliminatedOn { get; }
+        public int OriginalCountryID { get; }
 
         public Bindable<CountryData> Country = new Bindable<CountryData>();
         public Bindable<FaceDirection> UnitFaceDirection = new Bindable<FaceDirection>();
@@ -33,6 +34,7 @@ namespace AWBWApp.Game.Game.Logic
             Team = player.TeamName;
             RoundOrder = player.RoundOrder;
 
+            OriginalCountryID = country.AWBWID;
             Country.Value = country;
             UnitFaceDirection.Value = country.FaceDirection;
 

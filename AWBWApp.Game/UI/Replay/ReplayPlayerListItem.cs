@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Logic;
@@ -14,7 +15,6 @@ using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
 using osuTK;
 using osuTK.Graphics;
@@ -46,10 +46,19 @@ namespace AWBWApp.Game.UI.Replay
         private Container superPowerBackground;
         private Sprite superPower;
 
+        private ReplayPlayerInfo unitCount;
+        private ReplayPlayerInfo unitValue;
+
+        private Box nameBox;
+
         [Resolved]
         private NearestNeighbourTextureStore textureStore { get; set; }
 
+        [Resolved]
+        private CountryStorage countryStorage { get; set; }
+
         private Bindable<FaceDirection> faceDirection;
+        private Bindable<object> countryBindable;
 
         public ReplayPlayerListItem(PlayerInfo info)
         {
@@ -59,6 +68,17 @@ namespace AWBWApp.Game.UI.Replay
             Team = info.Team;
 
             faceDirection = info.UnitFaceDirection.GetBoundCopy();
+
+            countryBindable = new Bindable<object>();
+            info.Country.BindValueChanged(x => countryBindable.Value = x.NewValue.Code, true);
+            countryBindable.BindValueChanged(x =>
+            {
+                info.Country.Value = countryStorage.GetCountryByCode((string)x.NewValue);
+
+                nameBox!.Colour = Color4Extensions.FromHex(info.Country.Value.Colours["playerList"]).Darken(0.1f);
+                unitCount!.UpdateIcon($"{info.Country.Value.Path}/Infantry-0");
+                unitValue!.UpdateIcon($"{info.Country.Value.Path}/Infantry-0");
+            });
 
             RelativeSizeAxes = Axes.X;
             Size = new Vector2(1, 80);
@@ -173,10 +193,10 @@ namespace AWBWApp.Game.UI.Replay
 
                 Children = new Drawable[]
                 {
-                    new Box()
+                    nameBox = new Box()
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Colour = Color4Extensions.FromHex(info.Country.Value.Colours["playerList"]).Darken(0.1f), //Todo: Fix config values
+                        Colour = Color4Extensions.FromHex(info.Country.Value.Colours["playerList"]).Darken(0.1f)
                     }
                 }
             };
@@ -225,8 +245,6 @@ namespace AWBWApp.Game.UI.Replay
 
         private Drawable createInfoContainer(PlayerInfo info)
         {
-            ReplayPlayerInfo unitValue;
-
             tableContainer = new TableContainer()
             {
                 RelativeSizeAxes = Axes.Both,
@@ -269,7 +287,7 @@ namespace AWBWApp.Game.UI.Replay
                             Direction = FillDirection.Vertical,
                             Children = new Drawable[]
                             {
-                                new ReplayPlayerInfo($"{info.Country.Value.Path}/Infantry-0", info.UnitCount),
+                                unitCount = new ReplayPlayerInfo($"{info.Country.Value.Path}/Infantry-0", info.UnitCount),
                                 unitValue = new ReplayPlayerInfo($"{info.Country.Value.Path}/Infantry-0", info.UnitValue)
                                 {
                                     Position = new Vector2(0, 19),
@@ -453,12 +471,35 @@ namespace AWBWApp.Game.UI.Replay
             progressBar.Current.Value = coUpdated.NewValue.Power ?? 0;
         }
 
+        public MenuItem[] ContextMenuItems => createContextMenuItems();
+
+        private MenuItem[] createContextMenuItems()
+        {
+            var countryMenuItem = new MenuItem("Country")
+            {
+                Items = countryStorage.GetAllCountryIDs().Select(x =>
+                {
+                    var country = countryStorage.GetCountryByAWBWID(x);
+                    return new StatefulMenuItem(country.Name, countryBindable, country.Code);
+                }).ToArray()
+            };
+
+            return new MenuItem[]
+            {
+                new EnumMenuItem<FaceDirection>("Unit Face Direction", faceDirection),
+                countryMenuItem
+            };
+        }
+
         private class ReplayPlayerInfo : Container
         {
             private Sprite infoIcon;
             private string infoIconTexture;
             //private ShrinkingSpriteText text;
             private RollingCounter<int> counter;
+
+            [Resolved]
+            private NearestNeighbourTextureStore textureStore { get; set; }
 
             public ReplayPlayerInfo(string icon, Bindable<int> count)
             {
@@ -512,16 +553,15 @@ namespace AWBWApp.Game.UI.Replay
             }
 
             [BackgroundDependencyLoader]
-            private void Load(TextureStore storage)
+            private void load()
             {
-                infoIcon.Texture = storage.Get(infoIconTexture);
+                UpdateIcon(infoIconTexture);
+            }
+
+            public void UpdateIcon(string path)
+            {
+                infoIcon.Texture = textureStore.Get(path);
             }
         }
-
-        public MenuItem[] ContextMenuItems =>
-            new[]
-            {
-                new EnumMenuItem<FaceDirection>("Unit Face Direction", faceDirection)
-            };
     }
 }
