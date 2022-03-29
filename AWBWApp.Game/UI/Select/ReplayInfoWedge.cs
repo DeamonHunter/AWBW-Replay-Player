@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Country;
@@ -13,14 +11,8 @@ using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.Textures;
 using osuTK;
 using osuTK.Graphics;
-using osuTK.Graphics.ES30;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using Configuration = SixLabors.ImageSharp.Configuration;
-using Vector4 = System.Numerics.Vector4;
 
 namespace AWBWApp.Game.UI.Select
 {
@@ -361,72 +353,15 @@ namespace AWBWApp.Game.UI.Select
             [BackgroundDependencyLoader]
             private async void load(MapFileStorage mapStorage, TerrainTileStorage terrainStorage, BuildingStorage buildingStorage, CountryStorage countryStorage)
             {
-                ReplayMap map;
+                var (name, map) = await mapStorage.GetTextureForMap(mapID, terrainStorage, buildingStorage, countryStorage);
 
-                try
+                mapName.Text = name;
+
+                if (map != null)
                 {
-                    map = await mapStorage.GetOrDownloadMap(mapID);
+                    mapSprite.Texture = map;
+                    mapSprite.FillAspectRatio = map.Size.X / map.Size.Y;
                 }
-                catch (Exception e)
-                {
-                    map = null;
-                }
-
-                if (map == null)
-                {
-                    mapName.Text = $"Missing Map: {mapID}";
-                    Schedule(loadLayer.Hide);
-                    return;
-                }
-
-                mapName.Text = map.TerrainName;
-
-                //Todo: This is mostly for testing, should probably create these images only once
-
-                var image = new Image<Rgba32>(Configuration.Default, map.Size.X, map.Size.Y);
-                Dictionary<short, Rgba32> mapColors = new Dictionary<short, Rgba32>();
-
-                for (int y = 0; y < map.Size.Y; y++)
-                {
-                    for (int x = 0; x < map.Size.X; x++)
-                    {
-                        var tileId = map.Ids[y * map.Size.X + x];
-
-                        if (mapColors.TryGetValue(tileId, out var pixel))
-                        {
-                            image[x, y] = pixel;
-                            continue;
-                        }
-
-                        pixel = new Rgba32(0, 0, 0, 255);
-
-                        if (terrainStorage.TryGetTileByAWBWId(tileId, out var tile))
-                        {
-                            var colour = Color4Extensions.FromHex(tile.Colour ?? "000000FF");
-                            pixel = new Rgba32(new Vector4(colour.R, colour.G, colour.B, colour.A));
-                        }
-                        else if (buildingStorage.TryGetBuildingByAWBWId(tileId, out var building))
-                        {
-                            if (building.CountryID != 0)
-                            {
-                                var colour = Color4Extensions.FromHex(countryStorage.GetCountryByAWBWID(building.CountryID).Colours["playerList"]).Lighten(0.2f);
-                                pixel = new Rgba32(new Vector4(colour.R, colour.G, colour.B, colour.A));
-                            }
-                            else
-                            {
-                                var colour = Color4Extensions.FromHex(building.Colour ?? "000000FF");
-                                pixel = new Rgba32(new Vector4(colour.R, colour.G, colour.B, colour.A));
-                            }
-                        }
-
-                        mapColors[tileId] = pixel;
-                        image[x, y] = pixel;
-                    }
-                }
-
-                mapSprite.Texture = new Texture(map.Size.X, map.Size.Y, true, All.Nearest);
-                mapSprite.Texture.SetData(new TextureUpload(image));
-                mapSprite.FillAspectRatio = (float)map.Size.X / map.Size.Y;
 
                 Schedule(loadLayer.Hide);
             }

@@ -5,9 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.Country;
+using AWBWApp.Game.Game.Tile;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.IO.Network;
 using osu.Framework.IO.Stores;
 using osu.Framework.Logging;
@@ -20,6 +24,8 @@ namespace AWBWApp.Game.IO
         private const string terrain_folder = "ReplayData/Terrain";
 
         private readonly Storage underlyingStorage;
+
+        private readonly Dictionary<long, (string, Texture)> mapTextures = new Dictionary<long, (string, Texture)>();
 
         public MapFileStorage(Storage storage)
         {
@@ -89,6 +95,23 @@ namespace AWBWApp.Game.IO
 
                 return ParseAndStoreResponseHTML(mapID, webRequest.GetResponseString());
             }
+        }
+
+        public async Task<(string, Texture)> GetTextureForMap(long mapID, TerrainTileStorage tileStorage, BuildingStorage buildingStorage, CountryStorage countryStorage)
+        {
+            if (mapTextures.TryGetValue(mapID, out var existingTexture))
+                return existingTexture;
+
+            var map = await GetOrDownloadMap(mapID);
+
+            Texture texture = null;
+            if (map != null)
+                texture = map.GenerateTexture(tileStorage, buildingStorage, countryStorage);
+
+            var tuple = (map?.TerrainName ?? $"Missing Map: {mapID}", texture);
+
+            mapTextures[mapID] = tuple;
+            return tuple;
         }
 
         public IEnumerable<string> GetAvailableResources() => underlyingStorage.GetFiles("");
