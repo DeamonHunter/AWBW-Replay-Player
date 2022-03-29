@@ -169,56 +169,66 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (unitReplace != null)
             {
-                var activePlayerUnitReplace = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject(unitReplace, turnData.ActiveTeam, turnData.ActivePlayerID);
+                action.UnitChanges = new Dictionary<long, PowerAction.UnitChange>();
 
-                //Occasionally this will be { "units": null }
-                var unitReplaces = activePlayerUnitReplace["units"];
-
-                if (unitReplaces.Type != JTokenType.Null)
+                foreach (var player in replayData.ReplayInfo.Players)
                 {
-                    action.UnitChanges = new Dictionary<long, PowerAction.UnitChange>();
+                    var activePlayerUnitReplace = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject(unitReplace, player.Value.TeamName, player.Key);
 
-                    foreach (JObject unit in (JArray)unitReplaces)
+                    //Occasionally this will be { "units": null }
+                    var unitReplaces = activePlayerUnitReplace["units"];
+
+                    if (unitReplaces.Type != JTokenType.Null)
                     {
-                        var change = new PowerAction.UnitChange();
-
-                        foreach (var entry in unit)
+                        foreach (JObject unit in (JArray)unitReplaces)
                         {
-                            switch (entry.Key)
+                            var unitID = (long)unit["units_id"];
+
+                            var playerID = turnData.ReplayUnit.TryGetValue(unitID, out var savedUnit) ? savedUnit.PlayerID.Value : turnData.ActivePlayerID;
+
+                            if (playerID != player.Key)
+                                continue;
+
+                            var change = new PowerAction.UnitChange();
+
+                            foreach (var entry in unit)
                             {
-                                case "units_ammo":
-                                    change.Ammo = (int)entry.Value;
-                                    break;
+                                switch (entry.Key)
+                                {
+                                    case "units_ammo":
+                                        change.Ammo = (int)entry.Value;
+                                        break;
 
-                                case "units_fuel":
-                                    change.Fuel = (int)entry.Value;
-                                    break;
+                                    case "units_fuel":
+                                        change.Fuel = (int)entry.Value;
+                                        break;
 
-                                case "units_hit_points":
-                                    change.HitPoints = (int)entry.Value;
-                                    break;
+                                    case "units_hit_points":
+                                        change.HitPoints = (int)entry.Value;
+                                        break;
 
-                                case "units_movement_points":
-                                    change.MovementPoints = (int)entry.Value;
-                                    break;
+                                    case "units_movement_points":
+                                        change.MovementPoints = (int)entry.Value;
+                                        break;
 
-                                case "units_long_range":
-                                    change.Range = (int)entry.Value;
-                                    break;
+                                    case "units_long_range":
+                                        change.Range = (int)entry.Value;
+                                        break;
 
-                                case "units_moved":
-                                    change.UnitsMoved = (int)entry.Value;
-                                    break;
+                                    case "units_moved":
+                                        change.UnitsMoved = (int)entry.Value;
+                                        break;
 
-                                case "units_id":
-                                    break;
+                                    case "units_id":
+                                        break;
 
-                                default:
-                                    throw new Exception("Unknown Unit Change: " + entry.Key);
+                                    default:
+                                        throw new Exception("Unknown Unit Change: " + entry.Key);
+                                }
                             }
-                        }
 
-                        action.UnitChanges.Add((long)unit["units_id"], change);
+                            action.UnitChanges.Add(unitID, change);
+                        }
                     }
                 }
             }
@@ -227,35 +237,39 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (playerReplace != null)
             {
-                var details = ReplayActionHelper.GetPlayerSpecificDataFromJObject(playerReplace, turnData.ActiveTeam, turnData.ActivePlayerID);
                 action.PlayerChanges = new Dictionary<long, PowerAction.PlayerChange>();
 
-                foreach (var player in (JObject)details)
+                foreach (var player in replayData.ReplayInfo.Players)
                 {
-                    var change = new PowerAction.PlayerChange();
+                    var details = ReplayActionHelper.GetPlayerSpecificDataFromJObject(playerReplace, player.Value.TeamName, player.Key);
 
-                    foreach (var entry in (JObject)player.Value)
+                    if (((JObject)details).TryGetValue(player.Key.ToString(), out var playerChanges))
                     {
-                        switch (entry.Key)
+                        var change = new PowerAction.PlayerChange();
+
+                        foreach (var entry in (JObject)playerChanges)
                         {
-                            case "players_funds":
-                                change.Money = (int)entry.Value;
-                                break;
+                            switch (entry.Key)
+                            {
+                                case "players_funds":
+                                    change.Money = (int)entry.Value;
+                                    break;
 
-                            case "players_co_power":
-                                change.COPower = (int)entry.Value;
-                                break;
+                                case "players_co_power":
+                                    change.COPower = (int)entry.Value;
+                                    break;
 
-                            case "tags_co_power":
-                                change.COPower = (int)entry.Value;
-                                break;
+                                case "tags_co_power":
+                                    change.COPower = (int)entry.Value;
+                                    break;
 
-                            default:
-                                throw new Exception("Unknown PLayer Change: " + entry.Key);
+                                default:
+                                    throw new Exception("Unknown Player Change: " + entry.Key);
+                            }
                         }
-                    }
 
-                    action.PlayerChanges.Add(long.Parse(player.Key), change);
+                        action.PlayerChanges.Add(player.Key, change);
+                    }
                 }
             }
 
