@@ -795,6 +795,9 @@ namespace AWBWApp.Game.Game.Logic
 
             var movementRange = unit.MovementRange.Value;
 
+            var action = replayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
+            movementRange += action?.MovementRangeIncrease ?? 0;
+
             void addTileIfCanMoveTo(Vector2I position, int movement)
             {
                 Dictionary<MovementType, int> moveCosts;
