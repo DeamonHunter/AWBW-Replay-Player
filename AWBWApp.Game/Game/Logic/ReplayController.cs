@@ -217,6 +217,10 @@ namespace AWBWApp.Game.Game.Logic
             CurrentTurnIndex.SetDefault();
             currentActionIndex = -1;
             replayData = null;
+
+            Players?.Clear();
+            registeredPowers?.Clear();
+            endTurnDesyncs?.Clear();
         }
 
         public void ScheduleLoadReplay(ReplayData replayData, ReplayMap map) => Schedule(() => LoadReplay(replayData, map));
@@ -274,7 +278,20 @@ namespace AWBWApp.Game.Game.Logic
             });
         }
 
-        private void setupActions()
+        public void RunSetupActionsForTest(ReplayData replayData)
+        {
+            ClearReplay();
+
+            this.replayData = replayData;
+
+            Players.Clear();
+            foreach (var player in replayData.ReplayInfo.Players)
+                Players.Add(player.Key, new PlayerInfo(player.Value, countryStorage.GetCountryByAWBWID(player.Value.CountryID)));
+
+            setupActions(logDesyncs: false);
+        }
+
+        private void setupActions(bool logDesyncs = true)
         {
             var setupContext = new ReplaySetupContext(buildingStorage, COStorage, replayData.ReplayInfo.Players, replayData.ReplayInfo.FundsPerBuilding);
 
@@ -288,9 +305,13 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     var desync = setupContext.MakeDesync(nextTurn);
                     endTurnDesyncs.Add(i - 1, desync);
-                    var log = desync.WriteDesyncReport();
-                    if (!string.IsNullOrEmpty(log))
-                        Logger.Log(log);
+
+                    if (logDesyncs)
+                    {
+                        var log = desync.WriteDesyncReport();
+                        if (!string.IsNullOrEmpty(log))
+                            Logger.Log(log);
+                    }
                 }
 
                 setupContext.SetupForTurn(nextTurn, i);

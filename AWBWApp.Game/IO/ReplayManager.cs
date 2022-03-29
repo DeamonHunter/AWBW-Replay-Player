@@ -209,6 +209,30 @@ namespace AWBWApp.Game.IO
             return data;
         }
 
+        // To be used only for testing scenarios
+        public ReplayData GetReplayDataSync(long id)
+        {
+            var path = $"{id}.zip";
+            if (!underlyingStorage.Exists(path))
+                return null;
+
+            ReplayData data;
+
+            using (var stream = underlyingStorage.GetStream(path))
+            {
+                try
+                {
+                    data = _parser.ParseReplay(stream);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Failed to parse replay with id: " + id, e);
+                }
+            }
+
+            return data;
+        }
+
         public async Task<ReplayData> ParseAndStoreReplay(string path)
         {
             ReplayData data;

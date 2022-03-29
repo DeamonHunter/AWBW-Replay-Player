@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using AWBWApp.Game.API;
 using AWBWApp.Game.Game.Logic;
@@ -10,6 +11,7 @@ using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.IO.Network;
 using osu.Framework.Logging;
+using osu.Framework.Platform;
 
 namespace AWBWApp.Game.Tests.Visual.Logic
 {
@@ -44,8 +46,10 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         }
 
         [Test]
-        public void TestLoadMapAndRun()
+        public void TestDownloadMapAndRun()
         {
+            //Note due to how AWBW functions, this test needs to be updated once every 1-2 weeks for it to not fail in headless.
+
             AddStep("Clear Replay", () => ReplayController.ClearReplay());
             AddTextStep("Replay Number", default_game_id.ToString(), x => replayString = x);
             AddStep("Load Map", () => Task.Run(downloadReplayFile));
@@ -57,6 +61,33 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             {
                 var tester = new TestReplayParsing();
                 Task.Run(tester.TestParsingAllReplays);
+            });
+        }
+
+        [Test]
+        public void TestParsingAndSettingUpAllReplays()
+        {
+            AddStep("Setup all maps", () =>
+            {
+                var storagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AWBWReplayPlayer");
+                var storage = new DesktopStorage(storagePath, null);
+
+                var actualStoredReplays = new ReplayManager(storage, false);
+
+                var replays = actualStoredReplays.GetAllKnownReplays();
+
+                foreach (var replay in replays)
+                {
+                    try
+                    {
+                        var replayData = actualStoredReplays.GetReplayDataSync(replay.ID);
+                        ReplayController.RunSetupActionsForTest(replayData);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new AggregateException($"Failure in replay '{replay.ID}'.", e);
+                    }
+                }
             });
         }
 
