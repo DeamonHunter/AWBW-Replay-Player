@@ -373,7 +373,17 @@ namespace AWBWApp.Game.API.Replay.Actions
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
             var co = controller.COStorage.GetCOByName(CombatOfficerName);
-            COPower = IsSuperPower ? co.SuperPower : co.NormalPower;
+
+            if (IsSuperPower)
+            {
+                COPower = co.SuperPower;
+                context.StatsReadouts[context.ActivePlayerID].SuperPowersUsed++;
+            }
+            else
+            {
+                COPower = co.NormalPower;
+                context.StatsReadouts[context.ActivePlayerID].PowersUsed++;
+            }
 
             controller.RegisterPower(this, context);
 
@@ -444,6 +454,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                 }
             }
 
+            context.AdjustStatReadoutsFromUnitList(context.ActivePlayerID, originalUnits.Values);
+
             if (CreatedUnits != null)
             {
                 foreach (var unit in CreatedUnits)
@@ -451,6 +463,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                     var unitData = controller.Map.GetUnitDataForUnitName(unit.UnitName);
                     var newUnit = createUnit(unit, context.ActivePlayerID, unitData);
                     context.Units.Add(newUnit.ID, newUnit);
+
+                    var value = ReplayActionHelper.CalculateUnitCost(newUnit, co.DayToDayPower, null);
+                    context.StatsReadouts[context.ActivePlayerID].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged, newUnit.UnitName, value);
                 }
             }
 
@@ -460,6 +475,10 @@ namespace AWBWApp.Game.API.Replay.Actions
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Power Action.");
+            if (IsSuperPower)
+                controller.Stats.CurrentTurnStatsReadout[controller.ActivePlayer.ID].SuperPowersUsed++;
+            else
+                controller.Stats.CurrentTurnStatsReadout[controller.ActivePlayer.ID].PowersUsed++;
 
             var powerAnimation = new PowerDisplay(CombatOfficerName, PowerName, IsSuperPower);
             controller.AddGenericActionAnimation(powerAnimation);
@@ -616,7 +635,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                     var drawableUnit = controller.Map.AddUnit(newUnit);
 
-                    controller.ActivePlayer.UnitValue.Value += ReplayActionHelper.CalculateUnitCost(drawableUnit, dayToDay, null);
+                    var value = ReplayActionHelper.CalculateUnitCost(drawableUnit, dayToDay, null);
+                    controller.ActivePlayer.UnitValue.Value += value;
+                    controller.Stats.CurrentTurnStatsReadout[drawableUnit.OwnerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged, drawableUnit.UnitData.Name, value);
 
                     controller.Map.PlaySelectionAnimation(drawableUnit);
                     yield return ReplayWait.WaitForMilliseconds(50);
@@ -659,6 +680,11 @@ namespace AWBWApp.Game.API.Replay.Actions
         public void UndoAction(ReplayController controller)
         {
             Logger.Log("Undoing Power Action.");
+            ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, true);
+            if (IsSuperPower)
+                controller.Stats.CurrentTurnStatsReadout[controller.ActivePlayer.ID].SuperPowersUsed--;
+            else
+                controller.Stats.CurrentTurnStatsReadout[controller.ActivePlayer.ID].PowersUsed--;
 
             if (ChangeToWeather.HasValue)
                 controller.Map.CurrentWeather.Value = originalWeather;
@@ -708,6 +734,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     var drawableUnit = controller.Map.DeleteUnit(createdUnit.UnitID, false);
                     var value = ReplayActionHelper.CalculateUnitCost(drawableUnit, dayToDay, null);
                     controller.ActivePlayer.UnitValue.Value -= value;
+                    controller.Stats.CurrentTurnStatsReadout[drawableUnit.OwnerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged | UnitStatType.Undo, drawableUnit.UnitData.Name, value);
                 }
             }
 

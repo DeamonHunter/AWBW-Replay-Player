@@ -90,6 +90,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             repairCost = FundsAfterRepair - context.FundsValuesForPlayers[context.ActivePlayerID];
             context.FundsValuesForPlayers[context.ActivePlayerID] = FundsAfterRepair;
+            context.StatsReadouts[controller.ActivePlayer.ID].MoneySpentOnRepairingUnits += repairCost;
 
             var co = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[context.ActivePlayerID].ActiveCOID);
             repairValue = ReplayActionHelper.CalculateUnitCost(repairedUnit, co.DayToDayPower, null) - ReplayActionHelper.CalculateUnitCost(originalRepairedUnit, co.DayToDayPower, null);
@@ -112,6 +113,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             controller.ActivePlayer.Funds.Value = FundsAfterRepair;
             controller.ActivePlayer.UnitValue.Value += repairValue;
+            controller.Stats.CurrentTurnStatsReadout[controller.ActivePlayer.ID].MoneySpentOnRepairingUnits += repairCost;
 
             controller.Map.PlayEffect("Effects/Supplied", 600, unit.MapPosition, 0,
                 x => x.ScaleTo(new Vector2(0, 1))
@@ -125,6 +127,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             Logger.Log("Undoing Repair Action.");
 
             controller.Map.GetDrawableUnit(RepairedUnitID).UpdateUnit(originalRepairedUnit);
+            controller.Stats.CurrentTurnStatsReadout[controller.ActivePlayer.ID].MoneySpentOnRepairingUnits -= repairCost;
             controller.ActivePlayer.Funds.Value -= repairCost;
             controller.ActivePlayer.UnitValue.Value -= repairValue;
 

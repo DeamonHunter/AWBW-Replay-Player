@@ -5,6 +5,7 @@ using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Units;
+using AWBWApp.Game.UI.Replay;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics.Primitives;
 
@@ -209,6 +210,33 @@ namespace AWBWApp.Game.API.Replay
 
                 cargoUnit.Position = position;
                 UpdateUnitCargoPositions(context, cargoUnit, position);
+            }
+        }
+
+        public static void AdjustStatReadoutsFromUnitList(ReplayController controller, long ownerID, IEnumerable<ReplayUnit> units, bool undo, long? skipUnitID = null)
+        {
+            foreach (var unit in units)
+            {
+                if (unit.ID == skipUnitID)
+                    continue;
+
+                var dayToDay = controller.Players[unit.PlayerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+                var value = CalculateUnitCost(unit, dayToDay, null);
+
+                bool unitAlive = controller.Map.TryGetDrawableUnit(unit.ID, out var changedUnit);
+                if (unitAlive)
+                    value -= CalculateUnitCost(changedUnit, dayToDay, null);
+
+                //Don't care if the unit change doesn't affect value. In repairing/resupplying units.
+                if (value <= 0)
+                    continue;
+
+                var additionalFlags = unitAlive ? UnitStatType.UnitCountChanged : UnitStatType.None;
+                additionalFlags |= undo ? UnitStatType.UnitCountChanged : UnitStatType.None;
+
+                controller.Stats.CurrentTurnStatsReadout[unit.PlayerID!.Value].RegisterUnitStats(additionalFlags | UnitStatType.LostUnit, unit.UnitName, value);
+                if (unit.PlayerID != ownerID)
+                    controller.Stats.CurrentTurnStatsReadout[ownerID].RegisterUnitStats(additionalFlags | UnitStatType.DamageUnit, unit.UnitName, value);
             }
         }
     }

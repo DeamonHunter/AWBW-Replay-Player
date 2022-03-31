@@ -81,6 +81,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public HashSet<long> SuppliedUnits;
         public Dictionary<long, int> RepairedUnits;
 
+        private Dictionary<long, ReplayUnit> unitsToDestroy = new Dictionary<long, ReplayUnit>();
         private Dictionary<long, ReplayUnit> originalUnits = new Dictionary<long, ReplayUnit>();
         private HashSet<long> waitUnits = new HashSet<long>();
         private int repairCost;
@@ -95,6 +96,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             repairCost = context.FundsValuesForPlayers[NextPlayerID] - (FundsAfterTurnStart - context.PropertyValuesForPlayers[NextPlayerID]);
             context.FundsValuesForPlayers[NextPlayerID] -= repairCost;
+            context.StatsReadouts[NextPlayerID].MoneySpentOnRepairingUnits += repairCost;
 
             if (SuppliedUnits != null)
             {
@@ -160,8 +162,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                             originalUnits.Add(unit.Key, unit.Value.Clone());
 
                             unit.Value.Fuel = Math.Max(0, unit.Value.Fuel!.Value - fuelUsage);
+
                             if (unit.Value.Fuel <= 0 && unitData.MovementType is MovementType.Air or MovementType.Lander or MovementType.Sea)
-                                context.RemoveUnitFromSetupContext(unit.Key, originalUnits, out _);
+                                context.RemoveUnitFromSetupContext(unit.Key, unitsToDestroy, out var _);
                         }
                     }
                 }
@@ -174,11 +177,18 @@ namespace AWBWApp.Game.API.Replay.Actions
                     }
                 }
             }
+
+            foreach (var destroyedUnit in unitsToDestroy)
+            {
+                if (!originalUnits.ContainsKey(destroyedUnit.Key))
+                    originalUnits.Add(destroyedUnit.Key, destroyedUnit.Value);
+            }
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing End Turn Action.");
+            //Note: We aren't updating the StatsReadout here as it would just get set by the next turn anyway.
 
             var player = controller.Players[NextPlayerID];
 
@@ -224,6 +234,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                 }
             }
 
+            foreach (var destroyedUnit in unitsToDestroy)
+                controller.Map.DeleteUnit(destroyedUnit.Key, false);
+
             //Todo: Ignore Funds after turn start and next weather? These are already handled by GoToNextTurn()
             //Maybe have a weather changing animation?
             controller.GoToNextTurn(false);
@@ -233,8 +246,21 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             Logger.Log("Undoing End Turn Action.");
 
+            controller.Stats.CurrentTurnStatsReadout[controller.ActivePlayer.ID].MoneySpentOnRepairingUnits -= repairCost;
+
             foreach (var unit in originalUnits)
-                controller.Map.GetDrawableUnit(unit.Key).UpdateUnit(unit.Value);
+            {
+                if (controller.Map.TryGetDrawableUnit(unit.Key, out var drawableUnit))
+                    drawableUnit.UpdateUnit(unit.Value);
+                else
+                {
+                    var dayToDay = controller.Players[unit.Value.PlayerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+                    var value = ReplayActionHelper.CalculateUnitCost(unit.Value, dayToDay, null);
+
+                    controller.Stats.CurrentTurnStatsReadout[unit.Value.PlayerID!.Value].RegisterUnitStats(UnitStatType.LostUnit | UnitStatType.UnitCountChanged, unit.Value.UnitName, value);
+                    controller.Map.AddUnit(unit.Value);
+                }
+            }
 
             foreach (var unit in waitUnits)
                 controller.Map.GetDrawableUnit(unit).CanMove.Value = false;

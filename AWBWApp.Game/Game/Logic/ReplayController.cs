@@ -32,6 +32,8 @@ namespace AWBWApp.Game.Game.Logic
 
         public bool HasLoadedReplay { get; private set; }
 
+        public StatsPopup Stats { get; private set; }
+
         [Resolved]
         public COStorage COStorage { get; private set; }
 
@@ -122,6 +124,7 @@ namespace AWBWApp.Game.Game.Logic
                         RelativeSizeAxes = Axes.Y,
                         Size = new Vector2(225, 1)
                     },
+                    Stats = new StatsPopup(CurrentTurnIndex),
                     errorContainer = new BlockingLayer
                     {
                         BlockKeyEvents = false,
@@ -222,6 +225,7 @@ namespace AWBWApp.Game.Game.Logic
             currentActionIndex = -1;
             replayData = null;
 
+            Stats.ClearReadouts();
             Players?.Clear();
             registeredPowers?.Clear();
             endTurnDesyncs?.Clear();
@@ -298,6 +302,7 @@ namespace AWBWApp.Game.Game.Logic
         private void setupActions(bool logDesyncs = true)
         {
             var setupContext = new ReplaySetupContext(buildingStorage, COStorage, replayData.ReplayInfo.Players, replayData.ReplayInfo.FundsPerBuilding);
+            setupContext.SetupFirstTurn(replayData.TurnData[0]);
 
             endTurnDesyncs = new Dictionary<int, EndTurnDesync>();
 
@@ -307,7 +312,7 @@ namespace AWBWApp.Game.Game.Logic
 
                 if (i != 0)
                 {
-                    var desync = setupContext.MakeDesync(nextTurn);
+                    var desync = setupContext.FinishTurnAndCheckForDesyncs(Stats, nextTurn);
                     endTurnDesyncs.Add(i - 1, desync);
 
                     if (logDesyncs)

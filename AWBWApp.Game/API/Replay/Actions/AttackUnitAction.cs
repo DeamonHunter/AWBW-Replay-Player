@@ -233,6 +233,11 @@ namespace AWBWApp.Game.API.Replay.Actions
                 }
             }
 
+            context.AdjustStatReadoutsFromUnitList(originalAttacker.PlayerID!.Value, originalUnits.Values);
+
+            //Note: All transports can't attack, so there should only ever be one unit here.
+            controller.Stats.CurrentTurnStatsReadout[originalDefender.PlayerID!.Value].RegisterUnitStats(UnitStatType.DamageUnit, originalAttacker.UnitName, attackerValueLost);
+
             foreach (var powerChange in PowerChanges)
             {
                 originalPowers.Add(powerChange.PlayerID, context.PowerValuesForPlayers[powerChange.PlayerID]);
@@ -362,6 +367,11 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         private void afterAttackChanges(ReplayController controller)
         {
+            ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, false);
+
+            //Note: All transports can't attack, so there should only ever be one unit here.
+            controller.Stats.CurrentTurnStatsReadout[originalDefender.PlayerID!.Value].RegisterUnitStats(UnitStatType.DamageUnit, originalAttacker.UnitName, attackerValueLost);
+
             if (GainedFunds != null)
             {
                 foreach (var (playerID, funds) in GainedFunds)
@@ -406,6 +416,10 @@ namespace AWBWApp.Game.API.Replay.Actions
         public void UndoAction(ReplayController controller)
         {
             Logger.Log("Undoing Attack Action.");
+            ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, true);
+
+            //Note: All transports can't attack, so there should only ever be one unit here.
+            controller.Stats.CurrentTurnStatsReadout[originalDefender.PlayerID!.Value].RegisterUnitStats(UnitStatType.DamageUnit | UnitStatType.Undo, originalAttacker.UnitName, attackerValueLost);
 
             foreach (var cargoUnit in originalUnits)
                 controller.Map.AddUnit(cargoUnit.Value);

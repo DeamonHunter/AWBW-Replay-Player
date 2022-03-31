@@ -6,6 +6,7 @@ using AWBWApp.Game.API.Replay.Actions;
 using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.COs;
+using AWBWApp.Game.UI.Replay;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Game.Logic
@@ -18,6 +19,8 @@ namespace AWBWApp.Game.Game.Logic
         public Dictionary<long, ReplayUserTurn> PlayerTurns = new Dictionary<long, ReplayUserTurn>();
 
         //Todo: Are there other things we need to track here
+
+        public Dictionary<long, PlayerStatsReadout> StatsReadouts = new Dictionary<long, PlayerStatsReadout>();
         public Dictionary<long, int> PropertyValuesForPlayers = new Dictionary<long, int>();
         public Dictionary<long, int> FundsValuesForPlayers = new Dictionary<long, int>();
         public Dictionary<long, int> PowerValuesForPlayers = new Dictionary<long, int>();
@@ -45,8 +48,84 @@ namespace AWBWApp.Game.Game.Logic
             this.fundsPerBuilding = fundsPerBuilding;
         }
 
-        public EndTurnDesync MakeDesync(TurnData nextTurn)
+        public void SetupFirstTurn(TurnData firstTurn)
         {
+            foreach (var player in firstTurn.Players)
+            {
+                var readout = new PlayerStatsReadout
+                {
+                    GeneratedMoney = player.Value.Funds
+                };
+
+                StatsReadouts.Add(player.Key, readout);
+            }
+        }
+
+        public void SetupForTurn(TurnData turn, int turnIndex)
+        {
+            CurrentTurn = turn;
+            CurrentTurnIndex = turnIndex;
+            CurrentDay = turn.Day;
+
+            ActivePlayerID = turn.ActivePlayerID;
+            ActivePlayerTeam = turn.ActiveTeam;
+
+            PlayerTurns.Clear();
+
+            PropertyValuesForPlayers.Clear();
+            FundsValuesForPlayers.Clear();
+            Weather = turn.StartWeather.Type;
+
+            foreach (var player in turn.Players)
+            {
+                PlayerTurns.Add(player.Key, player.Value.Clone());
+                PropertyValuesForPlayers[player.Key] = getPropertyValueForPlayer(player.Key, turn);
+                FundsValuesForPlayers[player.Key] = player.Value.Funds;
+                PowerValuesForPlayers[player.Key] = player.Value.Power;
+            }
+
+            Units.Clear();
+            foreach (var unit in turn.ReplayUnit)
+                Units.Add(unit.Key, unit.Value.Clone());
+
+            Buildings.Clear();
+
+            foreach (var building in turn.Buildings)
+                Buildings.Add(building.Key, building.Value.Clone());
+        }
+
+        public void FinishSetup()
+        {
+            CurrentTurn.Actions ??= new List<IReplayAction>();
+
+            if (CurrentTurn.Actions.Count != 0)
+            {
+                if (CurrentTurn.Actions[^1] is IActionCanEndGame lastAction && lastAction.EndsGame())
+                    return;
+            }
+
+            var gameOverAction = new GameOverAction
+            {
+                FinishedDay = CurrentDay,
+                GameEndDate = null,
+                EndMessage = "Match ended in Draw!",
+                Winners = PlayerInfos.Select(x => x.Key).ToList(),
+                Losers = null
+            };
+
+            CurrentTurn.Actions.Add(gameOverAction);
+        }
+
+        public EndTurnDesync FinishTurnAndCheckForDesyncs(StatsPopup statsReadout, TurnData nextTurn)
+        {
+            StatsReadouts[nextTurn.ActivePlayerID].GeneratedMoney += nextTurn.Players[nextTurn.ActivePlayerID].Funds - FundsValuesForPlayers[nextTurn.ActivePlayerID];
+            statsReadout.RegisterReadouts(StatsReadouts);
+            var newReadouts = new Dictionary<long, PlayerStatsReadout>();
+
+            foreach (var readout in StatsReadouts)
+                newReadouts.Add(readout.Key, readout.Value.Clone());
+            StatsReadouts = newReadouts;
+
             var desync = new EndTurnDesync();
             desync.TurnIndex = CurrentTurnIndex;
             desync.NextPlayerID = nextTurn.ActivePlayerID;
@@ -114,63 +193,6 @@ namespace AWBWApp.Game.Game.Logic
             return desync;
         }
 
-        public void SetupForTurn(TurnData turn, int turnIndex)
-        {
-            CurrentTurn = turn;
-            CurrentTurnIndex = turnIndex;
-            CurrentDay = turn.Day;
-
-            ActivePlayerID = turn.ActivePlayerID;
-            ActivePlayerTeam = turn.ActiveTeam;
-
-            PlayerTurns.Clear();
-
-            PropertyValuesForPlayers.Clear();
-            FundsValuesForPlayers.Clear();
-            Weather = turn.StartWeather.Type;
-
-            foreach (var player in turn.Players)
-            {
-                PlayerTurns.Add(player.Key, player.Value.Clone());
-                PropertyValuesForPlayers[player.Key] = getPropertyValueForPlayer(player.Key, turn);
-                FundsValuesForPlayers[player.Key] = player.Value.Funds;
-                PowerValuesForPlayers[player.Key] = player.Value.Power;
-            }
-
-            Units.Clear();
-            foreach (var unit in turn.ReplayUnit)
-                Units.Add(unit.Key, unit.Value.Clone());
-
-            Buildings.Clear();
-
-            foreach (var building in turn.Buildings)
-                Buildings.Add(building.Key, building.Value.Clone());
-        }
-
-        public void FinishSetup()
-        {
-            //Adds in some draw handling
-
-            CurrentTurn.Actions ??= new List<IReplayAction>();
-
-            if (CurrentTurn.Actions.Count != 0)
-            {
-                if (CurrentTurn.Actions[^1] is IActionCanEndGame lastAction && lastAction.EndsGame())
-                    return;
-            }
-
-            var gameOverAction = new GameOverAction
-            {
-                FinishedDay = CurrentDay,
-                GameEndDate = null,
-                EndMessage = "Match ended in Draw!",
-                Winners = PlayerInfos.Select(x => x.Key).ToList(),
-                Losers = null
-            };
-
-            CurrentTurn.Actions.Add(gameOverAction);
-        }
-
         private int getPropertyValueForPlayer(long playerID, TurnData turn)
         {
             var playerCountry = PlayerInfos[playerID].CountryID;
@@ -213,6 +235,29 @@ namespace AWBWApp.Game.Game.Logic
             }
 
             return unitToRemove;
+        }
+
+        public void AdjustStatReadoutsFromUnitList(long ownerID, IEnumerable<ReplayUnit> units, long? skipUnitId = null)
+        {
+            foreach (var unit in units)
+            {
+                if (unit.ID == skipUnitId)
+                    continue;
+
+                var value = ReplayActionHelper.CalculateUnitCost(unit, coStorage.GetCOByAWBWId(PlayerTurns[unit.PlayerID!.Value].ActiveCOID).DayToDayPower, null);
+
+                bool unitAlive = Units.TryGetValue(unit.ID, out var changedUnit);
+                if (unitAlive)
+                    value -= ReplayActionHelper.CalculateUnitCost(changedUnit, coStorage.GetCOByAWBWId(PlayerTurns[changedUnit.PlayerID!.Value].ActiveCOID).DayToDayPower, null);
+
+                //Don't care if the unit change doesn't affect value. In repairing/resupplying units.
+                if (value <= 0)
+                    continue;
+
+                StatsReadouts[unit.PlayerID!.Value].RegisterUnitStats(unitAlive ? UnitStatType.LostUnit : UnitStatType.LostUnit | UnitStatType.UnitCountChanged, unit.UnitName, value);
+                if (unit.PlayerID != ownerID)
+                    StatsReadouts[ownerID].RegisterUnitStats(unitAlive ? UnitStatType.DamageUnit : UnitStatType.DamageUnit | UnitStatType.UnitCountChanged, unit.UnitName, value);
+            }
         }
     }
 

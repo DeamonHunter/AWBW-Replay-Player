@@ -101,6 +101,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             foreach (var unit in destroyedUnits)
                 context.RemoveUnitFromSetupContext(unit, originalUnits, out _);
+
+            context.AdjustStatReadoutsFromUnitList(context.ActivePlayerID, originalUnits.Values, ExplodedUnitId);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -143,11 +145,15 @@ namespace AWBWApp.Game.API.Replay.Actions
                 }
                 yield return ReplayWait.WaitForMilliseconds(100);
             }
+
+            ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, false, ExplodedUnitId);
         }
 
         public void UndoAction(ReplayController controller)
         {
             Logger.Log("Undoing Explode Action.");
+
+            ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, true, ExplodedUnitId);
 
             foreach (var replayUnit in originalUnits)
             {
