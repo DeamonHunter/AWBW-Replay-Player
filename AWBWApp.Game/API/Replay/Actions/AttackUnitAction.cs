@@ -228,7 +228,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                 if (context.Buildings.TryGetValue(defender.Position!.Value, out var buildingBelow) && buildingBelow.Capture != 20)
                 {
-                    buildingsHP.Add(attacker.Position.Value, buildingBelow.Capture!.Value);
+                    buildingsHP.Add(defender.Position.Value, buildingBelow.Capture!.Value);
                     buildingBelow.Capture = 20;
                 }
             }
