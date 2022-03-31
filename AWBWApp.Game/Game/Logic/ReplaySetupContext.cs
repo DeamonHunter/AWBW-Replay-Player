@@ -94,8 +94,10 @@ namespace AWBWApp.Game.Game.Logic
                 Buildings.Add(building.Key, building.Value.Clone());
         }
 
-        public void FinishSetup()
+        public void FinishSetup(StatsPopup statsReadout)
         {
+            statsReadout.RegisterReadouts(StatsReadouts);
+
             CurrentTurn.Actions ??= new List<IReplayAction>();
 
             if (CurrentTurn.Actions.Count != 0)

@@ -335,7 +335,7 @@ namespace AWBWApp.Game.Game.Logic
                 }
             }
 
-            setupContext.FinishSetup();
+            setupContext.FinishSetup(Stats);
         }
 
         public (int, int) GetLastTurnAndLastAction()

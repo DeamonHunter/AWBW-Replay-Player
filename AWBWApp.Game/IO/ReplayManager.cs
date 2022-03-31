@@ -28,7 +28,7 @@ namespace AWBWApp.Game.IO
 
         private readonly Dictionary<long, string> _playerNames = new Dictionary<long, string>();
 
-        private readonly AWBWReplayParser _parser = new AWBWReplayParser();
+        private readonly AWBWReplayParser parser = new AWBWReplayParser();
 
         public ReplayManager(Storage storage, bool checkForNewReplays = true)
         {
@@ -196,7 +196,7 @@ namespace AWBWApp.Game.IO
             {
                 try
                 {
-                    data = _parser.ParseReplay(stream);
+                    data = parser.ParseReplay(stream);
                 }
                 catch (Exception e)
                 {
@@ -222,7 +222,7 @@ namespace AWBWApp.Game.IO
             {
                 try
                 {
-                    data = _parser.ParseReplay(stream);
+                    data = parser.ParseReplay(stream);
                 }
                 catch (Exception e)
                 {
@@ -241,7 +241,7 @@ namespace AWBWApp.Game.IO
             {
                 using (var readFileStream = new FileStream(path, FileMode.Open))
                 {
-                    data = _parser.ParseReplay(readFileStream);
+                    data = parser.ParseReplay(readFileStream);
 
                     readFileStream.Seek(0, SeekOrigin.Begin);
                     using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.zip", FileAccess.Write, FileMode.Create))
@@ -266,7 +266,7 @@ namespace AWBWApp.Game.IO
 
             try
             {
-                data = _parser.ParseReplay(stream);
+                data = parser.ParseReplay(stream);
 
                 //Store only after parsing it. So we don't save a bad replay
                 using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.zip", FileAccess.Write, FileMode.Create))

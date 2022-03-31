@@ -35,7 +35,7 @@ namespace AWBWApp.Game.UI.Replay
 
         private void turnChanged(int newTurn)
         {
-            if (registeredReadouts.Count == 0)
+            if (registeredReadouts.Count == 0 || newTurn < 0)
                 return;
 
             var readouts = registeredReadouts[newTurn];
