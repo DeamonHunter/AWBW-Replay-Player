@@ -59,13 +59,16 @@ namespace AWBWApp.Game.UI.Replay
 
         private Bindable<FaceDirection> faceDirection;
         private Bindable<object> countryBindable;
+        private Action<long> openPlayerStats;
 
-        public ReplayPlayerListItem(PlayerInfo info)
+        public ReplayPlayerListItem(PlayerInfo info, Action<long> openPlayerStats)
         {
             PlayerID = info.ID;
             RoundOrder = info.RoundOrder;
             EliminatedOn = info.EliminatedOn;
             Team = info.Team;
+
+            this.openPlayerStats = openPlayerStats;
 
             faceDirection = info.UnitFaceDirection.GetBoundCopy();
 
@@ -486,6 +489,7 @@ namespace AWBWApp.Game.UI.Replay
 
             return new MenuItem[]
             {
+                new MenuItem("Open Stats", () => openPlayerStats?.Invoke(PlayerID)),
                 new EnumMenuItem<FaceDirection>("Unit Face Direction", faceDirection),
                 countryMenuItem
             };

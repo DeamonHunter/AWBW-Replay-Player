@@ -56,7 +56,7 @@ namespace AWBWApp.Game.UI.Replay
             };
         }
 
-        public void UpdateList(Dictionary<long, PlayerInfo> players)
+        public void CreateNewListForPlayers(Dictionary<long, PlayerInfo> players, ReplayController controller)
         {
             Schedule(() =>
             {
@@ -68,7 +68,7 @@ namespace AWBWApp.Game.UI.Replay
 
                 foreach (var player in players)
                 {
-                    var drawable = new ReplayPlayerListItem(player.Value);
+                    var drawable = new ReplayPlayerListItem(player.Value, x => controller.Stats.ShowStatsForPlayer(controller.Players[x]));
                     drawablePlayers.Add(drawable);
                     fillContainer.Add(drawable);
                 }

@@ -48,7 +48,7 @@ namespace AWBWApp.Game.Game.Logic
             this.fundsPerBuilding = fundsPerBuilding;
         }
 
-        public void SetupFirstTurn(TurnData firstTurn)
+        public void SetupFirstTurn(StatsHandler statsReadout, TurnData firstTurn)
         {
             foreach (var player in firstTurn.Players)
             {
@@ -59,6 +59,13 @@ namespace AWBWApp.Game.Game.Logic
 
                 StatsReadouts.Add(player.Key, readout);
             }
+
+            statsReadout.RegisterReadouts(StatsReadouts);
+
+            var newReadouts = new Dictionary<long, PlayerStatsReadout>();
+            foreach (var readout in StatsReadouts)
+                newReadouts.Add(readout.Key, readout.Value.Clone());
+            StatsReadouts = newReadouts;
         }
 
         public void SetupForTurn(TurnData turn, int turnIndex)
@@ -94,10 +101,8 @@ namespace AWBWApp.Game.Game.Logic
                 Buildings.Add(building.Key, building.Value.Clone());
         }
 
-        public void FinishSetup(StatsPopup statsReadout)
+        public void FinishSetup()
         {
-            statsReadout.RegisterReadouts(StatsReadouts);
-
             CurrentTurn.Actions ??= new List<IReplayAction>();
 
             if (CurrentTurn.Actions.Count != 0)
@@ -118,12 +123,12 @@ namespace AWBWApp.Game.Game.Logic
             CurrentTurn.Actions.Add(gameOverAction);
         }
 
-        public EndTurnDesync FinishTurnAndCheckForDesyncs(StatsPopup statsReadout, TurnData nextTurn)
+        public EndTurnDesync FinishTurnAndCheckForDesyncs(StatsHandler statsReadout, TurnData nextTurn)
         {
             StatsReadouts[nextTurn.ActivePlayerID].GeneratedMoney += nextTurn.Players[nextTurn.ActivePlayerID].Funds - FundsValuesForPlayers[nextTurn.ActivePlayerID];
             statsReadout.RegisterReadouts(StatsReadouts);
-            var newReadouts = new Dictionary<long, PlayerStatsReadout>();
 
+            var newReadouts = new Dictionary<long, PlayerStatsReadout>();
             foreach (var readout in StatsReadouts)
                 newReadouts.Add(readout.Key, readout.Value.Clone());
             StatsReadouts = newReadouts;

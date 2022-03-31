@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.UI.Components;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
 
@@ -41,7 +41,7 @@ namespace AWBWApp.Game.UI.Replay
                         RelativeSizeAxes = Axes.Both,
                         Colour = new Color4(240, 240, 240, 255)
                     },
-                    new CloseButton()
+                    new StandardCloseButton()
                     {
                         Anchor = Anchor.TopRight,
                         Origin = Anchor.TopRight,
@@ -49,7 +49,7 @@ namespace AWBWApp.Game.UI.Replay
                         Action = () =>
                         {
                             FinishTransforms(true);
-                            Expire();
+                            this.FadeOut(300, Easing.OutQuint).Expire();
                         }
                     },
                     new FillFlowContainer()
@@ -194,11 +194,13 @@ namespace AWBWApp.Game.UI.Replay
                 Padding = new MarginPadding { Horizontal = 25 }
             };
 
+            var boxColor = (rightAligned ? new Color4(142, 19, 19, 255) : new Color4(20, 125, 20, 255)).LightenAndFade(0.6f);
+            var borderColor = (rightAligned ? new Color4(142, 19, 19, 255) : new Color4(20, 125, 20, 255)).LightenAndFade(0.4f);
+
             foreach (var player in playersToShow)
             {
                 var info = players[player];
-
-                flow.Add(new PlayerDrawable(info, rightAligned));
+                flow.Add(new DrawablePlayerListItem(info, rightAligned, boxColor, borderColor, new Color4(20, 20, 20, 255)));
             }
 
             return flow;
@@ -229,135 +231,6 @@ namespace AWBWApp.Game.UI.Replay
                 {
                     child.FadeOut().ScaleTo(new Vector2(0, 1)).Delay(index * 100).FadeIn(200).ScaleTo(1, 400, Easing.OutQuint);
                     index++;
-                }
-            }
-        }
-
-        private class CloseButton : ClickableContainer
-        {
-            public CloseButton()
-            {
-                Colour = new Color4(40, 40, 40, 255);
-                AutoSizeAxes = Axes.Both;
-
-                Children = new Drawable[]
-                {
-                    new SpriteIcon()
-                    {
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Icon = FontAwesome.Solid.TimesCircle,
-                        Size = new Vector2(20)
-                    }
-                };
-            }
-
-            protected override bool OnHover(HoverEvent e)
-            {
-                this.FadeColour(new Color4(239, 155, 20, 255), 200);
-                return base.OnHover(e);
-            }
-
-            protected override void OnHoverLost(HoverLostEvent e)
-            {
-                this.FadeColour(new Color4(40, 40, 40, 255), 200);
-                base.OnHoverLost(e);
-            }
-        }
-
-        private class PlayerDrawable : Container
-        {
-            private PlayerInfo playerInfo;
-            private Sprite coSprite;
-            private Sprite tagSprite;
-
-            public PlayerDrawable(PlayerInfo info, bool rightAligned)
-            {
-                playerInfo = info;
-
-                Masking = true;
-                CornerRadius = 4;
-                AlwaysPresent = true;
-
-                RelativeSizeAxes = Axes.X;
-                Size = new Vector2(0.8f, 30f);
-                Position = new Vector2(rightAligned ? -25 : 25, 0);
-                Anchor = rightAligned ? Anchor.TopRight : Anchor.TopLeft;
-                Origin = rightAligned ? Anchor.TopRight : Anchor.TopLeft;
-
-                Children = new Drawable[]
-                {
-                    new Box()
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Colour = (rightAligned ? new Color4(142, 19, 19, 255) : new Color4(20, 125, 20, 255)).LightenAndFade(0.6f)
-                    },
-                    new FillFlowContainer()
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Direction = FillDirection.Horizontal,
-                        Anchor = rightAligned ? Anchor.TopRight : Anchor.TopLeft,
-                        Origin = rightAligned ? Anchor.TopRight : Anchor.TopLeft,
-                        Padding = new MarginPadding
-                        {
-                            Left = rightAligned ? 30 : 5,
-                            Right = rightAligned ? 5 : 30
-                        },
-                        Spacing = new Vector2(2, 0),
-                        Children = new Drawable[]
-                        {
-                            coSprite = new Sprite()
-                            {
-                                Size = new Vector2(30),
-                                Anchor = rightAligned ? Anchor.CentreRight : Anchor.CentreLeft,
-                                Origin = rightAligned ? Anchor.CentreRight : Anchor.CentreLeft
-                            },
-                            tagSprite = new Sprite()
-                            {
-                                Size = new Vector2(0),
-                                Anchor = rightAligned ? Anchor.CentreRight : Anchor.CentreLeft,
-                                Origin = rightAligned ? Anchor.CentreRight : Anchor.CentreLeft
-                            },
-                            new SpriteText()
-                            {
-                                Anchor = rightAligned ? Anchor.CentreRight : Anchor.CentreLeft,
-                                Origin = rightAligned ? Anchor.CentreRight : Anchor.CentreLeft,
-                                Text = playerInfo.Username,
-                                Font = new FontUsage("Roboto", weight: "Bold", size: 18),
-                                Colour = new Color4(20, 20, 20, 255)
-                            }
-                        }
-                    },
-                    new SpriteIcon()
-                    {
-                        Anchor = rightAligned ? Anchor.CentreLeft : Anchor.CentreRight,
-                        Origin = rightAligned ? Anchor.CentreLeft : Anchor.CentreRight,
-                        Size = new Vector2(20),
-                        Position = new Vector2(rightAligned ? 5 : -5, 0),
-                        Icon = FontAwesome.Solid.SkullCrossbones,
-                        Alpha = playerInfo.Eliminated.Value ? 1 : 0,
-                        Colour = new Color4(20, 20, 20, 255)
-                    },
-                    new Box()
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Size = new Vector2(1, 5),
-                        Anchor = Anchor.BottomCentre,
-                        Origin = Anchor.BottomCentre,
-                        Colour = (rightAligned ? new Color4(142, 19, 19, 255) : new Color4(20, 125, 20, 255)).LightenAndFade(0.4f)
-                    }
-                };
-            }
-
-            [BackgroundDependencyLoader]
-            private void load(NearestNeighbourTextureStore textureStore)
-            {
-                coSprite.Texture = textureStore.Get($"CO/{playerInfo.ActiveCO.Value.CO.Name}-Small");
-
-                if (playerInfo.TagCO.Value.CO != null)
-                {
-                    tagSprite.Texture = textureStore.Get($"CO/{playerInfo.TagCO.Value.CO.Name}-Small");
-                    tagSprite.Size = new Vector2(20);
                 }
             }
         }
