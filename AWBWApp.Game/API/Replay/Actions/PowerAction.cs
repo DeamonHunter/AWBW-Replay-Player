@@ -706,7 +706,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                 foreach (var createdUnit in CreatedUnits)
                 {
                     var drawableUnit = controller.Map.DeleteUnit(createdUnit.UnitID, false);
-                    controller.ActivePlayer.UnitValue.Value += ReplayActionHelper.CalculateUnitCost(drawableUnit, dayToDay, null);
+                    var value = ReplayActionHelper.CalculateUnitCost(drawableUnit, dayToDay, null);
+                    controller.ActivePlayer.UnitValue.Value -= value;
                 }
             }
 
