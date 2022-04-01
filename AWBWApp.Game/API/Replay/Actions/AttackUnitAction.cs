@@ -196,6 +196,9 @@ namespace AWBWApp.Game.API.Replay.Actions
             originalAttacker = attacker.Clone();
             originalDefender = defender.Clone();
 
+            originalUnits.Add(originalAttacker.ID, originalAttacker);
+            originalUnits.Add(originalDefender.ID, originalDefender);
+
             var attackerCO = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[attacker.PlayerID!.Value].ActiveCOID);
             var defenderCO = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[defender.PlayerID!.Value].ActiveCOID);
 
@@ -207,7 +210,6 @@ namespace AWBWApp.Game.API.Replay.Actions
             else
             {
                 context.RemoveUnitFromSetupContext(Attacker.ID, originalUnits, out attackerValueLost);
-                originalUnits.Remove(originalAttacker.ID);
 
                 if (context.Buildings.TryGetValue(attacker.Position!.Value, out var buildingBelow) && buildingBelow.Capture != 20)
                 {
@@ -224,7 +226,6 @@ namespace AWBWApp.Game.API.Replay.Actions
             else
             {
                 context.RemoveUnitFromSetupContext(Defender.ID, originalUnits, out defenderValueLost);
-                originalUnits.Remove(originalDefender.ID);
 
                 if (context.Buildings.TryGetValue(defender.Position!.Value, out var buildingBelow) && buildingBelow.Capture != 20)
                 {
@@ -421,21 +422,16 @@ namespace AWBWApp.Game.API.Replay.Actions
             //Note: All transports can't attack, so there should only ever be one unit here.
             controller.Stats.CurrentTurnStatsReadout[originalDefender.PlayerID!.Value].RegisterUnitStats(UnitStatType.DamageUnit | UnitStatType.Undo, originalAttacker.UnitName, attackerValueLost);
 
-            foreach (var cargoUnit in originalUnits)
-                controller.Map.AddUnit(cargoUnit.Value);
+            foreach (var originalUnit in originalUnits)
+            {
+                if (controller.Map.TryGetDrawableUnit(originalUnit.Key, out var drawableUnit))
+                    drawableUnit.UpdateUnit(originalUnit.Value);
+                else
+                    controller.Map.AddUnit(originalUnit.Value);
+            }
 
-            if (controller.Map.TryGetDrawableUnit(Attacker.ID, out var attackerUnit))
-                attackerUnit.UpdateUnit(originalAttacker);
-            else
-                attackerUnit = controller.Map.AddUnit(originalAttacker);
-
-            if (controller.Map.TryGetDrawableUnit(Defender.ID, out var defenderUnit))
-                defenderUnit.UpdateUnit(originalDefender);
-            else
-                defenderUnit = controller.Map.AddUnit(originalDefender);
-
-            controller.Players[attackerUnit.OwnerID!.Value].UnitValue.Value += attackerValueLost;
-            controller.Players[defenderUnit.OwnerID!.Value].UnitValue.Value += defenderValueLost;
+            controller.Players[originalAttacker.PlayerID!.Value].UnitValue.Value += attackerValueLost;
+            controller.Players[originalDefender.PlayerID!.Value].UnitValue.Value += defenderValueLost;
 
             foreach (var power in originalPowers)
             {
@@ -460,7 +456,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 MoveUnit.UndoAction(controller);
             else
             {
-                attackerUnit.CanMove.Value = true;
+                controller.Map.GetDrawableUnit(originalAttacker.ID).CanMove.Value = true;
                 controller.UpdateFogOfWar();
             }
         }
