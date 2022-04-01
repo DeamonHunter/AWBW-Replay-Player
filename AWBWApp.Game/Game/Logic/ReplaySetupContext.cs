@@ -51,7 +51,7 @@ namespace AWBWApp.Game.Game.Logic
         public void InitialSetup(StatsHandler statsReadout, List<TurnData> turns)
         {
             //Correct the replay's initial funds per player. (Replays will always have funds at 0 until the player gets their first turn.)
-            for (int i = 1; i < turns[0].Players.Count; i++)
+            for (int i = 1; i < turns[0].Players.Count && i < turns.Count; i++)
             {
                 var activePlayer = turns[i].ActivePlayerID;
                 var activeFunds = turns[i].Players[activePlayer].Funds;
