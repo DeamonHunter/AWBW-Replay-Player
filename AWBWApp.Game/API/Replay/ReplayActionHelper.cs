@@ -234,9 +234,9 @@ namespace AWBWApp.Game.API.Replay
                 var additionalFlags = unitAlive ? UnitStatType.UnitCountChanged : UnitStatType.None;
                 additionalFlags |= undo ? UnitStatType.UnitCountChanged : UnitStatType.None;
 
-                controller.Stats.CurrentTurnStatsReadout[unit.PlayerID!.Value].RegisterUnitStats(additionalFlags | UnitStatType.LostUnit, unit.UnitName, value);
+                controller.Stats.CurrentTurnStatsReadout[unit.PlayerID!.Value].RegisterUnitStats(additionalFlags | UnitStatType.LostUnit, unit.UnitName, unit.PlayerID!.Value, value);
                 if (unit.PlayerID != ownerID)
-                    controller.Stats.CurrentTurnStatsReadout[ownerID].RegisterUnitStats(additionalFlags | UnitStatType.DamageUnit, unit.UnitName, value);
+                    controller.Stats.CurrentTurnStatsReadout[ownerID].RegisterUnitStats(additionalFlags | UnitStatType.DamageUnit, unit.UnitName, unit.PlayerID!.Value, value);
             }
         }
     }

@@ -308,7 +308,7 @@ namespace AWBWApp.Game.Game.Logic
         private void setupActions(bool logDesyncs = true)
         {
             var setupContext = new ReplaySetupContext(buildingStorage, COStorage, replayData.ReplayInfo.Players, replayData.ReplayInfo.FundsPerBuilding);
-            setupContext.SetupFirstTurn(Stats, replayData.TurnData[0]);
+            setupContext.InitialSetup(Stats, replayData.TurnData);
 
             endTurnDesyncs = new Dictionary<int, EndTurnDesync>();
 

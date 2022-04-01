@@ -68,7 +68,7 @@ namespace AWBWApp.Game.UI.Replay
 
                 foreach (var player in players)
                 {
-                    var drawable = new ReplayPlayerListItem(player.Value, x => controller.Stats.ShowStatsForPlayer(controller.Players[x]));
+                    var drawable = new ReplayPlayerListItem(player.Value, x => controller.Stats.ShowStatsForPlayer(controller.Players, x));
                     drawablePlayers.Add(drawable);
                     fillContainer.Add(drawable);
                 }

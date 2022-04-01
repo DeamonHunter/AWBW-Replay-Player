@@ -48,9 +48,18 @@ namespace AWBWApp.Game.Game.Logic
             this.fundsPerBuilding = fundsPerBuilding;
         }
 
-        public void SetupFirstTurn(StatsHandler statsReadout, TurnData firstTurn)
+        public void InitialSetup(StatsHandler statsReadout, List<TurnData> turns)
         {
-            foreach (var player in firstTurn.Players)
+            //Correct the replay's initial funds per player. (Replays will always have funds at 0 until the player gets their first turn.)
+            for (int i = 1; i < turns[0].Players.Count; i++)
+            {
+                var activePlayer = turns[i].ActivePlayerID;
+                var activeFunds = turns[i].Players[activePlayer].Funds;
+                for (int j = i - 1; j >= 0; j--)
+                    turns[j].Players[activePlayer].Funds = activeFunds;
+            }
+
+            foreach (var player in turns[0].Players)
             {
                 var readout = new PlayerStatsReadout
                 {
@@ -261,9 +270,9 @@ namespace AWBWApp.Game.Game.Logic
                 if (value <= 0)
                     continue;
 
-                StatsReadouts[unit.PlayerID!.Value].RegisterUnitStats(unitAlive ? UnitStatType.LostUnit : UnitStatType.LostUnit | UnitStatType.UnitCountChanged, unit.UnitName, value);
+                StatsReadouts[unit.PlayerID!.Value].RegisterUnitStats(unitAlive ? UnitStatType.LostUnit : UnitStatType.LostUnit | UnitStatType.UnitCountChanged, unit.UnitName, unit.PlayerID!.Value, value);
                 if (unit.PlayerID != ownerID)
-                    StatsReadouts[ownerID].RegisterUnitStats(unitAlive ? UnitStatType.DamageUnit : UnitStatType.DamageUnit | UnitStatType.UnitCountChanged, unit.UnitName, value);
+                    StatsReadouts[ownerID].RegisterUnitStats(unitAlive ? UnitStatType.DamageUnit : UnitStatType.DamageUnit | UnitStatType.UnitCountChanged, unit.UnitName, unit.PlayerID!.Value, value);
             }
         }
     }

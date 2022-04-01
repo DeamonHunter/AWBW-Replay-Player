@@ -240,13 +240,16 @@ namespace AWBWApp.Game.UI.Replay
             }
         }
 
-        protected override bool OnClick(ClickEvent e)
+        protected override bool Handle(UIEvent e)
         {
-            return true;
-        }
+            switch (e)
+            {
+                case TouchEvent _:
+                case KeyDownEvent _:
+                case KeyUpEvent _:
+                    return false;
+            }
 
-        protected override bool OnHover(HoverEvent e)
-        {
             return true;
         }
     }

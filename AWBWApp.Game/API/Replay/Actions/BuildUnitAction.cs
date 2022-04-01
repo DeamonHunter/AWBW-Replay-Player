@@ -57,7 +57,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             activePlayer.Funds -= unitCost;
 
-            context.StatsReadouts[NewUnit.PlayerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged, NewUnit.UnitName, unitValue);
+            context.StatsReadouts[NewUnit.PlayerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged, NewUnit.UnitName, NewUnit.PlayerID!.Value, unitValue);
             context.StatsReadouts[NewUnit.PlayerID!.Value].MoneySpentOnBuildingUnits += unitCost;
         }
 
@@ -83,7 +83,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             controller.UpdateFogOfWar();
             controller.Map.PlaySelectionAnimation(unit);
 
-            controller.Stats.CurrentTurnStatsReadout[unit.OwnerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged, NewUnit.UnitName, unitValue);
+            controller.Stats.CurrentTurnStatsReadout[unit.OwnerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged, NewUnit.UnitName, NewUnit.PlayerID!.Value, unitValue);
             controller.Stats.CurrentTurnStatsReadout[unit.OwnerID!.Value].MoneySpentOnBuildingUnits += unitCost;
             yield break;
         }
@@ -93,7 +93,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             Logger.Log("Undoing Build Action.");
             var unit = controller.Map.DeleteUnit(NewUnit.ID, false);
 
-            controller.Stats.CurrentTurnStatsReadout[unit.OwnerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged | UnitStatType.Undo, NewUnit.UnitName, unitValue);
+            controller.Stats.CurrentTurnStatsReadout[unit.OwnerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged | UnitStatType.Undo, NewUnit.UnitName, NewUnit.PlayerID!.Value, unitValue);
             controller.Stats.CurrentTurnStatsReadout[unit.OwnerID!.Value].MoneySpentOnBuildingUnits -= unitCost;
 
             if (controller.Map.TryGetDrawableBuilding(unit.MapPosition, out DrawableBuilding building))

@@ -237,7 +237,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             context.AdjustStatReadoutsFromUnitList(originalAttacker.PlayerID!.Value, originalUnits.Values);
 
             //Note: All transports can't attack, so there should only ever be one unit here.
-            controller.Stats.CurrentTurnStatsReadout[originalDefender.PlayerID!.Value].RegisterUnitStats(UnitStatType.DamageUnit, originalAttacker.UnitName, attackerValueLost);
+            controller.Stats.CurrentTurnStatsReadout[originalDefender.PlayerID!.Value].RegisterUnitStats(UnitStatType.DamageUnit, originalAttacker.UnitName, originalAttacker.PlayerID!.Value, attackerValueLost);
 
             foreach (var powerChange in PowerChanges)
             {
@@ -371,7 +371,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, false);
 
             //Note: All transports can't attack, so there should only ever be one unit here.
-            controller.Stats.CurrentTurnStatsReadout[originalDefender.PlayerID!.Value].RegisterUnitStats(UnitStatType.DamageUnit, originalAttacker.UnitName, attackerValueLost);
+            controller.Stats.CurrentTurnStatsReadout[originalDefender.PlayerID!.Value].RegisterUnitStats(UnitStatType.DamageUnit, originalAttacker.UnitName, originalAttacker.PlayerID!.Value, attackerValueLost);
 
             if (GainedFunds != null)
             {
@@ -420,7 +420,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, true);
 
             //Note: All transports can't attack, so there should only ever be one unit here.
-            controller.Stats.CurrentTurnStatsReadout[originalDefender.PlayerID!.Value].RegisterUnitStats(UnitStatType.DamageUnit | UnitStatType.Undo, originalAttacker.UnitName, attackerValueLost);
+            controller.Stats.CurrentTurnStatsReadout[originalDefender.PlayerID!.Value].RegisterUnitStats(UnitStatType.DamageUnit | UnitStatType.Undo, originalAttacker.UnitName, originalAttacker.PlayerID!.Value, attackerValueLost);
 
             foreach (var originalUnit in originalUnits)
             {

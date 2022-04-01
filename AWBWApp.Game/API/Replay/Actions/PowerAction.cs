@@ -465,7 +465,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     context.Units.Add(newUnit.ID, newUnit);
 
                     var value = ReplayActionHelper.CalculateUnitCost(newUnit, co.DayToDayPower, null);
-                    context.StatsReadouts[context.ActivePlayerID].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged, newUnit.UnitName, value);
+                    context.StatsReadouts[context.ActivePlayerID].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged, newUnit.UnitName, newUnit.PlayerID!.Value, value);
                 }
             }
 
@@ -637,7 +637,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                     var value = ReplayActionHelper.CalculateUnitCost(drawableUnit, dayToDay, null);
                     controller.ActivePlayer.UnitValue.Value += value;
-                    controller.Stats.CurrentTurnStatsReadout[drawableUnit.OwnerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged, drawableUnit.UnitData.Name, value);
+                    controller.Stats.CurrentTurnStatsReadout[drawableUnit.OwnerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged, drawableUnit.UnitData.Name, drawableUnit.OwnerID!.Value, value);
 
                     controller.Map.PlaySelectionAnimation(drawableUnit);
                     yield return ReplayWait.WaitForMilliseconds(50);
@@ -734,7 +734,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     var drawableUnit = controller.Map.DeleteUnit(createdUnit.UnitID, false);
                     var value = ReplayActionHelper.CalculateUnitCost(drawableUnit, dayToDay, null);
                     controller.ActivePlayer.UnitValue.Value -= value;
-                    controller.Stats.CurrentTurnStatsReadout[drawableUnit.OwnerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged | UnitStatType.Undo, drawableUnit.UnitData.Name, value);
+                    controller.Stats.CurrentTurnStatsReadout[drawableUnit.OwnerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged | UnitStatType.Undo, drawableUnit.UnitData.Name, drawableUnit.OwnerID!.Value, value);
                 }
             }
 

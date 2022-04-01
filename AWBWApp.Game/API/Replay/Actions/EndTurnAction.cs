@@ -257,7 +257,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     var dayToDay = controller.Players[unit.Value.PlayerID!.Value].ActiveCO.Value.CO.DayToDayPower;
                     var value = ReplayActionHelper.CalculateUnitCost(unit.Value, dayToDay, null);
 
-                    controller.Stats.CurrentTurnStatsReadout[unit.Value.PlayerID!.Value].RegisterUnitStats(UnitStatType.LostUnit | UnitStatType.UnitCountChanged, unit.Value.UnitName, value);
+                    controller.Stats.CurrentTurnStatsReadout[unit.Value.PlayerID!.Value].RegisterUnitStats(UnitStatType.LostUnit | UnitStatType.UnitCountChanged, unit.Value.UnitName, unit.Value.PlayerID!.Value, value);
                     controller.Map.AddUnit(unit.Value);
                 }
             }
