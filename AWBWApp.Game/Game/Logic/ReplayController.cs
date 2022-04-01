@@ -126,6 +126,8 @@ namespace AWBWApp.Game.Game.Logic
                     },
                     Stats = new StatsHandler(CurrentTurnIndex)
                     {
+                        RelativeSizeAxes = Axes.Both,
+                        Position = new Vector2(-100, 0),
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                     },

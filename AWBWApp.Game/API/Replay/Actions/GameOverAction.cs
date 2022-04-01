@@ -68,7 +68,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             Logger.Log("Performing Game Over Action.");
 
-            var powerAnimation = new EndGamePopupDrawable(controller.Players, Winners, Losers, EndMessage);
+            var powerAnimation = new EndGamePopupDrawable(controller.Players, Winners, Losers, EndMessage, x => controller.Stats.ShowStatsForPlayer(controller.Players[x]));
             controller.AddGenericActionAnimation(powerAnimation);
             yield return ReplayWait.WaitForTransformable(powerAnimation);
         }

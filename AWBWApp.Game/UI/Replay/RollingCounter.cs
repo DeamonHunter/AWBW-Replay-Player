@@ -15,6 +15,36 @@ namespace AWBWApp.Game.UI.Replay
     {
         public Drawable DrawableCount { get; private set; }
 
+        private string prefix;
+
+        public string Prefix
+        {
+            get => prefix;
+            set
+            {
+                if (prefix == value)
+                    return;
+
+                prefix = value;
+                UpdateDisplay();
+            }
+        }
+
+        private string suffix;
+
+        public string Suffix
+        {
+            get => suffix;
+            set
+            {
+                if (suffix == value)
+                    return;
+
+                suffix = value;
+                UpdateDisplay();
+            }
+        }
+
         public T DisplayedCount
         {
             get => displayedCount;
@@ -44,7 +74,7 @@ namespace AWBWApp.Game.UI.Replay
         private readonly BindableWithCurrent<T> current = new BindableWithCurrent<T>();
 
         protected bool IsRollingProportionalToChange => false;
-        protected double RollingDuration => 1000;
+        public double RollingDuration = 1000;
         protected virtual Easing RollingEasing => Easing.OutQuint;
 
         private SpriteText displayedCountText;
@@ -65,7 +95,7 @@ namespace AWBWApp.Game.UI.Replay
         protected void UpdateDisplay()
         {
             if (displayedCountText != null)
-                displayedCountText.Text = FormatCount(DisplayedCount);
+                displayedCountText.Text = Prefix + FormatCount(DisplayedCount) + Suffix;
         }
 
         protected override void LoadComplete()

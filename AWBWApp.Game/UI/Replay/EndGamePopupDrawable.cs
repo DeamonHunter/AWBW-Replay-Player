@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Components;
@@ -8,6 +9,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
 
@@ -18,7 +20,7 @@ namespace AWBWApp.Game.UI.Replay
         private FillFlowContainer winnersContainer;
         private FillFlowContainer losersContainer;
 
-        public EndGamePopupDrawable(Dictionary<long, PlayerInfo> players, List<long> winners, List<long> losers, string gameOverMessage)
+        public EndGamePopupDrawable(Dictionary<long, PlayerInfo> players, List<long> winners, List<long> losers, string gameOverMessage, Action<long> openStatsAction)
         {
             Width = 400;
             AutoSizeAxes = Axes.Y;
@@ -61,7 +63,7 @@ namespace AWBWApp.Game.UI.Replay
                         AutoSizeAxes = Axes.Y,
                         Spacing = new Vector2(0, 3),
                         Padding = new MarginPadding { Bottom = 5 },
-                        Children = createFillFlowChildren(gameOverMessage, players, winners, losers, borderColour)
+                        Children = createFillFlowChildren(gameOverMessage, players, winners, losers, borderColour, openStatsAction)
                     }
                 }
             };
@@ -69,7 +71,7 @@ namespace AWBWApp.Game.UI.Replay
             this.FadeOut();
         }
 
-        private Drawable[] createFillFlowChildren(string gameOverMessage, Dictionary<long, PlayerInfo> players, List<long> winners, List<long> losers, Color4 borderColour)
+        private Drawable[] createFillFlowChildren(string gameOverMessage, Dictionary<long, PlayerInfo> players, List<long> winners, List<long> losers, Color4 borderColour, Action<long> openStatsAction)
         {
             if (winners == null || winners.Count == 0)
             {
@@ -117,7 +119,7 @@ namespace AWBWApp.Game.UI.Replay
                 }
             };
 
-            drawables[2] = winnersContainer = createPlayersFlow(players, winners, false);
+            drawables[2] = winnersContainer = createPlayersFlow(players, winners, false, openStatsAction);
 
             if (losers == null || losers.Count <= 0)
                 return drawables;
@@ -159,7 +161,7 @@ namespace AWBWApp.Game.UI.Replay
                 }
             };
 
-            drawables[4] = losersContainer = createPlayersFlow(players, losers, true);
+            drawables[4] = losersContainer = createPlayersFlow(players, losers, true, openStatsAction);
 
             return drawables;
         }
@@ -182,7 +184,7 @@ namespace AWBWApp.Game.UI.Replay
             return container;
         }
 
-        private FillFlowContainer createPlayersFlow(Dictionary<long, PlayerInfo> players, List<long> playersToShow, bool rightAligned)
+        private FillFlowContainer createPlayersFlow(Dictionary<long, PlayerInfo> players, List<long> playersToShow, bool rightAligned, Action<long> openStatsAction)
         {
             var flow = new FillFlowContainer()
             {
@@ -200,7 +202,10 @@ namespace AWBWApp.Game.UI.Replay
             foreach (var player in playersToShow)
             {
                 var info = players[player];
-                flow.Add(new DrawablePlayerListItem(info, rightAligned, boxColor, borderColor, new Color4(20, 20, 20, 255)));
+                flow.Add(new EndGamePlayerListItem(info, rightAligned, boxColor, borderColor, new Color4(20, 20, 20, 255), true)
+                {
+                    Action = () => openStatsAction?.Invoke(player)
+                });
             }
 
             return flow;
@@ -233,6 +238,16 @@ namespace AWBWApp.Game.UI.Replay
                     index++;
                 }
             }
+        }
+
+        protected override bool OnClick(ClickEvent e)
+        {
+            return true;
+        }
+
+        protected override bool OnHover(HoverEvent e)
+        {
+            return true;
         }
     }
 }

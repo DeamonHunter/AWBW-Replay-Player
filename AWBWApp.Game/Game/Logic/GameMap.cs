@@ -323,7 +323,7 @@ namespace AWBWApp.Game.Game.Logic
 
             var cursor = inputManager.CurrentState.Mouse.Position;
 
-            if (getUnitAndTileFromMousePosition(ToLocalSpace(cursor), out var tile, out var building, out var unit))
+            if (getUnitAndTileFromMousePosition(ToLocalSpace(cursor), out var tile, out var building, out var unit) && IsHovered)
                 infoPopup.ShowDetails(tile, building, unit);
             else
                 infoPopup.ShowDetails(null, null, null);

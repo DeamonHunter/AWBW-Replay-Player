@@ -5,18 +5,21 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Components
 {
-    public class DrawablePlayerListItem : Container
+    public class EndGamePlayerListItem : Button
     {
-        private PlayerInfo playerInfo;
-        private Sprite coSprite;
-        private Sprite tagSprite;
+        private readonly PlayerInfo playerInfo;
+        private readonly Sprite coSprite;
+        private readonly Sprite tagSprite;
+        private readonly Box hoverBox;
 
-        public DrawablePlayerListItem(PlayerInfo info, bool rightAligned, Color4 boxColor, Color4 borderColor, Color4 textColor)
+        public EndGamePlayerListItem(PlayerInfo info, bool rightAligned, Color4 boxColor, Color4 borderColor, Color4 textColor, bool showIcon)
         {
             playerInfo = info;
 
@@ -36,6 +39,12 @@ namespace AWBWApp.Game.UI.Components
                 {
                     RelativeSizeAxes = Axes.Both,
                     Colour = boxColor
+                },
+                hoverBox = new Box()
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = boxColor.LightenAndFade(0.4f),
+                    Alpha = 0
                 },
                 new FillFlowContainer()
                 {
@@ -80,7 +89,7 @@ namespace AWBWApp.Game.UI.Components
                     Size = new Vector2(20),
                     Position = new Vector2(rightAligned ? 5 : -5, 0),
                     Icon = FontAwesome.Solid.SkullCrossbones,
-                    Alpha = playerInfo.Eliminated.Value ? 1 : 0,
+                    Alpha = (playerInfo.Eliminated.Value && showIcon) ? 1 : 0,
                     Colour = new Color4(20, 20, 20, 255)
                 },
                 new Box()
@@ -104,6 +113,21 @@ namespace AWBWApp.Game.UI.Components
                 tagSprite.Texture = textureStore.Get($"CO/{playerInfo.TagCO.Value.CO.Name}-Small");
                 tagSprite.Size = new Vector2(20);
             }
+        }
+
+        protected override bool OnHover(HoverEvent e)
+        {
+            if (Action != null)
+                hoverBox.FadeIn(300, Easing.OutQuint);
+            return base.OnHover(e);
+        }
+
+        protected override void OnHoverLost(HoverLostEvent e)
+        {
+            base.OnHoverLost(e);
+
+            if (Action != null)
+                hoverBox.FadeOut(300, Easing.OutQuint);
         }
     }
 }

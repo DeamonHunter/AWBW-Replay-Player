@@ -13,12 +13,13 @@ using osu.Framework.Graphics.Animations;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class StatsHandler : Container
+    public class StatsHandler : Container<StatsPopup>
     {
         /// <summary>
         /// The stats readout that would be shown if the stats window was opened. This can be edited without mutating other turns.
@@ -30,7 +31,6 @@ namespace AWBWApp.Game.UI.Replay
         public StatsHandler(Bindable<int> turnNumberBindable)
         {
             turnNumberBindable.BindValueChanged(x => turnChanged(x.NewValue));
-            RelativeSizeAxes = Axes.Both;
         }
 
         public void RegisterReadouts(Dictionary<long, PlayerStatsReadout> readouts)
@@ -62,7 +62,8 @@ namespace AWBWApp.Game.UI.Replay
 
         public void ShowStatsForPlayer(PlayerInfo player)
         {
-            this.FadeInFromZero(300, Easing.OutQuint);
+            foreach (var popup in Children)
+                popup.Close();
 
             Add(new StatsPopup(player, CurrentTurnStatsReadout[player.ID]));
         }
@@ -88,9 +89,10 @@ namespace AWBWApp.Game.UI.Replay
             {
                 new Box()
                 {
-                    RelativeSizeAxes = Axes.Both
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = new Color4(230, 230, 230, 255)
                 },
-                new DrawablePlayerListItem(player, false, headerColor, borderColor, Color4.White)
+                new EndGamePlayerListItem(player, false, headerColor, borderColor, Color4.White, false)
                 {
                     Size = new Vector2(1, 40),
                     Position = Vector2.Zero
@@ -101,10 +103,7 @@ namespace AWBWApp.Game.UI.Replay
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
                     Padding = new MarginPadding { Top = 10, Right = 5 },
-                    Action = () =>
-                    {
-                        this.FadeOut(300, Easing.OutQuint).Expire();
-                    }
+                    Action = Close
                 },
                 new FillFlowContainer()
                 {
@@ -112,30 +111,13 @@ namespace AWBWApp.Game.UI.Replay
                     AutoSizeAxes = Axes.Y,
                     Margin = new MarginPadding { Top = 45 },
                     Direction = FillDirection.Vertical,
-                    Spacing = new Vector2(0, 2),
+                    Spacing = new Vector2(0, 5),
                     Children = new Drawable[]
                     {
-                        new SpriteText()
-                        {
-                            Colour = new Color4(20, 20, 20, 255),
-                            Margin = new MarginPadding { Horizontal = 5 },
-                            Font = FontUsage.Default.With(size: 18),
-                            Text = $"Total Generated Funds: {readout.GeneratedMoney}"
-                        },
-                        new SpriteText()
-                        {
-                            Colour = new Color4(20, 20, 20, 255),
-                            Margin = new MarginPadding { Horizontal = 5 },
-                            Font = FontUsage.Default.With(size: 18),
-                            Text = $"Funds Spent Building: {readout.MoneySpentOnBuildingUnits}"
-                        },
-                        new SpriteText()
-                        {
-                            Colour = new Color4(20, 20, 20, 255),
-                            Margin = new MarginPadding { Horizontal = 5 },
-                            Font = FontUsage.Default.With(size: 18),
-                            Text = $"Funds Spent Repairing: {readout.MoneySpentOnRepairingUnits}"
-                        },
+                        new StatLine("Total Generated Funds", readout.GeneratedMoney),
+                        new StatLine("Funds Spent Building", readout.MoneySpentOnBuildingUnits),
+                        new StatLine("Funds Spent Repairing", readout.MoneySpentOnRepairingUnits),
+                        new StatLine("Powers Used", $"{readout.PowersUsed} COP / {readout.SuperPowersUsed} SCOP"),
                         new UnitFlowContainer("Units Built", player.Country.Value.Code, readout.BuildStats),
                         new UnitFlowContainer("Units Lost", player.Country.Value.Code, readout.LostStats),
                         new UnitFlowContainer("Opponent Units Destroyed", player.Country.Value.Code, readout.DamageOtherStats),
@@ -147,7 +129,88 @@ namespace AWBWApp.Game.UI.Replay
         protected override void LoadComplete()
         {
             base.LoadComplete();
+            Open();
+        }
+
+        public void Open()
+        {
             this.FadeInFromZero(300, Easing.OutQuint);
+            this.ScaleTo(new Vector2(0.5f, 0f)).ScaleTo(Vector2.One, 500, Easing.OutQuint);
+        }
+
+        public void Close()
+        {
+            this.FadeOut(300, Easing.OutQuint);
+            this.ScaleTo(new Vector2(0.5f, 0f), 500, Easing.OutQuint);
+            Expire();
+        }
+
+        protected override bool OnClick(ClickEvent e)
+        {
+            return true;
+        }
+
+        protected override bool OnHover(HoverEvent e)
+        {
+            return true;
+        }
+
+        private class StatLine : CompositeDrawable
+        {
+            private StatLine(string description)
+            {
+                RelativeSizeAxes = Axes.X;
+                Height = 20;
+
+                AddRangeInternal(new Drawable[]
+                {
+                    new Box()
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = new Color4(200, 200, 200, 255)
+                    },
+                    new SpriteText()
+                    {
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        Position = new Vector2(5, 0),
+
+                        Colour = new Color4(20, 20, 20, 255),
+                        Font = FontUsage.Default.With(size: 18),
+                        Text = description
+                    }
+                });
+            }
+
+            public StatLine(string description, long value)
+                : this(description)
+            {
+                RollingCounter<long> counter;
+                AddInternal(counter = new RollingCounter<long>()
+                {
+                    Position = new Vector2(-5, 0),
+                    Anchor = Anchor.CentreRight,
+                    Origin = Anchor.CentreRight,
+                    Colour = new Color4(20, 20, 20, 255),
+                    Font = FontUsage.Default.With(size: 18),
+                });
+
+                counter.Current.Value = value;
+            }
+
+            public StatLine(string description, string value)
+                : this(description)
+            {
+                AddInternal(new SpriteText()
+                {
+                    Position = new Vector2(-5, 0),
+                    Anchor = Anchor.CentreRight,
+                    Origin = Anchor.CentreRight,
+                    Colour = new Color4(20, 20, 20, 255),
+                    Font = FontUsage.Default.With(size: 18),
+                    Text = value
+                });
+            }
         }
 
         private class UnitFlowContainer : Container
@@ -210,6 +273,8 @@ namespace AWBWApp.Game.UI.Replay
 
                 Spacing = new Vector2(1, 0);
 
+                RollingCounter<long> unitRollingCounter, valueRollingCounter;
+
                 Children = new Drawable[]
                 {
                     spriteAnimation = new TextureAnimation()
@@ -219,24 +284,30 @@ namespace AWBWApp.Game.UI.Replay
                         Origin = Anchor.CentreLeft,
                         Loop = true
                     },
-                    new SpriteText()
+                    unitRollingCounter = new RollingCounter<long>()
                     {
                         Font = FontUsage.Default.With(size: 18),
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
-                        Colour = new Color4(20, 20, 20, 255),
-                        Text = $"x {unitCount}"
+                        Prefix = "x",
+                        RollingDuration = 500,
+                        Colour = new Color4(20, 20, 20, 255)
                     },
-                    new SpriteText()
+                    valueRollingCounter = new RollingCounter<long>()
                     {
                         Font = FontUsage.Default.With(size: 12),
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
+                        Prefix = "(",
+                        Suffix = ")",
+                        RollingDuration = 500,
                         Padding = new MarginPadding { Bottom = 4 },
                         Colour = new Color4(20, 20, 20, 255),
-                        Text = $"({value})"
                     }
                 };
+
+                unitRollingCounter.Current.Value = unitCount;
+                valueRollingCounter.Current.Value = value;
             }
 
             [BackgroundDependencyLoader]
