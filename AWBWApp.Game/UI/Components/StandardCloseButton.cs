@@ -9,7 +9,7 @@ namespace AWBWApp.Game.UI.Components
 {
     public class StandardCloseButton : ClickableContainer
     {
-        private Color4 buttonColour;
+        private Color4 buttonColour = new Color4(20, 20, 20, 255);
 
         public Color4 ButtonColour
         {
