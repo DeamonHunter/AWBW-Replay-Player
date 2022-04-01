@@ -61,6 +61,7 @@ namespace AWBWApp.Game.Game.Units
         public Vector2I MapPosition { get; private set; }
 
         private UnitTextureAnimation textureAnimation;
+        private TextureAnimation lowStatsAnimation;
         private TextureSpriteText healthSpriteText;
 
         private Sprite capturing;
@@ -100,6 +101,12 @@ namespace AWBWApp.Game.Game.Units
                     Anchor = Anchor.BottomRight,
                     Origin = Anchor.BottomRight,
                     Font = new FontUsage(size: 1.5f)
+                },
+                lowStatsAnimation = new TextureAnimation()
+                {
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
+                    Size = new Vector2(7, 8)
                 }
             };
 
@@ -174,6 +181,9 @@ namespace AWBWApp.Game.Game.Units
             CanMove.BindValueChanged(x => updateUnitColour(x.NewValue));
             FogOfWarActive.BindValueChanged(x => updateUnitColour(x.NewValue));
             Dived.BindValueChanged(x => updateUnitColour(x.NewValue));
+
+            Fuel.BindValueChanged(_ => updateLowStatIndicators());
+            Ammo.BindValueChanged(_ => updateLowStatIndicators(), true);
 
             updateUnitColour(true);
             updateCarried();
@@ -269,6 +279,47 @@ namespace AWBWApp.Game.Game.Units
                 healthSpriteText.Show();
 
             healthSpriteText.Text = healthPoints.NewValue.ToString();
+        }
+
+        private bool wasLowAmmo;
+        private bool wasLowFuel;
+
+        private void updateLowStatIndicators()
+        {
+            var lowFuel = (float)Fuel.Value / UnitData.MaxFuel <= 0.25f;
+            var lowAmmo = UnitData.MaxAmmo > 0 && (float)Ammo.Value / UnitData.MaxAmmo <= 0.25f;
+
+            if (wasLowAmmo == lowAmmo && wasLowFuel == lowFuel)
+                return;
+
+            wasLowAmmo = lowAmmo;
+            wasLowFuel = lowFuel;
+
+            if (!lowAmmo && !lowFuel)
+            {
+                lowStatsAnimation.Hide();
+                return;
+            }
+
+            lowStatsAnimation.ClearFrames();
+            lowStatsAnimation.ClearAnimationCache();
+
+            if (lowAmmo && lowFuel)
+            {
+                lowStatsAnimation.AddFrame(textureStore.Get("UI/LowAmmo"), 1000);
+                lowStatsAnimation.AddFrame(textureStore.Get("UI/LowFuel"), 1000);
+            }
+            else if (lowAmmo)
+            {
+                lowStatsAnimation.AddFrame(textureStore.Get("UI/LowAmmo"), 1000);
+                lowStatsAnimation.AddFrame(null, 1000);
+            }
+            else
+            {
+                lowStatsAnimation.AddFrame(textureStore.Get("UI/LowFuel"), 1000);
+                lowStatsAnimation.AddFrame(null, 1000);
+            }
+            lowStatsAnimation.Play();
         }
 
         private void updateCarried()
