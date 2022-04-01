@@ -109,7 +109,8 @@ namespace AWBWApp.Game.Game.Units
             HealthPoints.BindValueChanged(updateHp);
             IsCapturing.BindValueChanged(updateCapturing);
             BeingCarried.BindValueChanged(_ => updateCarried());
-            unitFaceDirection?.BindValueChanged(x => updateFaceDirection(x.NewValue));
+            unitFaceDirection?.BindValueChanged(x => updateFaceDirection(x.NewValue), true);
+
             UpdateUnit(unit);
         }
 
