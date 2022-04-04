@@ -79,7 +79,7 @@
         "DayToDayPower": {
             "PowerIncreases": [
                 {
-                    "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neo Tank", "Recon", "Stealth", "Sub", "Tank"],
+                    "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neotank", "Recon", "Stealth", "Sub", "Tank"],
                     "PowerIncrease": 0.2
                 },
                 {
@@ -93,7 +93,7 @@
             "PowerStars": 3,
             "PowerIncreases": [
                 {
-                    "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neo Tank", "Recon", "Stealth", "Sub", "Tank"],
+                    "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neotank", "Recon", "Stealth", "Sub", "Tank"],
                     "PowerIncrease": 0.1
                 }
                 //Additional Effects: Directs get +1 Movement
@@ -103,7 +103,7 @@
             "PowerStars": 6,
             "PowerIncreases": [
                 {
-                    "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neo Tank", "Recon", "Stealth", "Sub", "Tank"],
+                    "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neotank", "Recon", "Stealth", "Sub", "Tank"],
                     "PowerIncrease": 0.3
                 }
                 //Additional Effects: Directs get +2 Movement
@@ -152,7 +152,7 @@
                     "PowerIncrease": 0.3
                 },
                 {
-                    "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neo Tank", "Recon", "Stealth", "Sub", "Tank"],
+                    "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neotank", "Recon", "Stealth", "Sub", "Tank"],
                     "PowerIncrease": -0.1
                 }
                 //Additional Effects: Directs get +1 Movement
@@ -209,7 +209,7 @@
                     "RangeIncrease": 1
                 },
                 {
-                    "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neo Tank", "Recon", "Stealth", "Sub", "Tank"],
+                    "AffectedUnits": [ "Anti-Air", "B-Copter", "Bomber", "Cruiser", "Fighter", "Md.Tank", "Mega Tank", "Neotank", "Recon", "Stealth", "Sub", "Tank"],
                     "PowerIncrease": -0.2
                 }
             ]
@@ -353,7 +353,7 @@
         "DayToDayPower": {
             "PowerIncreases": [
                 {
-                    "AffectedUnits": [ "Anti-Air", "Artillery", "Md.Tank", "Mega Tank", "Missile", "Neo Tank", "Piperunner", "Recon", "Rocket", "Tank" ],
+                    "AffectedUnits": [ "Anti-Air", "Artillery", "Md.Tank", "Mega Tank", "Missile", "Neotank", "Piperunner", "Recon", "Rocket", "Tank" ],
                     "PowerIncrease": 0.1
                 },
                 {
@@ -366,7 +366,7 @@
             "PowerStars": 3,
             "PowerIncreases": [
                 {
-                    "AffectedUnits": [ "Anti-Air", "Artillery", "Md.Tank", "Mega Tank", "Missile", "Neo Tank", "Piperunner", "Recon", "Rocket", "Tank" ],
+                    "AffectedUnits": [ "Anti-Air", "Artillery", "Md.Tank", "Mega Tank", "Missile", "Neotank", "Piperunner", "Recon", "Rocket", "Tank" ],
                     "PowerIncrease": 0.1
                 }
                 //Additional Effect: Vehicles gain +1 movement, All units get Resupplied
@@ -376,7 +376,7 @@
             "PowerStars": 6,
             "PowerIncreases": [
                 {
-                    "AffectedUnits": [ "Anti-Air", "Artillery", "Md.Tank", "Mega Tank", "Missile", "Neo Tank", "Piperunner", "Recon", "Rocket", "Tank" ],
+                    "AffectedUnits": [ "Anti-Air", "Artillery", "Md.Tank", "Mega Tank", "Missile", "Neotank", "Piperunner", "Recon", "Rocket", "Tank" ],
                     "PowerIncrease": 0.3
                 }
                 //Additional Effect: Vehicles gain +2 movement, All units get Resupplied
@@ -468,7 +468,7 @@
                     "PowerIncrease": 0.4
                 },
                 {
-                    "AffectedUnits": [ "Anti-Air", "Artillery", "Battleship", "Carrier", "Cruiser", "Md.Tank", "Mega Tank", "Missile", "Neo Tank", "Piperunner", "Recon", "Missile", "Sub", "Tank" ],
+                    "AffectedUnits": [ "Anti-Air", "Artillery", "Battleship", "Carrier", "Cruiser", "Md.Tank", "Mega Tank", "Missile", "Neotank", "Piperunner", "Recon", "Missile", "Sub", "Tank" ],
                     "PowerIncrease": -0.1
                 }
                 //Additional Effect: T-Copter, Lander, Transport gain +1 movement
