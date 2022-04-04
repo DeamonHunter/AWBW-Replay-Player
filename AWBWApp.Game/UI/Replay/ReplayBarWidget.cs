@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Input;
-using AWBWApp.Game.UI.Components.Tooltip;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -19,7 +18,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class ReplayBarWidget : TooltipContainer
+    public class ReplayBarWidget : Container
     {
         private readonly ReplayController replayController;
 
@@ -167,8 +166,6 @@ namespace AWBWApp.Game.UI.Replay
 
             replayController.GoToTurn(turn.TurnIndex);
         }
-
-        protected override ITooltip CreateTooltip() => new TextToolTip();
 
         private class ReplayIconButton : IconButton, IKeyBindingHandler<AWBWGlobalAction>, IHasTooltip
         {
