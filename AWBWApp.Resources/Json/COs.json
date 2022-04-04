@@ -2,7 +2,7 @@
     "Andy": {
         "Name": "Andy",
         "AWBWID": 1,
-        "ToolTip": "No day-to-day abilities.",
+        "ToolTip": "Andy: No day-to-day abilities.",
         "DayToDayPower": {},
         "NormalPower": {
             "PowerStars": 3
@@ -20,7 +20,7 @@
     "Hachi": {
         "Name": "Hachi",
         "AWBWID": 17,
-        "ToolTip": "Units cost -10% less to build.",
+        "ToolTip": "Hachi: Units cost -10% less to build.",
         "DayToDayPower": {
             "UnitPriceMultiplier": 0.9
         },
@@ -37,7 +37,7 @@
     "Jake": {
         "Name": "Jake",
         "AWBWID": 22,
-        "ToolTip": "All units gain +10% attack power on plains.",
+        "ToolTip": "Jake: All units gain +10% attack power on plains.",
         "DayToDayPower": {
             "PowerIncreases": [
                 {
@@ -79,7 +79,7 @@
     "Max": {
         "Name": "Max",
         "AWBWID": 7,
-        "ToolTip": "Direct units gain +20% attack power. Indirect units lose 10% attack and 1 range.",
+        "ToolTip": "Max: Direct units gain +20% attack power. Indirect units lose 10% attack and 1 range.",
         "DayToDayPower": {
             "PowerIncreases": [
                 {
@@ -117,7 +117,7 @@
     "Nell": {
         "Name": "Nell",
         "AWBWID": 24,
-        "ToolTip": "Luck on attacks is 0% to 19%.",
+        "ToolTip": "Nell: Luck on attacks is 0% to 19%.",
         "DayToDayPower": {
             "LuckRange": { "x": 0, "y": 19 }
         },
@@ -133,7 +133,7 @@
     "Rachel": {
         "Name": "Rachel",
         "AWBWID": 28,
-        "ToolTip": "Units repair +1 additional HP. (Not for free)",
+        "ToolTip": "Rachel: Units repair +1 additional HP. (Not for free)",
         "DayToDayPower": {
             //Additional Effects: Units will repair +1 more HP.
         },
@@ -151,7 +151,7 @@
     "Sami": {
         "Name": "Sami",
         "AWBWID": 8,
-        "ToolTip": "Footsoldiers gain +30% attack and 50% capture bonus. Transports gain +1 movement. Other directs lose -10% attack.",
+        "ToolTip": "Sami: Footsoldiers gain +30% attack and 50% capture bonus. Transports gain +1 movement. Other directs lose -10% attack.",
         "DayToDayPower": {
             "PowerIncreases": [
                 {
@@ -187,7 +187,7 @@
     "Colin": {
         "Name": "Colin",
         "AWBWID": 15,
-        "ToolTip": "Units cost -20% less to build but have -10% attack.",
+        "ToolTip": "Colin: Units cost -20% less to build but have -10% attack.",
         "DayToDayPower": {
             "UnitPriceMultiplier": 0.8,
             "PowerIncreases": [
@@ -209,7 +209,7 @@
     "Grit": {
         "Name": "Grit",
         "AWBWID": 2,
-        "ToolTip": "Indirect Units have +1 range and +20% attack. Direct Units (excluding footsoldiers) lose -20% attack.",
+        "ToolTip": "Grit: Indirect Units have +1 range and +20% attack. Direct Units (excluding footsoldiers) lose -20% attack.",
         "DayToDayPower": {
             "PowerIncreases": [
                 {
@@ -247,7 +247,7 @@
     "Olaf": {
         "Name": "Olaf",
         "AWBWID": 9,
-        "ToolTip": "Units unaffected by Snow, but rain affects units like snow.",
+        "ToolTip": "Olaf: Units unaffected by Snow, but rain affects units like snow.",
         "DayToDayPower": {
             "WeatherWithNoMovementAffect": "Snow",
             "WeatherWithAdditionalMovementAffect": "Rain"
@@ -264,7 +264,7 @@
     "Sasha": {
         "Name": "Sasha",
         "AWBWID": 19,
-        "ToolTip": "Gains +100 income per income generating property.",
+        "ToolTip": "Sasha: Gains +100 income per income generating property.",
         "DayToDayPower": {
             "PropertyFundIncrease": 100
         },
@@ -280,7 +280,7 @@
     "Drake": {
         "Name": "Drake",
         "AWBWID": 5,
-        "ToolTip": "Naval units gain +1 movement and +25% defence. Air Units lost -20% attack. All units unaffected by rain (excluding sight). Higher chance of rain during random weather.",
+        "ToolTip": "Drake: Naval units gain +1 movement and +25% defence. Air Units lost -20% attack. All units unaffected by rain (excluding sight). Higher chance of rain during random weather.",
         "DayToDayPower": {
             "WeatherWithNoMovementAffect": "Rain",
             //Todo: Higher Rain chance in random weather
@@ -308,7 +308,7 @@
     "Eagle": {
         "Name": "Eagle",
         "AWBWID": 10,
-        "ToolTip": "Air Untis gain +15% attack, +10% defense and consume -2 less fuel per day. Naval units lose -30% attack.",
+        "ToolTip": "Eagle: Air Untis gain +15% attack, +10% defense and consume -2 less fuel per day. Naval units lose -30% attack.",
         "DayToDayPower": {
             "AirFuelUsageDecrease": 2,
             "PowerIncreases": [
@@ -349,7 +349,7 @@
     "Javier": {
         "Name": "Javier",
         "AWBWID": 27,
-        "ToolTip": "Units gain +20% defense against indirect units. Com Towers additionally give +10% defense to all units.",
+        "ToolTip": "Javier: Units gain +20% defense against indirect units. Com Towers additionally give +10% defense to all units.",
         "DayToDayPower": {
             //Todo: Conditional Effects: +20% defense against indirects, +10% defense per tower
         },
@@ -365,7 +365,7 @@
     "Jess": {
         "Name": "Jess",
         "AWBWID": 14,
-        "ToolTip": "Vehicles gain +10% attack, but all other units lost -10% attack.",
+        "ToolTip": "Jess: Vehicles gain +10% attack, but all other units lost -10% attack.",
         "DayToDayPower": {
             "PowerIncreases": [
                 {
@@ -402,7 +402,7 @@
     "Grimm": {
         "Name": "Grimm",
         "AWBWID": 20,
-        "ToolTip": "Units gain +30% attack, but lose -20% attack",
+        "ToolTip": "Grimm: Units gain +30% attack, but lose -20% attack",
         "DayToDayPower": {
             "PowerIncreases": [
                 {
@@ -439,7 +439,7 @@
     "Kanbei": {
         "Name": "Kanbei",
         "AWBWID": 3,
-        "ToolTip": "Units cost +20% more, but gain +30% attack and defense.",
+        "ToolTip": "Kanbei: Units cost +20% more, but gain +30% attack and defense.",
         "DayToDayPower": {
             "UnitPriceMultiplier": 1.2,
             "PowerIncreases": [
@@ -475,7 +475,7 @@
     "Sensei": {
         "Name": "Sensei",
         "AWBWID": 13,
-        "Tooltip": "Copters gain +50% attack, footsoldiers gain +40% attack, but all other non-air units lose -10% attack. Transports gain +1 movement.",
+        "Tooltip": "Sensei: Copters gain +50% attack, footsoldiers gain +40% attack, but all other non-air units lose -10% attack. Transports gain +1 movement.",
         "DayToDayPower": {
             "PowerIncreases": [
                 {
@@ -517,7 +517,7 @@
     "Sonja": {
         "Name": "Sonja",
         "AWBWID": 18,
-        "Tooltip": "Units gain +1 vision in Fog of War, hidden hp, and counterattacks do 1.5x damage. Luck on attacks is -9% to 9%.",
+        "Tooltip": "Sonja: Units gain +1 vision in Fog of War, hidden hp, and counterattacks do 1.5x damage. Luck on attacks is -9% to 9%.",
         "DayToDayPower": {
             "HiddenHP": true,
             "CounterAttackPower": 1.5,
@@ -540,7 +540,7 @@
     "Adder": {
         "Name": "Adder",
         "AWBWID": 11,
-        "ToolTip": "No day-to-day abilities.",
+        "ToolTip": "Adder: No day-to-day abilities.",
         "DayToDayPower": {},
         "NormalPower": {
             "PowerStars": 2
@@ -554,7 +554,7 @@
     "Flak": {
         "Name": "Flak",
         "AWBWID": 25,
-        "ToolTip": "Luck on attacks is -9% to 24%.",
+        "ToolTip": "Flak: Luck on attacks is -9% to 24%.",
         "DayToDayPower": {
             "LuckRange": { "x": -9, "y": 24 }
         },
@@ -570,7 +570,7 @@
     "Hawke": {
         "Name": "Hawke",
         "AWBWID": 12,
-        "ToolTip": "All units gain +10% attack.",
+        "ToolTip": "Hawke: All units gain +10% attack.",
         "DayToDayPower": {
             "PowerIncreases": [
                 {
@@ -591,7 +591,7 @@
     "Jugger": {
         "Name": "Jugger",
         "AWBWID": 26,
-        "ToolTip": "Luck on attacks is -14% to 29%.",
+        "ToolTip": "Jugger: Luck on attacks is -14% to 29%.",
         "DayToDayPower": {
             "LuckRange": { "x": -14, "y": 29 }
         },
@@ -607,7 +607,7 @@
     "Kindle": {
         "Name": "Kindle",
         "AWBWID": 23,
-        "ToolTip": "All units gain +40% attack while on urban terrain.",
+        "ToolTip": "Kindle: All units gain +40% attack while on urban terrain.",
         "DayToDayPower": {
             "PowerIncreases": [
                 {
@@ -643,7 +643,7 @@
     "Koal": {
         "Name": "Koal",
         "AWBWID": 21,
-        "ToolTip": "All units gain +10% attack while on roads.",
+        "ToolTip": "Koal: All units gain +10% attack while on roads.",
         "DayToDayPower": {
             "PowerIncreases": [
                 {
@@ -679,7 +679,7 @@
     "Lash": {
         "Name": "Lash",
         "AWBWID": 16,
-        "ToolTip": "Units gain +10% attack per terrain star.",
+        "ToolTip": "Lash: Units gain +10% attack per terrain star.",
         "DayToDayPower": {
             //Todo: +10% attack for every terrain +10% defense
         },
@@ -696,7 +696,7 @@
     "Sturm": {
         "Name": "Sturm",
         "AWBWID": 29,
-        "ToolTip": "Movement cost over all terrain is reduced to 1, except during snow. Units lose -20% attack but gain +20% defense.",
+        "ToolTip": "Sturm: Movement cost over all terrain is reduced to 1, except during snow. Units lose -20% attack but gain +20% defense.",
         "DayToDayPower": {
             "MoveCostPerTile": 1,
             "PowerIncreases": [
@@ -719,7 +719,7 @@
     "Von Bolt": {
         "Name": "Von Bolt",
         "AWBWID": 30,
-        "ToolTip": "Units gain +10% attack and +10% defense",
+        "ToolTip": "Von Bolt: Units gain +10% attack and +10% defense",
         "DayToDayPower": {
             "PowerIncreases": [
                 {
