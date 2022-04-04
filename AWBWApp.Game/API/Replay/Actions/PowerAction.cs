@@ -528,7 +528,10 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             if (ChangeToWeather.HasValue)
+            {
                 controller.Map.CurrentWeather.Value = ChangeToWeather.Value;
+                controller.UpdateFogOfWar();
+            }
 
             if (PlayerChanges != null)
             {
@@ -576,10 +579,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                         if (change.Value.FuelGainPercentage.HasValue)
                             unit.Fuel.Value = Math.Max(0, Math.Min(unit.UnitData.MaxFuel, (int)Math.Ceiling(unit.Fuel.Value * change.Value.FuelGainPercentage.Value)));
 
-                        //Todo: Play heal/damage animation
-                        playEffectForUnitChange(controller, unit.MapPosition, change.Value);
+                        playEffectForUnitChange(controller, unit);
 
-                        yield return ReplayWait.WaitForMilliseconds(50);
+                        yield return ReplayWait.WaitForMilliseconds(75);
                     }
                 }
             }
@@ -615,12 +617,12 @@ namespace AWBWApp.Game.API.Replay.Actions
                         if (unit.HealthPoints.Value <= 0)
                             controller.Map.DeleteUnit(unit.UnitID, true);
                         else
-                            playEffectForUnitChange(controller, unit.MapPosition, change.Value);
+                            playEffectForUnitChange(controller, unit);
                     }
                     else
                         throw new Exception("Unable to find unit: " + change.Key);
 
-                    yield return ReplayWait.WaitForMilliseconds(50);
+                    yield return ReplayWait.WaitForMilliseconds(75);
                 }
             }
 
@@ -669,12 +671,9 @@ namespace AWBWApp.Game.API.Replay.Actions
             };
         }
 
-        private void playEffectForUnitChange(ReplayController controller, Vector2I position, UnitChange change)
+        private void playEffectForUnitChange(ReplayController controller, DrawableUnit unit)
         {
-        }
-
-        private void playEffectForUnitChange(ReplayController controller, Vector2I position, PlayerWideUnitChange change)
-        {
+            controller.Map.PlaySelectionAnimation(unit);
         }
 
         public void UndoAction(ReplayController controller)

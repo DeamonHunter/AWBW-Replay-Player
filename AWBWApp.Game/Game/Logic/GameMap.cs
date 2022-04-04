@@ -705,6 +705,14 @@ namespace AWBWApp.Game.Game.Logic
 
                 case 1:
                 {
+                    var range = unit.AttackRange.Value;
+
+                    var action = replayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
+                    range.Y += action?.COPower.PowerIncreases?.FirstOrDefault(x => x.AffectedUnits.Contains("all") || x.AffectedUnits.Contains(unit.Name))?.RangeIncrease ?? 0;
+
+                    var dayToDay = replayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+                    range.Y += dayToDay.PowerIncreases?.FirstOrDefault(x => x.AffectedUnits.Contains("all") || x.AffectedUnits.Contains(unit.Name))?.RangeIncrease ?? 0;
+
                     for (int i = unit.AttackRange.Value.X; i <= unit.AttackRange.Value.Y; i++)
                     {
                         foreach (var tile in Vec2IHelper.GetAllTilesWithDistance(unit.MapPosition, i))
@@ -728,7 +736,12 @@ namespace AWBWApp.Game.Game.Logic
                     var sightRangeModifier = dayToDayPower.SightIncrease + (action?.SightRangeIncrease ?? 0);
                     sightRangeModifier += unit.UnitData.MovementType != MovementType.Air ? tileGrid[unit.MapPosition.X, unit.MapPosition.Y].TerrainTile.SightDistanceIncrease : 0;
 
-                    for (int i = 0; i <= unit.UnitData.Vision + sightRangeModifier; i++)
+                    if (CurrentWeather.Value == Weather.Rain)
+                        sightRangeModifier -= 1;
+
+                    var vision = Math.Max(1, unit.UnitData.Vision + sightRangeModifier);
+
+                    for (int i = 0; i <= vision; i++)
                     {
                         foreach (var tile in Vec2IHelper.GetAllTilesWithDistance(unit.MapPosition, i))
                         {
@@ -804,18 +817,35 @@ namespace AWBWApp.Game.Game.Logic
             var movementRange = unit.MovementRange.Value;
 
             var action = replayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
+            var dayToDay = replayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+
             movementRange += action?.MovementRangeIncrease ?? 0;
 
             void addTileIfCanMoveTo(Vector2I position, int movement)
             {
                 Dictionary<MovementType, int> moveCosts;
+
+                TerrainType terrainType;
+
                 if (TryGetDrawableBuilding(position, out var building))
+                {
                     moveCosts = building.BuildingTile.MovementCostsPerType;
+                    terrainType = TerrainType.Building;
+                }
                 else
-                    moveCosts = tileGrid[position.X, position.Y].TerrainTile.MovementCostsPerType;
+                {
+                    var tile = tileGrid[position.X, position.Y].TerrainTile;
+                    moveCosts = tile.MovementCostsPerType;
+                    terrainType = tile.TerrainType;
+                }
 
                 if (moveCosts.TryGetValue(unit.UnitData.MovementType, out var cost))
                 {
+                    if (dayToDay.MoveCostPerTile != null && CurrentWeather.Value != Weather.Snow)
+                        cost = dayToDay.MoveCostPerTile.Value;
+                    else if (CurrentWeather.Value != Weather.Clear)
+                        cost = movementForWeather(unit.UnitData.MovementType, dayToDay.WeatherWithNoMovementAffect, dayToDay.WeatherWithAdditionalMovementAffect, terrainType, cost);
+
                     if (movement + cost <= movementRange)
                         queue.Enqueue(position, movement + cost);
                 }
@@ -844,6 +874,43 @@ namespace AWBWApp.Game.Game.Logic
                 nextTile = tilePos + new Vector2I(0, -1);
                 if (nextTile.Y >= 0 && !visited.Contains(nextTile))
                     addTileIfCanMoveTo(nextTile, movement);
+            }
+        }
+
+        private int movementForWeather(MovementType moveType, Weather noAffect, Weather additionalEffect, TerrainType type, int cost)
+        {
+            if (CurrentWeather.Value == Weather.Clear || CurrentWeather.Value == noAffect)
+                return cost;
+
+            if (CurrentWeather.Value == Weather.Rain && additionalEffect != Weather.Rain)
+            {
+                if ((moveType & (MovementType.Tread | MovementType.Tire)) == 0)
+                    return cost;
+
+                return (type & (TerrainType.Plain | TerrainType.Forest)) != 0 ? cost + 1 : cost;
+            }
+
+            switch (moveType)
+            {
+                default:
+                    return cost;
+
+                case MovementType.Air:
+                    return cost * 2;
+
+                case MovementType.LightInf:
+                    return (type & (TerrainType.Plain | TerrainType.Forest | TerrainType.Mountain)) != 0 ? cost * 2 : cost;
+
+                case MovementType.HeavyInf:
+                    return type == TerrainType.Mountain ? cost * 2 : cost;
+
+                case MovementType.Lander:
+                case MovementType.Sea:
+                    return (type & (TerrainType.Sea | TerrainType.Building)) != 0 ? cost * 2 : cost;
+
+                case MovementType.Tire:
+                case MovementType.Tread:
+                    return (type & (TerrainType.Plain | TerrainType.Forest)) != 0 ? cost + 1 : cost;
             }
         }
 

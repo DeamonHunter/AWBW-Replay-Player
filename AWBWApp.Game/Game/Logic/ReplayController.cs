@@ -10,6 +10,7 @@ using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Components;
+using AWBWApp.Game.UI.Components.Tooltip;
 using AWBWApp.Game.UI.Notifications;
 using AWBWApp.Game.UI.Replay;
 using NUnit.Framework;
@@ -95,68 +96,72 @@ namespace AWBWApp.Game.Game.Logic
             AddInternal(new AWBWContextMenuContainer()
             {
                 RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
+                Child = new AWBWTooltipContainer
                 {
-                    cameraControllerWithGrid = new CameraControllerWithGrid()
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new Drawable[]
                     {
-                        MaxScale = 8,
-                        MapSpace = mapPadding,
-                        MovementRegion = safeMovement,
-                        RelativeSizeAxes = Axes.Both,
-                        Child = Map = new GameMap(this),
-                    },
-                    powerLayer = new Container
-                    {
-                        Position = new Vector2(-100, 0),
-                        RelativeSizeAxes = Axes.Both
-                    },
-                    infoPopup = new DetailedInformationPopup
-                    {
-                        Position = new Vector2(10, -10),
-                        Origin = Anchor.BottomLeft,
-                        Anchor = Anchor.BottomLeft,
-                    },
-                    barWidget = new ReplayBarWidget(this),
-                    playerList = new ReplayPlayerList
-                    {
-                        Anchor = Anchor.TopRight,
-                        Origin = Anchor.TopRight,
-                        RelativeSizeAxes = Axes.Y,
-                        Size = new Vector2(225, 1)
-                    },
-                    Stats = new StatsHandler(CurrentTurnIndex)
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Position = new Vector2(-100, 0),
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    },
-                    errorContainer = new BlockingLayer
-                    {
-                        BlockKeyEvents = false,
-                        Size = new Vector2(300, 100),
-                        Origin = Anchor.Centre,
-                        Anchor = Anchor.Centre,
-                        Masking = true,
-                        CornerRadius = 10,
-                        Children = new Drawable[]
+                        cameraControllerWithGrid = new CameraControllerWithGrid()
                         {
-                            new Box()
+                            MaxScale = 8,
+                            MapSpace = mapPadding,
+                            MovementRegion = safeMovement,
+                            RelativeSizeAxes = Axes.Both,
+                            Child = Map = new GameMap(this),
+                        },
+                        powerLayer = new Container
+                        {
+                            Position = new Vector2(-100, 0),
+                            RelativeSizeAxes = Axes.Both
+                        },
+                        infoPopup = new DetailedInformationPopup
+                        {
+                            Position = new Vector2(10, -10),
+                            Origin = Anchor.BottomLeft,
+                            Anchor = Anchor.BottomLeft,
+                        },
+                        barWidget = new ReplayBarWidget(this),
+                        playerList = new ReplayPlayerList
+                        {
+                            Anchor = Anchor.TopRight,
+                            Origin = Anchor.TopRight,
+                            RelativeSizeAxes = Axes.Y,
+                            Size = new Vector2(225, 1)
+                        },
+                        Stats = new StatsHandler(CurrentTurnIndex)
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Position = new Vector2(-100, 0),
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                        },
+                        errorContainer = new BlockingLayer
+                        {
+                            BlockKeyEvents = false,
+                            Size = new Vector2(300, 100),
+                            Origin = Anchor.Centre,
+                            Anchor = Anchor.Centre,
+                            Masking = true,
+                            CornerRadius = 10,
+                            Children = new Drawable[]
                             {
-                                RelativeSizeAxes = Axes.Both,
-                                Colour = new Color4(30, 30, 30, 200)
-                            },
-                            new TextFlowContainer()
-                            {
-                                RelativeSizeAxes = Axes.Both,
-                                Anchor = Anchor.Centre,
-                                Origin = Anchor.Centre,
-                                TextAnchor = Anchor.Centre,
-                                Text = "An error has occurred.\nPlease press Esc to head back to the replay select screen."
+                                new Box()
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Colour = new Color4(30, 30, 30, 200)
+                                },
+                                new TextFlowContainer()
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    TextAnchor = Anchor.Centre,
+                                    Text = "An error has occurred.\nPlease press Esc to head back to the replay select screen."
+                                }
                             }
-                        }
-                    },
-                    loadingLayer = new ReplayLoadingLayer()
+                        },
+                        loadingLayer = new ReplayLoadingLayer()
+                    }
                 }
             });
 
@@ -673,7 +678,7 @@ namespace AWBWApp.Game.Game.Logic
             var action = GetActivePowerForPlayer(playerID);
             var sightRangeModifier = dayToDayPower.SightIncrease + (action?.SightRangeIncrease ?? 0);
 
-            if (currentTurn.StartWeather.Type == Weather.Rain)
+            if (Map.CurrentWeather.Value == Weather.Rain)
                 sightRangeModifier -= 1;
 
             Map.UpdateFogOfWar(playerID, sightRangeModifier, action?.COPower.SeeIntoHiddenTiles ?? false, resetFog);

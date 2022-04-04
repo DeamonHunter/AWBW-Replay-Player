@@ -249,7 +249,8 @@
         "AWBWID": 9,
         "ToolTip": "Units unaffected by Snow, but rain affects units like snow.",
         "DayToDayPower": {
-            //Todo: Handle uneffected by snow
+            "WeatherWithNoMovementAffect": "Snow",
+            "WeatherWithAdditionalMovementAffect": "Rain"
         },
         "NormalPower": {
             "PowerStars": 3
@@ -279,9 +280,9 @@
     "Drake": {
         "Name": "Drake",
         "AWBWID": 5,
-        "ToolTip": "Naval units gain +1 movement and +25% defence. Air Units lost -20% attack. Units unaffected by rain (excluding sight). Higher chance of rain during random weather.",
+        "ToolTip": "Naval units gain +1 movement and +25% defence. Air Units lost -20% attack. All units unaffected by rain (excluding sight). Higher chance of rain during random weather.",
         "DayToDayPower": {
-            //Todo: Handle uneffected by snow
+            "WeatherWithNoMovementAffect": "Rain",
             //Todo: Higher Rain chance in random weather
             "PowerIncreases": [
                 {
@@ -697,7 +698,7 @@
         "AWBWID": 29,
         "ToolTip": "Movement cost over all terrain is reduced to 1, except during snow. Units lose -20% attack but gain +20% defense.",
         "DayToDayPower": {
-            //Todo: Movement cost decrease
+            "MoveCostPerTile": 1,
             "PowerIncreases": [
                 {
                     "AffectedUnits": [ "all" ],
