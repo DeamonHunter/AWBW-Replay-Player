@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Input;
-using AWBWApp.Game.UI.Components;
+using AWBWApp.Game.UI.Components.Tooltip;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;

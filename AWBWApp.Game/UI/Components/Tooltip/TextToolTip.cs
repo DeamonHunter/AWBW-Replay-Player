@@ -2,21 +2,29 @@
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osuTK;
 using osuTK.Graphics;
 
-namespace AWBWApp.Game.UI.Components
+namespace AWBWApp.Game.UI.Components.Tooltip
 {
     /// <summary>
     /// Recreation of <see cref="TooltipContainer.Tooltip"/> which sets the tooltip to our colours
     /// </summary>
     public class TextToolTip : VisibilityContainer, ITooltip<LocalisableString>
     {
-        private readonly SpriteText text;
+        private readonly TextFlowContainer text;
+        private LocalisableString prev;
 
-        public virtual void SetContent(LocalisableString content) => text.Text = content;
+        public virtual void SetContent(LocalisableString content)
+        {
+            //Text flow container takes a frame to update. So we can't swap this every frame
+            if (prev == content)
+                return;
+
+            prev = content;
+            text.Text = content;
+        }
 
         private const float text_size = 16;
 
@@ -32,10 +40,15 @@ namespace AWBWApp.Game.UI.Components
                     RelativeSizeAxes = Axes.Both,
                     Colour = new Color4(40, 40, 40, 255),
                 },
-                text = new SpriteText
+                text = new TextFlowContainer(x =>
                 {
-                    Font = FrameworkFont.Regular.With(size: text_size),
+                    x.Font = FrameworkFont.Regular.With(size: text_size);
+                })
+                {
+                    AutoSizeAxes = Axes.Both,
+                    Text = "This is a test",
                     Padding = new MarginPadding(5),
+                    MaximumSize = new Vector2(300, float.MaxValue)
                 }
             };
         }

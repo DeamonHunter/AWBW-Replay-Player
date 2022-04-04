@@ -40,17 +40,15 @@ namespace AWBWApp.Game.UI.Replay
                 {
                     RelativeSizeAxes = Axes.Both,
                     ScrollbarAnchor = Anchor.TopRight,
+                    Margin = new MarginPadding { Bottom = 10 },
                     ScrollbarOverlapsContent = false,
-                    Children = new Drawable[]
+                    Child = fillContainer = new FillFlowContainer()
                     {
-                        fillContainer = new FillFlowContainer()
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Direction = FillDirection.Vertical,
-                            LayoutDuration = 450,
-                            LayoutEasing = Easing.OutQuint
-                        }
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Direction = FillDirection.Vertical,
+                        LayoutDuration = 450,
+                        LayoutEasing = Easing.OutQuint
                     }
                 }
             };

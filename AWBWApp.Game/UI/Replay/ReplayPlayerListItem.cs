@@ -6,6 +6,7 @@ using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Components.Menu;
+using AWBWApp.Game.UI.Components.Tooltip;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
@@ -34,11 +35,11 @@ namespace AWBWApp.Game.UI.Replay
         private TableContainer tableContainer;
 
         private COData co;
-        private Sprite coSprite;
+        private SpriteWithTooltip coSprite;
         private PowerProgress coProgress;
 
         private COData tagCO;
-        private Sprite tagCOSprite;
+        private SpriteWithTooltip tagCOSprite;
         private PowerProgress tagProgress;
 
         private Container normalPowerBackground;
@@ -262,7 +263,7 @@ namespace AWBWApp.Game.UI.Replay
                 Content = new Drawable[,]
                 {
                     {
-                        coSprite = new Sprite
+                        coSprite = new SpriteWithTooltip
                         {
                             FillMode = FillMode.Fit,
                             Anchor = Anchor.Centre,
@@ -317,7 +318,7 @@ namespace AWBWApp.Game.UI.Replay
             {
                 {
                     content[0, 0],
-                    tagCOSprite = new Sprite
+                    tagCOSprite = new SpriteWithTooltip
                     {
                         FillMode = FillMode.Fit,
                         Anchor = Anchor.BottomRight,
@@ -419,11 +420,13 @@ namespace AWBWApp.Game.UI.Replay
                 {
                     tagCOSprite.Texture = textureStore.Get($"CO/{coUpdated.NewValue.CO.Name}-Small");
                     tagCO = coUpdated.NewValue.CO;
+                    tagCOSprite.ToolTip = tagCO.Tooltip;
                 }
                 else
                 {
                     coSprite.Texture = textureStore.Get($"CO/{coUpdated.NewValue.CO.Name}-Small");
                     co = coUpdated.NewValue.CO;
+                    coSprite.ToolTip = co.Tooltip;
                 }
             }
 
@@ -437,6 +440,9 @@ namespace AWBWApp.Game.UI.Replay
                 (co, tagCO) = (tagCO, co);
                 (coSprite, tagCOSprite) = (tagCOSprite, coSprite);
                 (coProgress, tagProgress) = (tagProgress, coProgress);
+
+                coSprite.ToolTip = co.Tooltip;
+                tagCOSprite.ToolTip = tagCO.Tooltip;
 
                 coSprite.ResizeTo(new Vector2(36), 400, Easing.Out);
                 tagCOSprite.ResizeTo(new Vector2(24), 400, Easing.Out);

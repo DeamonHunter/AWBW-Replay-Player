@@ -5,14 +5,16 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Localisation;
 using osuTK;
 using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Components
 {
-    public class PowerProgress : Container, IHasCurrentValue<int>
+    public class PowerProgress : Container, IHasCurrentValue<int>, IHasTooltip
     {
         private readonly BindableWithCurrent<int> current = new BindableWithCurrent<int>();
 
@@ -44,6 +46,8 @@ namespace AWBWApp.Game.UI.Components
         public int ProgressPerBar = 90000;
 
         private readonly int smallBars;
+
+        public override bool HandlePositionalInput => true;
 
         public PowerProgress(int? requiredNormal, int? requiredSuper)
         {
@@ -86,6 +90,8 @@ namespace AWBWApp.Game.UI.Components
 
             Current.BindValueChanged(val => TransformPower(DisplayedValue, val.NewValue));
         }
+
+        public LocalisableString TooltipText => $"Normal: {Math.Floor(Math.Min(displayedPower, PowerRequiredForNormal) / 10.0f)} / {Math.Floor(PowerRequiredForNormal / 10.0f)}\nSuper:    {Math.Floor(Math.Min(displayedPower, PowerRequiredForSuper) / 10.0f)} / {Math.Floor(PowerRequiredForSuper / 10.0f)}";
 
         public void UpdatePower()
         {

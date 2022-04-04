@@ -5,6 +5,7 @@ using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Components;
+using AWBWApp.Game.UI.Components.Tooltip;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
@@ -349,7 +350,7 @@ namespace AWBWApp.Game.UI.Replay
 
                 Children = new Drawable[]
                 {
-                    spriteAnimation = new ToolTipTextureAnimation(playerUsername)
+                    spriteAnimation = new TextureAnimationWithTooltip(playerUsername)
                     {
                         Size = DrawableTile.BASE_SIZE,
                         Anchor = Anchor.CentreLeft,
@@ -402,18 +403,6 @@ namespace AWBWApp.Game.UI.Replay
                         spriteAnimation.Size = texture.Size;
                     spriteAnimation.AddFrame(texture, unitData.Frames[i]);
                 }
-            }
-
-            private class ToolTipTextureAnimation : TextureAnimation, IHasTooltip
-            {
-                private string tooltip;
-
-                public ToolTipTextureAnimation(string tooltip)
-                {
-                    this.tooltip = tooltip;
-                }
-
-                public LocalisableString TooltipText => tooltip;
             }
         }
     }
