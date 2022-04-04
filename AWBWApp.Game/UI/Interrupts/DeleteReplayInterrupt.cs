@@ -22,7 +22,7 @@ namespace AWBWApp.Game.UI.Interrupts
         private readonly TextFlowContainer errorText;
         private readonly LoadingLayer blockingLayer;
 
-        public DeleteReplayInterrupt(ReplayInfo replayToDelete)
+        public DeleteReplayInterrupt(ReplayInfo replayToDelete, string mapName)
         {
             this.replayToDelete = replayToDelete;
 
@@ -43,7 +43,7 @@ namespace AWBWApp.Game.UI.Interrupts
                         Children = new Drawable[]
                         {
                             new ReplayCarouselPanelBackground(replayToDelete),
-                            new ReplayCarouselPanelContent(new CarouselReplay(replayToDelete))
+                            new ReplayCarouselPanelContent(new CarouselReplay(replayToDelete, mapName))
                         }
                     },
                     errorText = new TextFlowContainer()

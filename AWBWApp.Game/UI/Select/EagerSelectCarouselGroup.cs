@@ -50,9 +50,14 @@ namespace AWBWApp.Game.UI.Select
 
         private void attemptSelection()
         {
-            if (State.Value != CarouselItemState.Selected) return;
+            if (filteringChildren)
+                return;
 
-            if (Children.Any(i => i.State.Value == CarouselItemState.Selected)) return;
+            if (State.Value != CarouselItemState.Selected)
+                return;
+
+            if (Children.Any(i => i.State.Value == CarouselItemState.Selected))
+                return;
 
             PerformSelection();
         }
@@ -71,6 +76,17 @@ namespace AWBWApp.Game.UI.Select
                 nextToSelect.State.Value = CarouselItemState.Selected;
             else
                 updateSelected(null);
+        }
+
+        private bool filteringChildren;
+
+        public override void Filter(string[] textParts, CarouselFilter filter)
+        {
+            filteringChildren = true;
+            base.Filter(textParts, filter);
+            filteringChildren = false;
+
+            attemptSelection();
         }
 
         private void updateSelected(CarouselItem newSelection)

@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.IO;
+using AWBWApp.Game.UI.Components;
 using osu.Framework.Allocation;
 using osu.Framework.Caching;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Pooling;
+using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Framework.Layout;
 using osuTK;
+using osuTK.Graphics;
 using osuTK.Input;
 
 namespace AWBWApp.Game.UI.Select
@@ -34,6 +38,9 @@ namespace AWBWApp.Game.UI.Select
         public ReplayInfo SelectedReplayData => selectedReplay?.ReplayInfo;
 
         private CarouselReplay selectedReplay;
+        private TextBox searchTextBox;
+        private FilterDropdown searchDropdown;
+        private Container searchContainer;
 
         private const float pixels_offscreen_before_unloading_replay = 1024;
 
@@ -65,6 +72,9 @@ namespace AWBWApp.Game.UI.Select
         [Resolved]
         private ReplayManager replayManager { get; set; }
 
+        [Resolved]
+        private MapFileStorage mapStorage { get; set; }
+
         private IEnumerable<CarouselReplay> replays => rootCarouselItem.Children.OfType<CarouselReplay>();
 
         private PendingScrollOperation pendingScrollOperation = PendingScrollOperation.None;
@@ -83,10 +93,54 @@ namespace AWBWApp.Game.UI.Select
                         Scroll = new CarouselScrollContainer
                         {
                             RelativeSizeAxes = Axes.Both
+                        },
+                        searchContainer = new Container()
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Children = new Drawable[]
+                            {
+                                new BlockingLayer(true, 0.75f)
+                                {
+                                    BlockKeyEvents = false,
+                                    RelativeSizeAxes = Axes.X,
+                                    Anchor = Anchor.TopRight,
+                                    Origin = Anchor.TopRight,
+                                    Height = 70,
+                                    Colour = new Color4(20, 20, 20, 100),
+                                },
+                                new Box()
+                                {
+                                    RelativeSizeAxes = Axes.X,
+                                    Anchor = Anchor.TopRight,
+                                    Origin = Anchor.TopRight,
+                                    Height = 30,
+                                    Colour = new Color4(20, 20, 20, 200)
+                                },
+                                searchTextBox = new BasicTextBox
+                                {
+                                    RelativeSizeAxes = Axes.X,
+                                    Position = new Vector2(0, 30),
+                                    Height = 35f,
+                                    Padding = new MarginPadding { Top = 5, Horizontal = 5 },
+                                    Anchor = Anchor.TopRight,
+                                    Origin = Anchor.TopRight,
+                                    PlaceholderText = "Search Here"
+                                },
+                                searchDropdown = new FilterDropdown()
+                                {
+                                    Position = new Vector2(-5, 35),
+                                    Size = new Vector2(100, 25),
+                                    Anchor = Anchor.TopRight,
+                                    Origin = Anchor.TopRight,
+                                }
+                            }
                         }
                     }
                 }
             };
+
+            searchTextBox.OnCommit += (x, y) => onSearchTextChange(x.Text, searchDropdown.Current.Value);
+            searchDropdown.Current.BindValueChanged(x => onSearchTextChange(searchTextBox.Text, x.NewValue));
         }
 
         [BackgroundDependencyLoader]
@@ -154,7 +208,7 @@ namespace AWBWApp.Game.UI.Select
 
         private CarouselReplay createCarouselReplay(ReplayInfo info)
         {
-            var item = new CarouselReplay(info);
+            var item = new CarouselReplay(info, mapStorage.Get(info.MapId)?.TerrainName ?? "[Missing Map]");
 
             item.State.ValueChanged += state =>
             {
@@ -177,6 +231,13 @@ namespace AWBWApp.Game.UI.Select
                 itemsCache.Invalidate();
 
             return base.OnInvalidate(invalidation, source);
+        }
+
+        public void OnEnter()
+        {
+            searchContainer.FadeInFromZero(300, Easing.OutQuint);
+            searchContainer.ScaleTo(new Vector2(1, 0.5f)).ScaleTo(Vector2.One, 500, Easing.OutQuint);
+            searchContainer.MoveToY(-40).MoveToY(0, 500, Easing.OutQuint);
         }
 
         protected override void Update()
@@ -212,11 +273,8 @@ namespace AWBWApp.Game.UI.Select
                             continue;
                         }
 
-                        if (panel.Y + panel.DrawHeight < visibleUpperBound - pixels_offscreen_before_unloading_replay || panel.Y > visibleBottomBound + pixels_offscreen_before_unloading_replay)
-                        {
-                            panel.ClearTransforms();
-                            panel.Expire();
-                        }
+                        panel.ClearTransforms();
+                        panel.Expire();
                     }
 
                     foreach (var item in toDisplay)
@@ -311,6 +369,7 @@ namespace AWBWApp.Game.UI.Select
                             // move down by half of visible height (height of the carousel's visible extent, including semi-transparent areas)
                             // then reapply the top semi-transparent area (because carousel's screen space starts below it)
                             scrollTarget = currentY + DrawableCarouselReplay.SELECTEDHEIGHT - visibleHalfHeight;
+                            pendingScrollOperation = PendingScrollOperation.Standard;
                         }
 
                         currentY += replay.TotalHeight + panel_padding;
@@ -392,6 +451,23 @@ namespace AWBWApp.Game.UI.Select
             item.State.Value = CarouselItemState.Selected;
         }
 
+        private string lastSearchText;
+        private CarouselFilter lastSearchFilter;
+
+        private void onSearchTextChange(string text, CarouselFilter filter)
+        {
+            if (text == lastSearchText && filter == lastSearchFilter)
+                return;
+
+            lastSearchText = text;
+            lastSearchFilter = filter;
+
+            var splitText = text.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+
+            rootCarouselItem.Filter(splitText, filter);
+            itemsCache.Invalidate();
+        }
+
         public void ScrollToSelected(bool immediate = false) => pendingScrollOperation = immediate ? PendingScrollOperation.Immediate : PendingScrollOperation.Standard;
 
         private enum PendingScrollOperation
@@ -407,6 +483,8 @@ namespace AWBWApp.Game.UI.Select
         private class CarouselBoundsItem : CarouselItem
         {
             public override DrawableCarouselItem GetDrawableForItem() => throw new NotImplementedException();
+
+            public override void Filter(string[] textParts, CarouselFilter filter) { }
         }
 
         private class CarouselRoot : EagerSelectCarouselGroup
@@ -476,6 +554,13 @@ namespace AWBWApp.Game.UI.Select
             public UserTrackingScrollContainer(Direction direction)
                 : base(direction)
             {
+            }
+
+            protected override ScrollbarContainer CreateScrollbar(Direction direction)
+            {
+                var scrollbar = base.CreateScrollbar(direction);
+                scrollbar.Child.Colour = new Color4(50, 100, 50, 255);
+                return scrollbar;
             }
 
             protected override void OnUserScroll(float value, bool animated = true, double? distanceDecay = default)

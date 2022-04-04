@@ -47,7 +47,7 @@ namespace AWBWApp.Game.UI.Toolbar
                 hoverDrawable = new HoverDrawable(updateHoverShow, onHoverLost, updateHoverShow)
                 {
                     RelativeSizeAxes = Axes.X,
-                    Size = new Vector2(1, 40),
+                    Size = new Vector2(1, 35),
                     AlwaysPresent = true
                 },
                 new FillFlowContainer()

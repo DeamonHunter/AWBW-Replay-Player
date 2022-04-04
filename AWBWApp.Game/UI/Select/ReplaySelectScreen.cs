@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AWBWApp.Game.API.Replay;
@@ -10,7 +11,6 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osu.Framework.Screens;
 using osuTK;
@@ -35,7 +35,6 @@ namespace AWBWApp.Game.UI.Select
 
         private Box background;
         private MovingGrid grid;
-        private Container noReplaysContainer;
 
         private static Color4 backgroundColor = new Color4(232, 209, 153, 255);
 
@@ -71,24 +70,6 @@ namespace AWBWApp.Game.UI.Select
                     RelativeSizeAxes = Axes.X,
                     Width = 250
                 },
-                noReplaysContainer = new Container()
-                {
-                    Size = new Vector2(500, 300),
-                    Masking = true,
-                    CornerRadius = 15,
-                    Alpha = 0,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Children = new Drawable[]
-                    {
-                        new Box()
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.Black.Opacity(0.5f)
-                        },
-                        createMissingReplaysContainer()
-                    }
-                },
                 carouselContainer = new Container()
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -105,28 +86,6 @@ namespace AWBWApp.Game.UI.Select
             });
         }
 
-        private TextFlowContainer createMissingReplaysContainer()
-        {
-            var textFlow = new TextFlowContainer()
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                TextAnchor = Anchor.Centre,
-                RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Spacing = new Vector2(0, 5)
-            };
-
-            textFlow.AddText("No Replays have been added.\n\n\n", text => text.Font = new FontUsage("Roboto", weight: "Bold", size: 36));
-            textFlow.AddText("You can add more replays by doing the following:\n\n", text => text.Font = new FontUsage("Roboto", weight: "Bold", size: 24));
-
-            textFlow.AddText("Select \"Import a Replay\" and follow the prompts.", text => text.Font = new FontUsage("Roboto", size: 24));
-            textFlow.AddText("\nOR\n");
-            textFlow.AddText("Dragging a replay on top of this player.", text => text.Font = new FontUsage("Roboto", size: 24));
-
-            return textFlow;
-        }
-
         private DependencyContainer dependencies;
 
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
@@ -141,6 +100,8 @@ namespace AWBWApp.Game.UI.Select
         public override void OnEntering(IScreen last)
         {
             base.OnEntering(last);
+
+            Carousel.OnEnter();
 
             background.FadeColour(backgroundColor).FadeColour(backgroundColor.Darken(0.2f), 500, Easing.In);
         }
@@ -215,12 +176,8 @@ namespace AWBWApp.Game.UI.Select
 
         private void updateSelected(ReplayInfo updatedReplay)
         {
+            ReplayInfo.HasReplays = Carousel.Replays.Any();
             ReplayInfo.Replay = updatedReplay;
-
-            if (updatedReplay == null)
-                Schedule(() => noReplaysContainer.FadeIn(400, Easing.In));
-            else
-                Schedule(() => noReplaysContainer.FadeOut(400, Easing.In));
         }
 
         private void carouselReplaysLoaded()
@@ -228,12 +185,7 @@ namespace AWBWApp.Game.UI.Select
             Carousel.AllowSelection = true;
 
             if (Carousel.SelectedReplayData != null)
-            {
-                noReplaysContainer.FadeOut(400, Easing.Out);
                 return;
-            }
-
-            noReplaysContainer.FadeIn(400, Easing.In);
         }
 
         private class ResetScrollContainer : Container

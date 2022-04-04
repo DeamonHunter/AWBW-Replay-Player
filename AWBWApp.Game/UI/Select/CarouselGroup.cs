@@ -63,5 +63,11 @@ namespace AWBWApp.Game.UI.Select
             // State.ValueChanged make decisions post-removal.
             i.State.Value = CarouselItemState.Collapsed;
         }
+
+        public override void Filter(string[] textParts, CarouselFilter filter)
+        {
+            foreach (var child in InternalChildren)
+                child.Filter(textParts, filter);
+        }
     }
 }

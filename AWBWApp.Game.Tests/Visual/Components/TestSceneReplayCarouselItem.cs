@@ -17,7 +17,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
         {
             var info = replayManager.GetReplayInStorage("Json/Replays/478996");
 
-            var replayItem = new CarouselReplay(info.ReplayInfo);
+            var replayItem = new CarouselReplay(info.ReplayInfo, "Test Map");
 
             Schedule(() =>
             {

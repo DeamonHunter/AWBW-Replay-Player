@@ -50,8 +50,6 @@ namespace AWBWApp.Game.UI.Select
                 index++;
             }
 
-            var mapName = mapStorage.Get(replayInfo.MapId)?.TerrainName ?? "[Unknown Map]";
-
             InternalChildren = new Drawable[]
             {
                 new FillFlowContainer
@@ -83,7 +81,7 @@ namespace AWBWApp.Game.UI.Select
                                 new SpriteText
                                 {
                                     Padding = new MarginPadding { Top = 2 },
-                                    Text = mapName,
+                                    Text = carouselReplay.MapName,
                                     Font = FontUsage.Default.With(weight: "SemiBold", size: 17, italics: true),
                                     Shadow = true,
                                     ShadowColour = new Color4(0, 0, 0, 200),

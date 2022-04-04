@@ -26,6 +26,7 @@ namespace AWBWApp.Game.UI.Select
         private const float height = MAX_HEIGHT * 0.9f;
 
         private ReplayInfo replayInfo;
+        private string mapName;
 
         private Action<ReplayInfo> startRequest;
         private Action<ReplayInfo> showFolderRequest;
@@ -40,6 +41,7 @@ namespace AWBWApp.Game.UI.Select
         public DrawableCarouselReplay(CarouselReplay panel)
         {
             replayInfo = panel.ReplayInfo;
+            mapName = panel.MapName;
             Item = panel;
         }
 
@@ -84,7 +86,7 @@ namespace AWBWApp.Game.UI.Select
                 };
 
                 if (interruptOverlay != null)
-                    items.Add(new MenuItem("Delete...", () => interruptOverlay.Push(new DeleteReplayInterrupt(replayInfo))));
+                    items.Add(new MenuItem("Delete...", () => interruptOverlay.Push(new DeleteReplayInterrupt(replayInfo, mapName))));
 
                 return items.ToArray();
             }
@@ -120,6 +122,7 @@ namespace AWBWApp.Game.UI.Select
                 return;
 
             replayInfo = ((CarouselReplay)Item).ReplayInfo;
+            mapName = ((CarouselReplay)Item).MapName;
 
             DelayedLoadWrapper background;
             DelayedLoadWrapper mainFlow;

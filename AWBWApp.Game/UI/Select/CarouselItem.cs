@@ -31,6 +31,8 @@ namespace AWBWApp.Game.UI.Select
 
         public abstract DrawableCarouselItem GetDrawableForItem();
 
+        public abstract void Filter(string[] textParts, CarouselFilter filter);
+
         public int CompareTo(CarouselItem other) => CarouselYPosition.CompareTo(other.CarouselYPosition);
     }
 

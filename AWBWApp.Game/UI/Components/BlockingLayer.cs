@@ -17,17 +17,20 @@ namespace AWBWApp.Game.UI.Components
 
         private readonly Container contents;
         private Box backgroundLayer;
+        private float alpha;
 
-        public BlockingLayer()
+        public BlockingLayer(bool startVisible = false, float alpha = 0.5f)
         {
             RelativeSizeAxes = Axes.Both;
+
+            this.alpha = alpha;
 
             AddRangeInternal(new Drawable[]
             {
                 backgroundLayer = new Box
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.Black,
+                    Colour = new Color4(20, 20, 20, 255),
                     Alpha = 0
                 },
                 contents = new Container()
@@ -35,11 +38,14 @@ namespace AWBWApp.Game.UI.Components
                     RelativeSizeAxes = Axes.Both
                 }
             });
+
+            if (startVisible)
+                State.Value = Visibility.Visible;
         }
 
         protected override void PopIn()
         {
-            backgroundLayer.FadeTo(0.5f, 1000, Easing.OutQuint);
+            backgroundLayer.FadeTo(alpha, 1000, Easing.OutQuint);
             contents.FadeIn(500, Easing.OutQuint);
         }
 

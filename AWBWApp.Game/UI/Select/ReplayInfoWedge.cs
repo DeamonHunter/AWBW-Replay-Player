@@ -31,6 +31,8 @@ namespace AWBWApp.Game.UI.Select
             }
         }
 
+        public bool HasReplays;
+
         private ReplayInfo replay;
 
         protected WedgeInfo Info { get; private set; }
@@ -46,17 +48,11 @@ namespace AWBWApp.Game.UI.Select
 
             void loadInfo()
             {
-                if (replay == null)
-                {
-                    removeDisplayedContent();
-                    return;
-                }
-
                 LoadComponentAsync(loadingContent = new Container()
                 {
                     RelativeSizeAxes = Axes.Both,
                     Depth = DisplayedContent?.Depth + 1 ?? 0,
-                    Child = Info = new WedgeInfo(replay)
+                    Child = Info = new WedgeInfo(replay, HasReplays)
                 }, loaded =>
                 {
                     if (loaded != loadingContent) return;
@@ -70,7 +66,7 @@ namespace AWBWApp.Game.UI.Select
 
         private void removeDisplayedContent()
         {
-            State.Value = replay == null ? Visibility.Hidden : Visibility.Visible;
+            State.Value = Visibility.Visible;
 
             DisplayedContent?.FadeOut(250);
             DisplayedContent?.Expire();
@@ -92,18 +88,60 @@ namespace AWBWApp.Game.UI.Select
 
     public class WedgeInfo : Container
     {
-        private ReplayInfo replay;
-        private SmallMapTexture map;
+        private readonly ReplayInfo replay;
+        private readonly bool hasReplays;
 
-        public WedgeInfo(ReplayInfo info)
+        public WedgeInfo(ReplayInfo info, bool hasReplays)
         {
             replay = info;
+            this.hasReplays = hasReplays;
         }
 
         [BackgroundDependencyLoader]
         private void load(MapFileStorage storage, CountryStorage countryStorage)
         {
             RelativeSizeAxes = Axes.Both;
+
+            if (replay == null)
+            {
+                Children = new Drawable[]
+                {
+                    new Container()
+                    {
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        RelativeSizeAxes = Axes.Both,
+                        Masking = true,
+                        BorderColour = new Color4(50, 50, 200, 255).Darken(0.4f),
+                        BorderThickness = 5,
+                        Size = new Vector2(1, 1.05f),
+                        Child = new Box()
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = ColourInfo.GradientVertical(new Color4(50, 50, 200, 175), new Color4(25, 25, 175, 125))
+                        }
+                    },
+                    new Container()
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Masking = true,
+                        CornerRadius = 15,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Children = new Drawable[]
+                        {
+                            new Box()
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = Color4.Black.Opacity(0.5f)
+                            },
+                            createMissingReplaysContainer(hasReplays)
+                        }
+                    },
+                };
+                return;
+            }
 
             SmallMapTexture map;
             Children = new Drawable[]
@@ -294,6 +332,35 @@ namespace AWBWApp.Game.UI.Select
         private void createHeader(SpriteText text)
         {
             text.Font = new FontUsage("Roboto", weight: "Bold");
+        }
+
+        private TextFlowContainer createMissingReplaysContainer(bool hasReplays)
+        {
+            var textFlow = new TextFlowContainer()
+            {
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                TextAnchor = Anchor.Centre,
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+                Spacing = new Vector2(0, 5),
+                Padding = new MarginPadding { Vertical = 5, Horizontal = 2 }
+            };
+
+            if (!hasReplays)
+            {
+                textFlow.AddText("No Replays match the current search text.", text => text.Font = new FontUsage("Roboto", weight: "Bold", size: 24));
+                return textFlow;
+            }
+
+            textFlow.AddText("No Replays have been added.\n\n\n", text => text.Font = new FontUsage("Roboto", weight: "Bold", size: 24));
+            textFlow.AddText("You can add more replays by doing the following:\n\n", text => text.Font = new FontUsage("Roboto", weight: "Bold", size: 18));
+
+            textFlow.AddText("Select \"Import a Replay\" and follow the prompts.", text => text.Font = new FontUsage("Roboto", size: 18));
+            textFlow.AddText("\nOR\n");
+            textFlow.AddText("Dragging a replay on top of this player.", text => text.Font = new FontUsage("Roboto", size: 18));
+
+            return textFlow;
         }
 
         private class SmallMapTexture : Container
