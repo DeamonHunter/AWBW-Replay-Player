@@ -170,7 +170,7 @@ namespace AWBWApp.Game.UI.Replay
         private class ReplayIconButton : IconButton, IKeyBindingHandler<AWBWGlobalAction>, IHasTooltip
         {
             private readonly AWBWGlobalAction triggerAction;
-            private Func<string> getToolTip;
+            private readonly Func<string> getToolTip;
 
             public ReplayIconButton(AWBWGlobalAction triggerAction, Func<string> getToolTip = null)
             {

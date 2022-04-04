@@ -47,13 +47,14 @@ namespace AWBWApp.Game.UI.Replay
                 Spacing = new Vector2(0, 5),
                 Children = new Drawable[]
                 {
-                    new StatLine("Total Generated Funds", readout.GeneratedMoney),
-                    new StatLine("Funds Spent Building", readout.MoneySpentOnBuildingUnits),
-                    new StatLine("Funds Spent Repairing", readout.MoneySpentOnRepairingUnits),
+                    new StatLine("Total Generated Funds", readout.GeneratedMoney)
+                    {
+                        Tooltip = $"Spent on Building: {readout.MoneySpentOnBuildingUnits}\nSpent On Repairing: {readout.MoneySpentOnRepairingUnits}"
+                    },
                     new StatLine("Powers Used", $"{readout.PowersUsed} COP / {readout.SuperPowersUsed} SCOP"),
-                    new UnitFlowContainer("Built Units", "Units Built", "Total Value", players[playerID].Country.Value.Code, readout.BuildStats, "Total Built Value", readout.TotalValueBuilt),
-                    new UnitFlowContainer("Damaged Units", "Units Died", "Value of Damage Taken", players[playerID].Country.Value.Code, readout.LostStats, "Total Value of Damage", readout.TotalValueLost),
-                    new UnitFlowContainer("Damage to Opponent Units", "Units Killed", "Value of Damage Dealt", players, readout.DamageOtherStats, "Total Value of Damage", readout.TotalValueDamaged),
+                    new UnitFlowContainer("Built/Value", players[playerID].Country.Value.Code, readout.BuildStats, "Total Built Value", readout.TotalValueBuilt),
+                    new UnitFlowContainer("Deaths/Value Damage Taken", players[playerID].Country.Value.Code, readout.LostStats, "Total Value of Damage", readout.TotalValueLost),
+                    new UnitFlowContainer("Kills/Value Damage Dealt", players, readout.DamageOtherStats, "Total Value of Damage", readout.TotalValueDamaged),
                 }
             };
 
@@ -143,8 +144,10 @@ namespace AWBWApp.Game.UI.Replay
                 };
         }
 
-        private class StatLine : CompositeDrawable
+        private class StatLine : CompositeDrawable, IHasTooltip
         {
+            public string Tooltip;
+
             private StatLine(string description)
             {
                 RelativeSizeAxes = Axes.X;
@@ -199,18 +202,22 @@ namespace AWBWApp.Game.UI.Replay
                     Text = value
                 });
             }
+
+            public LocalisableString TooltipText => Tooltip;
         }
 
-        private class UnitFlowContainer : TooltipContainer
+        private class UnitFlowContainer : Container
         {
             private GridContainer statsContainer;
 
-            private UnitFlowContainer(string heading, string valueToolip, long totalValue)
+            private readonly static Color4 seperator_color = new Colour4(150, 150, 150, 255);
+
+            private UnitFlowContainer(string heading, string valueDesc, long totalValue)
             {
                 RelativeSizeAxes = Axes.X;
                 AutoSizeAxes = Axes.Y;
 
-                TooltipRollingCounter<long> rollingCounter;
+                RollingCounter<long> rollingCounter;
                 Children = new Drawable[]
                 {
                     new Box()
@@ -225,8 +232,9 @@ namespace AWBWApp.Game.UI.Replay
                         Colour = new Color4(20, 20, 20, 255),
                         Text = heading
                     },
-                    rollingCounter = new TooltipRollingCounter<long>(valueToolip)
+                    rollingCounter = new RollingCounterWithTooltip<long>
                     {
+                        Tooltip = valueDesc,
                         Anchor = Anchor.TopRight,
                         Origin = Anchor.TopRight,
                         Position = new Vector2(-5, 0),
@@ -238,7 +246,7 @@ namespace AWBWApp.Game.UI.Replay
                         RelativeSizeAxes = Axes.X,
                         Height = 3,
                         Position = new Vector2(0, 18),
-                        Colour = new Colour4(150, 150, 150, 255)
+                        Colour = seperator_color
                     },
                     statsContainer = new GridContainer()
                     {
@@ -253,8 +261,8 @@ namespace AWBWApp.Game.UI.Replay
                 rollingCounter.Current.Value = totalValue;
             }
 
-            public UnitFlowContainer(string heading, string unitDesc, string valueDesc, string countryCode, Dictionary<string, (int, long)> units, string totalValueDescription, long totalValue)
-                : this(heading, totalValueDescription, totalValue)
+            public UnitFlowContainer(string heading, string countryCode, Dictionary<string, (int, long)> units, string valueDesc, long totalValue)
+                : this(heading, valueDesc, totalValue)
             {
                 var content = new Drawable[(units.Count / 3) + 1][];
 
@@ -267,38 +275,61 @@ namespace AWBWApp.Game.UI.Replay
                     if (content[row] == null)
                         content[row] = new Drawable[3];
 
-                    content[row][idx % 3] = new UnitStats(null, unitDesc, valueDesc, stat.Key, countryCode, stat.Value.Item1, stat.Value.Item2);
+                    content[row][idx % 3] = new UnitStats(null, stat.Key, countryCode, stat.Value.Item1, stat.Value.Item2);
                     idx++;
                 }
                 setContent(content);
             }
 
-            public UnitFlowContainer(string heading, string unitDesc, string valueDesc, Dictionary<long, PlayerInfo> players, Dictionary<long, Dictionary<string, (int, long)>> units, string totalValueDescription, long totalValue)
-                : this(heading, totalValueDescription, totalValue)
+            public UnitFlowContainer(string heading, Dictionary<long, PlayerInfo> players, Dictionary<long, Dictionary<string, (int, long)>> units, string valueDesc, long totalValue)
+                : this(heading, valueDesc, totalValue)
             {
-                var idx = 0;
-
-                var entryCount = 0;
+                var rowCount = 0;
 
                 foreach (var playerStats in units)
-                    entryCount += playerStats.Value.Count;
+                {
+                    if (playerStats.Value.Count <= 0)
+                        continue;
 
-                var content = new Drawable[(entryCount / 3) + 1][];
+                    rowCount += ((playerStats.Value.Count - 1) / 3) + 2;
+                }
+
+                rowCount = Math.Max(0, rowCount - 1);
+
+                var content = new Drawable[rowCount][];
+
+                var rowIdx = 0;
 
                 foreach (var playerStats in units)
                 {
                     var countryCode = players[playerStats.Key].Country.Value.Code;
 
+                    var idx = 0;
+
                     foreach (var stat in playerStats.Value)
                     {
-                        var row = idx / 3;
+                        if (content[rowIdx] == null)
+                            content[rowIdx] = new Drawable[3];
 
-                        if (content[row] == null)
-                            content[row] = new Drawable[3];
-
-                        content[row][idx % 3] = new UnitStats(players[playerStats.Key].Username, unitDesc, valueDesc, stat.Key, countryCode, stat.Value.Item1, stat.Value.Item2);
+                        content[rowIdx][idx % 3] = new UnitStats(players[playerStats.Key].Username, stat.Key, countryCode, stat.Value.Item1, stat.Value.Item2);
                         idx++;
+
+                        if (idx % 3 == 0)
+                            rowIdx++;
                     }
+
+                    if (idx % 3 != 0)
+                        rowIdx++;
+
+                    if (rowIdx >= rowCount)
+                        continue;
+
+                    content[rowIdx] = new Drawable[3];
+                    content[rowIdx][0] = new Box() { RelativeSizeAxes = Axes.X, Height = 2, Colour = seperator_color };
+                    content[rowIdx][1] = new Box() { RelativeSizeAxes = Axes.X, Height = 2, Colour = seperator_color };
+                    content[rowIdx][2] = new Box() { RelativeSizeAxes = Axes.X, Height = 2, Colour = seperator_color };
+
+                    rowIdx++;
                 }
                 setContent(content);
             }
@@ -315,33 +346,23 @@ namespace AWBWApp.Game.UI.Replay
             }
         }
 
-        private class TooltipRollingCounter<T> : RollingCounter<T>, IHasTooltip where T : struct, IEquatable<T>
-        {
-            private string tooltip;
-
-            public TooltipRollingCounter(string tooltip)
-            {
-                this.tooltip = tooltip;
-            }
-
-            public LocalisableString TooltipText => tooltip;
-        }
-
-        private class UnitStats : FillFlowContainer
+        private class UnitStats : FillFlowContainer, IHasTooltip
         {
             private TextureAnimation spriteAnimation;
 
             private string unitType;
             private string countryCode;
             private long unitValue;
+            private string playerUsername;
 
-            public UnitStats(string playerUsername, string unitDesc, string valueDesc, string unitType, string countryCode, int unitCount, long value)
+            public UnitStats(string playerUsername, string unitType, string countryCode, int unitCount, long value)
             {
                 AutoSizeAxes = Axes.X;
                 Height = 20;
 
                 this.unitType = unitType;
                 this.countryCode = countryCode;
+                this.playerUsername = playerUsername;
                 unitValue = value;
 
                 Spacing = new Vector2(2, 0);
@@ -350,14 +371,14 @@ namespace AWBWApp.Game.UI.Replay
 
                 Children = new Drawable[]
                 {
-                    spriteAnimation = new TextureAnimationWithTooltip(playerUsername)
+                    spriteAnimation = new TextureAnimation()
                     {
                         Size = DrawableTile.BASE_SIZE,
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
                         Loop = true
                     },
-                    unitRollingCounter = new TooltipRollingCounter<long>(unitDesc)
+                    unitRollingCounter = new RollingCounter<long>()
                     {
                         Font = FontUsage.Default.With(size: 18),
                         Anchor = Anchor.CentreLeft,
@@ -366,7 +387,7 @@ namespace AWBWApp.Game.UI.Replay
                         Suffix = " /",
                         Colour = new Color4(20, 20, 20, 255)
                     },
-                    valueRollingCounter = new TooltipRollingCounter<long>(valueDesc)
+                    valueRollingCounter = new RollingCounter<long>()
                     {
                         Font = FontUsage.Default.With(size: 13),
                         Anchor = Anchor.CentreLeft,
@@ -404,6 +425,8 @@ namespace AWBWApp.Game.UI.Replay
                     spriteAnimation.AddFrame(texture, unitData.Frames[i]);
                 }
             }
+
+            public LocalisableString TooltipText => playerUsername;
         }
     }
 }

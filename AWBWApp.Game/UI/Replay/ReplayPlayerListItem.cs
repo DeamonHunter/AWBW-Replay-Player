@@ -420,13 +420,13 @@ namespace AWBWApp.Game.UI.Replay
                 {
                     tagCOSprite.Texture = textureStore.Get($"CO/{coUpdated.NewValue.CO.Name}-Small");
                     tagCO = coUpdated.NewValue.CO;
-                    tagCOSprite.ToolTip = tagCO.Tooltip;
+                    tagCOSprite.Tooltip = tagCO.Tooltip;
                 }
                 else
                 {
                     coSprite.Texture = textureStore.Get($"CO/{coUpdated.NewValue.CO.Name}-Small");
                     co = coUpdated.NewValue.CO;
-                    coSprite.ToolTip = co.Tooltip;
+                    coSprite.Tooltip = co.Tooltip;
                 }
             }
 
@@ -441,8 +441,8 @@ namespace AWBWApp.Game.UI.Replay
                 (coSprite, tagCOSprite) = (tagCOSprite, coSprite);
                 (coProgress, tagProgress) = (tagProgress, coProgress);
 
-                coSprite.ToolTip = co.Tooltip;
-                tagCOSprite.ToolTip = tagCO.Tooltip;
+                coSprite.Tooltip = co.Tooltip;
+                tagCOSprite.Tooltip = tagCO.Tooltip;
 
                 coSprite.ResizeTo(new Vector2(36), 400, Easing.Out);
                 tagCOSprite.ResizeTo(new Vector2(24), 400, Easing.Out);

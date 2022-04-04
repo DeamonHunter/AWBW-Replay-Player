@@ -1,10 +1,11 @@
-﻿using osu.Framework.Graphics.Cursor;
-using osu.Framework.Graphics.Sprites;
+﻿using System;
+using AWBWApp.Game.UI.Replay;
+using osu.Framework.Graphics.Cursor;
 using osu.Framework.Localisation;
 
 namespace AWBWApp.Game.UI.Components.Tooltip
 {
-    public class SpriteWithTooltip : Sprite, IHasTooltip
+    public class RollingCounterWithTooltip<T> : RollingCounter<T>, IHasTooltip where T : struct, IEquatable<T>
     {
         public string Tooltip { get; set; }
 
