@@ -347,7 +347,7 @@ namespace AWBWApp.Game.UI.Select
                 Padding = new MarginPadding { Vertical = 5, Horizontal = 2 }
             };
 
-            if (!hasReplays)
+            if (hasReplays)
             {
                 textFlow.AddText("No Replays match the current search text.", text => text.Font = new FontUsage("Roboto", weight: "Bold", size: 24));
                 return textFlow;
