@@ -35,5 +35,7 @@ namespace AWBWApp.Game.Game.Units
         {
             return unitsByCode[code];
         }
+
+        public bool TryGetUnitByCode(string code, out UnitData unit) => unitsByCode.TryGetValue(code, out unit);
     }
 }
