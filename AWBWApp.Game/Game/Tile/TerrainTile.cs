@@ -6,7 +6,7 @@ namespace AWBWApp.Game.Game.Tile
 {
     public class TerrainTile
     {
-        public int AWBWId { get; set; }
+        public int AWBWID { get; set; }
 
         public int BaseDefence { get; set; }
 

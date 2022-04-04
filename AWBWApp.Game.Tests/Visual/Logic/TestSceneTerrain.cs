@@ -102,7 +102,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 for (int y = 0; y < ySize; y++)
                 {
                     var randomTile = terrainTileStorage.GetRandomTerrainTile(random);
-                    gameMap.Ids[x * ySize + y] = (short)randomTile.AWBWId;
+                    gameMap.Ids[x * ySize + y] = (short)randomTile.AWBWID;
                 }
             }
 
@@ -148,7 +148,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                         gameMap.Ids[y * xSize + x] = grass_terrain_id;
                     }
                     else if (tileStorage.TryGetTileByAWBWId(id, out TerrainTile tile))
-                        gameMap.Ids[y * xSize + x] = (short)tile.AWBWId;
+                        gameMap.Ids[y * xSize + x] = (short)tile.AWBWID;
                     else
                         throw new Exception($"Unknown AWBWID: {id}");
                 }

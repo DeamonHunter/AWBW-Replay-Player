@@ -19,7 +19,7 @@ namespace AWBWApp.Game.Game.Tile
             }
 
             foreach (var tile in tilesByCode)
-                tilesByAWBWId.Add(tile.Value.AWBWId, tile.Value);
+                tilesByAWBWId.Add(tile.Value.AWBWID, tile.Value);
         }
 
         public TerrainTile GetTileByCode(string code)

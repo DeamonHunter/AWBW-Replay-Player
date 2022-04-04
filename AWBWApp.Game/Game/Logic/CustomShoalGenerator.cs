@@ -133,7 +133,7 @@ namespace AWBWApp.Game.Game.Logic
                             if (outCome.Item1.West != TerrainType.None && nearby.West != TerrainType.None && (outCome.Item1.West & nearby.West) == 0)
                                 continue;
 
-                            id = tileStorage.GetTileByCode(outCome.Item2).AWBWId;
+                            id = tileStorage.GetTileByCode(outCome.Item2).AWBWID;
                             break;
                         }
 
@@ -151,7 +151,7 @@ namespace AWBWApp.Game.Game.Logic
                     {
                         var nearby = getNearbyTiles(map, i, x, y);
 
-                        var id = tileStorage.GetTileByCode(constructCustomShoal(nearby)).AWBWId;
+                        var id = tileStorage.GetTileByCode(constructCustomShoal(nearby)).AWBWID;
 
                         if (id != -1)
                             customShoal.Ids[i] = (short)id;
