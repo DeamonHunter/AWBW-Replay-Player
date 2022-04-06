@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Threading.Tasks;
 using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
@@ -187,20 +188,41 @@ namespace AWBWApp.Game.IO
         public async Task<ReplayData> GetReplayData(long id)
         {
             var path = $"{id}.zip";
-            if (!underlyingStorage.Exists(path))
-                return null;
 
             ReplayData data;
 
-            using (var stream = underlyingStorage.GetStream(path))
+            if (!underlyingStorage.Exists(path))
             {
-                try
+                path = $"{id}";
+
+                if (!underlyingStorage.Exists(path))
+                    return null;
+
+                using (var stream = underlyingStorage.GetStream(path))
                 {
-                    data = parser.ParseReplay(stream);
+                    try
+                    {
+                        data = parser.ParseReplayFile(stream);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to parse replay with id: " + id, e);
+                    }
                 }
-                catch (Exception e)
+            }
+            else
+            {
+                using (var stream = underlyingStorage.GetStream(path))
                 {
-                    throw new Exception("Failed to parse replay with id: " + id, e);
+                    try
+                    {
+                        var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read);
+                        data = parser.ParseReplayZip(zipArchive);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to parse replay with id: " + id, e);
+                    }
                 }
             }
 
@@ -213,20 +235,40 @@ namespace AWBWApp.Game.IO
         public ReplayData GetReplayDataSync(long id)
         {
             var path = $"{id}.zip";
-            if (!underlyingStorage.Exists(path))
-                return null;
 
             ReplayData data;
 
-            using (var stream = underlyingStorage.GetStream(path))
+            if (!underlyingStorage.Exists(path))
             {
-                try
+                path = $"{id}";
+                if (!underlyingStorage.Exists(path))
+                    return null;
+
+                using (var stream = underlyingStorage.GetStream(path))
                 {
-                    data = parser.ParseReplay(stream);
+                    try
+                    {
+                        data = parser.ParseReplayFile(stream);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to parse replay with id: " + id, e);
+                    }
                 }
-                catch (Exception e)
+            }
+            else
+            {
+                using (var stream = underlyingStorage.GetStream(path))
                 {
-                    throw new Exception("Failed to parse replay with id: " + id, e);
+                    try
+                    {
+                        var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read);
+                        data = parser.ParseReplayZip(zipArchive);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to parse replay with id: " + id, e);
+                    }
                 }
             }
 
@@ -239,13 +281,30 @@ namespace AWBWApp.Game.IO
 
             try
             {
-                using (var readFileStream = new FileStream(path, FileMode.Open))
+                if (Path.GetExtension(path) == ".zip")
                 {
-                    data = parser.ParseReplay(readFileStream);
+                    using (var readFileStream = new FileStream(path, FileMode.Open))
+                    {
+                        var zipArchive = new ZipArchive(readFileStream, ZipArchiveMode.Read);
+                        data = parser.ParseReplayZip(zipArchive);
 
-                    readFileStream.Seek(0, SeekOrigin.Begin);
-                    using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.zip", FileAccess.Write, FileMode.Create))
-                        readFileStream.CopyTo(writeStream);
+                        readFileStream.Seek(0, SeekOrigin.Begin);
+                        using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.zip", FileAccess.Write, FileMode.Create))
+                            readFileStream.CopyTo(writeStream);
+                    }
+                }
+                else
+                {
+                    //GZIP stream disposes the base stream. So we need to open this twice.
+                    using (var readFileStream = new FileStream(path, FileMode.Open))
+                        data = parser.ParseReplayFile(readFileStream);
+
+                    using (var readFileStream = new FileStream(path, FileMode.Open))
+                    {
+                        readFileStream.Seek(0, SeekOrigin.Begin);
+                        using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}", FileAccess.Write, FileMode.Create))
+                            readFileStream.CopyTo(writeStream);
+                    }
                 }
             }
             catch (Exception e)
@@ -266,7 +325,8 @@ namespace AWBWApp.Game.IO
 
             try
             {
-                data = parser.ParseReplay(stream);
+                var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read);
+                data = parser.ParseReplayZip(zipArchive);
 
                 //Store only after parsing it. So we don't save a bad replay
                 using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.zip", FileAccess.Write, FileMode.Create))

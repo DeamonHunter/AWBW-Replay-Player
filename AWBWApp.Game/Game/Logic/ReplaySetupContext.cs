@@ -110,7 +110,7 @@ namespace AWBWApp.Game.Game.Logic
                 Buildings.Add(building.Key, building.Value.Clone());
         }
 
-        public void FinishSetup()
+        public void AddGameOverAction()
         {
             CurrentTurn.Actions ??= new List<IReplayAction>();
 

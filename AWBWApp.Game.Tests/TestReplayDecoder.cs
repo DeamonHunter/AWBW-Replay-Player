@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.IO.Compression;
 using System.Threading.Tasks;
 using AWBWApp.Game.API.Replay;
 using osu.Framework.Allocation;
@@ -16,16 +17,24 @@ namespace AWBWApp.Game.Tests
 
         public ReplayData GetReplayInStorage(string replay)
         {
-            var replayStream = storage.Get(replay);
+            var replayData = storage.Get(replay);
 
-            return parser.ParseReplay(new MemoryStream(replayStream));
+            using (var stream = new MemoryStream(replayData))
+            {
+                var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read);
+                return parser.ParseReplayZip(zipArchive);
+            }
         }
 
         public async Task<ReplayData> GetReplayInStorageAsync(string replay)
         {
-            var replayStream = await storage.GetAsync(replay).ConfigureAwait(false);
+            var replayData = await storage.GetAsync(replay).ConfigureAwait(false);
 
-            return parser.ParseReplay(new MemoryStream(replayStream));
+            using (var stream = new MemoryStream(replayData))
+            {
+                var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read);
+                return parser.ParseReplayZip(zipArchive);
+            }
         }
     }
 }

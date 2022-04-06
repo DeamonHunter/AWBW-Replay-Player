@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using AWBWApp.Game.API.Replay.Actions;
+using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Logic;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics.Primitives;
@@ -30,15 +31,16 @@ namespace AWBWApp.Game.API.Replay
             actionDatabase = new ReplayActionDatabase();
         }
 
-        public ReplayData ParseReplay(Stream archiveStream)
+        public ReplayData ParseReplayZip(ZipArchive zipArchive)
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            var zipArchive = new ZipArchive(archiveStream, ZipArchiveMode.Read);
 
-            //As of 18/11/2021, replays contain 2 files. One is the gameID and the other has an 'a' appended to the start.
-            if (zipArchive.Entries.Count != 2)
-                throw new Exception("Cannot parse replay file, as it is either too old or invalid. (Archive does not contain 2 files.)");
+            if (zipArchive.Entries.Count <= 0)
+                throw new Exception("Cannot parse zip as replay. It contains 0 files.");
+
+            if (zipArchive.Entries.Count > 2)
+                throw new Exception("Cannot parse zip as replay. It contains too many files.");
 
             ReadOnlySpan<char> gameStateFile = null;
             ReadOnlySpan<char> replayFile = null;
@@ -60,7 +62,30 @@ namespace AWBWApp.Game.API.Replay
             }
 
             var state = readBaseReplayData(gameStateFile);
-            readReplayActions(state, replayFile);
+            if (replayFile != null)
+                readReplayActions(state, replayFile);
+
+            stopWatch.Stop();
+            Logger.Log("Replay parsing took: " + stopWatch.Elapsed);
+            return state;
+        }
+
+        public ReplayData ParseReplayFile(Stream fileStream)
+        {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+
+            ReadOnlySpan<char> gameStateFile = null;
+
+            using (var entryStream = new GZipStream(fileStream, CompressionMode.Decompress))
+            {
+                using (var sr = new StreamReader(entryStream))
+                    gameStateFile = sr.ReadToEnd();
+            }
+
+            var state = readBaseReplayData(gameStateFile);
+            state.ReplayInfo.OldReplay = true;
+
             stopWatch.Stop();
             Logger.Log("Replay parsing took: " + stopWatch.Elapsed);
             return state;
@@ -665,14 +690,32 @@ namespace AWBWApp.Game.API.Replay
                             break;
                         }
 
-                        #region Unneeded Values
-
                         case "co_power_on":
                         {
-                            //Can be "N", "Y" or "S". This is not saved as the replay player will calculate this itself.
-                            readString(text, ref textIndex);
+                            //Can be "N", "Y" or "S".
+                            var powerOn = readString(text, ref textIndex);
+
+                            switch (powerOn)
+                            {
+                                case "S":
+                                case "s":
+                                    playerDataTurn.COPowerOn = ActiveCOPower.Super;
+                                    break;
+
+                                case "Y":
+                                case "y":
+                                    playerDataTurn.COPowerOn = ActiveCOPower.Normal;
+                                    break;
+
+                                default:
+                                    playerDataTurn.COPowerOn = ActiveCOPower.None;
+                                    break;
+                            }
+
                             break;
                         }
+
+                        #region Unneeded Values
 
                         case "co_image":
                         {

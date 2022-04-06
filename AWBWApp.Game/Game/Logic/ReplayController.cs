@@ -346,7 +346,8 @@ namespace AWBWApp.Game.Game.Logic
                 }
             }
 
-            setupContext.FinishSetup();
+            if (!replayData.ReplayInfo.OldReplay)
+                setupContext.AddGameOverAction();
         }
 
         public (int, int) GetLastTurnAndLastAction()
@@ -634,9 +635,11 @@ namespace AWBWApp.Game.Game.Logic
 
                 var activePower = GetActivePowerForPlayer(player.Key);
 
-                ActiveCOPower powerType = ActiveCOPower.None;
+                ActiveCOPower powerType;
                 if (activePower != null)
                     powerType = activePower.IsSuperPower ? ActiveCOPower.Super : ActiveCOPower.Normal;
+                else
+                    powerType = currentTurn.Players[player.Key]?.COPowerOn ?? ActiveCOPower.None;
 
                 if (undo)
                     player.Value.UpdateUndo(currentTurn.Players[player.Key], COStorage, turnIdx, unitCount, unitValue, propertyValue, powerType);

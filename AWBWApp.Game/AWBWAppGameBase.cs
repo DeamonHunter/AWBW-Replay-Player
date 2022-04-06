@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using AWBWApp.Game.API;
@@ -163,13 +162,6 @@ namespace AWBWApp.Game
             for (int i = 0; i < paths.Length; i++)
             {
                 var path = paths[i];
-
-                if (Path.GetExtension(path) != ".zip")
-                {
-                    if (updateNotification != null)
-                        updateNotification.Progress = (float)i / paths.Length;
-                    continue;
-                }
 
                 try
                 {
