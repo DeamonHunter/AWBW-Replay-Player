@@ -74,7 +74,7 @@ namespace AWBWApp.Game.UI.Replay
         private readonly BindableWithCurrent<T> current = new BindableWithCurrent<T>();
 
         protected bool IsRollingProportionalToChange => false;
-        public double RollingDuration = 1000;
+        public double RollingDuration = 500;
         protected virtual Easing RollingEasing => Easing.OutQuint;
 
         private SpriteText displayedCountText;

@@ -383,7 +383,7 @@ namespace AWBWApp.Game.UI.Replay
                         Font = FontUsage.Default.With(size: 18),
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
-                        RollingDuration = 500,
+                        RollingDuration = 350,
                         Suffix = " /",
                         Colour = new Color4(20, 20, 20, 255)
                     },
@@ -392,7 +392,7 @@ namespace AWBWApp.Game.UI.Replay
                         Font = FontUsage.Default.With(size: 13),
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.CentreLeft,
-                        RollingDuration = 500,
+                        RollingDuration = 350,
                         Colour = new Color4(20, 20, 20, 255)
                     },
                 };
