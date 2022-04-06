@@ -55,15 +55,21 @@ namespace AWBWApp.Game.UI
         public void FitMapToSpace()
         {
             var drawSize = new Vector2(DrawSize.X - MapSpace.TotalHorizontal, DrawSize.Y - MapSpace.TotalVertical);
-            content.Scale = Vector2.One;
 
-            var possibleScaleX = drawSize.X / content.Size.X;
-            var possibleScaleY = drawSize.Y / content.Size.Y;
+            var contentSize = content.Size;
+
+            var possibleScaleX = drawSize.X / contentSize.X;
+            var possibleScaleY = drawSize.Y / contentSize.Y;
 
             var newScale = Math.Clamp(Math.Min(possibleScaleX, possibleScaleY) * 0.975f, MinScale, MaxScale);
 
+            contentSize *= newScale;
+
+            var offset = (drawSize - contentSize) * 0.5f;
+
             content.Scale = new Vector2(newScale);
-            moveMapToPosition(new Vector2(MapSpace.Left, MapSpace.Top));
+
+            moveMapToPosition(new Vector2(MapSpace.Left, MapSpace.Top) + offset);
         }
 
         protected override bool OnScroll(ScrollEvent e)

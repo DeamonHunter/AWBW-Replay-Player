@@ -74,15 +74,17 @@ namespace AWBWApp.Game.Game.Logic
 
         private Dictionary<int, EndTurnDesync> endTurnDesyncs;
 
+        private const int player_list_width = 225;
+
         public ReplayController()
         {
             //Offset so the centered position would be half the bar to the right, and half a tile up. Chosen to look nice.
             var mapPadding = new MarginPadding
             {
                 Top = DrawableTile.HALF_BASE_SIZE.Y,
-                Bottom = DrawableTile.HALF_BASE_SIZE.Y,
+                Bottom = 8 + DrawableTile.HALF_BASE_SIZE.Y,
                 Left = DrawableTile.HALF_BASE_SIZE.X,
-                Right = 200 + DrawableTile.HALF_BASE_SIZE.X
+                Right = 201 + DrawableTile.HALF_BASE_SIZE.X
             };
 
             var safeMovement = new MarginPadding
@@ -126,7 +128,7 @@ namespace AWBWApp.Game.Game.Logic
                             Anchor = Anchor.TopRight,
                             Origin = Anchor.TopRight,
                             RelativeSizeAxes = Axes.Y,
-                            Size = new Vector2(225, 1)
+                            Size = new Vector2(player_list_width, 1)
                         },
                         Stats = new StatsHandler(CurrentTurnIndex)
                         {
