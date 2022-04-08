@@ -23,7 +23,7 @@ namespace AWBWApp.Game.UI.Select
             get => replay;
             set
             {
-                if (replay == value) return;
+                if (replay == value && DisplayedContent != null) return;
 
                 replay = value;
 

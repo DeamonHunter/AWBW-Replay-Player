@@ -171,6 +171,8 @@ namespace AWBWApp.Game.UI.Select
             {
                 ReplaysChanged?.Invoke();
                 ReplaysLoaded = true;
+                if (selectedReplay == null)
+                    SelectionChanged?.Invoke(null);
 
                 itemsCache.Invalidate();
             });
