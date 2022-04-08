@@ -106,7 +106,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
                     Size = Vector2.One
                 };
 
-                carouselAdjust?.Invoke(carousel);
+                LoadComponentAsync(carousel = new ReplayCarousel(), x => carouselAdjust?.Invoke(x));
 
                 Child = carousel;
             });
