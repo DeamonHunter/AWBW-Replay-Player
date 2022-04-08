@@ -116,7 +116,6 @@ namespace AWBWApp.Game.Game.Building
                 playbackPosition = 0;
 
             textureAnimation.ClearFrames();
-            textureAnimation.ClearAnimationCache();
 
             textureAnimation.Size = weatherTextures[0].Size;
 

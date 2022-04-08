@@ -236,7 +236,6 @@ namespace AWBWApp.Game.Game.Units
         private void updateAnimation()
         {
             textureAnimation.ClearFrames();
-            textureAnimation.ClearAnimationCache();
 
             if (UnitData.Frames == null)
             {
@@ -302,7 +301,6 @@ namespace AWBWApp.Game.Game.Units
             }
 
             lowStatsAnimation.ClearFrames();
-            lowStatsAnimation.ClearAnimationCache();
 
             if (lowAmmo && lowFuel)
             {
@@ -384,6 +382,8 @@ namespace AWBWApp.Game.Game.Units
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre
                 };
+
+            protected override void ClearDisplay() => textureHolder.Texture = null;
 
             protected override void DisplayFrame(Texture content) => textureHolder.Texture = content;
 
