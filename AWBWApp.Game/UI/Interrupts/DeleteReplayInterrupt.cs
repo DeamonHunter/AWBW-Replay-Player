@@ -42,7 +42,7 @@ namespace AWBWApp.Game.UI.Interrupts
                         Size = new Vector2(0.8f, 100),
                         Children = new Drawable[]
                         {
-                            new ReplayCarouselPanelBackground(replayToDelete),
+                            new ReplayCarouselPanelBackground(),
                             new ReplayCarouselPanelContent(new CarouselReplay(replayToDelete, mapName))
                         }
                     },

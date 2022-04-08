@@ -1,5 +1,4 @@
-﻿using AWBWApp.Game.API.Replay;
-using osu.Framework.Extensions.Color4Extensions;
+﻿using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
@@ -11,15 +10,16 @@ namespace AWBWApp.Game.UI.Select
 {
     public class ReplayCarouselPanelBackground : BufferedContainer
     {
-        public ReplayCarouselPanelBackground(ReplayInfo replayInfo)
+        public ReplayCarouselPanelBackground()
         {
             RedrawOnScale = false;
             RelativeSizeAxes = Axes.Both;
+
             Children = new Drawable[]
             {
                 new Box()
                 {
-                    Colour = replayInfo.LeagueMatch != null ? ColourInfo.SingleColour(Color4Extensions.FromHex("ed8f15")) : ColourInfo.SingleColour(Color4Extensions.FromHex("15a1ed")),
+                    Colour = ColourInfo.SingleColour(Color4Extensions.FromHex("15a1ed")),
                     RelativeSizeAxes = Axes.Both,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

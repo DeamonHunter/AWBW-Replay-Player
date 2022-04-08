@@ -129,7 +129,7 @@ namespace AWBWApp.Game.UI.Select
 
             Panel.Children = new Drawable[]
             {
-                background = new DelayedLoadWrapper(() => new ReplayCarouselPanelBackground(replayInfo), 100)
+                background = new DelayedLoadWrapper(() => new ReplayCarouselPanelBackground(), 100)
                 {
                     RelativeSizeAxes = Axes.Both
                 },
