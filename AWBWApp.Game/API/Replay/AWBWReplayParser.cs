@@ -1317,19 +1317,13 @@ namespace AWBWApp.Game.API.Replay
             }
             else
             {
-                //Tag battles with more than 2 players seem to occasionally add these for dead? players.
-                if (actionCount > 1)
-                    throw new Exception("Replay actions contained an unknown turn id.");
+                //Multiplayer battles can occasionally add data for turns that didn't happen.
+                Logger.Log($"Replay contained a unknown turn {{{day},{playerID}}}, which has {actionCount} actions.");
 
-                if (actionCount == 1)
+                for (int i = 0; i < actionCount; i++)
                 {
                     var index = readInteger(text, ref textIndex);
                     var actionString = readString(text, ref textIndex);
-                    var jsonObject = JObject.Parse(actionString);
-                    var action = actionDatabase.ParseJObjectIntoReplayAction(jsonObject, replayData, null);
-
-                    if (!(action is EndTurnAction))
-                        throw new Exception("Replay actions contained an unknown turn id.");
                 }
             }
 
