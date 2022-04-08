@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using AWBWApp.Game.API;
@@ -149,6 +150,13 @@ namespace AWBWApp.Game
             }
         }
 
+        protected override void Update()
+        {
+            base.Update();
+
+            mapStorage.CheckForMapsToDownload();
+        }
+
         public virtual async Task ImportFiles(ProgressNotification updateNotification, params string[] paths)
         {
             if (paths.Length == 0)
@@ -163,10 +171,14 @@ namespace AWBWApp.Game
             {
                 var path = paths[i];
 
+                var extension = Path.GetExtension(path);
+                if (extension != null && extension != ".zip" && extension != ".gz")
+                    continue;
+
                 try
                 {
                     var data = await replayStorage.ParseAndStoreReplay(path);
-                    await mapStorage.GetOrDownloadMap(data.ReplayInfo.MapId);
+                    await mapStorage.GetOrAwaitDownloadMap(data.ReplayInfo.MapId);
                 }
                 catch (Exception e)
                 {
@@ -175,6 +187,8 @@ namespace AWBWApp.Game
 
                 if (updateNotification != null)
                     updateNotification.Progress = (float)i / paths.Length;
+
+                await Task.Delay(150);
             }
 
             if (updateNotification != null)

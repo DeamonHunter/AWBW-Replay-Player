@@ -147,7 +147,7 @@ namespace AWBWApp.Game.UI.Select
                         if (data == null)
                             throw new Exception($"Replay `{Carousel.SelectedReplayData.ID}` was not found. Was the file deleted?");
 
-                        var map = await mapStorage.GetOrDownloadMap(data.ReplayInfo.MapId);
+                        var map = await mapStorage.GetOrAwaitDownloadMap(data.ReplayInfo.MapId);
 
                         if (cancellationToken.IsCancellationRequested)
                             return;

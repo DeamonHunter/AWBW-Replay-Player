@@ -117,32 +117,65 @@ namespace AWBWApp.Game.IO
         {
             bool savePlayers = false;
 
+            var playerQueue = new Queue<ReplayUser>();
+
             foreach (var player in info.Players)
+                playerQueue.Enqueue(player.Value);
+
+            int errorCount = 0;
+            bool first = true;
+
+            while (playerQueue.Count > 0)
             {
-                if (player.Value.Username != null)
+                var player = playerQueue.Dequeue();
+
+                if (player.Username != null)
                 {
-                    if (!_playerNames.ContainsKey(player.Value.UserId))
-                        _playerNames[player.Value.UserId] = player.Value.Username;
+                    if (!_playerNames.ContainsKey(player.UserId))
+                        _playerNames[player.UserId] = player.Username;
                     continue;
                 }
 
                 savePlayers = true;
 
-                if (_playerNames.TryGetValue(player.Value.UserId, out var username))
+                if (_playerNames.TryGetValue(player.UserId, out var username))
                 {
-                    player.Value.Username = username;
+                    player.Username = username;
                     continue;
                 }
 
                 //We do not know this player's username and need to grab it.
-                var usernameRequest = new UsernameWebRequest(player.Value.UserId);
+                var usernameRequest = new UsernameWebRequest(player.UserId);
 
-                await usernameRequest.PerformAsync().ConfigureAwait(false);
+                try
+                {
+                    await usernameRequest.PerformAsync().ConfigureAwait(false);
 
-                //Todo: Check how this acts if we do not have internet.
+                    if (usernameRequest.Username == null)
+                    {
+                        errorCount++;
+                        playerQueue.Enqueue(player);
+                        await Task.Delay(1000);
+                        continue;
+                    }
 
-                player.Value.Username = usernameRequest.Username;
-                _playerNames[player.Value.UserId] = usernameRequest.Username;
+                    player.Username = usernameRequest.Username;
+                    _playerNames[player.UserId] = usernameRequest.Username;
+
+                    if (playerQueue.Count > 0)
+                        await Task.Delay(150);
+                }
+                catch (Exception e)
+                {
+                    Logger.Log($"Encountered Error while attempting to get username for id '{player.UserId}': {e.Message}");
+                    errorCount++;
+
+                    if (errorCount > 3)
+                        throw new Exception($"Failed to get usernames for replay, `{info.ID}:{info.Name}`");
+
+                    playerQueue.Enqueue(player);
+                    await Task.Delay(1000);
+                }
             }
 
             if (savePlayers)

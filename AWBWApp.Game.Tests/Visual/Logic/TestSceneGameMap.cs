@@ -137,7 +137,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             else
                 Logger.Log($"Replay of id '{gameID}' existed locally.");
 
-            var terrainFile = await mapStorage.GetOrDownloadMap(replay.ReplayInfo.MapId);
+            var terrainFile = await mapStorage.GetOrAwaitDownloadMap(replay.ReplayInfo.MapId);
 
             terrainFile = generator.CreateCustomShoalVersion(terrainFile);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AWBWApp.Game.API;
@@ -12,9 +13,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Textures;
-using osu.Framework.IO.Network;
 using osu.Framework.IO.Stores;
-using osu.Framework.Logging;
 using osu.Framework.Platform;
 
 namespace AWBWApp.Game.IO
@@ -46,54 +45,111 @@ namespace AWBWApp.Game.IO
 
         public ReplayMap Get(long mapID) => Get($"{mapID}.json");
 
-        public async Task<ReplayMap> GetOrDownloadMap(long mapID)
+        private Queue<(long, TaskCompletionSource<ReplayMap>)> mapsToDownload = new Queue<(long, TaskCompletionSource<ReplayMap>)>();
+
+        public async Task<ReplayMap> GetOrAwaitDownloadMap(long mapID)
+        {
+            var map = Get(mapID);
+            if (map != null)
+                return map;
+
+            TaskCompletionSource<ReplayMap> task;
+
+            lock (mapsToDownload)
+            {
+                var contains = mapsToDownload.FirstOrDefault(x => x.Item1 == mapID);
+
+                if (contains.Item2 == null)
+                {
+                    task = new TaskCompletionSource<ReplayMap>();
+                    mapsToDownload.Enqueue((mapID, task));
+                }
+                else
+                    task = contains.Item2;
+            }
+
+            return await task.Task.ConfigureAwait(false);
+        }
+
+        private DateTime lastDownloaded;
+        private bool downloadingMap;
+
+        public void CheckForMapsToDownload()
+        {
+            if (downloadingMap || (DateTime.UtcNow - lastDownloaded).TotalSeconds < 1)
+                return;
+
+            lock (mapsToDownload)
+            {
+                if (mapsToDownload.Count <= 0)
+                    return;
+
+                var next = mapsToDownload.Dequeue();
+                Task.Run(() => downloadMap(next.Item1, next.Item2));
+            }
+        }
+
+        private async void downloadMap(long mapID, TaskCompletionSource<ReplayMap> completionSource)
         {
             var map = Get(mapID);
 
             if (map != null)
-                return map;
-
-            try
             {
-                var mapAPILink = "https://awbw.amarriner.com/matsuzen/api/map/map_info.php?maps_id=" + mapID;
+                completionSource.SetResult(map);
+                return;
+            }
 
-                using (var jsonRequest = new GenericJsonWebRequest(mapAPILink))
+            downloadingMap = true;
+            var errorCount = 0;
+
+            while (true)
+            {
+                try
                 {
-                    await jsonRequest.PerformAsync().ConfigureAwait(false);
+                    var mapAPILink = "https://awbw.amarriner.com/matsuzen/api/map/map_info.php?maps_id=" + mapID;
 
-                    if (jsonRequest.ResponseObject == null)
-                        throw new Exception("Failed to download map."); //Todo: Change exception type.
+                    using (var jsonRequest = new GenericJsonWebRequest(mapAPILink))
+                    {
+                        await jsonRequest.PerformAsync().ConfigureAwait(false);
 
-                    //Double check if we already got the map by the time this got through.
-                    //Todo: Maybe keep track of the requests we already have.
-                    map = Get(mapID);
-                    if (map != null)
-                        return map;
+                        if (jsonRequest.ResponseObject == null)
+                        {
+                            errorCount++;
 
-                    return ParseAndStoreResponseJson(mapID, jsonRequest.ResponseObject);
+                            if (errorCount > 3)
+                            {
+                                completionSource.SetException(new Exception($"Failed to download map '{mapID}"));
+                                downloadingMap = false;
+                                lastDownloaded = DateTime.UtcNow;
+                                return;
+                            }
+
+                            await Task.Delay(1000);
+                            continue;
+                        }
+
+                        map = ParseAndStoreResponseJson(mapID, jsonRequest.ResponseObject);
+                        completionSource.SetResult(map);
+
+                        downloadingMap = false;
+                        lastDownloaded = DateTime.UtcNow;
+                        return;
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                Logger.Log("Failed to download map: " + e.Message);
-            }
+                catch
+                {
+                    errorCount++;
 
-            var mapPagelink = "https://awbw.amarriner.com/text_map.php?maps_id=" + mapID;
+                    if (errorCount > 3)
+                    {
+                        completionSource.SetException(new Exception($"Failed to download map '{mapID}"));
+                        downloadingMap = false;
+                        lastDownloaded = DateTime.UtcNow;
+                        return;
+                    }
 
-            using (var webRequest = new WebRequest(mapPagelink))
-            {
-                await webRequest.PerformAsync().ConfigureAwait(false);
-
-                if (webRequest.ResponseStream.Length <= 100)
-                    throw new Exception($"Unable to find the map with ID '{mapID}'. Is the session cookie correct?");
-
-                //Double check if we already got the map by the time this got through.
-                //Todo: Maybe keep track of the requests we already have.
-                map = Get(mapID);
-                if (map != null)
-                    return map;
-
-                return ParseAndStoreResponseHTML(mapID, webRequest.GetResponseString());
+                    await Task.Delay(1000);
+                }
             }
         }
 
@@ -102,7 +158,7 @@ namespace AWBWApp.Game.IO
             if (mapTextures.TryGetValue(mapID, out var existingTexture))
                 return existingTexture;
 
-            var map = await GetOrDownloadMap(mapID);
+            var map = await GetOrAwaitDownloadMap(mapID);
 
             Texture texture = null;
             if (map != null)

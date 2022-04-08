@@ -28,6 +28,12 @@ namespace AWBWApp.Game.API
             if (htmlPage == null)
                 throw new Exception("Got null response.");
 
+            if (htmlPage.StartsWith("<html>\r\n<head><title>503 Service Temporarily Unavailable</title></head>"))
+            {
+                Username = null;
+                return;
+            }
+
             var idx = htmlPage.IndexOf(username_index, StringComparison.InvariantCulture);
 
             if (idx < 0)
