@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Country;
@@ -11,6 +12,8 @@ using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.Textures;
+using osu.Framework.Logging;
 using osuTK;
 using osuTK.Graphics;
 
@@ -420,7 +423,19 @@ namespace AWBWApp.Game.UI.Select
             [BackgroundDependencyLoader]
             private async void load(MapFileStorage mapStorage, TerrainTileStorage terrainStorage, BuildingStorage buildingStorage, CountryStorage countryStorage)
             {
-                var (name, map) = await mapStorage.GetTextureForMap(mapID, terrainStorage, buildingStorage, countryStorage);
+                string name;
+                Texture map;
+
+                try
+                {
+                    (name, map) = await mapStorage.GetTextureForMap(mapID, terrainStorage, buildingStorage, countryStorage);
+                }
+                catch (Exception e)
+                {
+                    Logger.Log($"Failed to get map for texture: {mapID}. {e.Message}");
+                    mapName.Text = $"[Missing Map: {mapID}";
+                    return;
+                }
 
                 mapName.Text = name;
 
