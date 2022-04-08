@@ -263,6 +263,9 @@ namespace AWBWApp.Game.API.Replay
                     case "league":
                     {
                         var leagueMatch = readString(text, ref textIndex);
+                        if (leagueMatch == null)
+                            break;
+
                         if (!firstTurn && replayData.ReplayInfo.LeagueMatch != leagueMatch)
                             throw new Exception("Data 'LeagueMatch' changed per turn when not expected.");
 
