@@ -28,8 +28,30 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             var endEvent = (string)updatedInfo["event"];
 
+            if (endEvent == "GameOver")
+            {
+                var gameOver = new GameOverAction
+                {
+                    EndMessage = (string)updatedInfo["message"],
+                    FinishedDay = turnData.Day,
+                    Winners = new List<long>(),
+                    Losers = new List<long>()
+                };
+
+                foreach (var player in (JObject)updatedInfo["playersElim"])
+                {
+                    var eliminated = (string)player.Value;
+                    if (eliminated == "Y" || eliminated == "y")
+                        gameOver.Losers.Add(long.Parse(player.Key));
+                    else
+                        gameOver.Winners.Add(long.Parse(player.Key));
+                }
+
+                return gameOver;
+            }
+
             if (endEvent != "NextTurn")
-                throw new NotImplementedException("End turn actions that don't go to the next turn are not implemented.");
+                throw new NotSupportedException($"Unknown End Turn Event Type: {endEvent}. Should be either NextTurn or GameOver.");
 
             action.NextPlayerID = (long)updatedInfo["nextPId"];
             action.NextDay = (int)updatedInfo["day"];
