@@ -1,5 +1,6 @@
 ﻿using System;
 using osu.Framework.Allocation;
+using osu.Framework.Graphics;
 using osu.Framework.Platform;
 using osuTK.Graphics;
 
@@ -44,6 +45,8 @@ namespace AWBWApp.Game.UI.Notifications
         {
             if (error != null)
                 clipboard?.SetText(error.ToString());
+
+            this.FlashColour(new Color4(200, 200, 200, 255), 250);
 
             return false;
         }
