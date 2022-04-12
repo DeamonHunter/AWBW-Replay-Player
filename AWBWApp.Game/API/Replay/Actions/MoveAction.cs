@@ -39,7 +39,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 };
                 action.Path[i] = position;
             }
-            action.Distance = (int)jObject["dist"];
+            action.Distance = ((int?)jObject["dist"]) ?? 0;
             action.Trapped = (bool)jObject["trapped"];
 
             return action;
