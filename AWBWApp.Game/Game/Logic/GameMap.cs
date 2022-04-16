@@ -713,7 +713,7 @@ namespace AWBWApp.Game.Game.Logic
                     var dayToDay = replayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
                     range.Y += dayToDay.PowerIncreases?.FirstOrDefault(x => x.AffectedUnits.Contains("all") || x.AffectedUnits.Contains(unit.Name))?.RangeIncrease ?? 0;
 
-                    for (int i = unit.AttackRange.Value.X; i <= unit.AttackRange.Value.Y; i++)
+                    for (int i = range.X; i <= range.Y; i++)
                     {
                         foreach (var tile in Vec2IHelper.GetAllTilesWithDistance(unit.MapPosition, i))
                         {
