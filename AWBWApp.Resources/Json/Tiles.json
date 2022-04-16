@@ -73,10 +73,8 @@
         "AWBWID": 4,
         "BaseDefence": 0,
         "MovementCostsPerType": {
-            "LightInf": 1,
+            "LightInf": 2,
             "HeavyInf": 1,
-            "Tread": 2,
-            "Tire": 3,
             "Air": 1
         },
         "Colour": "#6492ff",
@@ -91,10 +89,8 @@
         "AWBWID": 5,
         "BaseDefence": 0,
         "MovementCostsPerType": {
-            "LightInf": 1,
+            "LightInf": 2,
             "HeavyInf": 1,
-            "Tread": 2,
-            "Tire": 3,
             "Air": 1
         },
         "Colour": "#6492ff",
@@ -109,10 +105,8 @@
         "AWBWID": 6,
         "BaseDefence": 0,
         "MovementCostsPerType": {
-            "LightInf": 1,
+            "LightInf": 2,
             "HeavyInf": 1,
-            "Tread": 2,
-            "Tire": 3,
             "Air": 1
         },
         "Colour": "#6492ff",
@@ -127,10 +121,8 @@
         "AWBWID": 7,
         "BaseDefence": 0,
         "MovementCostsPerType": {
-            "LightInf": 1,
+            "LightInf": 2,
             "HeavyInf": 1,
-            "Tread": 2,
-            "Tire": 3,
             "Air": 1
         },
         "Colour": "#6492ff",
@@ -145,10 +137,8 @@
         "AWBWID": 8,
         "BaseDefence": 0,
         "MovementCostsPerType": {
-            "LightInf": 1,
+            "LightInf": 2,
             "HeavyInf": 1,
-            "Tread": 2,
-            "Tire": 3,
             "Air": 1
         },
         "Colour": "#6492ff",
@@ -163,10 +153,8 @@
         "AWBWID": 9,
         "BaseDefence": 0,
         "MovementCostsPerType": {
-            "LightInf": 1,
+            "LightInf": 2,
             "HeavyInf": 1,
-            "Tread": 2,
-            "Tire": 3,
             "Air": 1
         },
         "Colour": "#6492ff",
@@ -181,10 +169,8 @@
         "AWBWID": 10,
         "BaseDefence": 0,
         "MovementCostsPerType": {
-            "LightInf": 1,
+            "LightInf": 2,
             "HeavyInf": 1,
-            "Tread": 2,
-            "Tire": 3,
             "Air": 1
         },
         "Colour": "#6492ff",
@@ -199,10 +185,8 @@
         "AWBWID": 11,
         "BaseDefence": 0,
         "MovementCostsPerType": {
-            "LightInf": 1,
+            "LightInf": 2,
             "HeavyInf": 1,
-            "Tread": 2,
-            "Tire": 3,
             "Air": 1
         },
         "Colour": "#6492ff",
@@ -217,10 +201,8 @@
         "AWBWID": 12,
         "BaseDefence": 0,
         "MovementCostsPerType": {
-            "LightInf": 1,
+            "LightInf": 2,
             "HeavyInf": 1,
-            "Tread": 2,
-            "Tire": 3,
             "Air": 1
         },
         "Colour": "#6492ff",
@@ -235,10 +217,8 @@
         "AWBWID": 13,
         "BaseDefence": 0,
         "MovementCostsPerType": {
-            "LightInf": 1,
+            "LightInf": 2,
             "HeavyInf": 1,
-            "Tread": 2,
-            "Tire": 3,
             "Air": 1
         },
         "Colour": "#6492ff",
@@ -253,10 +233,8 @@
         "AWBWID": 14,
         "BaseDefence": 0,
         "MovementCostsPerType": {
-            "LightInf": 1,
+            "LightInf": 2,
             "HeavyInf": 1,
-            "Tread": 2,
-            "Tire": 3,
             "Air": 1
         },
         "Colour": "#6492ff",
