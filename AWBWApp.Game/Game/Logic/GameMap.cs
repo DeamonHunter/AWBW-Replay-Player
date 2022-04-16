@@ -717,24 +717,24 @@ namespace AWBWApp.Game.Game.Logic
                     var dayToDay = replayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
                     range.Y += dayToDay.PowerIncreases?.FirstOrDefault(x => x.AffectedUnits.Contains("all") || x.AffectedUnits.Contains(unit.Name))?.RangeIncrease ?? 0;
 
-                    for (int i = range.X; i <= range.Y; i++)
+                    if (unit.UnitData.AttackRange != Vector2I.One)
                     {
-                        foreach (var tile in Vec2IHelper.GetAllTilesWithDistance(unit.MapPosition, i))
+                        for (int i = range.X; i <= range.Y; i++)
                         {
-                            if (tile.X < 0 || tile.Y < 0 || tile.X >= MapSize.X || tile.Y >= MapSize.Y)
-                                continue;
+                            foreach (var tile in Vec2IHelper.GetAllTilesWithDistance(unit.MapPosition, i))
+                            {
+                                if (tile.X < 0 || tile.Y < 0 || tile.X >= MapSize.X || tile.Y >= MapSize.Y)
+                                    continue;
 
-                            tileList.Add(tile);
+                                tileList.Add(tile);
+                            }
                         }
                     }
-
-                    colour = new Color4(220, 50, 50, 100);
-                    outlineColour = new Color4(200, 75, 75, 255);
-
-                    if (unit.UnitData.AttackRange == Vector2I.One)
-                        showPossibleAttackRange(unit, tileList, range);
                     else
-                        rangeIndicator.ClearSecondaryRange();
+                        getPossibleAttackRange(unit, tileList, range);
+
+                    colour = new Color4(200, 90, 90, 70);
+                    outlineColour = new Color4(160, 82, 51, 255);
                     break;
                 }
 
@@ -781,7 +781,7 @@ namespace AWBWApp.Game.Game.Logic
             return true;
         }
 
-        private void showPossibleAttackRange(DrawableUnit unit, List<Vector2I> removeList, Vector2I range)
+        private void getPossibleAttackRange(DrawableUnit unit, List<Vector2I> tileList, Vector2I range)
         {
             var movementList = new List<Vector2I>();
 
@@ -803,10 +803,7 @@ namespace AWBWApp.Game.Game.Logic
                 }
             }
 
-            foreach (var tile in removeList)
-                tileSet.Remove(tile);
-
-            rangeIndicator.ShowNewRange(tileSet.ToList(), unit.MapPosition, new Color4(200, 90, 90, 70), new Color4(160, 82, 51, 255), true);
+            tileList.AddRange(tileSet);
         }
 
         protected override bool OnClick(ClickEvent e)
