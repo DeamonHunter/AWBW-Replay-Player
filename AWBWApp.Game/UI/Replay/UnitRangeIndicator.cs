@@ -15,11 +15,8 @@ namespace AWBWApp.Game.UI.Replay
 {
     public class UnitRangeIndicator : Container
     {
-        private readonly Container<Box> primaryBoxContainer;
-        private readonly Container<Path> primaryOutlineContainer;
-
-        private readonly Container<Box> secondaryBoxContainer;
-        private readonly Container<Path> secondaryOutlineContainer;
+        private readonly Container<Box> boxContainer;
+        private readonly Container<Path> outlineContainer;
 
         private Vector2I lastCenter;
 
@@ -27,52 +24,31 @@ namespace AWBWApp.Game.UI.Replay
         {
             Children = new Drawable[]
             {
-                secondaryBoxContainer = new Container<Box>(),
-                secondaryOutlineContainer = new Container<Path>(),
-                primaryBoxContainer = new Container<Box>(),
-                primaryOutlineContainer = new Container<Path>()
+                boxContainer = new Container<Box>(),
+                outlineContainer = new Container<Path>()
             };
         }
 
-        public void ShowNewRange(List<Vector2I> positions, Vector2I center, Color4 colour, Color4 outlineColour, bool secondary)
+        public void ShowNewRange(List<Vector2I> positions, Vector2I center, Color4 colour, Color4 outlineColour)
         {
             Position = GameMap.GetDrawablePositionForBottomOfTile(center);
 
-            var box = secondary ? secondaryBoxContainer : primaryBoxContainer;
-            var line = secondary ? secondaryOutlineContainer : primaryOutlineContainer;
-
             if (Alpha > 0.75f && lastCenter == center)
             {
-                foreach (var child in box.Children)
+                foreach (var child in boxContainer.Children)
                     child.FadeOut(500, Easing.OutCubic).Expire();
-                foreach (var child in line.Children)
+                foreach (var child in outlineContainer.Children)
                     child.FadeOut(500, Easing.OutCubic).Expire();
             }
             else
             {
-                box.Clear();
-                line.Clear();
+                boxContainer.Clear();
+                outlineContainer.Clear();
             }
 
             lastCenter = center;
 
-            showRange(box, line, positions, center, colour, outlineColour);
-        }
-
-        public void ClearSecondaryRange()
-        {
-            if (Alpha > 0.75f)
-            {
-                foreach (var child in secondaryBoxContainer.Children)
-                    child.FadeOut(500, Easing.OutCubic).Expire();
-                foreach (var child in secondaryOutlineContainer.Children)
-                    child.FadeOut(500, Easing.OutCubic).Expire();
-            }
-            else
-            {
-                secondaryBoxContainer.Clear();
-                secondaryOutlineContainer.Clear();
-            }
+            showRange(boxContainer, outlineContainer, positions, center, colour, outlineColour);
         }
 
         private void showRange(Container<Box> boxContainer, Container<Path> pathContainer, List<Vector2I> positions, Vector2I center, Color4 colour, Color4 outlineColour)

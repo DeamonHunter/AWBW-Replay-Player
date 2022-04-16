@@ -699,8 +699,6 @@ namespace AWBWApp.Game.Game.Logic
             {
                 case 0:
                 {
-                    rangeIndicator.ClearSecondaryRange();
-
                     getMovementTiles(unit, tileList);
                     colour = new Color4(50, 200, 50, 100);
                     outlineColour = new Color4(100, 150, 100, 255);
@@ -740,8 +738,6 @@ namespace AWBWApp.Game.Game.Logic
 
                 case 2:
                 {
-                    rangeIndicator.ClearSecondaryRange();
-
                     var dayToDayPower = replayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
                     var action = replayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
                     var sightRangeModifier = dayToDayPower.SightIncrease + (action?.SightRangeIncrease ?? 0);
@@ -776,7 +772,7 @@ namespace AWBWApp.Game.Game.Logic
                     throw new ArgumentException("Out of range", nameof(drawMode));
             }
 
-            rangeIndicator.ShowNewRange(tileList, unit.MapPosition, colour, outlineColour, false);
+            rangeIndicator.ShowNewRange(tileList, unit.MapPosition, colour, outlineColour);
 
             return true;
         }
