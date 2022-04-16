@@ -15,35 +15,68 @@ namespace AWBWApp.Game.UI.Replay
 {
     public class UnitRangeIndicator : Container
     {
-        private readonly Container<Box> boxContainer;
-        private readonly Container<Path> outlineContainer;
+        private readonly Container<Box> primaryBoxContainer;
+        private readonly Container<Path> primaryOutlineContainer;
+
+        private readonly Container<Box> secondaryBoxContainer;
+        private readonly Container<Path> secondaryOutlineContainer;
+
+        private Vector2I lastCenter;
 
         public UnitRangeIndicator()
         {
             Children = new Drawable[]
             {
-                boxContainer = new Container<Box>(),
-                outlineContainer = new Container<Path>()
+                secondaryBoxContainer = new Container<Box>(),
+                secondaryOutlineContainer = new Container<Path>(),
+                primaryBoxContainer = new Container<Box>(),
+                primaryOutlineContainer = new Container<Path>()
             };
         }
 
-        public void ShowNewRange(List<Vector2I> positions, Vector2I center, Color4 colour, Color4 outlineColour)
+        public void ShowNewRange(List<Vector2I> positions, Vector2I center, Color4 colour, Color4 outlineColour, bool secondary)
         {
             Position = GameMap.GetDrawablePositionForBottomOfTile(center);
 
-            if (Alpha > 0.75f)
+            var box = secondary ? secondaryBoxContainer : primaryBoxContainer;
+            var line = secondary ? secondaryOutlineContainer : primaryOutlineContainer;
+
+            if (Alpha > 0.75f && lastCenter == center)
             {
-                foreach (var child in boxContainer.Children)
+                foreach (var child in box.Children)
                     child.FadeOut(500, Easing.OutCubic).Expire();
-                foreach (var child in outlineContainer.Children)
+                foreach (var child in line.Children)
                     child.FadeOut(500, Easing.OutCubic).Expire();
             }
             else
             {
-                boxContainer.Clear();
-                outlineContainer.Clear();
+                box.Clear();
+                line.Clear();
             }
 
+            lastCenter = center;
+
+            showRange(box, line, positions, center, colour, outlineColour);
+        }
+
+        public void ClearSecondaryRange()
+        {
+            if (Alpha > 0.75f)
+            {
+                foreach (var child in secondaryBoxContainer.Children)
+                    child.FadeOut(500, Easing.OutCubic).Expire();
+                foreach (var child in secondaryOutlineContainer.Children)
+                    child.FadeOut(500, Easing.OutCubic).Expire();
+            }
+            else
+            {
+                secondaryBoxContainer.Clear();
+                secondaryOutlineContainer.Clear();
+            }
+        }
+
+        private void showRange(Container<Box> boxContainer, Container<Path> pathContainer, List<Vector2I> positions, Vector2I center, Color4 colour, Color4 outlineColour)
+        {
             positions.Sort((x, y) =>
             {
                 var yComparison = x.Y.CompareTo(y.Y);
@@ -93,7 +126,6 @@ namespace AWBWApp.Game.UI.Replay
             }
 
             //Todo: Is there a more efficient algorithm for this.
-
             while (edges.Count > 0)
             {
                 var outline = new Path
@@ -163,10 +195,10 @@ namespace AWBWApp.Game.UI.Replay
 
                 outline.Position = new Vector2(minX * DrawableTile.BASE_SIZE.X, minY * DrawableTile.BASE_SIZE.Y);
 
-                outlineContainer.Add(outline);
-
-                this.FadeIn(500, Easing.OutQuint);
+                pathContainer.Add(outline);
             }
+
+            this.FadeIn(500, Easing.OutQuint);
         }
 
         private enum PointDirection

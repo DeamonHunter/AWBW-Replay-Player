@@ -698,10 +698,14 @@ namespace AWBWApp.Game.Game.Logic
             switch (drawMode)
             {
                 case 0:
+                {
+                    rangeIndicator.ClearSecondaryRange();
+
                     getMovementTiles(unit, tileList);
                     colour = new Color4(50, 200, 50, 100);
                     outlineColour = new Color4(100, 150, 100, 255);
                     break;
+                }
 
                 case 1:
                 {
@@ -724,13 +728,20 @@ namespace AWBWApp.Game.Game.Logic
                         }
                     }
 
-                    colour = new Color4(200, 50, 50, 100);
-                    outlineColour = new Color4(150, 100, 100, 255);
+                    colour = new Color4(220, 50, 50, 100);
+                    outlineColour = new Color4(200, 75, 75, 255);
+
+                    if (unit.UnitData.AttackRange == Vector2I.One)
+                        showPossibleAttackRange(unit, tileList, range);
+                    else
+                        rangeIndicator.ClearSecondaryRange();
                     break;
                 }
 
                 case 2:
                 {
+                    rangeIndicator.ClearSecondaryRange();
+
                     var dayToDayPower = replayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
                     var action = replayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
                     var sightRangeModifier = dayToDayPower.SightIncrease + (action?.SightRangeIncrease ?? 0);
@@ -765,9 +776,37 @@ namespace AWBWApp.Game.Game.Logic
                     throw new ArgumentException("Out of range", nameof(drawMode));
             }
 
-            rangeIndicator.ShowNewRange(tileList, unit.MapPosition, colour, outlineColour);
+            rangeIndicator.ShowNewRange(tileList, unit.MapPosition, colour, outlineColour, false);
 
             return true;
+        }
+
+        private void showPossibleAttackRange(DrawableUnit unit, List<Vector2I> removeList, Vector2I range)
+        {
+            var movementList = new List<Vector2I>();
+
+            getMovementTiles(unit, movementList);
+
+            var tileSet = new HashSet<Vector2I>();
+
+            foreach (var moveTile in movementList)
+            {
+                for (int i = range.X; i <= range.Y; i++)
+                {
+                    foreach (var tile in Vec2IHelper.GetAllTilesWithDistance(moveTile, i))
+                    {
+                        if (tile.X < 0 || tile.Y < 0 || tile.X >= MapSize.X || tile.Y >= MapSize.Y)
+                            continue;
+
+                        tileSet.Add(tile);
+                    }
+                }
+            }
+
+            foreach (var tile in removeList)
+                tileSet.Remove(tile);
+
+            rangeIndicator.ShowNewRange(tileSet.ToList(), unit.MapPosition, new Color4(200, 90, 90, 70), new Color4(160, 82, 51, 255), true);
         }
 
         protected override bool OnClick(ClickEvent e)
