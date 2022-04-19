@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading.Tasks;
 using AWBWApp.Game;
 using AWBWApp.Game.Update;
@@ -17,8 +18,10 @@ namespace AWBWApp.Desktop
         {
             base.SetHost(host);
 
-            var desktopWindow = (SDL2DesktopWindow)host.Window;
+            var iconStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), "game.ico");
 
+            var desktopWindow = (SDL2DesktopWindow)host.Window;
+            desktopWindow.SetIconFromStream(iconStream);
             desktopWindow.Title = Name;
             desktopWindow.DragDrop += fileDrop;
         }
