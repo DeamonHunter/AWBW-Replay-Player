@@ -43,7 +43,7 @@
             "request": "launch",
             "program": "dotnet",
             "args": [
-                "${workspaceRoot}/AWBWApp.Desktop/bin/Debug/net6.0/AWBWApp.dll",
+                "${workspaceRoot}/AWBWApp.Desktop/bin/Debug/net6.0/AWBW Replay Player.dll",
             ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "Build (Desktop, Debug)",
@@ -60,7 +60,7 @@
             "request": "launch",
             "program": "dotnet",
             "args": [
-                "${workspaceRoot}/AWBWApp.Desktop/bin/Debug/net6.0/AWBWApp.dll",
+                "${workspaceRoot}/AWBWApp.Desktop/bin/Debug/net6.0/AWBW Replay Player.dll",
             ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "Build (Desktop, Release)",
