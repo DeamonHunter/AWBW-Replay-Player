@@ -9,13 +9,13 @@
             "request": "launch",
             "program": "dotnet",
             "args": [
-                "${workspaceRoot}/AWBWApp.Game.Tests/bin/Debug/net5.0/AWBWApp.Game.Tests.dll",
+                "${workspaceRoot}/AWBWApp.Game.Tests/bin/Debug/net6.0/AWBWApp.Game.Tests.dll",
             ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "Build (Tests, Debug)",
             "linux": {
                 "env": {
-                    "LD_LIBRARY_PATH": "${workspaceRoot}/AWBWApp.Game.Tests/bin/Debug/net5.0:${env:LD_LIBRARY_PATH}"
+                    "LD_LIBRARY_PATH": "${workspaceRoot}/AWBWApp.Game.Tests/bin/Debug/net6.0:${env:LD_LIBRARY_PATH}"
                 }
             },
             "console": "internalConsole"
@@ -26,13 +26,13 @@
             "request": "launch",
             "program": "dotnet",
             "args": [
-                "${workspaceRoot}/AWBWApp.Game.Tests/bin/Release/net5.0/AWBWApp.Game.Tests.dll",
+                "${workspaceRoot}/AWBWApp.Game.Tests/bin/Release/net6.0/AWBWApp.Game.Tests.dll",
             ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "Build (Tests, Release)",
             "linux": {
                 "env": {
-                    "LD_LIBRARY_PATH": "${workspaceRoot}/AWBWApp.Game.Tests/bin/Release/net5.0:${env:LD_LIBRARY_PATH}"
+                    "LD_LIBRARY_PATH": "${workspaceRoot}/AWBWApp.Game.Tests/bin/Release/net6.0:${env:LD_LIBRARY_PATH}"
                 }
             },
             "console": "internalConsole"
@@ -43,13 +43,13 @@
             "request": "launch",
             "program": "dotnet",
             "args": [
-                "${workspaceRoot}/AWBWApp.Desktop/bin/Debug/net5.0/AWBWApp.dll",
+                "${workspaceRoot}/AWBWApp.Desktop/bin/Debug/net6.0/AWBWApp.dll",
             ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "Build (Desktop, Debug)",
             "linux": {
                 "env": {
-                    "LD_LIBRARY_PATH": "${workspaceRoot}/AWBWApp.Desktop/bin/Debug/net5.0:${env:LD_LIBRARY_PATH}"
+                    "LD_LIBRARY_PATH": "${workspaceRoot}/AWBWApp.Desktop/bin/Debug/net6.0:${env:LD_LIBRARY_PATH}"
                 }
             },
             "console": "internalConsole"
@@ -60,13 +60,13 @@
             "request": "launch",
             "program": "dotnet",
             "args": [
-                "${workspaceRoot}/AWBWApp.Desktop/bin/Debug/net5.0/AWBWApp.dll",
+                "${workspaceRoot}/AWBWApp.Desktop/bin/Debug/net6.0/AWBWApp.dll",
             ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "Build (Desktop, Release)",
             "linux": {
                 "env": {
-                    "LD_LIBRARY_PATH": "${workspaceRoot}/AWBWApp.Desktop/bin/Debug/net5.0:${env:LD_LIBRARY_PATH}"
+                    "LD_LIBRARY_PATH": "${workspaceRoot}/AWBWApp.Desktop/bin/Debug/net6.0:${env:LD_LIBRARY_PATH}"
                 }
             },
             "console": "internalConsole"
