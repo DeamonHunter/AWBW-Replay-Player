@@ -2,13 +2,11 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using AWBWApp.Game.UI.Components.Menu;
 using AWBWApp.Game.UI.Notifications;
 using AWBWApp.Game.UI.Toolbar;
 using AWBWApp.Game.Update;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Screens;
@@ -45,21 +43,7 @@ namespace AWBWApp.Game
             if (clipboard != null)
                 dependencies.CacheAs(clipboard);
 
-            //Todo: This is gross
-            loadComponentAfterOtherComponents(
-                menuBar = new AWBWMenuBar(new MenuItem[]
-                {
-                    new MenuItem("Settings")
-                    {
-                        Items = new[]
-                        {
-                            new ToggleMenuItem("Show Grid", LocalConfig.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap)),
-                            new ToggleMenuItem("Show Hidden Units", LocalConfig.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits)),
-                            new ToggleMenuItem("Skip End Turn", LocalConfig.GetBindable<bool>(AWBWSetting.ReplaySkipEndTurn)),
-                            new ToggleMenuItem("Short Action Tooltips", LocalConfig.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips))
-                        }
-                    }
-                }, notificationOverlay = new NotificationOverlay()), Add);
+            loadComponentAfterOtherComponents(menuBar = new MainControlMenuBar(screenStack.Exit, notificationOverlay = new NotificationOverlay()), Add);
 
             dependencies.Cache(notificationOverlay);
             loadComponentAfterOtherComponents(updateManager = CreateUpdateManager(), Add, true);

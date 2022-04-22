@@ -19,6 +19,7 @@ namespace AWBWApp.Game
             SetDefault(AWBWSetting.ReplayShowHiddenUnits, true);
             SetDefault(AWBWSetting.ReplayShowGridOverMap, false);
             SetDefault(AWBWSetting.ReplayShortenActionToolTips, false);
+            SetDefault(AWBWSetting.ReplayShowMovementArrows, true);
         }
     }
 
@@ -28,6 +29,7 @@ namespace AWBWApp.Game
         ReplaySkipEndTurn,
         ReplayShowHiddenUnits,
         ReplayShowGridOverMap,
-        ReplayShortenActionToolTips
+        ReplayShortenActionToolTips,
+        ReplayShowMovementArrows
     }
 }

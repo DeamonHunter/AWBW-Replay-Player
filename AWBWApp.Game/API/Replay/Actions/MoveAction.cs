@@ -99,8 +99,12 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             var effect = controller.Map.PlaySelectionAnimation(unit);
-            if (Path.Length > 1)
-                renderPath(Path, controller);
+
+            if (controller.ShowMovementArrows)
+            {
+                if (Path.Length > 1)
+                    renderPath(Path, controller);
+            }
 
             yield return ReplayWait.WaitForTransformable(effect);
 

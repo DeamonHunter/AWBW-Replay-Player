@@ -54,6 +54,10 @@ namespace AWBWApp.Game.Game.Logic
         public BindableInt CurrentTurnIndex { get; private set; } = new BindableInt(-1);
         public int CurrentDay => currentTurn.Day;
 
+        private IBindable<bool> showMovementArrowsBindable;
+
+        public bool ShowMovementArrows => showMovementArrowsBindable?.Value ?? true;
+
         private TurnData currentTurn;
         private int currentActionIndex;
 
@@ -67,6 +71,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private IBindable<bool> skipEndTurnBindable;
         private IBindable<bool> shortenActionTooltipsBindable;
+
         public Dictionary<long, PlayerInfo> Players { get; private set; } = new Dictionary<long, PlayerInfo>();
         public PlayerInfo ActivePlayer => currentTurn != null ? Players[currentTurn.ActivePlayerID] : null;
 
@@ -180,6 +185,7 @@ namespace AWBWApp.Game.Game.Logic
         {
             skipEndTurnBindable = configManager.GetBindable<bool>(AWBWSetting.ReplaySkipEndTurn);
             shortenActionTooltipsBindable = configManager.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips);
+            showMovementArrowsBindable = configManager.GetBindable<bool>(AWBWSetting.ReplayShowMovementArrows);
         }
 
         protected override void Update()
