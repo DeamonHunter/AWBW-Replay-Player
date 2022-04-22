@@ -37,8 +37,15 @@ namespace AWBWApp.Game.API.Replay.Actions
             action.SupplyingUnitId = (long)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)supplyData["unit"], turnData.ActiveTeam, turnData.ActivePlayerID);
 
             action.SuppliedUnitIds = new List<long>();
-            foreach (var id in (JArray)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)supplyData["supplied"], turnData.ActiveTeam, turnData.ActivePlayerID))
-                action.SuppliedUnitIds.Add((long)id);
+
+            var supplied = supplyData["supplied"];
+
+            if (supplied != null && supplied.Type != JTokenType.Null)
+            {
+                foreach (var id in (JArray)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)supplyData["supplied"], turnData.ActiveTeam, turnData.ActivePlayerID))
+                    action.SuppliedUnitIds.Add((long)id);
+            }
+
             return action;
         }
     }
