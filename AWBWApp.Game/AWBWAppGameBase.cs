@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using AWBWApp.Game.API;
@@ -170,10 +169,6 @@ namespace AWBWApp.Game
             for (int i = 0; i < paths.Length; i++)
             {
                 var path = paths[i];
-
-                var extension = Path.GetExtension(path);
-                if (extension != null && extension != ".zip" && extension != ".gz")
-                    continue;
 
                 try
                 {
