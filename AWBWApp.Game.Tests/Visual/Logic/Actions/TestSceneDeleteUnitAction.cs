@@ -19,7 +19,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddStep("Delete Unit", ReplayController.GoToNextAction);
             AddUntilStep("Unit was deleted", () => !HasUnit(originalUnit.ID));
             AddAssert("Unit Value is 0", () => ReplayController.Players[0].UnitValue.Value == 0);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Unit reverted correctly", () => DoesUnitMatchData(originalUnit.ID, originalUnit));
             AddAssert("Unit Value is 1000", () => ReplayController.Players[0].UnitValue.Value == 1000);
         }
@@ -31,7 +31,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddStep("Delete Unit", ReplayController.GoToNextAction);
             AddUntilStep("Unit was deleted", () => !HasUnit(originalUnit.ID));
             AddAssert("Unit Value is 0", () => ReplayController.Players[0].UnitValue.Value == 0);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Unit reverted correctly", () => DoesUnitMatchData(originalUnit.ID, originalUnit));
             AddAssert("Unit Value is 1000", () => ReplayController.Players[0].UnitValue.Value == 1000);
         }

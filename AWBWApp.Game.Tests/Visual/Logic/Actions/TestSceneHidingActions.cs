@@ -18,9 +18,9 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Unit is Hidden", () => DoesUnitPassTest(0, x => x.Dived.Value));
             AddStep("Unhide Unit", ReplayController.GoToNextAction);
             AddUntilStep("Unit is not Hidden", () => DoesUnitPassTest(0, x => !x.Dived.Value));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddUntilStep("Unit is Hidden", () => DoesUnitPassTest(0, x => x.Dived.Value));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddUntilStep("Unit is not Hidden", () => DoesUnitPassTest(0, x => !x.Dived.Value));
         }
 
@@ -32,9 +32,9 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Unit is Hidden", () => DoesUnitPassTest(0, x => x.Dived.Value && x.MapPosition == unitPosition));
             AddStep("Unhide Unit", ReplayController.GoToNextAction);
             AddUntilStep("Unit is not Hidden", () => DoesUnitPassTest(0, x => !x.Dived.Value && x.MapPosition == unitPosition + new Vector2I(1, 0)));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddUntilStep("Unit is Hidden", () => DoesUnitPassTest(0, x => x.Dived.Value && x.MapPosition == unitPosition));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddUntilStep("Unit is not Hidden", () => DoesUnitPassTest(0, x => !x.Dived.Value && x.MapPosition == unitPosition - new Vector2I(1, 0)));
         }
 

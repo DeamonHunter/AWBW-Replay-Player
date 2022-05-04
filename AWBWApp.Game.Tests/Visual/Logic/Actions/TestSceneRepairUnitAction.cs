@@ -16,7 +16,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Repaired", () => !ReplayController.HasOngoingAction());
             AddAssert("Unit HP is 9", () => DoesUnitPassTest(1, x => x.HealthPoints.Value == 9));
             AddAssert("Funds is 0", () => ReplayController.ActivePlayer.Funds.Value == 0);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Unit HP is 8", () => DoesUnitPassTest(1, x => x.HealthPoints.Value == 8));
             AddAssert("Funds is 100", () => ReplayController.ActivePlayer.Funds.Value == 100);
         }
@@ -29,7 +29,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Repaired", () => !ReplayController.HasOngoingAction());
             AddAssert("Unit HP is 9", () => DoesUnitPassTest(1, x => x.HealthPoints.Value == 9));
             AddAssert("Funds is 0", () => ReplayController.ActivePlayer.Funds.Value == 0);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Unit HP is 8", () => DoesUnitPassTest(1, x => x.HealthPoints.Value == 8));
             AddAssert("Funds is 100", () => ReplayController.ActivePlayer.Funds.Value == 100);
         }

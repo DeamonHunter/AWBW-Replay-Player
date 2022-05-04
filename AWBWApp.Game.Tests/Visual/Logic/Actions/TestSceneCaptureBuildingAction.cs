@@ -30,12 +30,12 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddAssert("Unit finished capturing and done move", () => DoesUnitPassTest(0, x => !x.IsCapturing.Value && !x.CanMove.Value));
             AddAssert("Player 0 owns building", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.OwnerID == 0);
             AddAssert("Property Value is 1000", () => ReplayController.ActivePlayer.PropertyValue.Value == 1000);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Player 0 no longer owns building", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.OwnerID == null);
             AddAssert("Building uncaptured and 10hp", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == neutral_city && building.CaptureHealth.Value == 10);
             AddAssert("Unit capturing", () => DoesUnitPassTest(0, x => x.IsCapturing.Value)); //Don't test can move as this is technically an illegal setup
             AddAssert("Property Value is 0", () => ReplayController.ActivePlayer.PropertyValue.Value == 0);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Building uncaptured and 20hp", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == neutral_city && building.CaptureHealth.Value == 20);
             AddAssert("Unit not capturing and can move", () => DoesUnitPassTest(0, x => !x.IsCapturing.Value && x.CanMove.Value));
         }
@@ -55,13 +55,13 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddAssert("Player 0 owns building", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.OwnerID == 0);
             AddAssert("Property Value is 1000", () => ReplayController.ActivePlayer.PropertyValue.Value == 1000);
             AddAssert("Opponent Value is 0", () => ReplayController.Players[1].PropertyValue.Value == 0);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Player 1 owns building", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.OwnerID == 1);
             AddAssert("Building uncaptured and 10hp", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == blue_moon_city && building.CaptureHealth.Value == 10);
             AddAssert("Unit capturing", () => DoesUnitPassTest(0, x => x.IsCapturing.Value)); //Don't test can move as this is technically an illegal setup
             AddAssert("Property Value is 0", () => ReplayController.ActivePlayer.PropertyValue.Value == 0);
             AddAssert("Opponent Value is 1000", () => ReplayController.Players[1].PropertyValue.Value == 1000);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Building uncaptured and 20hp", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out var building) && building.BuildingTile.AWBWID == blue_moon_city && building.CaptureHealth.Value == 20);
             AddAssert("Unit not capturing and can move", () => DoesUnitPassTest(0, x => !x.IsCapturing.Value && x.CanMove.Value));
         }

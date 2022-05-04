@@ -22,7 +22,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Rocket Launched", () => !ReplayController.HasOngoingAction());
             AddAssert("No Missile", () => !ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out _));
             AddAssert("Opponent Unit Value is 17500", () => ReplayController.Players[1].UnitValue.Value == 17500);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Unit reverted correctly", () => DoesUnitMatchData(launchingUnit.ID, launchingUnit));
             AddAssert("Missile Exists", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out _));
             AddAssert("Opponent Unit Value is 24000", () => ReplayController.Players[1].UnitValue.Value == 25000);
@@ -36,7 +36,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Rocket Launched", () => !ReplayController.HasOngoingAction());
             AddAssert("No Missile", () => !ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out _));
             AddAssert("Opponent Unit Value is 16800", () => ReplayController.Players[1].UnitValue.Value == 17500);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Unit reverted correctly", () => DoesUnitMatchData(launchingUnit.ID, launchingUnit));
             AddAssert("Missile Exists", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out _));
             AddAssert("Opponent Unit Value is 24000", () => ReplayController.Players[1].UnitValue.Value == 25000);
@@ -50,7 +50,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Rocket Launched", () => !ReplayController.HasOngoingAction());
             AddAssert("No Missile", () => !ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out _));
             AddAssert("Opponent Unit Value is 0", () => ReplayController.Players[1].UnitValue.Value == 0);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Unit reverted correctly", () => DoesUnitMatchData(launchingUnit.ID, launchingUnit));
             AddAssert("Missile Exists", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out _));
             AddAssert("Opponent Unit Value is 3900", () => ReplayController.Players[1].UnitValue.Value == 7500);

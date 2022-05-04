@@ -23,13 +23,13 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddStep("Attack Down", () => ReplayController.GoToNextAction());
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(4, spaces));
 
-            AddStep("Undo", () => ReplayController.UndoAction());
+            AddStep("Undo", () => ReplayController.GoToPreviousAction());
             AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(3, spaces));
-            AddStep("Undo", () => ReplayController.UndoAction());
+            AddStep("Undo", () => ReplayController.GoToPreviousAction());
             AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, spaces));
-            AddStep("Undo", () => ReplayController.UndoAction());
+            AddStep("Undo", () => ReplayController.GoToPreviousAction());
             AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(1, spaces));
-            AddStep("Undo", () => ReplayController.UndoAction());
+            AddStep("Undo", () => ReplayController.GoToPreviousAction());
             AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(0, 0));
         }
 
@@ -39,7 +39,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddStep("Setup", moveTestTrap);
             AddStep("Move Right", () => ReplayController.GoToNextAction());
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(4, 1));
-            AddStep("Undo", () => ReplayController.UndoAction());
+            AddStep("Undo", () => ReplayController.GoToPreviousAction());
             AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(1, 1));
         }
 
@@ -52,9 +52,9 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, spaces));
             AddStep("Attack Up", () => ReplayController.GoToNextAction());
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(4, spaces));
-            AddStep("Undo", () => ReplayController.UndoAction());
+            AddStep("Undo", () => ReplayController.GoToPreviousAction());
             AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == GetPositionForIteration(2, spaces));
-            AddStep("Undo", () => ReplayController.UndoAction());
+            AddStep("Undo", () => ReplayController.GoToPreviousAction());
             AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(0, 0));
         }
 

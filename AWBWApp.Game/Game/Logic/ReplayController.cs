@@ -501,7 +501,7 @@ namespace AWBWApp.Game.Game.Logic
             barWidget.UpdateActions();
         }
 
-        public void UndoAction()
+        public void GoToPreviousAction()
         {
             completeAllActions();
 

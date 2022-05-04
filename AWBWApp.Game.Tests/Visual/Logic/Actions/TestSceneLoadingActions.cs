@@ -18,9 +18,9 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Unit is Loaded", () => DoesUnitPassTest(0, x => x.BeingCarried.Value));
             AddStep("Unload Unit", ReplayController.GoToNextAction);
             AddUntilStep("Unit is not Loaded", () => DoesUnitPassTest(0, x => !x.BeingCarried.Value));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddUntilStep("Unit is Loaded", () => DoesUnitPassTest(0, x => x.BeingCarried.Value));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddUntilStep("Unit is not Loaded", () => DoesUnitPassTest(0, x => !x.BeingCarried.Value));
         }
 

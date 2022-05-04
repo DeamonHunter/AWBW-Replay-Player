@@ -16,7 +16,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddStep("Supply Units", ReplayController.GoToNextAction);
             AddUntilStep("Supplied", () => !ReplayController.HasOngoingAction());
             AddAssert("All units supplied", () => DoesUnitPassTest(1, x => x.Fuel.Value == 99) && DoesUnitPassTest(2, x => x.Fuel.Value == 99) && DoesUnitPassTest(1, x => x.Fuel.Value == 99) && DoesUnitPassTest(4, x => x.Fuel.Value == 99));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("All units have no fuel", () => DoesUnitPassTest(1, x => x.Fuel.Value == 0) && DoesUnitPassTest(2, x => x.Fuel.Value == 0) && DoesUnitPassTest(1, x => x.Fuel.Value == 0) && DoesUnitPassTest(4, x => x.Fuel.Value == 0));
         }
 
@@ -27,7 +27,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddStep("Supply Units", ReplayController.GoToNextAction);
             AddUntilStep("Supplied", () => !ReplayController.HasOngoingAction());
             AddAssert("All units supplied", () => DoesUnitPassTest(1, x => x.Fuel.Value == 99) && DoesUnitPassTest(2, x => x.Fuel.Value == 99) && DoesUnitPassTest(1, x => x.Fuel.Value == 99));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("All units have no fuel", () => DoesUnitPassTest(1, x => x.Fuel.Value == 0) && DoesUnitPassTest(2, x => x.Fuel.Value == 0) && DoesUnitPassTest(1, x => x.Fuel.Value == 0));
         }
 

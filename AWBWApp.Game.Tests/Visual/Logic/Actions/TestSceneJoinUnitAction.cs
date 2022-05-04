@@ -22,7 +22,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddAssert("Check Joined Unit is correct", () => DoesUnitMatchData(unitB.ID, joinedUnit));
             AddAssert("Gained no funds", () => ReplayController.ActivePlayer.Funds.Value == 1000);
             AddAssert("Unit Value is 1000", () => ReplayController.ActivePlayer.UnitValue.Value == 1000);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Both units are back to original stats", () => DoesUnitMatchData(unitA.ID, unitA) && DoesUnitMatchData(unitB.ID, unitB));
             AddAssert("Unit Value is 1000", () => ReplayController.ActivePlayer.UnitValue.Value == 1000);
         }
@@ -36,7 +36,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddAssert("Check Joined Unit is correct", () => DoesUnitMatchData(unitB.ID, joinedUnit));
             AddAssert("Gained 600 funds", () => ReplayController.ActivePlayer.Funds.Value == 1600);
             AddAssert("Unit Value is 1000", () => ReplayController.ActivePlayer.UnitValue.Value == 1000);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Both units are back to original stats", () => DoesUnitMatchData(unitA.ID, unitA) && DoesUnitMatchData(unitB.ID, unitB));
             AddAssert("Funds reverted", () => ReplayController.ActivePlayer.Funds.Value == 1000);
             AddAssert("Unit Value is 1600", () => ReplayController.ActivePlayer.UnitValue.Value == 1600);

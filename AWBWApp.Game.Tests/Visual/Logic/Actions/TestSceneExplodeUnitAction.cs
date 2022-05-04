@@ -21,7 +21,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Unit was deleted", () => !HasUnit(explodingUnit.ID));
             AddAssert("Unit Value is 0", () => ReplayController.Players[0].UnitValue.Value == 0);
             AddAssert("Opponent Unit Value is 16800", () => ReplayController.Players[1].UnitValue.Value == 16800);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Unit reverted correctly", () => DoesUnitMatchData(explodingUnit.ID, explodingUnit));
             AddAssert("Unit Value is 25000", () => ReplayController.Players[0].UnitValue.Value == 25000);
             AddAssert("Opponent Unit Value is 24000", () => ReplayController.Players[1].UnitValue.Value == 24000);
@@ -35,7 +35,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Unit was explode", () => !HasUnit(explodingUnit.ID));
             AddAssert("Unit Value is 0", () => ReplayController.Players[0].UnitValue.Value == 0);
             AddAssert("Opponent Unit Value is 7700", () => ReplayController.Players[1].UnitValue.Value == 14700);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Unit reverted correctly", () => DoesUnitMatchData(explodingUnit.ID, explodingUnit));
             AddAssert("Unit Value is 25000", () => ReplayController.Players[0].UnitValue.Value == 25000);
             AddAssert("Opponent Unit Value is 11000", () => ReplayController.Players[1].UnitValue.Value == 21000);
@@ -49,7 +49,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Unit was deleted", () => !HasUnit(explodingUnit.ID));
             AddAssert("Unit Value is 0", () => ReplayController.Players[0].UnitValue.Value == 0);
             AddAssert("Opponent Unit Value is 0", () => ReplayController.Players[1].UnitValue.Value == 0);
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Unit reverted correctly", () => DoesUnitMatchData(explodingUnit.ID, explodingUnit));
             AddAssert("Unit Value is 25000", () => ReplayController.Players[0].UnitValue.Value == 25000);
             AddAssert("Opponent Unit Value is 3900", () => ReplayController.Players[1].UnitValue.Value == 7200);

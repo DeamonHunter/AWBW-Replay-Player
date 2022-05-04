@@ -24,14 +24,14 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddStep("Destroy Transport carrying Unit", () => ReplayController.GoToNextAction());
             AddUntilStep("Transport Destroyed", () => !HasUnit(4));
             AddAssert("Transport Cargo Destroyed", () => !HasUnit(5));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddUntilStep("Transport Exists", () => HasUnit(4));
             AddUntilStep("Transport Cargo Exists", () => HasUnit(5));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddUntilStep("Air Exists", () => HasUnit(3));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddUntilStep("Sea Exists", () => HasUnit(2));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddUntilStep("Land Exists", () => HasUnit(1));
         }
 
@@ -53,16 +53,16 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Defender HP is 2", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 2));
             AddUntilStep("Attacker HP is 9", () => DoesUnitPassTest(4, x => x.HealthPoints.Value == 9));
 
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Defender HP is 4", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 4));
             AddAssert("Attacker HP is 10", () => DoesUnitPassTest(4, x => x.HealthPoints.Value == 10));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Defender HP is 6", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 6));
             AddAssert("Attacker HP is 10", () => DoesUnitPassTest(3, x => x.HealthPoints.Value == 10));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Defender HP is 8", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 8));
             AddAssert("Attacker HP is 10", () => DoesUnitPassTest(2, x => x.HealthPoints.Value == 10));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Defender HP is 10", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 10));
             AddAssert("Attacker HP is 10", () => DoesUnitPassTest(1, x => x.HealthPoints.Value == 10));
         }
@@ -74,7 +74,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddStep("Perform", () => ReplayController.GoToNextAction());
             AddUntilStep("Defender HP is 5", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 5));
             AddUntilStep("Attacker HP is 8", () => DoesUnitPassTest(1, x => x.HealthPoints.Value == 8));
-            AddStep("Undo", ReplayController.UndoAction);
+            AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Defender HP is 10", () => DoesUnitPassTest(0, x => x.HealthPoints.Value == 10));
             AddAssert("Attacker HP is 10", () => DoesUnitPassTest(1, x => x.HealthPoints.Value == 10));
             AddAssert("Attacker Position is start", () => DoesUnitPassTest(1, x => x.MapPosition == Vector2I.Zero));
