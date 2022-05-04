@@ -13,7 +13,7 @@ namespace AWBWApp.Game.UI.Components.Tooltip
     /// </summary>
     public class TextToolTip : VisibilityContainer, ITooltip<LocalisableString>
     {
-        private readonly TextFlowContainer text;
+        private TextFlowContainer text;
         private LocalisableString prev;
 
         public virtual void SetContent(LocalisableString content)
@@ -22,8 +22,10 @@ namespace AWBWApp.Game.UI.Components.Tooltip
             if (prev == content)
                 return;
 
+            text?.Expire();
             prev = content;
-            text.Text = content;
+            text = createContainer(content);
+            Add(text);
         }
 
         private const float text_size = 16;
@@ -40,16 +42,20 @@ namespace AWBWApp.Game.UI.Components.Tooltip
                     RelativeSizeAxes = Axes.Both,
                     Colour = new Color4(40, 40, 40, 255),
                 },
-                text = new TextFlowContainer(x =>
-                {
-                    x.Font = FrameworkFont.Regular.With(size: text_size);
-                })
-                {
-                    AutoSizeAxes = Axes.Both,
-                    Text = "This is a test",
-                    Padding = new MarginPadding(5),
-                    MaximumSize = new Vector2(300, float.MaxValue)
-                }
+            };
+        }
+
+        private TextFlowContainer createContainer(LocalisableString text)
+        {
+            return new TextFlowContainer(x =>
+            {
+                x.Font = FrameworkFont.Regular.With(size: text_size);
+            })
+            {
+                AutoSizeAxes = Axes.Both,
+                Text = text,
+                Padding = new MarginPadding(5),
+                MaximumSize = new Vector2(300, float.MaxValue)
             };
         }
 

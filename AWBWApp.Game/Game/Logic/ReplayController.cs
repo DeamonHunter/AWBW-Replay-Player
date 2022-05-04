@@ -82,7 +82,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private const int player_list_width = 225;
 
-        public BindableFloat AutoAdvanceDelay { get; private set; } = new BindableFloat(0.5f) { MaxValue = 2, MinValue = 0, Precision = 0.1f };
+        public BindableFloat AutoAdvanceDelay { get; private set; } = new BindableFloat(0.5f) { MaxValue = 5, MinValue = 0.05f, Precision = 0.05f };
         private AWBWGlobalAction? autoAdvance;
         private double currentAutoAdvanceDelay = -1;
 
@@ -181,7 +181,7 @@ namespace AWBWApp.Game.Game.Logic
 
             Map.OnLoadComplete += _ => cameraControllerWithGrid.FitMapToSpace();
 
-            AutoAdvanceDelay.BindValueChanged(x => currentAutoAdvanceDelay = x.NewValue);
+            AutoAdvanceDelay.BindValueChanged(x => currentAutoAdvanceDelay = x.NewValue * 1000);
 
             loadingLayer.Show();
             errorContainer.Hide();
@@ -238,7 +238,7 @@ namespace AWBWApp.Game.Game.Logic
                 }
             }
 
-            if (autoAdvance.HasValue && currentOngoingActions.Count <= 0)
+            if (autoAdvance.HasValue && currentOngoingActions.Count <= 0 && currentAutoAdvanceDelay > 0)
             {
                 currentAutoAdvanceDelay -= Clock.ElapsedFrameTime;
 
@@ -263,8 +263,12 @@ namespace AWBWApp.Game.Game.Logic
                             break;
                     }
 
-                    currentAutoAdvanceDelay = AutoAdvanceDelay.Value * 1000;
-                    cancelAutoAdvanceIfCantContinue();
+                    //This is gross. But changing turns requires a schedule, and we want to ensure that things have settled.
+                    Schedule(() => Schedule(() =>
+                    {
+                        currentAutoAdvanceDelay = AutoAdvanceDelay.Value * 1000;
+                        cancelAutoAdvanceIfCantContinue();
+                    }));
                 }
             }
         }
@@ -842,6 +846,7 @@ namespace AWBWApp.Game.Game.Logic
 
             autoAdvance = action;
             currentAutoAdvanceDelay = AutoAdvanceDelay.Value * 1000;
+            barWidget.SetSliderVisibility(true);
 
             cancelAutoAdvanceIfCantContinue();
         }
@@ -876,6 +881,7 @@ namespace AWBWApp.Game.Game.Logic
         {
             if (autoAdvance.HasValue)
                 barWidget.CancelAutoAdvance(autoAdvance.Value);
+            barWidget.SetSliderVisibility(false);
             autoAdvance = null;
         }
 

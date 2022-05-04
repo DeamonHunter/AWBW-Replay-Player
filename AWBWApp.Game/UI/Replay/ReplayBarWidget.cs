@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Input;
+using AWBWApp.Game.UI.Components;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -10,6 +11,7 @@ using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
@@ -27,6 +29,7 @@ namespace AWBWApp.Game.UI.Replay
         private readonly ReplayIconButton nextButton;
         private readonly ReplayIconButton nextTurnButton;
         private readonly ReplayBarWidgetDropdown dropdown;
+        private readonly Container sliderBarContainer;
 
         public ReplayBarWidget(ReplayController replayController)
         {
@@ -47,10 +50,44 @@ namespace AWBWApp.Game.UI.Replay
             };
 
             var dropDownHeader = dropdown.GetDetachedHeader();
-
+            SliderBar<float> sliderBar;
             Children = new Drawable[]
             {
                 dropdown,
+                sliderBarContainer = new Container()
+                {
+                    AutoSizeAxes = Axes.Both,
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.BottomCentre,
+                    Masking = true,
+                    CornerRadius = 5,
+                    EdgeEffect = new EdgeEffectParameters
+                    {
+                        Type = EdgeEffectType.Shadow,
+                        Colour = Color4.Black.Opacity(40),
+                        Radius = 5,
+                    },
+                    Children = new Drawable[]
+                    {
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Size = Vector2.One,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Colour = new Color4(25, 25, 25, 180),
+                        },
+                        sliderBar = new KnobSliderBar<float>()
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Size = new Vector2(180, 30),
+                            AccentColour = new Color4(16, 147, 49, 255),
+                            BackgroundColour = Color4.DarkGray,
+                            Suffix = " seconds delay"
+                        }
+                    }
+                },
                 new Container()
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -138,6 +175,8 @@ namespace AWBWApp.Game.UI.Replay
 
             replayController.CurrentTurnIndex.BindValueChanged(_ => updateTurnText());
             dropdown.Current.ValueChanged += x => changeTurn(x.NewValue);
+            sliderBar.Current.BindTo(replayController.AutoAdvanceDelay);
+            SetSliderVisibility(false);
         }
 
         public void UpdateTurns(List<TurnData> turns)
@@ -188,6 +227,11 @@ namespace AWBWApp.Game.UI.Replay
             }
         }
 
+        public void SetSliderVisibility(bool visible)
+        {
+            sliderBarContainer.ScaleTo(visible ? Vector2.One : new Vector2(0, 0.1f), 250, Easing.OutQuint);
+        }
+
         private void updateTurnText()
         {
             if (!replayController.HasLoadedReplay)
@@ -217,7 +261,7 @@ namespace AWBWApp.Game.UI.Replay
             private readonly Func<string> getToolTip;
 
             private const float auto_advance_timer = 400;
-            private Color4 autoAdvanceIconColour = new Color4(10, 117, 37, 255);
+            private Color4 autoAdvanceIconColour = new Color4(16, 147, 49, 255);
             private bool autoAdvancing;
             private bool confirmingAutoAdvance;
 
