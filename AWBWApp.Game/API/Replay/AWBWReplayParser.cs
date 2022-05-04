@@ -796,7 +796,7 @@ namespace AWBWApp.Game.API.Replay
                         {
                             //Describes how much time this player had at the start of the turn.
                             //Not useful for us as we don't really care when turns begin and end.
-                            readInteger(text, ref textIndex);
+                            readNullableInteger(text, ref textIndex);
                             break;
                         }
 
@@ -1437,7 +1437,7 @@ namespace AWBWApp.Game.API.Replay
         private int readInteger(ReadOnlySpan<char> text, ref int index)
         {
             if (text[index++] != 'i')
-                throw new Exception("Was expecting a integer.");
+                throw new Exception("Was expecting a integer. Was: " + text[index - 1]);
             if (text[index++] != ':')
                 throw new Exception("Integer was badly formatted.");
 
