@@ -10,7 +10,7 @@ namespace AWBWApp.Game.UI
     {
         public const float DEFAULT_BUTTON_SIZE = 30;
 
-        public Color4 IconColor
+        public Color4 IconColour
         {
             get => iconColor ?? Color4.White;
             set
@@ -24,7 +24,7 @@ namespace AWBWApp.Game.UI
 
         public Color4 IconHoverColour
         {
-            get => iconHoverColour ?? IconColor;
+            get => iconHoverColour ?? IconColour;
             set => iconHoverColour = value;
         }
 
@@ -64,7 +64,7 @@ namespace AWBWApp.Game.UI
 
         protected override void OnHoverLost(HoverLostEvent e)
         {
-            icon.FadeColour(IconColor, 500, Easing.OutQuint);
+            icon.FadeColour(IconColour, 500, Easing.OutQuint);
             base.OnHoverLost(e);
         }
     }

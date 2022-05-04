@@ -8,6 +8,7 @@ using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.Input;
 using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Components.Tooltip;
@@ -80,6 +81,10 @@ namespace AWBWApp.Game.Game.Logic
         private Dictionary<int, EndTurnDesync> endTurnDesyncs;
 
         private const int player_list_width = 225;
+
+        public BindableFloat AutoAdvanceDelay { get; private set; } = new BindableFloat(0.5f) { MaxValue = 2, MinValue = 0, Precision = 0.1f };
+        private AWBWGlobalAction? autoAdvance;
+        private double currentAutoAdvanceDelay = -1;
 
         public ReplayController()
         {
@@ -176,6 +181,8 @@ namespace AWBWApp.Game.Game.Logic
 
             Map.OnLoadComplete += _ => cameraControllerWithGrid.FitMapToSpace();
 
+            AutoAdvanceDelay.BindValueChanged(x => currentAutoAdvanceDelay = x.NewValue);
+
             loadingLayer.Show();
             errorContainer.Hide();
         }
@@ -228,6 +235,36 @@ namespace AWBWApp.Game.Game.Logic
 
                     currentOngoingActions.Enqueue(ongoingAction);
                     break;
+                }
+            }
+
+            if (autoAdvance.HasValue && currentOngoingActions.Count <= 0)
+            {
+                currentAutoAdvanceDelay -= Clock.ElapsedFrameTime;
+
+                if (currentAutoAdvanceDelay <= 0)
+                {
+                    switch (autoAdvance)
+                    {
+                        case AWBWGlobalAction.PreviousTurn:
+                            goToTurnWithIdxAndShowLastAction(CurrentTurnIndex.Value - 1);
+                            break;
+
+                        case AWBWGlobalAction.PreviousAction:
+                            GoToPreviousAction();
+                            break;
+
+                        case AWBWGlobalAction.NextAction:
+                            GoToNextAction();
+                            break;
+
+                        case AWBWGlobalAction.NextTurn:
+                            goToTurnWithIdxAndShowLastAction(CurrentTurnIndex.Value + 1);
+                            break;
+                    }
+
+                    currentAutoAdvanceDelay = AutoAdvanceDelay.Value * 1000;
+                    cancelAutoAdvanceIfCantContinue();
                 }
             }
         }
@@ -593,16 +630,42 @@ namespace AWBWApp.Game.Game.Logic
         public void RestartTurn(bool completeActions = true) => goToTurnWithIdx(CurrentTurnIndex.Value, completeActions);
         public void GoToTurn(int turnIdx, bool completeActions = true) => goToTurnWithIdx(turnIdx, completeActions);
 
+        private void goToTurnWithIdxAndShowLastAction(int turnIdx)
+        {
+            turnIdx = Math.Clamp(turnIdx, 0, replayData.TurnData.Count - 1);
+
+            //We do not have a state to go to on the last turn so fake it by quickly advancing through everything
+            if (turnIdx == replayData.TurnData.Count - 1)
+            {
+                goToTurnWithIdx(turnIdx, true);
+
+                ScheduleAfterChildren(() =>
+                {
+                    while (currentActionIndex < currentTurn.Actions.Count - 2)
+                        GoToNextAction();
+
+                    GoToNextAction();
+                    completeAllActions();
+                    ClearAllEffects();
+                });
+                return;
+            }
+
+            goToTurnWithIdx(turnIdx + 1, true);
+            ScheduleAfterChildren(() =>
+            {
+                GoToPreviousAction();
+                completeAllActions();
+                ClearAllEffects();
+            });
+        }
+
         private void goToTurnWithIdx(int turnIdx, bool completeActions)
         {
             if (completeActions)
                 completeAllActions();
 
-            if (turnIdx < 0)
-                turnIdx = 0;
-
-            if (turnIdx >= replayData.TurnData.Count)
-                turnIdx = replayData.TurnData.Count - 1;
+            turnIdx = Math.Clamp(turnIdx, 0, replayData.TurnData.Count - 1);
 
             currentActionIndex = -1;
             currentTurn = replayData.TurnData[turnIdx];
@@ -764,6 +827,62 @@ namespace AWBWApp.Game.Game.Logic
             });
 
             return power.Power;
+        }
+
+        public void ToggleAutoAdvance(AWBWGlobalAction action)
+        {
+            if (autoAdvance == action)
+            {
+                CancelAutoAdvance();
+                return;
+            }
+
+            if (autoAdvance.HasValue)
+                barWidget.CancelAutoAdvance(autoAdvance.Value);
+
+            autoAdvance = action;
+            currentAutoAdvanceDelay = AutoAdvanceDelay.Value * 1000;
+
+            cancelAutoAdvanceIfCantContinue();
+        }
+
+        private void cancelAutoAdvanceIfCantContinue()
+        {
+            switch (autoAdvance)
+            {
+                case AWBWGlobalAction.PreviousTurn:
+                    if (!HasPreviousTurn())
+                        CancelAutoAdvance();
+                    break;
+
+                case AWBWGlobalAction.PreviousAction:
+                    if (!HasPreviousAction())
+                        CancelAutoAdvance();
+                    break;
+
+                case AWBWGlobalAction.NextAction:
+                    if (!HasNextAction())
+                        CancelAutoAdvance();
+                    break;
+
+                case AWBWGlobalAction.NextTurn:
+                    if (!HasNextTurn())
+                        CancelAutoAdvance();
+                    break;
+            }
+        }
+
+        public void CancelAutoAdvance()
+        {
+            if (autoAdvance.HasValue)
+                barWidget.CancelAutoAdvance(autoAdvance.Value);
+            autoAdvance = null;
+        }
+
+        public void ClearAllEffects()
+        {
+            powerLayer.Clear();
+            Map.ClearAllEffects();
         }
 
         private struct RegisteredPower

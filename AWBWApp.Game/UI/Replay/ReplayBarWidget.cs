@@ -22,10 +22,10 @@ namespace AWBWApp.Game.UI.Replay
     {
         private readonly ReplayController replayController;
 
-        private readonly IconButton lastTurnButton;
-        private readonly IconButton prevButton;
-        private readonly IconButton nextButton;
-        private readonly IconButton nextTurnButton;
+        private readonly ReplayIconButton prevTurnButton;
+        private readonly ReplayIconButton prevButton;
+        private readonly ReplayIconButton nextButton;
+        private readonly ReplayIconButton nextTurnButton;
         private readonly ReplayBarWidgetDropdown dropdown;
 
         public ReplayBarWidget(ReplayController replayController)
@@ -81,18 +81,28 @@ namespace AWBWApp.Game.UI.Replay
                             Anchor = Anchor.Centre,
                             Children = new Drawable[]
                             {
-                                lastTurnButton = new ReplayIconButton(AWBWGlobalAction.PreviousTurn)
+                                prevTurnButton = new ReplayIconButton(AWBWGlobalAction.PreviousTurn)
                                 {
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
-                                    Action = () => replayController.GoToPreviousTurn(),
+                                    Action = () =>
+                                    {
+                                        replayController.CancelAutoAdvance();
+                                        replayController.GoToPreviousTurn();
+                                    },
+                                    ToggleAutoAdvanceAction = replayController.ToggleAutoAdvance,
                                     Icon = FontAwesome.Solid.AngleDoubleLeft
                                 },
                                 prevButton = new ReplayIconButton(AWBWGlobalAction.PreviousAction, replayController.GetPreviousActionName)
                                 {
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
-                                    Action = () => this.replayController.UndoAction(),
+                                    Action = () =>
+                                    {
+                                        replayController.CancelAutoAdvance();
+                                        replayController.GoToPreviousAction();
+                                    },
+                                    ToggleAutoAdvanceAction = replayController.ToggleAutoAdvance,
                                     Icon = FontAwesome.Solid.AngleLeft
                                 },
                                 dropDownHeader,
@@ -100,14 +110,24 @@ namespace AWBWApp.Game.UI.Replay
                                 {
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
-                                    Action = () => replayController.GoToNextAction(),
+                                    Action = () =>
+                                    {
+                                        replayController.CancelAutoAdvance();
+                                        replayController.GoToNextAction();
+                                    },
+                                    ToggleAutoAdvanceAction = replayController.ToggleAutoAdvance,
                                     Icon = FontAwesome.Solid.AngleRight
                                 },
                                 nextTurnButton = new ReplayIconButton(AWBWGlobalAction.NextTurn)
                                 {
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
-                                    Action = () => replayController.GoToNextTurn(),
+                                    Action = () =>
+                                    {
+                                        replayController.CancelAutoAdvance();
+                                        replayController.GoToNextTurn();
+                                    },
+                                    ToggleAutoAdvanceAction = replayController.ToggleAutoAdvance,
                                     Icon = FontAwesome.Solid.AngleDoubleRight
                                 },
                             }
@@ -140,10 +160,32 @@ namespace AWBWApp.Game.UI.Replay
 
         public void UpdateActions()
         {
-            lastTurnButton.Enabled.Value = replayController.HasPreviousTurn();
+            prevTurnButton.Enabled.Value = replayController.HasPreviousTurn();
             prevButton.Enabled.Value = replayController.HasPreviousAction();
             nextButton.Enabled.Value = replayController.HasNextAction();
             nextTurnButton.Enabled.Value = replayController.HasNextTurn();
+        }
+
+        public void CancelAutoAdvance(AWBWGlobalAction button)
+        {
+            switch (button)
+            {
+                case AWBWGlobalAction.PreviousTurn:
+                    prevTurnButton.CancelAutoAdvance();
+                    break;
+
+                case AWBWGlobalAction.PreviousAction:
+                    prevButton.CancelAutoAdvance();
+                    break;
+
+                case AWBWGlobalAction.NextAction:
+                    nextButton.CancelAutoAdvance();
+                    break;
+
+                case AWBWGlobalAction.NextTurn:
+                    nextTurnButton.CancelAutoAdvance();
+                    break;
+            }
         }
 
         private void updateTurnText()
@@ -169,37 +211,26 @@ namespace AWBWApp.Game.UI.Replay
 
         private class ReplayIconButton : IconButton, IKeyBindingHandler<AWBWGlobalAction>, IHasTooltip
         {
+            public Action<AWBWGlobalAction> ToggleAutoAdvanceAction;
+
             private readonly AWBWGlobalAction triggerAction;
             private readonly Func<string> getToolTip;
+
+            private const float auto_advance_timer = 400;
+            private Color4 autoAdvanceIconColour = new Color4(10, 117, 37, 255);
+            private bool autoAdvancing;
+            private bool confirmingAutoAdvance;
+
+            private bool mouseDown;
+            private bool keyDown;
+
+            public LocalisableString TooltipText => getToolTip?.Invoke();
 
             public ReplayIconButton(AWBWGlobalAction triggerAction, Func<string> getToolTip = null)
             {
                 AutoSizeAxes = Axes.Both;
                 this.triggerAction = triggerAction;
                 this.getToolTip = getToolTip;
-            }
-
-            public LocalisableString TooltipText => getToolTip?.Invoke();
-
-            public bool OnPressed(KeyBindingPressEvent<AWBWGlobalAction> e)
-            {
-                if (e.Repeat)
-                    return false;
-
-                if (e.Action == triggerAction)
-                {
-                    Action?.Invoke();
-                    Content.ScaleTo(0.85f, 2000, Easing.OutQuint);
-                    return true;
-                }
-
-                return false;
-            }
-
-            public void OnReleased(KeyBindingReleaseEvent<AWBWGlobalAction> e)
-            {
-                if (e.Action == triggerAction)
-                    Content.ScaleTo(1, 1000, Easing.OutElastic);
             }
 
             protected override void LoadComplete()
@@ -209,6 +240,108 @@ namespace AWBWApp.Game.UI.Replay
                 // works with AutoSizeAxes above to make buttons autosize with the scale animation.
                 Content.AutoSizeAxes = Axes.None;
                 Content.Size = new Vector2(DEFAULT_BUTTON_SIZE);
+
+                Enabled.BindValueChanged(x =>
+                {
+                    if (x.NewValue)
+                        return;
+
+                    mouseDown = false;
+                    keyDown = false;
+                    triggerUp();
+                });
+            }
+
+            protected override bool OnMouseDown(MouseDownEvent e)
+            {
+                mouseDown = true;
+                triggerDown();
+                return true;
+            }
+
+            protected override bool OnClick(ClickEvent e)
+            {
+                return true;
+            }
+
+            protected override void OnMouseUp(MouseUpEvent e)
+            {
+                if (!e.HasAnyButtonPressed)
+                {
+                    mouseDown = false;
+                    triggerUp();
+                }
+            }
+
+            public bool OnPressed(KeyBindingPressEvent<AWBWGlobalAction> e)
+            {
+                if (e.Repeat || e.Action != triggerAction)
+                    return false;
+
+                keyDown = true;
+                triggerDown();
+                return true;
+            }
+
+            public void OnReleased(KeyBindingReleaseEvent<AWBWGlobalAction> e)
+            {
+                if (e.Action != triggerAction)
+                    return;
+
+                keyDown = false;
+                triggerUp();
+            }
+
+            private void triggerDown()
+            {
+                if (autoAdvancing)
+                {
+                    Content.ScaleTo(0.9f).ScaleTo(1, 1000, Easing.OutElastic);
+                    CancelAutoAdvance();
+                    ToggleAutoAdvanceAction?.Invoke(triggerAction);
+                    return;
+                }
+
+                Content.ScaleTo(0.85f, 2000, Easing.OutQuint);
+
+                if (!Enabled.Value)
+                    return;
+
+                beginAutoAdvance();
+                Action?.Invoke();
+            }
+
+            private void triggerUp()
+            {
+                if (mouseDown || keyDown)
+                    return;
+
+                Content.ScaleTo(1, 1000, Easing.OutElastic);
+                if (confirmingAutoAdvance)
+                    CancelAutoAdvance();
+            }
+
+            private void beginAutoAdvance()
+            {
+                if (confirmingAutoAdvance)
+                    return;
+
+                this.TransformTo("IconColour", autoAdvanceIconColour, auto_advance_timer, Easing.Out).OnComplete(_ => autoAdvance());
+                confirmingAutoAdvance = true;
+            }
+
+            private void autoAdvance()
+            {
+                confirmingAutoAdvance = false;
+                autoAdvancing = true;
+                ToggleAutoAdvanceAction?.Invoke(triggerAction);
+            }
+
+            public void CancelAutoAdvance()
+            {
+                confirmingAutoAdvance = false;
+                autoAdvancing = false;
+                this.TransformTo("IconColour", Color4.White, 75, Easing.InQuint);
             }
         }
     }

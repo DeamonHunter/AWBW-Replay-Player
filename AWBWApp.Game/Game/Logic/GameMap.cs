@@ -520,6 +520,11 @@ namespace AWBWApp.Game.Game.Logic
             return effect;
         }
 
+        public void ClearAllEffects()
+        {
+            effectAnimationController.Clear();
+        }
+
         public DrawableUnit GetDrawableUnit(Vector2I unitPosition)
         {
             //Todo: query by position rather than iterate over everything
