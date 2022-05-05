@@ -147,6 +147,7 @@ namespace AWBWApp.Game.UI.Select
         private void load()
         {
             replayManager.ReplayAdded += replayAdded;
+            replayManager.ReplayChanged += replayAdded;
             replayManager.ReplayRemoved += replayRemoved;
 
             if (!replays.Any())
@@ -183,7 +184,7 @@ namespace AWBWApp.Game.UI.Select
 
         public void UpdateReplay(ReplayInfo replayInfo)
         {
-            CarouselReplay existingReplay = replays.FirstOrDefault(r => r.ReplayInfo.Equals(replayInfo));
+            CarouselReplay existingReplay = replays.FirstOrDefault(r => r.ReplayInfo.ID == replayInfo.ID);
             var newItem = createCarouselReplay(replayInfo);
 
             if (existingReplay != null)

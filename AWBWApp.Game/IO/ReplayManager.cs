@@ -189,10 +189,15 @@ namespace AWBWApp.Game.IO
 
         private void addReplay(ReplayData data)
         {
+            var containedAlready = _knownReplays.ContainsKey(data.ReplayInfo.ID);
+
             _knownReplays[data.ReplayInfo.ID] = data.ReplayInfo;
             saveReplays();
 
-            ReplayAdded?.Invoke(data.ReplayInfo);
+            if (containedAlready)
+                ReplayChanged?.Invoke(data.ReplayInfo);
+            else
+                ReplayAdded?.Invoke(data.ReplayInfo);
         }
 
         private void saveReplays()
