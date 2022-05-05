@@ -37,10 +37,10 @@ namespace AWBWApp.Game.API.Replay
             stopWatch.Start();
 
             if (zipArchive.Entries.Count <= 0)
-                throw new Exception("Cannot parse zip as replay. It contains 0 files.");
+                throw new Exception("Cannot parse zip as replay. It contains 0 files, and is probably not a AWBW replay.");
 
             if (zipArchive.Entries.Count > 2)
-                throw new Exception("Cannot parse zip as replay. It contains too many files.");
+                throw new Exception("Cannot parse zip as replay. It contains too many files for a AWBW replay.");
 
             ReadOnlySpan<char> gameStateFile = null;
             ReadOnlySpan<char> replayFile = null;
@@ -77,10 +77,17 @@ namespace AWBWApp.Game.API.Replay
 
             ReadOnlySpan<char> gameStateFile = null;
 
-            using (var entryStream = new GZipStream(fileStream, CompressionMode.Decompress))
+            try
             {
-                using (var sr = new StreamReader(entryStream))
-                    gameStateFile = sr.ReadToEnd();
+                using (var entryStream = new GZipStream(fileStream, CompressionMode.Decompress))
+                {
+                    using (var sr = new StreamReader(entryStream))
+                        gameStateFile = sr.ReadToEnd();
+                }
+            }
+            catch (InvalidDataException)
+            {
+                throw new Exception("Failed to open replay as a GZip file. Are you sure this is a replay?");
             }
 
             var state = readBaseReplayData(gameStateFile);
