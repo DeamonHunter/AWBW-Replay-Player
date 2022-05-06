@@ -21,6 +21,9 @@ namespace AWBWApp.Game.UI.Interrupts
         private ReplayManager replayStorage { get; set; }
 
         [Resolved]
+        private MapFileStorage mapStorage { get; set; }
+
+        [Resolved]
         private InterruptDialogueOverlay interrupt { get; set; }
 
         [Resolved]
@@ -192,6 +195,12 @@ namespace AWBWApp.Game.UI.Interrupts
                             throw new Exception($"Unable to find the replay of game '{gameID}'. Is the session cookie correct?");
 
                         var replayData = await replayStorage.ParseThenStoreReplayStream(gameID, webRequest.ResponseStream);
+
+                        var hasMap = mapStorage.HasMap(replayData.ReplayInfo.MapId);
+                        await mapStorage.GetOrAwaitDownloadMap(replayData.ReplayInfo.MapId);
+                        if (!hasMap)
+                            replayStorage.ReplayChanged?.Invoke(replayData.ReplayInfo);
+
                         replay = replayData.ReplayInfo;
                     }
                 }

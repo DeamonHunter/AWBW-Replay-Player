@@ -47,6 +47,8 @@ namespace AWBWApp.Game.IO
 
         private Queue<(long, TaskCompletionSource<ReplayMap>)> mapsToDownload = new Queue<(long, TaskCompletionSource<ReplayMap>)>();
 
+        public bool HasMap(long mapID) => underlyingStorage.Exists($"{mapID}.json");
+
         public async Task<ReplayMap> GetOrAwaitDownloadMap(long mapID)
         {
             var map = Get(mapID);

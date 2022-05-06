@@ -173,7 +173,10 @@ namespace AWBWApp.Game
                 try
                 {
                     var data = await replayStorage.ParseAndStoreReplay(path);
+                    var hasMap = mapStorage.HasMap(data.ReplayInfo.MapId);
                     await mapStorage.GetOrAwaitDownloadMap(data.ReplayInfo.MapId);
+                    if (!hasMap)
+                        replayStorage.ReplayChanged?.Invoke(data.ReplayInfo);
                 }
                 catch (Exception e)
                 {
