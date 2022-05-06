@@ -279,6 +279,7 @@ namespace AWBWApp.Game.API.Replay
                             user.Username = playerNode.SelectSingleNode("Player")!.InnerText;
 
                             user.CountryID = countryNameToAWBWID[playerNode.SelectSingleNode("Country")!.InnerText];
+                            user.RoundOrder = user.CountryID;
                             user.COsUsedByPlayer.Add(coNameToAWBWId[playerNode.SelectSingleNode("CO")!.InnerText]);
 
                             data.ReplayInfo.Players.Add(user.ID, user);
