@@ -105,6 +105,8 @@ namespace AWBWApp.Game.API.Replay
 
             { "missilesilo", (true, 111) },
             { "missilesiloempty", (false, 112) },
+            { "hpipeseam", (true, 113) },
+            { "vpipeseam", (true, 114) },
 
             { "orangestarcity", (true, 38) },
             { "orangestarbase", (true, 39) },
@@ -244,6 +246,7 @@ namespace AWBWApp.Game.API.Replay
             { "recon", "Recon" },
             { "apc", "APC" },
             { "artillery", "Artillery" },
+            { "rocket", "Rocket" },
             { "anti-air", "Anti-Air" },
             { "missile", "Missile" },
             { "fighter", "Fighter" },
@@ -443,13 +446,27 @@ namespace AWBWApp.Game.API.Replay
 
                                 var name = entityNode.SelectSingleNode("Name");
 
-                                if (name!.InnerText == "capture")
+                                switch (name!.InnerText)
                                 {
-                                    if (turnData.Buildings[position].Capture == 0)
-                                        turnData.Buildings[position].Capture = 20;
-                                    else
-                                        turnData.Buildings[position].Capture = 10;
-                                    continue;
+                                    case "capture":
+                                    {
+                                        turnData.Buildings[position].Capture = turnData.Buildings[position].Capture == 0 ? 20 : 10;
+                                        continue;
+                                    }
+
+                                    case "aniammo":
+                                    {
+                                        var unit = turnData.ReplayUnit.First(unit => unit.Value.Position == position && (!unit.Value.BeingCarried.HasValue || unit.Value.BeingCarried == false));
+                                        unit.Value.Ammo = 0;
+                                        continue;
+                                    }
+
+                                    case "anifuel":
+                                    {
+                                        var unit = turnData.ReplayUnit.First(unit => unit.Value.Position == position && (!unit.Value.BeingCarried.HasValue || unit.Value.BeingCarried == false));
+                                        unit.Value.Fuel = 0;
+                                        continue;
+                                    }
                                 }
 
                                 if (int.TryParse(name!.InnerText, out var health))
