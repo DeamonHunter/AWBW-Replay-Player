@@ -100,7 +100,8 @@ namespace AWBWApp.Game.Game.Units
                 {
                     Anchor = Anchor.BottomRight,
                     Origin = Anchor.BottomRight,
-                    Font = new FontUsage(size: 1.5f)
+                    Font = new FontUsage(size: 2.25f),
+                    Position = new Vector2(1, 1)
                 },
                 lowStatsAnimation = new TextureAnimation()
                 {

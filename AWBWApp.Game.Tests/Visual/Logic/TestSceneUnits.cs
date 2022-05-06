@@ -73,5 +73,46 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 ReplayController.RestartTurn();
             });
         }
+
+        [TestCase("Infantry")]
+        [TestCase("Tank")]
+        public void TestShowAllStatus(string unit)
+        {
+            AddStep("Show All Statuses - Infantry", () =>
+            {
+                var data = CreateBasicReplayData(2);
+                var turn = CreateBasicTurnData(data);
+                data.TurnData.Add(turn);
+
+                for (int i = 0; i < 10; i++)
+                {
+                    var healthOnly = CreateBasicReplayUnit(i * 4, 0, unit, new Vector2I(i, 0));
+                    healthOnly.HitPoints = i + 1;
+                    healthOnly.Ammo = 99;
+                    healthOnly.Fuel = 99;
+                    turn.ReplayUnit.Add(healthOnly.ID, healthOnly);
+
+                    var healthAndAmmo = CreateBasicReplayUnit(i * 4 + 1, 0, unit, new Vector2I(i, 1));
+                    healthAndAmmo.HitPoints = i + 1;
+                    healthAndAmmo.Ammo = 0;
+                    healthAndAmmo.Fuel = 99;
+                    turn.ReplayUnit.Add(healthAndAmmo.ID, healthAndAmmo);
+
+                    var healthAndFuel = CreateBasicReplayUnit(i * 4 + 2, 0, unit, new Vector2I(i, 2));
+                    healthAndFuel.HitPoints = i + 1;
+                    healthAndFuel.Ammo = 99;
+                    healthAndFuel.Fuel = 0;
+                    turn.ReplayUnit.Add(healthAndFuel.ID, healthAndFuel);
+
+                    var all = CreateBasicReplayUnit(i * 4 + 3, 0, unit, new Vector2I(i, 3));
+                    all.HitPoints = i + 1;
+                    all.Ammo = 0;
+                    all.Fuel = 0;
+                    turn.ReplayUnit.Add(all.ID, all);
+                }
+
+                ReplayController.LoadReplay(data, CreateBasicMap(10, 4));
+            });
+        }
     }
 }
