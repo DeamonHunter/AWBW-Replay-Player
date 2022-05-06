@@ -296,6 +296,8 @@ namespace AWBWApp.Game.API.Replay
 
         private void readXMLTurnData(ReplayData data, XmlNode turnsNode)
         {
+            var unitId = 0;
+
             foreach (XmlNode node in turnsNode.ChildNodes)
             {
                 int turnIndex = -1;
@@ -326,6 +328,8 @@ namespace AWBWApp.Game.API.Replay
 
                         case "EntityInfos":
                         {
+                            var lastTurn = turnIndex - 1 < data.TurnData.Count && turnIndex > 0 ? data.TurnData[turnIndex - 1] : null;
+
                             foreach (XmlNode entityNode in innerNode.ChildNodes)
                             {
                                 var x = int.Parse(entityNode.SelectSingleNode("X")!.InnerText);
@@ -337,7 +341,10 @@ namespace AWBWApp.Game.API.Replay
 
                                 if (name!.InnerText == "capture")
                                 {
-                                    turnData.Buildings[position].Capture = 10;
+                                    if (turnData.Buildings[position].Capture == 0)
+                                        turnData.Buildings[position].Capture = 20;
+                                    else
+                                        turnData.Buildings[position].Capture = 10;
                                     continue;
                                 }
 
@@ -355,12 +362,13 @@ namespace AWBWApp.Game.API.Replay
                                 if (countryShortNameToAWBWID.TryGetValue(code, out var countryID))
                                 {
                                     var replayUnit = new ReplayUnit();
-                                    replayUnit.ID = turnData.ReplayUnit.Count;
+                                    replayUnit.ID = unitId++;
                                     replayUnit.UnitName = unitNames[name.InnerText[2..]];
                                     replayUnit.HitPoints = 10;
                                     replayUnit.Position = position;
                                     replayUnit.PlayerID = data.ReplayInfo.Players.First(p => p.Value.CountryID == countryID).Value.ID;
 
+                                    replayUnit.TimesMoved = 0;
                                     replayUnit.Fuel = 99;
                                     replayUnit.Ammo = 99;
 
@@ -374,17 +382,41 @@ namespace AWBWApp.Game.API.Replay
                                     if (buildingID.Item1)
                                     {
                                         var replayBuilding = new ReplayBuilding();
+                                        replayBuilding.ID = position.Y * 1000 + position.X;
                                         replayBuilding.Capture = 20;
                                         replayBuilding.LastCapture = 20;
                                         replayBuilding.TerrainID = buildingID.Item2;
                                         replayBuilding.Position = position;
-
                                         turnData.Buildings.Add(position, replayBuilding);
                                     }
                                     continue;
                                 }
 
                                 throw new Exception($"Unknown name: {name.InnerText}");
+                            }
+
+                            if (lastTurn != null)
+                            {
+                                foreach (var building in turnData.Buildings)
+                                {
+                                    var lastTurnBuilding = lastTurn.Buildings[building.Key];
+
+                                    if (lastTurnBuilding.Capture != 20)
+                                    {
+                                        if (lastTurnBuilding.TerrainID != building.Value.TerrainID)
+                                            building.Value.Capture = 20;
+                                        else
+                                        {
+                                            var unitAbove = turnData.ReplayUnit.FirstOrDefault(unit => unit.Value.Position == building.Value.Position);
+                                            var lastUnitAbove = lastTurn.ReplayUnit.FirstOrDefault(unit => unit.Value.Position == building.Value.Position);
+
+                                            if (unitAbove.Value?.UnitName != lastUnitAbove.Value?.UnitName || unitAbove.Value?.PlayerID != lastUnitAbove.Value?.PlayerID)
+                                                building.Value.Capture = 20;
+                                            else
+                                                building.Value.Capture = 10;
+                                        }
+                                    }
+                                }
                             }
 
                             break;
@@ -413,6 +445,10 @@ namespace AWBWApp.Game.API.Replay
 
                                         case "HasLost":
                                             playerTurn.Eliminated = bool.Parse(playerInfoNode.InnerText);
+
+                                            if (playerTurn.Eliminated && !playerData.Value.EliminatedOn.HasValue)
+                                                playerData.Value.EliminatedOn = turnIndex;
+
                                             break;
 
                                         case "IsActive":
@@ -431,6 +467,7 @@ namespace AWBWApp.Game.API.Replay
                                                 playerTurn.COPowerOn = ActiveCOPower.Normal;
                                             else
                                                 playerTurn.COPowerOn = ActiveCOPower.None;
+
                                             break;
 
                                         case "Income":

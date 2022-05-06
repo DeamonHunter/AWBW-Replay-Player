@@ -399,6 +399,12 @@ namespace AWBWApp.Game.Game.Logic
                 }
             }
 
+            foreach (var unit in units.Where(x => !gameState.ReplayUnit.ContainsKey(x.Value.UnitID)))
+            {
+                units.Remove(unit.Key);
+                unitsDrawable.Remove(unit.Value);
+            }
+
             for (int x = 0; x < MapSize.X; x++)
             {
                 for (int y = 0; y < MapSize.Y; y++)
@@ -412,12 +418,6 @@ namespace AWBWApp.Game.Game.Logic
                     else
                         buildingGrid.RemoveTile(new Vector2I(x, y));
                 }
-            }
-
-            foreach (var unit in units.Where(x => !gameState.ReplayUnit.ContainsKey(x.Value.UnitID)))
-            {
-                units.Remove(unit.Key);
-                unitsDrawable.Remove(unit.Value);
             }
 
             CurrentWeather.Value = gameState.StartWeather.Type;
