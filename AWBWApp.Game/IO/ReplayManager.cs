@@ -29,7 +29,8 @@ namespace AWBWApp.Game.IO
 
         private readonly Dictionary<long, string> _playerNames = new Dictionary<long, string>();
 
-        private readonly AWBWReplayParser parser = new AWBWReplayParser();
+        private readonly AWBWJsonReplayParser jsonParser = new AWBWJsonReplayParser();
+        private readonly AWBWXmlReplayParser xmlParser = new AWBWXmlReplayParser();
 
         public ReplayManager(Storage storage, bool checkForNewReplays = true)
         {
@@ -129,6 +130,9 @@ namespace AWBWApp.Game.IO
             {
                 var player = playerQueue.Dequeue();
 
+                if (player.UserId == -1)
+                    continue;
+
                 if (player.Username != null)
                 {
                     if (!_playerNames.ContainsKey(player.UserId))
@@ -225,22 +229,44 @@ namespace AWBWApp.Game.IO
 
         public async Task<ReplayData> GetReplayData(long id)
         {
-            var path = $"{id}.zip";
-
             ReplayData data;
 
-            if (!underlyingStorage.Exists(path))
+            if (underlyingStorage.Exists($"{id}.zip"))
             {
-                path = $"{id}";
-
-                if (!underlyingStorage.Exists(path))
-                    return null;
-
-                using (var stream = underlyingStorage.GetStream(path))
+                using (var stream = underlyingStorage.GetStream($"{id}.zip"))
                 {
                     try
                     {
-                        data = parser.ParseReplayFile(stream);
+                        var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read);
+                        data = jsonParser.ParseReplayZip(zipArchive);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to parse replay with id: " + id, e);
+                    }
+                }
+            }
+            else if (underlyingStorage.Exists($"{id}.awbw"))
+            {
+                using (var stream = underlyingStorage.GetStream($"{id}.awbw"))
+                {
+                    try
+                    {
+                        data = xmlParser.ParseReplayFile(stream);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to parse replay with id: " + id, e);
+                    }
+                }
+            }
+            else if (underlyingStorage.Exists(id.ToString()))
+            {
+                using (var stream = underlyingStorage.GetStream(id.ToString()))
+                {
+                    try
+                    {
+                        return jsonParser.ParseReplayFile(stream);
                     }
                     catch (Exception e)
                     {
@@ -249,20 +275,7 @@ namespace AWBWApp.Game.IO
                 }
             }
             else
-            {
-                using (var stream = underlyingStorage.GetStream(path))
-                {
-                    try
-                    {
-                        var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read);
-                        data = parser.ParseReplayZip(zipArchive);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception("Failed to parse replay with id: " + id, e);
-                    }
-                }
-            }
+                throw new Exception($"Unknown Replay ID: {id}");
 
             await checkForUsernamesAndGetIfMissing(data.ReplayInfo, false);
 
@@ -272,36 +285,14 @@ namespace AWBWApp.Game.IO
         // To be used only for testing scenarios
         public ReplayData GetReplayDataSync(long id)
         {
-            var path = $"{id}.zip";
-
-            ReplayData data;
-
-            if (!underlyingStorage.Exists(path))
+            if (underlyingStorage.Exists($"{id}.zip"))
             {
-                path = $"{id}";
-                if (!underlyingStorage.Exists(path))
-                    return null;
-
-                using (var stream = underlyingStorage.GetStream(path))
-                {
-                    try
-                    {
-                        data = parser.ParseReplayFile(stream);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception("Failed to parse replay with id: " + id, e);
-                    }
-                }
-            }
-            else
-            {
-                using (var stream = underlyingStorage.GetStream(path))
+                using (var stream = underlyingStorage.GetStream($"{id}.zip"))
                 {
                     try
                     {
                         var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read);
-                        data = parser.ParseReplayZip(zipArchive);
+                        return jsonParser.ParseReplayZip(zipArchive);
                     }
                     catch (Exception e)
                     {
@@ -310,7 +301,37 @@ namespace AWBWApp.Game.IO
                 }
             }
 
-            return data;
+            if (underlyingStorage.Exists($"{id}.awbw"))
+            {
+                using (var stream = underlyingStorage.GetStream($"{id}.awbw"))
+                {
+                    try
+                    {
+                        return xmlParser.ParseReplayFile(stream);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to parse replay with id: " + id, e);
+                    }
+                }
+            }
+
+            if (underlyingStorage.Exists(id.ToString()))
+            {
+                using (var stream = underlyingStorage.GetStream(id.ToString()))
+                {
+                    try
+                    {
+                        return jsonParser.ParseReplayFile(stream);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Failed to parse replay with id: " + id, e);
+                    }
+                }
+            }
+
+            return null;
         }
 
         public async Task<ReplayData> ParseAndStoreReplay(string path)
@@ -319,15 +340,30 @@ namespace AWBWApp.Game.IO
 
             try
             {
-                if (Path.GetExtension(path) == ".zip")
+                var extension = Path.GetExtension(path);
+
+                if (extension == ".zip")
                 {
                     using (var readFileStream = new FileStream(path, FileMode.Open))
                     {
                         var zipArchive = new ZipArchive(readFileStream, ZipArchiveMode.Read);
-                        data = parser.ParseReplayZip(zipArchive);
+                        data = jsonParser.ParseReplayZip(zipArchive);
 
                         readFileStream.Seek(0, SeekOrigin.Begin);
                         using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.zip", FileAccess.Write, FileMode.Create))
+                            readFileStream.CopyTo(writeStream);
+                    }
+                }
+                else if (extension == ".awbw")
+                {
+                    //Old style AWBW replay
+                    using (var readFileStream = new FileStream(path, FileMode.Open))
+                        data = xmlParser.ParseReplayFile(readFileStream);
+
+                    using (var readFileStream = new FileStream(path, FileMode.Open))
+                    {
+                        readFileStream.Seek(0, SeekOrigin.Begin);
+                        using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.awbw", FileAccess.Write, FileMode.Create))
                             readFileStream.CopyTo(writeStream);
                     }
                 }
@@ -335,7 +371,7 @@ namespace AWBWApp.Game.IO
                 {
                     //GZIP stream disposes the base stream. So we need to open this twice.
                     using (var readFileStream = new FileStream(path, FileMode.Open))
-                        data = parser.ParseReplayFile(readFileStream);
+                        data = jsonParser.ParseReplayFile(readFileStream);
 
                     using (var readFileStream = new FileStream(path, FileMode.Open))
                     {
@@ -357,14 +393,14 @@ namespace AWBWApp.Game.IO
             return data;
         }
 
-        public async Task<ReplayData> ParseAndStoreReplay(long id, Stream stream)
+        public async Task<ReplayData> ParseThenStoreReplayStream(long id, Stream stream)
         {
             ReplayData data;
 
             try
             {
                 var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read);
-                data = parser.ParseReplayZip(zipArchive);
+                data = jsonParser.ParseReplayZip(zipArchive);
 
                 //Store only after parsing it. So we don't save a bad replay
                 using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.zip", FileAccess.Write, FileMode.Create))

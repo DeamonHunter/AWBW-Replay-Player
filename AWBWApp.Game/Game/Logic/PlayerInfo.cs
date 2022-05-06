@@ -77,7 +77,7 @@ namespace AWBWApp.Game.Game.Logic
             UnitValue.Value = unitValue;
             PropertyValue.Value = propertyValue;
 
-            if (ActiveCO.Value.CO.AWBWId != turn.ActiveCOID)
+            if (ActiveCO.Value.CO.AWBWID != turn.ActiveCOID)
                 (ActiveCO.Value, TagCO.Value) = (TagCO.Value, ActiveCO.Value);
 
             ActivePower.Value = activePower;

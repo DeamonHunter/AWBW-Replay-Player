@@ -141,12 +141,12 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                 Eliminated = playerInfo.Eliminated.Value,
                 Funds = playerInfo.Funds.Value,
 
-                ActiveCOID = playerInfo.ActiveCO.Value.CO?.AWBWId ?? 1,
+                ActiveCOID = playerInfo.ActiveCO.Value.CO?.AWBWID ?? 1,
                 Power = playerInfo.ActiveCO.Value.Power ?? 0,
                 RequiredPowerForNormal = playerInfo.ActiveCO.Value.PowerRequiredForNormal,
                 RequiredPowerForSuper = playerInfo.ActiveCO.Value.PowerRequiredForSuper,
 
-                TagCOID = playerInfo.TagCO.Value.CO?.AWBWId,
+                TagCOID = playerInfo.TagCO.Value.CO?.AWBWID,
                 TagPower = playerInfo.TagCO.Value.Power,
                 TagRequiredPowerForNormal = playerInfo.TagCO.Value.PowerRequiredForNormal,
                 TagRequiredPowerForSuper = playerInfo.TagCO.Value.PowerRequiredForSuper

@@ -18,7 +18,7 @@ namespace AWBWApp.Game.Game.COs
             }
 
             foreach (var co in coByName)
-                coByAWBWId.Add(co.Value.AWBWId, co.Value);
+                coByAWBWId.Add(co.Value.AWBWID, co.Value);
         }
 
         public COData GetCOByAWBWId(int id)

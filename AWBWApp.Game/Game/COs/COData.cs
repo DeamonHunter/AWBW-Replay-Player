@@ -8,7 +8,7 @@ namespace AWBWApp.Game.Game.COs
     public class COData
     {
         public string Name { get; set; }
-        public int AWBWId { get; set; }
+        public int AWBWID { get; set; }
         public string Tooltip;
 
         public COPower DayToDayPower;

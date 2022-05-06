@@ -191,7 +191,7 @@ namespace AWBWApp.Game.UI.Interrupts
                         if (webRequest.ResponseStream.Length <= 100)
                             throw new Exception($"Unable to find the replay of game '{gameID}'. Is the session cookie correct?");
 
-                        var replayData = await replayStorage.ParseAndStoreReplay(gameID, webRequest.ResponseStream);
+                        var replayData = await replayStorage.ParseThenStoreReplayStream(gameID, webRequest.ResponseStream);
                         replay = replayData.ReplayInfo;
                     }
                 }

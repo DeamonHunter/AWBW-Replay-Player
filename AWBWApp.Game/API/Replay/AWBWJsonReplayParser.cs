@@ -16,7 +16,7 @@ using osu.Framework.Logging;
 namespace AWBWApp.Game.API.Replay
 {
     //Todo: This would potentially be faster/cleaner using a memory stream or similar instead of reading everything into a string
-    public class AWBWReplayParser
+    public class AWBWJsonReplayParser
     {
         private const string turn_start_text = "O:8:\"awbwGame\":";
         private const string player_start_text = "O:10:\"awbwPlayer\":";
@@ -26,7 +26,7 @@ namespace AWBWApp.Game.API.Replay
 
         private static ReplayActionDatabase actionDatabase;
 
-        public AWBWReplayParser()
+        public AWBWJsonReplayParser()
         {
             actionDatabase = new ReplayActionDatabase();
         }

@@ -26,6 +26,7 @@ namespace AWBWApp.Game.API.Replay
 
         public int ActiveCOID;
         public int Power;
+        public double PowerPercentage;
         public int? RequiredPowerForNormal; //This changes every time we use a power.
         public int? RequiredPowerForSuper; //This changes every time we use a power.
 

@@ -13,7 +13,7 @@ namespace AWBWApp.Game.Tests
         [Resolved]
         private ResourceStore<byte[]> storage { get; set; }
 
-        private readonly AWBWReplayParser parser = new AWBWReplayParser();
+        private readonly AWBWJsonReplayParser parser = new AWBWJsonReplayParser();
 
         public ReplayData GetReplayInStorage(string replay)
         {
