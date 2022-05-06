@@ -58,9 +58,6 @@ namespace AWBWApp.Game.UI.Replay
         [Resolved]
         private CountryStorage countryStorage { get; set; }
 
-        [Resolved]
-        private COStorage coStorage { get; set; }
-
         private Bindable<FaceDirection> faceDirection;
         private Bindable<object> countryBindable;
         private Action<long> openPlayerStats;
