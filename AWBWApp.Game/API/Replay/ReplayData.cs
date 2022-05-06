@@ -32,7 +32,7 @@ namespace AWBWApp.Game.API.Replay
         public MatchType Type;
         public string LeagueMatch;
         public bool TeamMatch;
-        public bool OldReplay;
+        public int ReplayVersion;
 
         public int? CaptureWinBuildingNumber;
 

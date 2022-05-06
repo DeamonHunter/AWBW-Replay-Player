@@ -185,7 +185,7 @@ namespace AWBWApp.Game.API.Replay
             xml.LoadXml(gameStateFile);
 
             var state = readReplayData(xml);
-            state.ReplayInfo.OldReplay = true;
+            state.ReplayInfo.ReplayVersion = 0;
 
             stopWatch.Stop();
             Logger.Log("Replay parsing took: " + stopWatch.Elapsed);
@@ -432,8 +432,6 @@ namespace AWBWApp.Game.API.Replay
 
                                 var playerTurn = new ReplayUserTurn();
                                 playerTurn.ActiveCOID = playerData.Value.COsUsedByPlayer.First();
-                                playerTurn.RequiredPowerForNormal = 90000;
-                                playerTurn.RequiredPowerForSuper = 180000;
 
                                 foreach (XmlNode playerInfoNode in playerNode.SelectSingleNode("TurnInfo"))
                                 {

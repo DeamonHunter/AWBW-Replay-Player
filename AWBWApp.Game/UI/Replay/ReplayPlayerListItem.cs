@@ -58,11 +58,16 @@ namespace AWBWApp.Game.UI.Replay
         [Resolved]
         private CountryStorage countryStorage { get; set; }
 
+        [Resolved]
+        private COStorage coStorage { get; set; }
+
         private Bindable<FaceDirection> faceDirection;
         private Bindable<object> countryBindable;
         private Action<long> openPlayerStats;
 
-        public ReplayPlayerListItem(PlayerInfo info, Action<long> openPlayerStats)
+        private bool usePercentagePowers;
+
+        public ReplayPlayerListItem(PlayerInfo info, Action<long> openPlayerStats, bool usePercentagePowers)
         {
             PlayerID = info.ID;
             RoundOrder = info.RoundOrder;
@@ -70,6 +75,7 @@ namespace AWBWApp.Game.UI.Replay
             Team = info.Team;
 
             this.openPlayerStats = openPlayerStats;
+            this.usePercentagePowers = usePercentagePowers;
 
             faceDirection = info.UnitFaceDirection.GetBoundCopy();
 
@@ -89,6 +95,20 @@ namespace AWBWApp.Game.UI.Replay
             Margin = new MarginPadding { Bottom = 2 };
             Anchor = Anchor.TopCentre;
             Origin = Anchor.TopCentre;
+
+            int? requiredNormalPower;
+            int? requiredSuperPower;
+
+            if (usePercentagePowers)
+            {
+                requiredNormalPower = info.ActiveCO.Value.CO.NormalPower?.PowerStars * 90000;
+                requiredSuperPower = info.ActiveCO.Value.CO.SuperPower?.PowerStars * 90000;
+            }
+            else
+            {
+                requiredNormalPower = info.ActiveCO.Value.PowerRequiredForNormal;
+                requiredSuperPower = info.ActiveCO.Value.PowerRequiredForSuper;
+            }
 
             InternalChildren = new Drawable[]
             {
@@ -123,7 +143,7 @@ namespace AWBWApp.Game.UI.Replay
                         },
                     }
                 },
-                coProgress = new PowerProgress(info.ActiveCO.Value.PowerRequiredForNormal, info.ActiveCO.Value.PowerRequiredForSuper)
+                coProgress = new PowerProgress(requiredNormalPower, requiredSuperPower)
                 {
                     RelativeSizeAxes = Axes.X,
                     Size = new Vector2(1, 15f),
@@ -183,9 +203,13 @@ namespace AWBWApp.Game.UI.Replay
                 adjustContentForTagCO(info);
 
             info.Eliminated.BindValueChanged(onEliminationChange, true);
+            info.ActivePower.BindValueChanged(x => onPowerActivationChange(x.NewValue), true);
+
             info.ActiveCO.BindValueChanged(x => onCOChange(x, false), true);
             info.TagCO.BindValueChanged(x => onCOChange(x, true), true);
-            info.ActivePower.BindValueChanged(x => onPowerActivationChange(x.NewValue), true);
+
+            if (usePercentagePowers)
+                info.PowerPercentage.BindValueChanged(onPowerPercentageChange, true);
         }
 
         private Drawable createNameAndTeamContainer(PlayerInfo info)
@@ -453,6 +477,9 @@ namespace AWBWApp.Game.UI.Replay
                 tableContainer.Content = newContent;
             }
 
+            if (usePercentagePowers)
+                return;
+
             var progressBar = wasTagCO ? tagProgress : coProgress;
 
             var requiredNormalPower = coUpdated.NewValue.PowerRequiredForNormal ?? 0;
@@ -478,6 +505,11 @@ namespace AWBWApp.Game.UI.Replay
             }
 
             progressBar.Current.Value = coUpdated.NewValue.Power ?? 0;
+        }
+
+        private void onPowerPercentageChange(ValueChangedEvent<double> powerPercentage)
+        {
+            coProgress.Current.Value = (int)Math.Round(powerPercentage.NewValue * coProgress.PowerRequiredForSuper);
         }
 
         public MenuItem[] ContextMenuItems => createContextMenuItems();

@@ -395,7 +395,7 @@ namespace AWBWApp.Game.Game.Logic
                 }
             }
 
-            if (!replayData.ReplayInfo.OldReplay)
+            if (replayData.ReplayInfo.ReplayVersion < 2)
                 setupContext.AddGameOverAction();
         }
 
@@ -723,7 +723,7 @@ namespace AWBWApp.Game.Game.Logic
             }
 
             if (reset)
-                playerList.CreateNewListForPlayers(Players, this);
+                playerList.CreateNewListForPlayers(Players, this, replayData.ReplayInfo.ReplayVersion <= 0);
             playerList.SortList(currentTurn.ActivePlayerID, turnIdx);
         }
 

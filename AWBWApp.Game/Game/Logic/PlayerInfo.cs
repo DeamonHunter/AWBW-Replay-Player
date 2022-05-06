@@ -22,6 +22,7 @@ namespace AWBWApp.Game.Game.Logic
         public Bindable<COInfo> TagCO = new Bindable<COInfo>();
         public Bindable<ActiveCOPower> ActivePower = new Bindable<ActiveCOPower>();
 
+        public BindableDouble PowerPercentage = new BindableDouble(); //Only used for old style replays
         public BindableInt Funds = new BindableInt();
         public BindableInt UnitCount = new BindableInt();
         public BindableInt UnitValue = new BindableInt();
@@ -49,6 +50,7 @@ namespace AWBWApp.Game.Game.Logic
             UnitCount.Value = unitCount;
             UnitValue.Value = unitValue;
             PropertyValue.Value = propertyValue;
+            PowerPercentage.Value = turn.PowerPercentage;
 
             ActiveCO.Value = new COInfo
             {

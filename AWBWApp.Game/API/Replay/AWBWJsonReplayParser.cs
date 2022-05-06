@@ -64,6 +64,7 @@ namespace AWBWApp.Game.API.Replay
             var state = readBaseReplayData(gameStateFile);
             if (replayFile != null)
                 readReplayActions(state, replayFile);
+            state.ReplayInfo.ReplayVersion = 2;
 
             stopWatch.Stop();
             Logger.Log("Replay parsing took: " + stopWatch.Elapsed);
@@ -91,7 +92,7 @@ namespace AWBWApp.Game.API.Replay
             }
 
             var state = readBaseReplayData(gameStateFile);
-            state.ReplayInfo.OldReplay = true;
+            state.ReplayInfo.ReplayVersion = 1;
 
             stopWatch.Stop();
             Logger.Log("Replay parsing took: " + stopWatch.Elapsed);
