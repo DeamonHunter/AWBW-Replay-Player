@@ -88,7 +88,7 @@ namespace AWBWApp.Game.Game.Units
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft
                 },
-                healthSpriteText = new TextureSpriteText("UI/Health")
+                healthSpriteText = new TextureSpriteText("UI/Healthv2")
                 {
                     Anchor = Anchor.BottomRight,
                     Origin = Anchor.BottomRight,
