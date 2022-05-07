@@ -20,7 +20,7 @@ namespace AWBWApp.Game.UI.Replay
         private FillFlowContainer winnersContainer;
         private FillFlowContainer losersContainer;
 
-        public EndGamePopupDrawable(Dictionary<long, PlayerInfo> players, List<long> winners, List<long> losers, string gameOverMessage, Action<long> openStatsAction)
+        public EndGamePopupDrawable(Dictionary<long, PlayerInfo> players, List<long> winners, List<long> losers, string gameOverMessage, bool draw, Action<long> openStatsAction)
         {
             Width = 400;
             AutoSizeAxes = Axes.Y;
@@ -63,7 +63,7 @@ namespace AWBWApp.Game.UI.Replay
                         AutoSizeAxes = Axes.Y,
                         Spacing = new Vector2(0, 3),
                         Padding = new MarginPadding { Bottom = 5 },
-                        Children = createFillFlowChildren(gameOverMessage, players, winners, losers, borderColour, openStatsAction)
+                        Children = createFillFlowChildren(gameOverMessage, players, winners, losers, borderColour, draw, openStatsAction)
                     }
                 }
             };
@@ -71,7 +71,7 @@ namespace AWBWApp.Game.UI.Replay
             this.FadeOut();
         }
 
-        private Drawable[] createFillFlowChildren(string gameOverMessage, Dictionary<long, PlayerInfo> players, List<long> winners, List<long> losers, Color4 borderColour, Action<long> openStatsAction)
+        private Drawable[] createFillFlowChildren(string gameOverMessage, Dictionary<long, PlayerInfo> players, List<long> winners, List<long> losers, Color4 borderColour, bool draw, Action<long> openStatsAction)
         {
             if (winners == null || winners.Count == 0)
             {
@@ -105,7 +105,7 @@ namespace AWBWApp.Game.UI.Replay
                         Padding = new MarginPadding { Left = 30 },
                         Colour = borderColour,
                         Font = new FontUsage("Roboto", weight: "Bold"),
-                        Text = "Victory"
+                        Text = draw ? "Drawed" : "Victory"
                     },
                     new SpriteIcon()
                     {

@@ -54,6 +54,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public int FinishedDay;
         public string GameEndDate;
         public string EndMessage;
+        public bool Draw;
 
         public List<long> Winners;
         public List<long> Losers;
@@ -68,7 +69,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             Logger.Log("Performing Game Over Action.");
 
-            var powerAnimation = new EndGamePopupDrawable(controller.Players, Winners, Losers, EndMessage, x => controller.Stats.ShowStatsForPlayer(controller.Players, x));
+            var powerAnimation = new EndGamePopupDrawable(controller.Players, Winners, Losers, EndMessage, Draw, x => controller.Stats.ShowStatsForPlayer(controller.Players, x));
             controller.AddGenericActionAnimation(powerAnimation);
             yield return ReplayWait.WaitForTransformable(powerAnimation);
         }

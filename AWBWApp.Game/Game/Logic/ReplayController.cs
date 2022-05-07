@@ -395,7 +395,8 @@ namespace AWBWApp.Game.Game.Logic
                 }
             }
 
-            if (replayData.ReplayInfo.ReplayVersion < 2)
+            //Check to see if the replay properly ends, but only on versions that have actions.
+            if (replayData.ReplayInfo.ReplayVersion >= 2)
                 setupContext.AddGameOverAction();
         }
 

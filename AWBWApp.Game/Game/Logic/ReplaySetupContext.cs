@@ -120,12 +120,14 @@ namespace AWBWApp.Game.Game.Logic
                     return;
             }
 
+            //If the end does not have a game over action. Its likely a draw.
             var gameOverAction = new GameOverAction
             {
                 FinishedDay = CurrentDay,
                 GameEndDate = null,
                 EndMessage = "Match ended in Draw!",
                 Winners = PlayerInfos.Select(x => x.Key).ToList(),
+                Draw = true,
                 Losers = null
             };
 
