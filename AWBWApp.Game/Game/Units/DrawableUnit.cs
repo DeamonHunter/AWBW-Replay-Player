@@ -61,10 +61,8 @@ namespace AWBWApp.Game.Game.Units
         public Vector2I MapPosition { get; private set; }
 
         private UnitTextureAnimation textureAnimation;
-        private TextureAnimation lowStatsAnimation;
+        private TextureAnimation statsAnimation;
         private TextureSpriteText healthSpriteText;
-
-        private Sprite capturing;
 
         public CountryData Country => country.Value;
 
@@ -90,12 +88,6 @@ namespace AWBWApp.Game.Game.Units
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft
                 },
-                capturing = new Sprite
-                {
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft,
-                    Alpha = 0
-                },
                 healthSpriteText = new TextureSpriteText("UI/Health")
                 {
                     Anchor = Anchor.BottomRight,
@@ -103,7 +95,7 @@ namespace AWBWApp.Game.Game.Units
                     Font = new FontUsage(size: 2.25f),
                     Position = new Vector2(1, 1)
                 },
-                lowStatsAnimation = new TextureAnimation()
+                statsAnimation = new TextureAnimation()
                 {
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
@@ -115,7 +107,6 @@ namespace AWBWApp.Game.Game.Units
             AttackRange.Value = unitData.AttackRange;
 
             HealthPoints.BindValueChanged(updateHp);
-            IsCapturing.BindValueChanged(updateCapturing);
             BeingCarried.BindValueChanged(_ => updateCarried());
             unitFaceDirection?.BindValueChanged(x => updateFaceDirection(x.NewValue), true);
 
@@ -161,19 +152,9 @@ namespace AWBWApp.Game.Game.Units
             }
         }
 
-        public void CheckForDesyncs(ReplayUnit replayUnit)
-        {
-            if (UnitID != replayUnit.ID)
-                throw new Exception($"Checking for desync on the wrong unit. Tried to check for {replayUnit.ID} but tried to check {UnitID}.");
-            //Todo: More checks
-        }
-
         [BackgroundDependencyLoader]
         private void load(AWBWConfigManager configManager)
         {
-            capturing.Texture = textureStore.Get("UI/Capturing");
-            capturing.Size = capturing.Texture.Size;
-
             country.BindValueChanged(x => updateAnimation(), true);
 
             showUnitInFog = configManager.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits);
@@ -183,11 +164,26 @@ namespace AWBWApp.Game.Game.Units
             FogOfWarActive.BindValueChanged(x => updateUnitColour(x.NewValue));
             Dived.BindValueChanged(x => updateUnitColour(x.NewValue));
 
-            Fuel.BindValueChanged(_ => updateLowStatIndicators());
-            Ammo.BindValueChanged(_ => updateLowStatIndicators(), true);
+            IsCapturing.BindValueChanged(_ => updateStatIndicators());
+            Fuel.BindValueChanged(_ => updateStatIndicators());
+            Ammo.BindValueChanged(_ => updateStatIndicators(), true);
 
             updateUnitColour(true);
             updateCarried();
+
+            statsAnimation.FinishTransforms();
+        }
+
+        private int lastCargoAmount;
+
+        protected override void Update()
+        {
+            base.Update();
+            if (lastCargoAmount == Cargo.Count)
+                return;
+
+            lastCargoAmount = Cargo.Count;
+            updateStatIndicators();
         }
 
         public void MoveToPosition(Vector2I position, bool updateVisual = true)
@@ -281,44 +277,40 @@ namespace AWBWApp.Game.Game.Units
             healthSpriteText.Text = healthPoints.NewValue.ToString();
         }
 
-        private bool wasLowAmmo;
-        private bool wasLowFuel;
-
-        private void updateLowStatIndicators()
+        private void updateStatIndicators()
         {
             var lowFuel = (float)Fuel.Value / UnitData.MaxFuel <= 0.25f;
             var lowAmmo = UnitData.MaxAmmo > 0 && (float)Ammo.Value / UnitData.MaxAmmo <= 0.25f;
+            var hasCargo = Cargo.Count > 0;
+            var capturing = IsCapturing.Value;
 
-            if (wasLowAmmo == lowAmmo && wasLowFuel == lowFuel)
-                return;
-
-            wasLowAmmo = lowAmmo;
-            wasLowFuel = lowFuel;
-
-            if (!lowAmmo && !lowFuel)
+            if (!lowAmmo && !lowFuel && !hasCargo && !capturing)
             {
-                lowStatsAnimation.Hide();
+                statsAnimation.Hide();
                 return;
             }
 
-            lowStatsAnimation.ClearFrames();
+            statsAnimation.ClearFrames();
 
-            if (lowAmmo && lowFuel)
-            {
-                lowStatsAnimation.AddFrame(textureStore.Get("UI/LowAmmo"), 1000);
-                lowStatsAnimation.AddFrame(textureStore.Get("UI/LowFuel"), 1000);
-            }
-            else if (lowAmmo)
-            {
-                lowStatsAnimation.AddFrame(textureStore.Get("UI/LowAmmo"), 1000);
-                lowStatsAnimation.AddFrame(null, 1000);
-            }
-            else
-            {
-                lowStatsAnimation.AddFrame(textureStore.Get("UI/LowFuel"), 1000);
-                lowStatsAnimation.AddFrame(null, 1000);
-            }
-            lowStatsAnimation.Play();
+            if (lowAmmo)
+                statsAnimation.AddFrame(textureStore.Get("UI/LowAmmo"), 1000);
+
+            if (lowFuel)
+                statsAnimation.AddFrame(textureStore.Get("UI/LowFuel"), 1000);
+
+            if (hasCargo)
+                statsAnimation.AddFrame(textureStore.Get("UI/HasCargo"), 1000);
+
+            if (capturing)
+                statsAnimation.AddFrame(textureStore.Get("UI/Capturing"), 1000);
+
+            if (statsAnimation.FrameCount < 2 && !capturing && !hasCargo)
+                statsAnimation.AddFrame(null, 1000);
+
+            if (statsAnimation.Alpha == 0)
+                statsAnimation.ScaleTo(0.5f).ScaleTo(1, 200, Easing.OutBounce).FadeIn(100, Easing.InQuint);
+
+            statsAnimation.Play();
         }
 
         private void updateCarried()
@@ -327,14 +319,6 @@ namespace AWBWApp.Game.Game.Units
                 textureAnimation.Hide();
             else
                 textureAnimation.Show();
-        }
-
-        private void updateCapturing(ValueChangedEvent<bool> isCapturing)
-        {
-            if (isCapturing.NewValue)
-                capturing.ScaleTo(0.5f).ScaleTo(1, 200, Easing.OutBounce).FadeIn(100, Easing.InQuint);
-            else
-                capturing.FadeOut();
         }
 
         private void updateUnitColour(bool newValue)
