@@ -107,6 +107,8 @@ namespace AWBWApp.Game.API.Replay
             { "missilesiloempty", (false, 112) },
             { "hpipeseam", (true, 113) },
             { "vpipeseam", (true, 114) },
+            { "hpiperubble", (false, 115) },
+            { "vpiperubble", (false, 116) },
 
             { "orangestarcity", (true, 38) },
             { "orangestarbase", (true, 39) },

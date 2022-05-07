@@ -77,7 +77,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
             AddStep("Create", () =>
             {
                 Clear();
-                endGamePopup = new EndGamePopupDrawable(players, winningIds, losingIds, "The game is over! DeamonHunter is the winner!", null);
+                endGamePopup = new EndGamePopupDrawable(players, winningIds, losingIds, "The game is over! DeamonHunter is the winner!", false, null);
 
                 Add(endGamePopup);
             });
