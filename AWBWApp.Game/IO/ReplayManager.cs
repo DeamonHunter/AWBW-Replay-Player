@@ -266,7 +266,7 @@ namespace AWBWApp.Game.IO
                 {
                     try
                     {
-                        return jsonParser.ParseReplayFile(stream);
+                        data = jsonParser.ParseReplayFile(stream);
                     }
                     catch (Exception e)
                     {
