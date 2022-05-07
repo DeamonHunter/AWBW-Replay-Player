@@ -79,6 +79,8 @@ namespace AWBWApp.Game.UI.Select
 
         private PendingScrollOperation pendingScrollOperation = PendingScrollOperation.None;
 
+        private const float header_height = 70;
+
         public ReplayCarousel()
         {
             rootCarouselItem = new CarouselRoot(this);
@@ -92,7 +94,7 @@ namespace AWBWApp.Game.UI.Select
                         setPool,
                         Scroll = new CarouselScrollContainer
                         {
-                            RelativeSizeAxes = Axes.Both
+                            Position = new Vector2(0, header_height)
                         },
                         searchContainer = new Container()
                         {
@@ -105,7 +107,7 @@ namespace AWBWApp.Game.UI.Select
                                     RelativeSizeAxes = Axes.X,
                                     Anchor = Anchor.TopRight,
                                     Origin = Anchor.TopRight,
-                                    Height = 70,
+                                    Height = header_height,
                                     Colour = new Color4(20, 20, 20, 100),
                                 },
                                 new Box()
@@ -238,6 +240,7 @@ namespace AWBWApp.Game.UI.Select
 
         public void OnEnter()
         {
+            OnSizingChanged();
             searchContainer.FadeInFromZero(300, Easing.OutQuint);
             searchContainer.ScaleTo(new Vector2(1, 0.5f)).ScaleTo(Vector2.One, 500, Easing.OutQuint);
             searchContainer.MoveToY(-40).MoveToY(0, 500, Easing.OutQuint);
@@ -246,6 +249,7 @@ namespace AWBWApp.Game.UI.Select
         protected override void Update()
         {
             base.Update();
+            Scroll.Size = new Vector2(DrawSize.X, DrawSize.Y - header_height);
 
             bool revalidateItems = !itemsCache.IsValid;
 
@@ -561,7 +565,11 @@ namespace AWBWApp.Game.UI.Select
 
             protected override ScrollbarContainer CreateScrollbar(Direction direction)
             {
-                var scrollbar = base.CreateScrollbar(direction);
+                var scrollbar = new SizeSettableScrollbar(direction)
+                {
+                    ScrollbarSize = 18
+                };
+
                 scrollbar.Child.Colour = new Color4(50, 100, 50, 255);
                 return scrollbar;
             }
@@ -588,6 +596,39 @@ namespace AWBWApp.Game.UI.Select
             {
                 UserScrolling = false;
                 base.ScrollToEnd(animated, allowDuringDrag);
+            }
+
+            protected class SizeSettableScrollbar : BasicScrollbar
+            {
+                private float scrollbarSize;
+
+                public float ScrollbarSize
+                {
+                    get => scrollbarSize;
+                    set
+                    {
+                        if (scrollbarSize == value)
+                            return;
+
+                        scrollbarSize = value;
+                        var val = Size[(int)ScrollDirection];
+                        ResizeTo(val);
+                    }
+                }
+
+                protected override float MinimumDimSize => scrollbarSize;
+
+                public SizeSettableScrollbar(Direction direction)
+                    : base(direction)
+                {
+                }
+
+                public override void ResizeTo(float val, int duration = 0, Easing easing = Easing.None)
+                {
+                    Vector2 newSize = new Vector2(scrollbarSize);
+                    newSize[(int)ScrollDirection] = val;
+                    this.ResizeTo<BasicScrollbar>(newSize, (double)duration, easing);
+                }
             }
         }
     }
