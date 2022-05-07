@@ -463,7 +463,12 @@ namespace AWBWApp.Game.Game.Logic
             if (unit.Cargo != null)
             {
                 foreach (var cargoId in unit.Cargo)
+                {
+                    if (cargoId == -1)
+                        continue;
+
                     DeleteUnit(cargoId, false);
+                }
             }
 
             return unit;

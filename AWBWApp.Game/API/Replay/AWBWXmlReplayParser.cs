@@ -467,6 +467,15 @@ namespace AWBWApp.Game.API.Replay
                                         unit.Value.Fuel = 0;
                                         continue;
                                     }
+
+                                    case "load":
+                                    case "fogload":
+                                    {
+                                        var unit = turnData.ReplayUnit.First(unit => unit.Value.Position == position && (!unit.Value.BeingCarried.HasValue || unit.Value.BeingCarried == false));
+                                        unit.Value.CargoUnits ??= new List<long>();
+                                        unit.Value.CargoUnits.Add(-1);
+                                        continue;
+                                    }
                                 }
 
                                 if (int.TryParse(name!.InnerText, out var health))
