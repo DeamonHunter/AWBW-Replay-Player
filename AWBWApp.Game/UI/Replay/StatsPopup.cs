@@ -109,7 +109,7 @@ namespace AWBWApp.Game.UI.Replay
             scrollContainer.ScrollbarVisible = false;
             scrollContainer.ScrollbarOverlapsContent = true;
             this.FadeInFromZero(300, Easing.OutQuint);
-            this.ScaleTo(new Vector2(0.5f, 0f)).ScaleTo(Vector2.One, 500, Easing.OutQuint).OnComplete(x =>
+            this.ScaleTo(new Vector2(0.5f, 0f)).ScaleTo(new Vector2(1.15f), 500, Easing.OutQuint).OnComplete(x =>
             {
                 x.scrollContainer.ScrollbarVisible = true;
                 x.scrollContainer.ScrollbarOverlapsContent = false;
@@ -121,7 +121,7 @@ namespace AWBWApp.Game.UI.Replay
             scrollContainer.ScrollbarVisible = false;
             scrollContainer.ScrollbarOverlapsContent = true;
             this.FadeOut(300, Easing.OutQuint);
-            this.ScaleTo(new Vector2(0.5f, 0f), 500, Easing.OutQuint);
+            this.ScaleTo(Vector2.Zero, 500, Easing.OutQuint);
             Expire();
         }
 
