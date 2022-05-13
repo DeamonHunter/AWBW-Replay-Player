@@ -299,7 +299,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             //Perform Attack vs Defender
-            var reticule = PlayAttackAnimation(controller, attackerUnit.MapPosition, defenderUnit.MapPosition, attackerUnit);
+            var reticule = PlayAttackAnimation(controller, attackerUnit.MapPosition, defenderUnit.MapPosition, attackerUnit, false);
             yield return ReplayWait.WaitForTransformable(reticule);
 
             attackerUnit.CanMove.Value = false;
@@ -324,7 +324,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             //Perform Attack vs Attacker
-            reticule = PlayAttackAnimation(controller, defenderUnit.MapPosition, attackerUnit.MapPosition, defenderUnit);
+            reticule = PlayAttackAnimation(controller, defenderUnit.MapPosition, attackerUnit.MapPosition, defenderUnit, true);
             yield return ReplayWait.WaitForTransformable(reticule);
 
             attackerUnit.UpdateUnit(attackerStats);
@@ -403,13 +403,17 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
         }
 
-        public EffectAnimation PlayAttackAnimation(ReplayController controller, Vector2I start, Vector2I end, DrawableUnit attacker)
+        public EffectAnimation PlayAttackAnimation(ReplayController controller, Vector2I start, Vector2I end, DrawableUnit attacker, bool counterAttack)
         {
-            var effect = controller.Map.PlayEffect("Effects/Target", 100, start, 0, x =>
+            var scale = counterAttack ? 0.75f : 1f;
+            var lengthModifier = counterAttack ? 0.66f : 0.9f;
+
+            var effect = controller.Map.PlayEffect("Effects/Target", 600 * lengthModifier, start, 0, x =>
             {
                 x.WaitForTransformationToComplete(attacker)
-                 .MoveTo(GameMap.GetDrawablePositionForBottomOfTile(start) + DrawableTile.HALF_BASE_SIZE).FadeTo(0.5f).ScaleTo(0.5f)
-                 .FadeTo(1, 250, Easing.In).MoveTo(GameMap.GetDrawablePositionForBottomOfTile(end) + DrawableTile.HALF_BASE_SIZE, 400, Easing.In).ScaleTo(1, 600, Easing.OutBounce).RotateTo(180, 400).Then().Expire();
+                 .MoveTo(GameMap.GetDrawablePositionForBottomOfTile(start) + DrawableTile.HALF_BASE_SIZE).FadeTo(0.5f).ScaleTo(0.5f * scale)
+                 .FadeTo(1, 250 * lengthModifier, Easing.In).MoveTo(GameMap.GetDrawablePositionForBottomOfTile(end) + DrawableTile.HALF_BASE_SIZE, 400 * lengthModifier, Easing.In)
+                 .ScaleTo(scale, 600 * lengthModifier, Easing.OutBounce).RotateTo(180, 400 * lengthModifier).Then().Expire();
             });
 
             return effect;
