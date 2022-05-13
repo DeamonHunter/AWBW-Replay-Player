@@ -190,8 +190,15 @@ namespace AWBWApp.Game.IO
             for (int x = 0; x < terrainFile.Size.X; x++)
             {
                 var column = mapArray[x];
+
                 for (int y = 0; y < terrainFile.Size.Y; y++)
-                    terrainFile.Ids[y * terrainFile.Size.X + x] = (short)column[y];
+                {
+                    var value = column[y];
+                    if (value == null || value.Type == JTokenType.Null || value.Type == JTokenType.String)
+                        terrainFile.Ids[y] = 0;
+                    else
+                        terrainFile.Ids[y * terrainFile.Size.X + x] = (short)value;
+                }
             }
 
             var terrainFileSerialised = JsonConvert.SerializeObject(terrainFile);
