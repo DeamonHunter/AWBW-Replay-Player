@@ -353,6 +353,11 @@ namespace AWBWApp.Game.API.Replay.Actions
                 return false;
 
             var distance = (defendingUnit.MapPosition - attackerLocation).ManhattonDistance();
+
+            //Indirect attacks cannot be countered.
+            if (distance > 1)
+                return false;
+
             if (distance < defendingUnit.UnitData.AttackRange.X || distance > defendingUnit.UnitData.AttackRange.Y)
                 return false;
 
