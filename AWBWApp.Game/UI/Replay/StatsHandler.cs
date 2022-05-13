@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AWBWApp.Game.Game.Logic;
 using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osuTK;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class StatsHandler : Container<StatsPopup>
+    public class StatsHandler : Container
     {
         /// <summary>
         /// The stats readout that would be shown if the stats window was opened. This can be edited without mutating other turns.
@@ -15,9 +18,21 @@ namespace AWBWApp.Game.UI.Replay
 
         private readonly List<Dictionary<long, PlayerStatsReadout>> registeredReadouts = new List<Dictionary<long, PlayerStatsReadout>>();
 
+        private FillFlowContainer<StatsPopup> fillFlowContainer;
+
         public StatsHandler(Bindable<int> turnNumberBindable)
         {
             turnNumberBindable.BindValueChanged(x => turnChanged(x.NewValue));
+
+            Child = fillFlowContainer = new FillFlowContainer<StatsPopup>()
+            {
+                Direction = FillDirection.Horizontal,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                RelativeSizeAxes = Axes.Both,
+                AutoSizeDuration = 15,
+                Spacing = new Vector2(5, 0)
+            };
         }
 
         public void RegisterReadouts(Dictionary<long, PlayerStatsReadout> readouts)
@@ -49,10 +64,44 @@ namespace AWBWApp.Game.UI.Replay
 
         public void ShowStatsForPlayer(Dictionary<long, PlayerInfo> players, long playerID)
         {
-            foreach (var popup in Children)
-                popup.Close();
+            var childCount = fillFlowContainer.Children.Count;
 
-            Add(new StatsPopup(players, playerID, CurrentTurnStatsReadout[playerID]));
+            foreach (var popup in fillFlowContainer.Children)
+            {
+                if (popup.PlayerID != playerID)
+                    continue;
+
+                childCount -= 1;
+                popup.Close();
+            }
+
+            for (int i = childCount - 2; i >= 0; i--)
+                fillFlowContainer.Children[i].Close();
+
+            fillFlowContainer.Add(new StatsPopup(players, playerID, CurrentTurnStatsReadout[playerID], (p1, p2) => ComparePlayers(players, p1, p2)));
+        }
+
+        public void ComparePlayers(Dictionary<long, PlayerInfo> players, long player1, long player2)
+        {
+            foreach (var popup in fillFlowContainer.Children)
+            {
+                if (popup.PlayerID == player1 || popup.PlayerID == player2)
+                    continue;
+
+                popup.Close();
+            }
+
+            if (!fillFlowContainer.Children.Any(x => x.PlayerID == player1))
+                fillFlowContainer.Add(new StatsPopup(players, player1, CurrentTurnStatsReadout[player1], (p1, p2) => ComparePlayers(players, p1, p2)));
+
+            if (!fillFlowContainer.Children.Any(x => x.PlayerID == player2))
+                fillFlowContainer.Add(new StatsPopup(players, player2, CurrentTurnStatsReadout[player2], (p1, p2) => ComparePlayers(players, p1, p2)));
+        }
+
+        public void CloseAllStats()
+        {
+            foreach (var popup in fillFlowContainer.Children)
+                popup.Close();
         }
     }
 

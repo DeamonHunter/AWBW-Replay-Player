@@ -484,6 +484,8 @@ namespace AWBWApp.Game.Game.Logic
 
         public void GoToNextAction()
         {
+            Stats.CloseAllStats();
+
             if (currentTurn.Actions == null)
             {
                 //Todo: Maybe some notification to say no actions occured?
@@ -545,6 +547,7 @@ namespace AWBWApp.Game.Game.Logic
 
         public void GoToPreviousAction()
         {
+            Stats.CloseAllStats();
             completeAllActions();
 
             if (currentTurn.Actions == null || currentActionIndex < 0)
@@ -637,6 +640,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private void goToTurnWithIdxAndShowLastAction(int turnIdx)
         {
+            Stats.CloseAllStats();
             turnIdx = Math.Clamp(turnIdx, 0, replayData.TurnData.Count - 1);
 
             //We do not have a state to go to on the last turn so fake it by quickly advancing through everything
@@ -667,6 +671,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private void goToTurnWithIdx(int turnIdx, bool completeActions)
         {
+            Stats.CloseAllStats();
             if (completeActions)
                 completeAllActions();
 

@@ -14,6 +14,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
 using osuTK;
@@ -21,12 +22,21 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class StatsPopup : TooltipContainer
+    public class StatsPopup : TooltipContainer, IHasContextMenu
     {
+        public long PlayerID;
+
         private StatScrollContainer scrollContainer;
 
-        public StatsPopup(Dictionary<long, PlayerInfo> players, long playerID, PlayerStatsReadout readout)
+        private Dictionary<long, PlayerInfo> players;
+        private Action<long, long> compareToAction;
+
+        public StatsPopup(Dictionary<long, PlayerInfo> players, long playerID, PlayerStatsReadout readout, Action<long, long> compareToAction)
         {
+            PlayerID = playerID;
+            this.players = players;
+            this.compareToAction = compareToAction;
+
             AutoSizeAxes = Axes.Y;
 
             Width = 300;
@@ -115,16 +125,8 @@ namespace AWBWApp.Game.UI.Replay
             Expire();
         }
 
-        protected override bool Handle(UIEvent e)
+        protected override bool OnHover(HoverEvent e)
         {
-            switch (e)
-            {
-                case TouchEvent _:
-                case KeyDownEvent _:
-                case KeyUpEvent _:
-                    return false;
-            }
-
             return true;
         }
 
@@ -427,6 +429,29 @@ namespace AWBWApp.Game.UI.Replay
             }
 
             public LocalisableString TooltipText => playerUsername;
+        }
+
+        public MenuItem[] ContextMenuItems => createMenuItems();
+
+        private MenuItem[] createMenuItems()
+        {
+            var playerItems = new List<MenuItem>();
+
+            foreach (var player in players)
+            {
+                if (player.Key == PlayerID)
+                    continue;
+
+                playerItems.Add(new MenuItem(player.Value.Username, () => compareToAction(PlayerID, player.Key)));
+            }
+
+            return new MenuItem[]
+            {
+                new MenuItem("Compare To")
+                {
+                    Items = playerItems
+                }
+            };
         }
     }
 }
