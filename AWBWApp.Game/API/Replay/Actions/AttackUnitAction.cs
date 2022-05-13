@@ -323,10 +323,6 @@ namespace AWBWApp.Game.API.Replay.Actions
                 yield break;
             }
 
-            //Todo: Figure out ammo usage
-            if (attackerUnit.UnitData.MaxAmmo != 99)
-                attackerUnit.Ammo.Value -= 1;
-
             //Perform Attack vs Attacker
             reticule = PlayAttackAnimation(controller, defenderUnit.MapPosition, attackerUnit.MapPosition, defenderUnit);
             yield return ReplayWait.WaitForTransformable(reticule);
