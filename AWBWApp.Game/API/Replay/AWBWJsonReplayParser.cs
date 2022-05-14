@@ -36,30 +36,51 @@ namespace AWBWApp.Game.API.Replay
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
-            if (zipArchive.Entries.Count <= 0)
-                throw new Exception("Cannot parse zip as replay. It contains 0 files, and is probably not a AWBW replay.");
-
-            if (zipArchive.Entries.Count > 2)
-                throw new Exception("Cannot parse zip as replay. It contains too many files for a AWBW replay.");
+            var count = zipArchive.Entries.Count(x => !x.FullName.Contains("__MACOSX") && x.CompressedLength != 0);
+            if (count <= 0)
+                throw new Exception("Cannot parse replay. The zip file contains zero files.");
 
             ReadOnlySpan<char> gameStateFile = null;
             ReadOnlySpan<char> replayFile = null;
 
             foreach (var entry in zipArchive.Entries)
             {
+                if (entry.FullName.Contains("__MACOSX") || entry.CompressedLength == 0)
+                    continue;
+
                 string text;
 
-                using (var entryStream = new GZipStream(entry.Open(), CompressionMode.Decompress))
+                try
                 {
-                    using (var sr = new StreamReader(entryStream))
-                        text = sr.ReadToEnd();
+                    using (var entryStream = new GZipStream(entry.Open(), CompressionMode.Decompress))
+                    {
+                        using (var sr = new StreamReader(entryStream))
+                            text = sr.ReadToEnd();
+                    }
+                }
+                catch
+                {
+                    continue;
                 }
 
-                if (entry.Name.StartsWith("a"))
-                    replayFile = text;
-                else
+                if (text.StartsWith(turn_start_text))
+                {
+                    if (gameStateFile != null)
+                        throw new Exception("Cannot parse replay. The zip file contains multiple replays.");
+
                     gameStateFile = text;
+                }
+                else if (text.StartsWith("p:"))
+                {
+                    if (replayFile != null)
+                        throw new Exception("Cannot parse replay. The zip file contains multiple replays.");
+
+                    replayFile = text;
+                }
             }
+
+            if (gameStateFile == null)
+                throw new Exception("Cannot parse replay. The zip did not contain a replay file.");
 
             var state = readBaseReplayData(gameStateFile);
             if (replayFile != null)
