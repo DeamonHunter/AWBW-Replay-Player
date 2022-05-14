@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.Game.Logic;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -17,6 +19,9 @@ namespace AWBWApp.Game.UI.Replay
         private FillFlowContainer fillContainer;
 
         private SortedList<ReplayPlayerListItem> drawablePlayers = new SortedList<ReplayPlayerListItem>();
+
+        private Bindable<float> playerListScale;
+        private Bindable<bool> playerListRightSide;
 
         public ReplayPlayerList()
         {
@@ -52,6 +57,20 @@ namespace AWBWApp.Game.UI.Replay
                     }
                 }
             };
+        }
+
+        [BackgroundDependencyLoader]
+        private void load(AWBWConfigManager configManager)
+        {
+            playerListScale = configManager.GetBindable<float>(AWBWSetting.PlayerListScale);
+            playerListScale.BindValueChanged(x => this.ScaleTo(x.NewValue, 150, Easing.OutQuint), true);
+
+            playerListRightSide = configManager.GetBindable<bool>(AWBWSetting.PlayerListRightSide);
+            playerListRightSide.BindValueChanged(x =>
+            {
+                Anchor = x.NewValue ? Anchor.TopLeft : Anchor.TopRight;
+                Origin = x.NewValue ? Anchor.TopLeft : Anchor.TopRight;
+            }, true);
         }
 
         public void CreateNewListForPlayers(Dictionary<long, PlayerInfo> players, ReplayController controller, bool usePercentagePowers)

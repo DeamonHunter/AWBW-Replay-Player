@@ -20,6 +20,8 @@ namespace AWBWApp.Game
             SetDefault(AWBWSetting.ReplayShowGridOverMap, false);
             SetDefault(AWBWSetting.ReplayShortenActionToolTips, false);
             SetDefault(AWBWSetting.ReplayShowMovementArrows, true);
+            SetDefault(AWBWSetting.PlayerListScale, 1f);
+            SetDefault(AWBWSetting.PlayerListRightSide, false);
         }
     }
 
@@ -30,6 +32,8 @@ namespace AWBWApp.Game
         ReplayShowHiddenUnits,
         ReplayShowGridOverMap,
         ReplayShortenActionToolTips,
-        ReplayShowMovementArrows
+        ReplayShowMovementArrows,
+        PlayerListScale,
+        PlayerListRightSide
     }
 }
