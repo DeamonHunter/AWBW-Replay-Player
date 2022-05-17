@@ -21,7 +21,10 @@ namespace AWBWApp.Game
             SetDefault(AWBWSetting.ReplayShortenActionToolTips, false);
             SetDefault(AWBWSetting.ReplayShowMovementArrows, true);
             SetDefault(AWBWSetting.PlayerListScale, 1f);
-            SetDefault(AWBWSetting.PlayerListRightSide, false);
+            SetDefault(AWBWSetting.PlayerListLeftSide, false);
+            SetDefault(AWBWSetting.ReplayBarControlScale, 1f);
+            SetDefault(AWBWSetting.ReplayBarControlPositionX, 0f);
+            SetDefault(AWBWSetting.ReplayBarControlPositionY, 0f);
         }
     }
 
@@ -34,6 +37,9 @@ namespace AWBWApp.Game
         ReplayShortenActionToolTips,
         ReplayShowMovementArrows,
         PlayerListScale,
-        PlayerListRightSide
+        PlayerListLeftSide,
+        ReplayBarControlScale,
+        ReplayBarControlPositionX,
+        ReplayBarControlPositionY,
     }
 }

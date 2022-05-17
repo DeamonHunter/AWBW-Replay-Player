@@ -4,6 +4,9 @@ using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Input;
 using AWBWApp.Game.UI.Components;
+using AWBWApp.Game.UI.Components.Menu;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -15,12 +18,14 @@ using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
+using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
+using osuTK.Input;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class ReplayBarWidget : Container
+    public class ReplayBarWidget : Container, IHasContextMenu
     {
         private readonly ReplayController replayController;
 
@@ -31,14 +36,20 @@ namespace AWBWApp.Game.UI.Replay
         private readonly ReplayBarWidgetDropdown dropdown;
         private readonly Container sliderBarContainer;
 
+        private Bindable<float> replayBarScale;
+        private Bindable<float> replayBarOffsetX;
+        private Bindable<float> replayBarOffsetY;
+
+        private MenuItem[] contextMenuItems;
+
         public ReplayBarWidget(ReplayController replayController)
         {
             this.replayController = replayController;
 
             Padding = new MarginPadding { Bottom = 10 };
-            Width = 300;
+            AutoSizeAxes = Axes.X;
             Height = 55;
-            //RelativeSizeAxes = Axes.X;
+
             Origin = Anchor.BottomCentre;
             Anchor = Anchor.BottomCentre;
 
@@ -90,7 +101,8 @@ namespace AWBWApp.Game.UI.Replay
                 },
                 new Container()
                 {
-                    RelativeSizeAxes = Axes.Both,
+                    AutoSizeAxes = Axes.X,
+                    RelativeSizeAxes = Axes.Y,
                     Masking = true,
                     CornerRadius = 5,
                     EdgeEffect = new EdgeEffectParameters
@@ -113,6 +125,7 @@ namespace AWBWApp.Game.UI.Replay
                         {
                             AutoSizeAxes = Axes.Both,
                             Direction = FillDirection.Horizontal,
+                            Padding = new MarginPadding { Horizontal = 10 },
                             Spacing = new Vector2(5),
                             Origin = Anchor.Centre,
                             Anchor = Anchor.Centre,
@@ -177,6 +190,35 @@ namespace AWBWApp.Game.UI.Replay
             dropdown.Current.ValueChanged += x => changeTurn(x.NewValue);
             sliderBar.Current.BindTo(replayController.AutoAdvanceDelay);
             SetSliderVisibility(false);
+        }
+
+        [BackgroundDependencyLoader]
+        private void load(AWBWConfigManager configManager)
+        {
+            replayBarScale = configManager.GetBindable<float>(AWBWSetting.ReplayBarControlScale);
+            replayBarScale.BindValueChanged(x =>
+            {
+                this.ScaleTo(x.NewValue, 150, Easing.OutQuint);
+                moveBarToOffset(Position);
+            }, true);
+
+            replayBarOffsetX = configManager.GetBindable<float>(AWBWSetting.ReplayBarControlPositionX);
+            replayBarOffsetY = configManager.GetBindable<float>(AWBWSetting.ReplayBarControlPositionY);
+
+            contextMenuItems = new[]
+            {
+                new MenuItem("Scale")
+                {
+                    Items = createPlayerListScaleItems(configManager)
+                },
+                new MenuItem("Reset Position", () => moveBarToOffset(Vector2.Zero))
+            };
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+            moveBarToOffset(new Vector2(replayBarOffsetX.Value, replayBarOffsetY.Value));
         }
 
         public void UpdateTurns(List<TurnData> turns)
@@ -245,12 +287,85 @@ namespace AWBWApp.Game.UI.Replay
             };
         }
 
+        protected override bool OnDragStart(DragStartEvent e)
+        {
+            if (e.Button != MouseButton.Left)
+                return base.OnDragStart(e);
+
+            moveBarToOffset(Position + e.Delta);
+
+            return true;
+        }
+
+        protected override void OnDrag(DragEvent e)
+        {
+            base.OnDrag(e);
+            moveBarToOffset(Position + e.Delta);
+        }
+
+        protected override void UpdateAfterAutoSize()
+        {
+            base.UpdateAfterAutoSize();
+            moveBarToOffset(Position);
+        }
+
+        private void moveBarToOffset(Vector2 offset)
+        {
+            if (Parent == null)
+                return;
+
+            var newPosition = new Vector2(
+                Math.Clamp(offset.X, (Parent.DrawSize.X - DrawSize.X * Scale.X) * -0.5f, (Parent.DrawSize.X - DrawSize.X * Scale.X) * 0.5f),
+                Math.Clamp(offset.Y, -Parent.DrawSize.Y + DrawSize.Y * Scale.Y, 0)
+            );
+
+            if (Precision.AlmostEquals(newPosition, Position))
+                return;
+
+            Position = newPosition;
+            replayBarOffsetX.Value = Position.X;
+            replayBarOffsetY.Value = Position.Y;
+        }
+
         private void changeTurn(Turn turn)
         {
             if (replayController.CurrentTurnIndex.Value == turn.TurnIndex)
                 return;
 
             replayController.GoToTurn(turn.TurnIndex);
+        }
+
+        public MenuItem[] ContextMenuItems => contextMenuItems;
+
+        private MenuItem[] createPlayerListScaleItems(AWBWConfigManager configManager)
+        {
+            var playerListScale = configManager.GetBindable<float>(AWBWSetting.ReplayBarControlScale);
+            var genericBindable = new Bindable<object>(1f);
+
+            playerListScale.BindValueChanged(x =>
+            {
+                genericBindable.Value = x.NewValue;
+            }, true);
+
+            genericBindable.BindValueChanged(x =>
+            {
+                playerListScale.Value = (float)x.NewValue;
+            });
+
+            return new MenuItem[]
+            {
+                new StatefulMenuItem("0.75x", genericBindable, 0.75f),
+                new StatefulMenuItem("0.8x", genericBindable, 0.8f),
+                new StatefulMenuItem("0.85x", genericBindable, 0.85f),
+                new StatefulMenuItem("0.9x", genericBindable, 0.9f),
+                new StatefulMenuItem("0.95x", genericBindable, 0.95f),
+                new StatefulMenuItem("1.0x", genericBindable, 1f),
+                new StatefulMenuItem("1.05x", genericBindable, 1.05f),
+                new StatefulMenuItem("1.1x", genericBindable, 1.1f),
+                new StatefulMenuItem("1.15x", genericBindable, 1.15f),
+                new StatefulMenuItem("1.2x", genericBindable, 1.2f),
+                new StatefulMenuItem("1.25x", genericBindable, 1.25f),
+            };
         }
 
         private class ReplayIconButton : IconButton, IKeyBindingHandler<AWBWGlobalAction>, IHasTooltip
