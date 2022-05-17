@@ -184,12 +184,35 @@ namespace AWBWApp.Game.UI.Interrupts
 
             interactablesContainer.TransformSpacingTo(new Vector2(animationBaseXOffset, baseSpacing.Y), Enter_Duration, Easing.OutQuint);
             interactablesContainer.MoveToX(animationBaseXOffset, Enter_Duration, Easing.OutQuint);
+        }
 
+        protected override bool OnClick(ClickEvent e)
+        {
+            return true;
+        }
+
+        protected override bool OnKeyDown(KeyDownEvent e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                Cancel();
+                return true;
+            }
+
+            return base.OnKeyDown(e);
         }
 
         protected void ActionInvoked()
         {
             actionWasInvoked = true;
+        }
+
+        public virtual void Close()
+        {
+            if (!actionWasInvoked)
+                Cancel();
+            else
+                Hide();
         }
 
         protected virtual void Cancel()

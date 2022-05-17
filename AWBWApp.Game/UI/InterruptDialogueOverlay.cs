@@ -2,6 +2,8 @@
 using AWBWApp.Game.UI.Interrupts;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
+using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI
 {
@@ -19,12 +21,24 @@ namespace AWBWApp.Game.UI
         {
             RelativeSizeAxes = Axes.Both;
 
-            Child = interruptHolder = new Container
+            Children = new Drawable[]
             {
-                RelativeSizeAxes = Axes.Both,
+                new ClickableContainer()
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Action = () => CurrentInterrupt?.Close(),
+                    Child = new Box()
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = new Color4(40, 40, 40, 100)
+                    }
+                },
+                interruptHolder = new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Width = 0.4f,
+                }
             };
-
-            Width = 0.4f;
         }
 
         public void Push(BaseInterrupt interrupt, bool hidePreviousInterrupt = true)
@@ -33,7 +47,7 @@ namespace AWBWApp.Game.UI
                 return;
 
             if (hidePreviousInterrupt)
-                CurrentInterrupt?.Hide();
+                CurrentInterrupt?.Close();
             else
                 interrupts.Push(CurrentInterrupt);
 
@@ -86,10 +100,8 @@ namespace AWBWApp.Game.UI
         protected override void PopOut()
         {
             if (CurrentInterrupt?.State.Value == Visibility.Visible)
-            {
-                CurrentInterrupt.Hide();
-                return;
-            }
+                CurrentInterrupt.Close();
+
             this.FadeOut(BaseInterrupt.Exit_Duration, Easing.OutSine);
         }
     }
