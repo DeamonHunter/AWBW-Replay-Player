@@ -1,27 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.Game.Logic;
+using AWBWApp.Game.UI.Components.Menu;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Lists;
 using osuTK;
 using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class ReplayPlayerList : Container
+    public class ReplayPlayerList : Container, IHasContextMenu
     {
         private FillFlowContainer fillContainer;
 
         private SortedList<ReplayPlayerListItem> drawablePlayers = new SortedList<ReplayPlayerListItem>();
 
         private Bindable<float> playerListScale;
-        private Bindable<bool> playerListRightSide;
+        private Bindable<bool> playerListLeftSide;
+
+        private MenuItem[] contextMenuItems;
 
         public ReplayPlayerList()
         {
@@ -63,14 +68,27 @@ namespace AWBWApp.Game.UI.Replay
         private void load(AWBWConfigManager configManager)
         {
             playerListScale = configManager.GetBindable<float>(AWBWSetting.PlayerListScale);
-            playerListScale.BindValueChanged(x => this.ScaleTo(x.NewValue, 150, Easing.OutQuint), true);
+            playerListScale.BindValueChanged(x =>
+            {
+                this.ScaleTo(x.NewValue, 150, Easing.OutQuint);
+                this.ResizeHeightTo(1 / x.NewValue, 150, Easing.OutQuint);
+            }, true);
 
-            playerListRightSide = configManager.GetBindable<bool>(AWBWSetting.PlayerListRightSide);
-            playerListRightSide.BindValueChanged(x =>
+            playerListLeftSide = configManager.GetBindable<bool>(AWBWSetting.PlayerListLeftSide);
+            playerListLeftSide.BindValueChanged(x =>
             {
                 Anchor = x.NewValue ? Anchor.TopLeft : Anchor.TopRight;
                 Origin = x.NewValue ? Anchor.TopLeft : Anchor.TopRight;
             }, true);
+
+            contextMenuItems = new[]
+            {
+                new MenuItem("Scale")
+                {
+                    Items = createPlayerListScaleItems(configManager)
+                },
+                new ToggleMenuItem("Swap Sides", configManager.GetBindable<bool>(AWBWSetting.PlayerListLeftSide)),
+            };
         }
 
         public void CreateNewListForPlayers(Dictionary<long, PlayerInfo> players, ReplayController controller, bool usePercentagePowers)
@@ -124,6 +142,39 @@ namespace AWBWApp.Game.UI.Replay
 
                 fillContainer.SetLayoutPosition(player, i);
             }
+        }
+
+        public MenuItem[] ContextMenuItems => contextMenuItems;
+
+        private MenuItem[] createPlayerListScaleItems(AWBWConfigManager configManager)
+        {
+            var playerListScale = configManager.GetBindable<float>(AWBWSetting.PlayerListScale);
+            var genericBindable = new Bindable<object>(1f);
+
+            playerListScale.BindValueChanged(x =>
+            {
+                genericBindable.Value = x.NewValue;
+            }, true);
+
+            genericBindable.BindValueChanged(x =>
+            {
+                playerListScale.Value = (float)x.NewValue;
+            });
+
+            return new MenuItem[]
+            {
+                new StatefulMenuItem("0.75x", genericBindable, 0.75f),
+                new StatefulMenuItem("0.8x", genericBindable, 0.8f),
+                new StatefulMenuItem("0.85x", genericBindable, 0.85f),
+                new StatefulMenuItem("0.9x", genericBindable, 0.9f),
+                new StatefulMenuItem("0.95x", genericBindable, 0.95f),
+                new StatefulMenuItem("1.0x", genericBindable, 1f),
+                new StatefulMenuItem("1.05x", genericBindable, 1.05f),
+                new StatefulMenuItem("1.1x", genericBindable, 1.1f),
+                new StatefulMenuItem("1.15x", genericBindable, 1.15f),
+                new StatefulMenuItem("1.2x", genericBindable, 1.2f),
+                new StatefulMenuItem("1.25x", genericBindable, 1.25f),
+            };
         }
     }
 }
