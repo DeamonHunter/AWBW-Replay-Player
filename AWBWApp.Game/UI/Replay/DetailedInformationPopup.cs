@@ -21,6 +21,8 @@ namespace AWBWApp.Game.UI.Replay
         private BuildingPopup buildingPopup;
         private UnitPopup unitPopup;
 
+        private Bindable<bool> playerListLeftSide;
+
         public DetailedInformationPopup()
         {
             AutoSizeAxes = Axes.X;
@@ -29,6 +31,10 @@ namespace AWBWApp.Game.UI.Replay
             AutoSizeDuration = 250;
             AutoSizeEasing = Easing.OutQuint;
             Masking = true;
+
+            Anchor = Anchor.BottomLeft;
+            Origin = Anchor.BottomLeft;
+            Position = new Vector2(10, -10);
 
             Children = new Drawable[]
             {
@@ -60,6 +66,18 @@ namespace AWBWApp.Game.UI.Replay
                     }
                 }
             };
+        }
+
+        [BackgroundDependencyLoader]
+        private void load(AWBWConfigManager configManager)
+        {
+            playerListLeftSide = configManager.GetBindable<bool>(AWBWSetting.PlayerListLeftSide);
+            playerListLeftSide.BindValueChanged(x =>
+            {
+                Anchor = x.NewValue ? Anchor.BottomRight : Anchor.BottomLeft;
+                Origin = x.NewValue ? Anchor.BottomRight : Anchor.BottomLeft;
+                Position = x.NewValue ? new Vector2(-10, -10) : new Vector2(10, -10);
+            }, true);
         }
 
         public void ShowDetails(DrawableTile tile, DrawableBuilding building, DrawableUnit unit)

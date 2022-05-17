@@ -126,13 +126,7 @@ namespace AWBWApp.Game.Game.Logic
                             Position = new Vector2(-100, 0),
                             RelativeSizeAxes = Axes.Both
                         },
-                        infoPopup = new DetailedInformationPopup
-                        {
-                            Position = new Vector2(10, -10),
-                            Origin = Anchor.BottomLeft,
-                            Anchor = Anchor.BottomLeft,
-                        },
-                        barWidget = new ReplayBarWidget(this),
+                        infoPopup = new DetailedInformationPopup(),
                         playerList = new ReplayPlayerList
                         {
                             Anchor = Anchor.TopRight,
@@ -140,6 +134,7 @@ namespace AWBWApp.Game.Game.Logic
                             RelativeSizeAxes = Axes.Y,
                             Size = new Vector2(player_list_width, 1)
                         },
+                        barWidget = new ReplayBarWidget(this),
                         Stats = new StatsHandler(CurrentTurnIndex)
                         {
                             RelativeSizeAxes = Axes.Both,
