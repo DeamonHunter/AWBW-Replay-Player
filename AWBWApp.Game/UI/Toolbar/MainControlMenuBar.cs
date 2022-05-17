@@ -1,5 +1,6 @@
 ﻿using System;
 using AWBWApp.Game.UI.Components.Menu;
+using AWBWApp.Game.UI.Interrupts;
 using AWBWApp.Game.UI.Notifications;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -18,7 +19,7 @@ namespace AWBWApp.Game.UI.Toolbar
         }
 
         [BackgroundDependencyLoader]
-        private void load(AWBWConfigManager configManager)
+        private void load(AWBWConfigManager configManager, InterruptDialogueOverlay interrupts)
         {
             var scaleItems = createPlayerListScaleItems(configManager);
 
@@ -42,6 +43,7 @@ namespace AWBWApp.Game.UI.Toolbar
                         new ToggleMenuItem("Shorten Action Tooltips", configManager.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips))
                     }
                 },
+                new MenuItem("Rebind Keys", () => interrupts.Push(new KeyRebindingInterrupt())),
                 new MenuItem("UI Settings")
                 {
                     Items = new[]

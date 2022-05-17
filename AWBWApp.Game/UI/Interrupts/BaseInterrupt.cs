@@ -5,8 +5,10 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
+using osuTK.Input;
 
 namespace AWBWApp.Game.UI.Interrupts
 {
@@ -16,7 +18,7 @@ namespace AWBWApp.Game.UI.Interrupts
         public const float Enter_Duration = 500;
         public const float Exit_Duration = 200;
 
-        private readonly Vector2 buttonsEnterSpacing = new Vector2(-50f, 0f);
+        private readonly float animationBaseXOffset = -50f;
 
         private readonly Container content;
         private readonly FillFlowContainer interactablesContainer;
@@ -48,6 +50,20 @@ namespace AWBWApp.Game.UI.Interrupts
                     return;
                 bodyText = value;
                 body.Text = value;
+            }
+        }
+
+        private Vector2 baseSpacing;
+
+        public Vector2 InteractablesSpacing
+        {
+            get => baseSpacing;
+            set
+            {
+                baseSpacing = value;
+
+                if (State.Value == Visibility.Visible)
+                    interactablesContainer.Spacing = baseSpacing;
             }
         }
 
@@ -147,14 +163,14 @@ namespace AWBWApp.Game.UI.Interrupts
 
             if (content.Alpha == 0)
             {
-                interactablesContainer.TransformSpacingTo(buttonsEnterSpacing);
-                interactablesContainer.MoveToX(buttonsEnterSpacing.X);
+                interactablesContainer.TransformSpacingTo(new Vector2(animationBaseXOffset, baseSpacing.Y));
+                interactablesContainer.MoveToX(animationBaseXOffset);
             }
 
             content.FadeIn(Enter_Duration, Easing.OutQuint);
-            this.MoveToX(buttonsEnterSpacing.X).MoveToX(0, Enter_Duration, Easing.OutQuint);
+            this.MoveToX(animationBaseXOffset).MoveToX(0, Enter_Duration, Easing.OutQuint);
 
-            interactablesContainer.TransformSpacingTo(Vector2.Zero, Enter_Duration, Easing.OutQuint);
+            interactablesContainer.TransformSpacingTo(baseSpacing, Enter_Duration, Easing.OutQuint);
             interactablesContainer.MoveToX(0, Enter_Duration, Easing.OutQuint);
         }
 
@@ -164,10 +180,11 @@ namespace AWBWApp.Game.UI.Interrupts
                 CancelAction?.Invoke();
 
             content.FadeOut(Exit_Duration, Easing.InSine);
-            this.MoveToX(0).MoveToX(buttonsEnterSpacing.X, Enter_Duration, Easing.OutQuint);
+            this.MoveToX(0).MoveToX(animationBaseXOffset, Enter_Duration, Easing.OutQuint);
 
-            interactablesContainer.TransformSpacingTo(buttonsEnterSpacing, Enter_Duration, Easing.OutQuint);
-            interactablesContainer.MoveToX(buttonsEnterSpacing.X, Enter_Duration, Easing.OutQuint);
+            interactablesContainer.TransformSpacingTo(new Vector2(animationBaseXOffset, baseSpacing.Y), Enter_Duration, Easing.OutQuint);
+            interactablesContainer.MoveToX(animationBaseXOffset, Enter_Duration, Easing.OutQuint);
+
         }
 
         protected void ActionInvoked()

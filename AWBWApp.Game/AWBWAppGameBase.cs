@@ -121,7 +121,8 @@ namespace AWBWApp.Game
             sessionHandler = new AWBWSessionHandler();
             dependencies.Cache(sessionHandler);
 
-            base.Content.Add(globalBindings = new GlobalActionContainer(this));
+            base.Content.Add(globalBindings = new GlobalActionContainer(this, HostStorage));
+            dependencies.Cache(globalBindings);
         }
 
         public override void SetHost(GameHost host)
@@ -197,6 +198,7 @@ namespace AWBWApp.Game
         {
             base.Dispose(isDisposing);
             LocalConfig?.Dispose();
+            globalBindings?.Dispose();
         }
 
         public void GracefullyExit()
