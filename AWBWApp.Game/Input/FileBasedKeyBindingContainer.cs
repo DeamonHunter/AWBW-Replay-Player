@@ -22,10 +22,9 @@ namespace AWBWApp.Game.Input
 
             foreach (var binding in DefaultKeyBindings)
             {
-                if (config.Has((T)binding.Action))
-                    keyBindings.Add(new KeyBinding(config.Get<string>((T)binding.Action), binding.Action));
-                else
-                    keyBindings.Add(new KeyBinding(binding.KeyCombination, binding.Action));
+                var trackedBinding = new CombinationTrackedKeyBinding(config.Has((T)binding.Action) ? config.Get<string>((T)binding.Action) : binding.KeyCombination, binding.Action, SetConfig);
+                trackedBinding.Event.Invoke(trackedBinding.Action, trackedBinding.KeyCombination);
+                keyBindings.Add(trackedBinding);
             }
 
             KeyBindings = keyBindings;
@@ -36,7 +35,54 @@ namespace AWBWApp.Game.Input
             config.Save();
         }
 
-        private class KeyBindingConfigManager<T> : IniConfigManager<T> where T : struct, Enum
+        protected void SetConfig(object action, KeyCombination newCombination)
+        {
+            config.SetValue((T)action, newCombination.ToString());
+        }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            if (IsDisposed)
+                return;
+
+            config?.Dispose();
+            base.Dispose(isDisposing);
+        }
+
+        protected class CombinationTrackedKeyBinding : IKeyBinding
+        {
+            private KeyCombination keyCombination;
+
+            public KeyCombination KeyCombination
+            {
+                get => keyCombination;
+                set
+                {
+                    keyCombination = value;
+                    Event?.Invoke(Action, keyCombination);
+                }
+            }
+
+            public object Action { get; set; }
+
+            public Action<object, KeyCombination> Event { get; private set; }
+
+            /// <summary>
+            /// Construct a new instance.
+            /// </summary>
+            /// <param name="keys">The combination of keys which will trigger this binding.</param>
+            /// <param name="action">The resultant action which is triggered by this binding. Usually an enum type.</param>
+            public CombinationTrackedKeyBinding(KeyCombination keys, object action, Action<object, KeyCombination> keyChangeEvent)
+            {
+                KeyCombination = keys;
+                Action = action;
+                Event = keyChangeEvent;
+            }
+
+            public override string ToString() => $"{KeyCombination}=>{Action}";
+        }
+
+        protected class KeyBindingConfigManager<T> : IniConfigManager<T> where T : struct, Enum
         {
             protected override string Filename => "keybindings.ini";
 

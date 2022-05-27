@@ -29,8 +29,13 @@ namespace AWBWApp.Game.Input
         public void ResetToDefault()
         {
             var bindings = new List<IKeyBinding>();
+
             foreach (var binding in DefaultKeyBindings)
-                bindings.Add(binding);
+            {
+                var trackedBinding = new CombinationTrackedKeyBinding(binding.KeyCombination, binding.Action, SetConfig);
+                trackedBinding.Event.Invoke(trackedBinding.Action, trackedBinding.KeyCombination);
+                bindings.Add(trackedBinding);
+            }
 
             KeyBindings = bindings;
         }
@@ -49,12 +54,12 @@ namespace AWBWApp.Game.Input
         public override IEnumerable<IKeyBinding> DefaultKeyBindings =>
             new IKeyBinding[]
             {
-                new KeyBinding(InputKey.H, AWBWGlobalAction.PreviousTurn),
-                new KeyBinding(InputKey.J, AWBWGlobalAction.PreviousAction),
-                new KeyBinding(InputKey.K, AWBWGlobalAction.NextAction),
-                new KeyBinding(InputKey.L, AWBWGlobalAction.NextTurn),
-                new KeyBinding(InputKey.G, AWBWGlobalAction.ShowGridLines),
-                new KeyBinding(InputKey.F, AWBWGlobalAction.ShowUnitsInFog),
+                new CombinationTrackedKeyBinding(InputKey.H, AWBWGlobalAction.PreviousTurn, SetConfig),
+                new CombinationTrackedKeyBinding(InputKey.J, AWBWGlobalAction.PreviousAction, SetConfig),
+                new CombinationTrackedKeyBinding(InputKey.K, AWBWGlobalAction.NextAction, SetConfig),
+                new CombinationTrackedKeyBinding(InputKey.L, AWBWGlobalAction.NextTurn, SetConfig),
+                new CombinationTrackedKeyBinding(InputKey.G, AWBWGlobalAction.ShowGridLines, SetConfig),
+                new CombinationTrackedKeyBinding(InputKey.F, AWBWGlobalAction.ShowUnitsInFog, SetConfig),
             };
 
         protected override IEnumerable<Drawable> KeyBindingInputQueue
