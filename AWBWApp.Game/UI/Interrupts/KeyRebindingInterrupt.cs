@@ -44,14 +44,38 @@ namespace AWBWApp.Game.UI.Interrupts
                 createKeyRebindRow(AWBWGlobalAction.NextTurn),
                 createKeyRebindRow(AWBWGlobalAction.ShowGridLines),
                 createKeyRebindRow(AWBWGlobalAction.ShowUnitsInFog),
-                new InterruptButton
+                new Container()
                 {
-                    Text = "Reset To Default",
-                    BackgroundColour = Color4Extensions.FromHex(@"681d1f"),
-                    HoverColour = Color4Extensions.FromHex(@"681d1f").Lighten(0.2f),
-                    Action = keybindingOverlay.ResetToDefault,
-                    Width = 0.9f
-                },
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Children = new Drawable[]
+                    {
+                        new InterruptButton
+                        {
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
+                            Text = "Reset To Default",
+                            BackgroundColour = Color4Extensions.FromHex(@"681d1f"),
+                            HoverColour = Color4Extensions.FromHex(@"681d1f").Lighten(0.2f),
+                            Action = keybindingOverlay.ResetToDefault,
+                            Width = 0.4f,
+                            RelativePositionAxes = Axes.X,
+                            Position = new Vector2(0.05f, 0)
+                        },
+                        new InterruptButton
+                        {
+                            Anchor = Anchor.CentreRight,
+                            Origin = Anchor.CentreRight,
+                            Text = "Close Key Bindings",
+                            BackgroundColour = Color4Extensions.FromHex(@"1d681e"),
+                            HoverColour = Color4Extensions.FromHex(@"1d681e").Lighten(0.2f),
+                            Action = Close,
+                            Width = 0.4f,
+                            RelativePositionAxes = Axes.X,
+                            Position = new Vector2(-0.05f, 0)
+                        }
+                    }
+                }
             });
         }
 
