@@ -15,7 +15,7 @@ namespace AWBWApp.Game.API
         private const string username_index = "Username:";
 
         public UsernameWebRequest(long userID)
-            : base($"https://awbw.amarriner.com/profile.php?users_id= {userID}")
+            : base($"https://awbw.amarriner.com/profile.php?users_id={userID}")
         {
             UserID = userID;
         }
