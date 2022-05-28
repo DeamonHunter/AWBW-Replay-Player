@@ -79,5 +79,10 @@ namespace AWBWApp.Game.IO
 
             return new WrappedStorage(this, path);
         }
+
+        public override void Move(string from, string to)
+        {
+            UnderlyingStorage.Move(MutatePath(from), MutatePath(to));
+        }
     }
 }
