@@ -164,9 +164,9 @@ namespace AWBWApp.Game.Game.Units
             FogOfWarActive.BindValueChanged(x => updateUnitColour(x.NewValue));
             Dived.BindValueChanged(x => updateUnitColour(x.NewValue));
 
-            IsCapturing.BindValueChanged(_ => updateStatIndicators());
-            Fuel.BindValueChanged(_ => updateStatIndicators());
-            Ammo.BindValueChanged(_ => updateStatIndicators(), true);
+            IsCapturing.BindValueChanged(_ => updateStatIndicators(false));
+            Fuel.BindValueChanged(_ => updateStatIndicators(false));
+            Ammo.BindValueChanged(_ => updateStatIndicators(false), true);
 
             updateUnitColour(true);
             updateCarried();
@@ -183,7 +183,7 @@ namespace AWBWApp.Game.Game.Units
                 return;
 
             lastCargoAmount = Cargo.Count;
-            updateStatIndicators();
+            updateStatIndicators(false);
         }
 
         public void MoveToPosition(Vector2I position, bool updateVisual = true)
@@ -277,14 +277,14 @@ namespace AWBWApp.Game.Game.Units
             healthSpriteText.Text = healthPoints.NewValue.ToString();
         }
 
-        private void updateStatIndicators()
+        private void updateStatIndicators(bool unitRevealed)
         {
             var lowFuel = (float)Fuel.Value / UnitData.MaxFuel <= 0.25f;
             var lowAmmo = UnitData.MaxAmmo > 0 && (float)Ammo.Value / UnitData.MaxAmmo <= 0.25f;
             var hasCargo = Cargo.Count > 0;
             var capturing = IsCapturing.Value;
 
-            if (!lowAmmo && !lowFuel && !hasCargo && !capturing)
+            if (!unitRevealed && !lowAmmo && !lowFuel && !hasCargo && !capturing)
             {
                 statsAnimation.Hide();
                 return;
@@ -308,7 +308,10 @@ namespace AWBWApp.Game.Game.Units
                 statsAnimation.AddFrame(null, 1000);
 
             if (statsAnimation.Alpha == 0)
-                statsAnimation.ScaleTo(0.5f).ScaleTo(1, 200, Easing.OutBounce).FadeIn(100, Easing.InQuint);
+            {
+                statsAnimation.ScaleTo(0.5f).ScaleTo(1, 200, Easing.OutBounce);
+                statsAnimation.FadeIn(100, Easing.InQuint);
+            }
 
             statsAnimation.Play();
         }
@@ -343,6 +346,9 @@ namespace AWBWApp.Game.Game.Units
                 alpha = 0.7f;
 
             textureAnimation.FadeTo(alpha, 250, Easing.OutQuint);
+
+            updateStatIndicators(alpha > 0);
+            statsAnimation.FadeTo(alpha, 250, Easing.OutQuint);
         }
 
         private class UnitTextureAnimation : Animation<Texture>
