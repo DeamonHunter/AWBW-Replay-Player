@@ -32,7 +32,7 @@ namespace AWBWApp.Game.IO
         private readonly AWBWJsonReplayParser jsonParser = new AWBWJsonReplayParser();
         private readonly AWBWXmlReplayParser xmlParser = new AWBWXmlReplayParser();
 
-        public ReplayManager(Storage storage, bool checkForNewReplays = true)
+        public ReplayManager(Storage storage)
         {
             underlyingStorage = new WrappedStorage(storage, replay_folder);
 
@@ -53,9 +53,11 @@ namespace AWBWApp.Game.IO
                         _playerNames = JsonConvert.DeserializeObject<Dictionary<long, string>>(sr.ReadToEnd()) ?? _playerNames;
                 }
             }
+        }
 
-            if (checkForNewReplays)
-                checkAllReplays();
+        public void PostLoad()
+        {
+            checkAllReplays();
         }
 
         public IEnumerable<ReplayInfo> GetAllKnownReplays() => _knownReplays.Values;

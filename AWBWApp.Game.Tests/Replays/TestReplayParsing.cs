@@ -19,7 +19,7 @@ namespace AWBWApp.Game.Tests.Replays
             var storagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AWBWReplayPlayer");
             var storage = new DesktopStorage(storagePath, null);
 
-            var replayStorage = new ReplayManager(storage, false);
+            var replayStorage = new ReplayManager(storage);
 
             var replays = replayStorage.GetAllKnownReplays();
 

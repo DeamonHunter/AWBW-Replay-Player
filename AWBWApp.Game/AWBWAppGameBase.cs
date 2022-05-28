@@ -125,6 +125,12 @@ namespace AWBWApp.Game
             dependencies.Cache(globalBindings);
         }
 
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+            replayStorage.PostLoad();
+        }
+
         public override void SetHost(GameHost host)
         {
             base.SetHost(host);

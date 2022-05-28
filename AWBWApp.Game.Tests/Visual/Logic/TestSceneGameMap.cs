@@ -72,7 +72,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 var storagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AWBWReplayPlayer");
                 var storage = new DesktopStorage(storagePath, null);
 
-                var actualStoredReplays = new ReplayManager(storage, false);
+                var actualStoredReplays = new ReplayManager(storage);
 
                 var replays = actualStoredReplays.GetAllKnownReplays();
 
