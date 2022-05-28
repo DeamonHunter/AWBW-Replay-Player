@@ -96,8 +96,15 @@ namespace AWBWApp.Game.IO
 
             Task.Run(async () =>
             {
-                foreach (var replayInfo in userNameChecks)
-                    await checkForUsernamesAndGetIfMissing(replayInfo, true);
+                try
+                {
+                    foreach (var replayInfo in userNameChecks)
+                        await checkForUsernamesAndGetIfMissing(replayInfo, true);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, "Failed to download usernames.");
+                }
 
                 foreach (var replayPath in newReplays)
                 {
@@ -173,11 +180,11 @@ namespace AWBWApp.Game.IO
                 }
                 catch (Exception e)
                 {
-                    Logger.Log($"Encountered Error while attempting to get username for id '{player.UserId}': {e.Message}");
+                    Logger.Log($"Encountered Error while attempting to get username for id '{player.UserId}': {e.Message}'");
                     errorCount++;
 
                     if (errorCount > 3)
-                        throw new Exception($"Failed to get usernames for replay, `{info.ID}:{info.Name}`");
+                        throw new Exception($"Failed to get usernames for replay, `{info.ID}:{info.Name}`. Failed on: '{player.UserId}': {e.Message}'", e);
 
                     playerQueue.Enqueue(player);
                     await Task.Delay(1000);
@@ -279,7 +286,14 @@ namespace AWBWApp.Game.IO
             else
                 throw new Exception($"Unknown Replay ID: {id}");
 
-            await checkForUsernamesAndGetIfMissing(data.ReplayInfo, false);
+            try
+            {
+                await checkForUsernamesAndGetIfMissing(data.ReplayInfo, false);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Failed to download usernames.");
+            }
 
             return data;
         }
@@ -388,7 +402,14 @@ namespace AWBWApp.Game.IO
                 throw new AggregateException("Failed to parse replay with path: " + path, e);
             }
 
-            await checkForUsernamesAndGetIfMissing(data.ReplayInfo, false);
+            try
+            {
+                await checkForUsernamesAndGetIfMissing(data.ReplayInfo, false);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Failed to download usernames.");
+            }
 
             addReplay(data);
 
@@ -416,7 +437,14 @@ namespace AWBWApp.Game.IO
                 stream.Dispose();
             }
 
-            await checkForUsernamesAndGetIfMissing(data.ReplayInfo, false);
+            try
+            {
+                await checkForUsernamesAndGetIfMissing(data.ReplayInfo, false);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Failed to download usernames.");
+            }
 
             addReplay(data);
 
