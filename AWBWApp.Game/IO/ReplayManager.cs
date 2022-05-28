@@ -110,7 +110,7 @@ namespace AWBWApp.Game.IO
                 {
                     try
                     {
-                        var replay = await ParseAndStoreReplay(replayPath);
+                        var replay = await ParseAndStoreReplay(underlyingStorage.GetFullPath(replayPath));
                         addReplay(replay);
                     }
                     catch (Exception e)
@@ -365,9 +365,14 @@ namespace AWBWApp.Game.IO
                         var zipArchive = new ZipArchive(readFileStream, ZipArchiveMode.Read);
                         data = jsonParser.ParseReplayZip(zipArchive);
 
-                        readFileStream.Seek(0, SeekOrigin.Begin);
-                        using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.zip", FileAccess.Write, FileMode.Create))
-                            readFileStream.CopyTo(writeStream);
+                        var movePath = underlyingStorage.GetFullPath($"{data.ReplayInfo.ID}.zip");
+
+                        if (movePath != path)
+                        {
+                            readFileStream.Seek(0, SeekOrigin.Begin);
+                            using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.zip", FileAccess.Write, FileMode.Create))
+                                readFileStream.CopyTo(writeStream);
+                        }
                     }
                 }
                 else if (extension == ".awbw")
@@ -376,11 +381,16 @@ namespace AWBWApp.Game.IO
                     using (var readFileStream = new FileStream(path, FileMode.Open))
                         data = xmlParser.ParseReplayFile(readFileStream);
 
-                    using (var readFileStream = new FileStream(path, FileMode.Open))
+                    var movePath = underlyingStorage.GetFullPath($"{data.ReplayInfo.ID}.awbw");
+
+                    if (movePath != path)
                     {
-                        readFileStream.Seek(0, SeekOrigin.Begin);
-                        using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.awbw", FileAccess.Write, FileMode.Create))
-                            readFileStream.CopyTo(writeStream);
+                        using (var readFileStream = new FileStream(path, FileMode.Open))
+                        {
+                            readFileStream.Seek(0, SeekOrigin.Begin);
+                            using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.awbw", FileAccess.Write, FileMode.Create))
+                                readFileStream.CopyTo(writeStream);
+                        }
                     }
                 }
                 else
@@ -389,11 +399,16 @@ namespace AWBWApp.Game.IO
                     using (var readFileStream = new FileStream(path, FileMode.Open))
                         data = jsonParser.ParseReplayFile(readFileStream);
 
-                    using (var readFileStream = new FileStream(path, FileMode.Open))
+                    var movePath = underlyingStorage.GetFullPath($"{data.ReplayInfo.ID}");
+
+                    if (movePath != path)
                     {
-                        readFileStream.Seek(0, SeekOrigin.Begin);
-                        using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}", FileAccess.Write, FileMode.Create))
-                            readFileStream.CopyTo(writeStream);
+                        using (var readFileStream = new FileStream(path, FileMode.Open))
+                        {
+                            readFileStream.Seek(0, SeekOrigin.Begin);
+                            using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}", FileAccess.Write, FileMode.Create))
+                                readFileStream.CopyTo(writeStream);
+                        }
                     }
                 }
             }
