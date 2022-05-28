@@ -63,6 +63,7 @@ namespace AWBWApp.Game.UI.Interrupts
                         Origin = Anchor.TopCentre,
                         TextAnchor = Anchor.TopCentre,
                         RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
                         Width = 0.95f,
                         Colour = Color4.Red
                     },

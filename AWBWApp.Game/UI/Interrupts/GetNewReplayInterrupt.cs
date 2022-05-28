@@ -61,6 +61,7 @@ namespace AWBWApp.Game.UI.Interrupts
                         Origin = Anchor.TopCentre,
                         TextAnchor = Anchor.TopCentre,
                         RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
                         Width = 0.95f,
                         Colour = Color4.Red
                     },
@@ -192,7 +193,7 @@ namespace AWBWApp.Game.UI.Interrupts
                         await webRequest.PerformAsync().ConfigureAwait(false);
 
                         if (webRequest.ResponseStream.Length <= 100)
-                            throw new Exception($"Unable to find the replay of game '{gameID}'. Is the session cookie correct?");
+                            throw new Exception($"Unable to find the replay of game '{gameID}'. Does the replay still exist on AWBW?");
 
                         var replayData = await replayStorage.ParseThenStoreReplayStream(gameID, webRequest.ResponseStream);
 
@@ -213,7 +214,7 @@ namespace AWBWApp.Game.UI.Interrupts
             }
             catch (Exception e)
             {
-                failed("Unknown error has occured while logging in.");
+                failed("Unknown error has occured while attempting to download the file.");
                 Logger.Error(e, e.Message);
                 return;
             }
