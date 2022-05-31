@@ -2,12 +2,18 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 using AWBWApp.Game.Tests.AWBWApp.Game.Tests;
+using osu.Framework.Allocation;
+using osu.Framework.Platform;
 using osu.Framework.Testing;
 
 namespace AWBWApp.Game.Tests.Visual
 {
     public class AWBWAppTestScene : TestScene
     {
+        protected Storage LocalStorage => localStorage.Value;
+
+        private Lazy<Storage> localStorage;
+
         protected override ITestSceneTestRunner CreateRunner() => new AWBWAppTestSceneTestRunner();
 
         private class AWBWAppTestSceneTestRunner : AWBWAppTestBase, ITestSceneTestRunner
@@ -21,6 +27,38 @@ namespace AWBWApp.Game.Tests.Visual
             }
 
             public void RunTestBlocking(TestScene test) => runner.RunTestBlocking(test);
+        }
+
+        public void RecycleLocalStorage()
+        {
+            if (localStorage?.IsValueCreated == true)
+            {
+                try
+                {
+                    localStorage.Value.DeleteDirectory(".");
+                }
+                catch
+                {
+                    //Don't exactly care about leaving folders behind. So silence this.
+                }
+            }
+
+            localStorage = new Lazy<Storage>(() => new TemporaryNativeStorage($"{GetType().Name}-{Guid.NewGuid()}"));
+        }
+
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        {
+            var dependencies = base.CreateChildDependencies(parent);
+            RecycleLocalStorage();
+
+            return dependencies;
+        }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            base.Dispose(isDisposing);
+
+            RecycleLocalStorage();
         }
 
         protected void AddTextStep(string description, string start, Action<string> valueChanged, int? maxCharacters = null) =>
