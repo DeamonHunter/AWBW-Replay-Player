@@ -260,6 +260,11 @@ namespace AWBWApp.Game.Game.Logic
                 var playerID = getPlayerIDFromCountryID(building.CountryID);
                 var country = playerID.HasValue ? replayController.Players[playerID.Value].Country : null;
                 var drawableBuilding = new DrawableBuilding(building, position, playerID, country);
+
+                //For testing purposes. Likely not used in any game.
+                if (awbwBuilding.Value.Capture.HasValue && awbwBuilding.Value.Capture != 0)
+                    drawableBuilding.CaptureHealth.Value = awbwBuilding.Value.Capture.Value;
+
                 buildingGrid.AddTile(drawableBuilding, position);
             }
 
@@ -268,7 +273,13 @@ namespace AWBWApp.Game.Game.Logic
             if (replayUnits != null)
             {
                 foreach (var unit in replayUnits)
-                    AddUnit(unit.Value, false);
+                {
+                    var drawableUnit = AddUnit(unit.Value, false);
+
+                    //For testing purposes. Likely not used in any game.
+                    if (!drawableUnit.BeingCarried.Value && TryGetDrawableBuilding(drawableUnit.MapPosition, out var awbwBuilding))
+                        drawableUnit.IsCapturing.Value = awbwBuilding.CaptureHealth.Value != 20 && awbwBuilding.CaptureHealth.Value != 0;
+                }
             }
 
             fogOfWarGenerator = new FogOfWarGenerator(this);

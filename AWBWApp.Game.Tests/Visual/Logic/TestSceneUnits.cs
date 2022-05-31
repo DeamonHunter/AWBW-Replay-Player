@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
 using NUnit.Framework;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Tests.Visual.Logic
@@ -11,6 +12,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         private List<int> unitIds;
 
         private ReplayData baseData;
+
+        private AWBWConfigManager config;
 
         [Test]
         public void TestDisplayAllUnits()
@@ -78,41 +81,92 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         [TestCase("Tank")]
         public void TestShowAllStatus(string unit)
         {
-            AddStep("Show All Statuses - Infantry", () =>
+            AddStep("Setup", () =>
             {
                 var data = CreateBasicReplayData(2);
+                data.ReplayInfo.Fog = true;
+                config.SetValue(AWBWSetting.ReplayShowHiddenUnits, true);
+
                 var turn = CreateBasicTurnData(data);
                 data.TurnData.Add(turn);
 
+                var turn2 = CreateBasicTurnData(data, 1);
+                data.TurnData.Add(turn2);
+
                 for (int i = 0; i < 10; i++)
                 {
-                    var healthOnly = CreateBasicReplayUnit(i * 4, 0, unit, new Vector2I(i, 0));
+                    var healthOnly = CreateBasicReplayUnit(i * 6, 0, unit, new Vector2I(i, 0));
                     healthOnly.HitPoints = i + 1;
                     healthOnly.Ammo = 99;
                     healthOnly.Fuel = 99;
                     turn.ReplayUnit.Add(healthOnly.ID, healthOnly);
+                    turn2.ReplayUnit.Add(healthOnly.ID, healthOnly);
 
-                    var healthAndAmmo = CreateBasicReplayUnit(i * 4 + 1, 0, unit, new Vector2I(i, 1));
+                    var healthAndAmmo = CreateBasicReplayUnit(i * 6 + 1, 0, unit, new Vector2I(i, 1));
                     healthAndAmmo.HitPoints = i + 1;
                     healthAndAmmo.Ammo = 0;
                     healthAndAmmo.Fuel = 99;
                     turn.ReplayUnit.Add(healthAndAmmo.ID, healthAndAmmo);
+                    turn2.ReplayUnit.Add(healthAndAmmo.ID, healthAndAmmo);
 
-                    var healthAndFuel = CreateBasicReplayUnit(i * 4 + 2, 0, unit, new Vector2I(i, 2));
+                    var healthAndFuel = CreateBasicReplayUnit(i * 6 + 2, 0, unit, new Vector2I(i, 2));
                     healthAndFuel.HitPoints = i + 1;
                     healthAndFuel.Ammo = 99;
                     healthAndFuel.Fuel = 0;
                     turn.ReplayUnit.Add(healthAndFuel.ID, healthAndFuel);
+                    turn2.ReplayUnit.Add(healthAndFuel.ID, healthAndFuel);
 
-                    var all = CreateBasicReplayUnit(i * 4 + 3, 0, unit, new Vector2I(i, 3));
+                    var healthAndLoaded = CreateBasicReplayUnit(i * 6 + 3, 0, unit, new Vector2I(i, 3));
+                    healthAndLoaded.HitPoints = i + 1;
+                    healthAndLoaded.Ammo = 99;
+                    healthAndLoaded.Fuel = 99;
+                    healthAndLoaded.CargoUnits = new List<long>();
+                    healthAndLoaded.CargoUnits.Add(0);
+                    turn.ReplayUnit.Add(healthAndLoaded.ID, healthAndLoaded);
+                    turn2.ReplayUnit.Add(healthAndLoaded.ID, healthAndLoaded);
+
+                    var healthAndCapturing = CreateBasicReplayUnit(i * 6 + 4, 0, unit, new Vector2I(i, 4));
+                    healthAndCapturing.HitPoints = i + 1;
+                    healthAndCapturing.Ammo = 99;
+                    healthAndCapturing.Fuel = 99;
+                    turn.ReplayUnit.Add(healthAndCapturing.ID, healthAndCapturing);
+                    turn2.ReplayUnit.Add(healthAndCapturing.ID, healthAndCapturing);
+
+                    var building = CreateBasicReplayBuilding(i * 2, new Vector2I(i, 4), 34);
+                    building.Capture = 10;
+                    building.LastCapture = 20;
+                    turn.Buildings.Add(building.Position, building);
+                    turn2.Buildings.Add(building.Position, building);
+
+                    var all = CreateBasicReplayUnit(i * 6 + 5, 0, unit, new Vector2I(i, 5));
                     all.HitPoints = i + 1;
                     all.Ammo = 0;
                     all.Fuel = 0;
+                    all.CargoUnits = new List<long>();
+                    all.CargoUnits.Add(0);
+                    all.TimesCaptured = 1;
                     turn.ReplayUnit.Add(all.ID, all);
+                    turn2.ReplayUnit.Add(all.ID, all);
+
+                    building = CreateBasicReplayBuilding(i * 2 + 1, new Vector2I(i, 5), 34);
+                    building.Capture = 10;
+                    building.LastCapture = 20;
+                    turn.Buildings.Add(building.Position, building);
+                    turn2.Buildings.Add(building.Position, building);
                 }
 
-                ReplayController.LoadReplay(data, CreateBasicMap(10, 4));
+                ReplayController.LoadReplay(data, CreateBasicMap(10, 6));
             });
+
+            AddStep("Go to Opponent Turn", () => ReplayController.GoToNextTurn());
+            AddStep("Toggle Fog Visibility", () => config.SetValue(AWBWSetting.ReplayShowHiddenUnits, !config.Get<bool>(AWBWSetting.ReplayShowHiddenUnits)));
+        }
+
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        {
+            var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+            dependencies.Cache(config = new AWBWConfigManager(LocalStorage));
+            return dependencies;
         }
     }
 }

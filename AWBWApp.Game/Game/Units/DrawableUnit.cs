@@ -348,7 +348,8 @@ namespace AWBWApp.Game.Game.Units
             textureAnimation.FadeTo(alpha, 250, Easing.OutQuint);
 
             updateStatIndicators(alpha > 0);
-            statsAnimation.FadeTo(alpha, 250, Easing.OutQuint);
+            statsAnimation.FadeTo(alpha > 0 ? 1 : 0, 250, Easing.OutQuint);
+            healthSpriteText.FadeTo(alpha > 0 ? 1 : 0, 250, Easing.OutQuint);
         }
 
         private class UnitTextureAnimation : Animation<Texture>
