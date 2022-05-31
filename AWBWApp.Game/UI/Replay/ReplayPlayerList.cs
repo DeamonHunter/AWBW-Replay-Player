@@ -67,11 +67,13 @@ namespace AWBWApp.Game.UI.Replay
                 {
                     Anchor = Anchor.BottomCentre,
                     Origin = Anchor.BottomCentre,
-                    RelativeSizeAxes = Axes.X
+                    RelativeSizeAxes = Axes.X,
+                    Prefix = "Fog: "
                 }
             };
 
             fogDropdown.Current.BindTo(controller.CurrentFogView);
+            fogDropdown.Hide();
         }
 
         [BackgroundDependencyLoader]
