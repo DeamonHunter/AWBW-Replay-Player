@@ -107,7 +107,7 @@ namespace AWBWApp.Game.Game.Units
             AttackRange.Value = unitData.AttackRange;
 
             HealthPoints.BindValueChanged(updateHp);
-            BeingCarried.BindValueChanged(_ => updateCarried());
+            BeingCarried.BindValueChanged(x => updateUnitColour(x.NewValue));
             unitFaceDirection?.BindValueChanged(x => updateFaceDirection(x.NewValue), true);
 
             UpdateUnit(unit);
@@ -169,7 +169,6 @@ namespace AWBWApp.Game.Game.Units
             Ammo.BindValueChanged(_ => updateStatIndicators(false), true);
 
             updateUnitColour(true);
-            updateCarried();
 
             statsAnimation.FinishTransforms();
         }
@@ -279,6 +278,9 @@ namespace AWBWApp.Game.Game.Units
 
         private void updateStatIndicators(bool unitRevealed)
         {
+            if (unitHidden())
+                return;
+
             var lowFuel = (float)Fuel.Value / UnitData.MaxFuel <= 0.25f;
             var lowAmmo = UnitData.MaxAmmo > 0 && (float)Ammo.Value / UnitData.MaxAmmo <= 0.25f;
             var hasCargo = Cargo.Count > 0;
@@ -316,14 +318,6 @@ namespace AWBWApp.Game.Game.Units
             statsAnimation.Play();
         }
 
-        private void updateCarried()
-        {
-            if (BeingCarried.Value)
-                textureAnimation.Hide();
-            else
-                textureAnimation.Show();
-        }
-
         private void updateUnitColour(bool newValue)
         {
             Color4 colour;
@@ -340,7 +334,7 @@ namespace AWBWApp.Game.Game.Units
             textureAnimation.TransformTo("GreyscaleAmount", CanMove.Value ? 0f : 0.5f, 250, newValue ? Easing.OutQuint : Easing.InQuint);
 
             float alpha = 1;
-            if (BeingCarried.Value || (FogOfWarActive.Value && !(showUnitInFog?.Value ?? true)))
+            if (unitHidden())
                 alpha = 0f;
             else if (Dived.Value)
                 alpha = 0.7f;
@@ -351,6 +345,8 @@ namespace AWBWApp.Game.Game.Units
             statsAnimation.FadeTo(alpha > 0 ? 1 : 0, 250, Easing.OutQuint);
             healthSpriteText.FadeTo(alpha > 0 ? 1 : 0, 250, Easing.OutQuint);
         }
+
+        private bool unitHidden() => BeingCarried.Value || (FogOfWarActive.Value && !(showUnitInFog?.Value ?? true));
 
         private class UnitTextureAnimation : Animation<Texture>
         {
