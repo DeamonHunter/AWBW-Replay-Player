@@ -64,7 +64,7 @@ namespace AWBWApp.Game.IO
         public IEnumerable<ReplayInfo> GetAllKnownReplays()
         {
             var replays = _knownReplays.Values.ToList();
-            replays.Sort((x, y) => x.EndDate.CompareTo(y.EndDate));
+            replays.Sort((x, y) => y.EndDate.CompareTo(x.EndDate));
             return replays;
         }
 
