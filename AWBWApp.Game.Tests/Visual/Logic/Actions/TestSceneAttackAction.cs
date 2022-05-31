@@ -346,6 +346,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         {
             var replayData = CreateBasicReplayData(2);
             var firstTurn = CreateBasicTurnData(replayData);
+            firstTurn.Players[0].ActiveCOID = 18;
             firstTurn.Players[0].RequiredPowerForNormal = 270000;
             firstTurn.Players[0].RequiredPowerForSuper = 450000;
             replayData.TurnData.Add(firstTurn);
@@ -361,7 +362,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 
             firstTurn.Actions.Add(powerAction);
 
-            var turn = CreateBasicTurnData(replayData);
+            var turn = CreateBasicTurnData(replayData, 1);
+            turn.Players[0].ActiveCOID = 18;
             turn.Players[0].RequiredPowerForNormal = 324000;
             turn.Players[0].RequiredPowerForSuper = 540000;
             replayData.TurnData.Add(turn);

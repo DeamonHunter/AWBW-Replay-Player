@@ -39,7 +39,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             return replayData;
         }
 
-        protected TurnData CreateBasicTurnData(ReplayData data)
+        protected TurnData CreateBasicTurnData(ReplayData data, int playerIdx = 0)
         {
             var players = new Dictionary<long, ReplayUserTurn>();
 
@@ -58,7 +58,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             var playersInOrder = data.ReplayInfo.Players.Values.ToList();
             playersInOrder.Sort((x, y) => x.RoundOrder.CompareTo(y.RoundOrder));
 
-            var activeId = playersInOrder[0];
+            var activeId = playersInOrder[playerIdx];
 
             return new TurnData
             {
