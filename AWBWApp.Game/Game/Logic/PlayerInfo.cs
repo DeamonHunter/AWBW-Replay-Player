@@ -9,6 +9,7 @@ namespace AWBWApp.Game.Game.Logic
     {
         public long ID { get; }
         public string Username { get; }
+        public long UserID { get; }
         public int RoundOrder { get; }
         public string Team { get; }
         public int? EliminatedOn { get; }
@@ -32,6 +33,8 @@ namespace AWBWApp.Game.Game.Logic
         {
             ID = player.ID;
             Username = player.Username;
+            UserID = player.UserId;
+
             Team = player.TeamName;
             RoundOrder = player.RoundOrder;
 

@@ -37,7 +37,7 @@ namespace AWBWApp.Game.UI.Select
             {
                 playersDrawables.Add(new SpriteText
                 {
-                    Text = player.Value.Username ?? "[Unknown Username: " + player.Value.UserId + "]",
+                    Text = player.Value.Username ?? "[Unknown Username:" + player.Value.UserId + "]",
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
                     Colour = Color4Extensions.FromHex(countryStorage.GetCountryByAWBWID(player.Value.CountryID).Colours["replayList"]).Lighten(0.5f), //Todo: Fix config
