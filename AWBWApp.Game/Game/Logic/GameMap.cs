@@ -408,6 +408,7 @@ namespace AWBWApp.Game.Game.Logic
 
                     var player = replayController.Players[unit.Value.PlayerID!.Value];
                     var drawableUnit = new DrawableUnit(unitData, unit.Value, player.Country, player.UnitFaceDirection);
+                    drawableUnit.FogOfWarActive.Value = IsTileFoggy(drawableUnit.MapPosition);
                     units.Add(unit.Value.ID, drawableUnit);
                     unitsDrawable.Add(drawableUnit);
                 }

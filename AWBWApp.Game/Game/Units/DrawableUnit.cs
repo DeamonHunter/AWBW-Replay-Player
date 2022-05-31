@@ -170,6 +170,7 @@ namespace AWBWApp.Game.Game.Units
 
             updateUnitColour(true);
 
+            textureAnimation.FinishTransforms();
             statsAnimation.FinishTransforms();
         }
 
