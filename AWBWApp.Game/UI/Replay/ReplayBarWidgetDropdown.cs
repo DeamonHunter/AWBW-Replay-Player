@@ -7,6 +7,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
+using osu.Framework.Layout;
 using osu.Framework.Localisation;
 using osuTK;
 using osuTK.Graphics;
@@ -18,6 +19,8 @@ namespace AWBWApp.Game.UI.Replay
     /// </summary>
     public class ReplayBarWidgetDropdown : HeaderDetachedDropdown<Turn>
     {
+        public float OffsetHeight { set => ((ReplayBarDropdownMenu)Menu).OffsetHeight = value; }
+
         protected override DropdownHeader CreateDetachedHeader() => Header = new ReplayBarDownHeader();
 
         public override DropdownHeader GetDetachedHeader()
@@ -36,12 +39,12 @@ namespace AWBWApp.Game.UI.Replay
             {
                 Anchor = Anchor.BottomCentre,
                 Origin = Anchor.BottomCentre,
-                MaxHeight = 312
+                MaxHeight = 312,
             };
 
         protected override LocalisableString GenerateItemText(Turn item)
         {
-            return $"{item.Day} - {item.Player}";
+            return $"{item.Day} - {item.Player ?? $"[Unknown Username:{item.PlayerID}]"}";
         }
 
         public class ReplayBarDownHeader : DropdownHeader
@@ -113,11 +116,56 @@ namespace AWBWApp.Game.UI.Replay
 
         private class ReplayBarDropdownMenu : DropdownMenu
         {
+            public float OffsetHeight { get; set; }
+
+            private readonly LayoutValue positionLayout = new LayoutValue(Invalidation.DrawInfo | Invalidation.RequiredParentSizeToFit);
+
             protected override Menu CreateSubMenu() => new AWBWSubMenu(this, null);
 
             protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) => new BasicScrollContainer(direction);
 
             protected override DrawableDropdownMenuItem CreateDrawableDropdownMenuItem(MenuItem item) => new ReplayBarDropdownMenuItem(item);
+
+            public ReplayBarDropdownMenu()
+            {
+                AddLayout(positionLayout);
+            }
+
+            protected override void Update()
+            {
+                base.Update();
+
+                if (positionLayout.IsValid || State != MenuState.Open)
+                    return;
+
+                correctAnchor();
+            }
+
+            private void correctAnchor()
+            {
+                var inputManager = GetContainingInputManager();
+
+                Vector2 menuBottomRight;
+                if ((Origin & Anchor.y2) != 0)
+                    menuBottomRight = ToSpaceOfOtherDrawable(new Vector2(DrawWidth, MaxHeight * Scale.Y + DrawSize.Y + OffsetHeight), inputManager);
+                else
+                    menuBottomRight = ToSpaceOfOtherDrawable(new Vector2(DrawWidth, MaxHeight * Scale.Y), inputManager);
+
+                if (menuBottomRight.Y > inputManager.DrawSize.Y)
+                {
+                    Origin = switchAxisAnchors(Origin, Anchor.y0, Anchor.y2);
+                    Parent.Parent.Y = 0;
+                }
+                else
+                {
+                    Origin = switchAxisAnchors(Origin, Anchor.y2, Anchor.y0);
+                    Parent.Parent.Y = OffsetHeight;
+                }
+
+                positionLayout.Validate();
+
+                static Anchor switchAxisAnchors(Anchor originalValue, Anchor toDisable, Anchor toEnable) => (originalValue & ~toDisable) | toEnable;
+            }
 
             protected override void UpdateSize(Vector2 newSize)
             {
@@ -145,6 +193,7 @@ namespace AWBWApp.Game.UI.Replay
 
             protected override void AnimateOpen()
             {
+                correctAnchor();
                 this.FadeIn(300, Easing.OutQuint);
             }
 
@@ -206,5 +255,6 @@ namespace AWBWApp.Game.UI.Replay
         public int TurnIndex;
         public int Day;
         public string Player;
+        public long PlayerID;
     }
 }

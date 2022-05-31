@@ -57,7 +57,8 @@ namespace AWBWApp.Game.UI.Replay
             {
                 Anchor = Anchor.TopCentre,
                 Origin = Anchor.BottomCentre,
-                Width = 300
+                Width = 300,
+                OffsetHeight = Height - Padding.Bottom
             };
 
             var dropDownHeader = dropdown.GetDetachedHeader();
