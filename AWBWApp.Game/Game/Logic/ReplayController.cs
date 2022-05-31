@@ -20,6 +20,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Development;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Logging;
 using osuTK;
@@ -76,6 +77,8 @@ namespace AWBWApp.Game.Game.Logic
         public Dictionary<long, PlayerInfo> Players { get; private set; } = new Dictionary<long, PlayerInfo>();
         public PlayerInfo ActivePlayer => currentTurn != null ? Players[currentTurn.ActivePlayerID] : null;
 
+        public Bindable<object> CurrentFogView = new Bindable<object> { Default = "" };
+
         private readonly Queue<IEnumerator<ReplayWait>> currentOngoingActions = new Queue<IEnumerator<ReplayWait>>();
 
         private Dictionary<int, EndTurnDesync> endTurnDesyncs;
@@ -127,7 +130,7 @@ namespace AWBWApp.Game.Game.Logic
                             RelativeSizeAxes = Axes.Both
                         },
                         infoPopup = new DetailedInformationPopup(),
-                        playerList = new ReplayPlayerList
+                        playerList = new ReplayPlayerList(this)
                         {
                             Anchor = Anchor.TopRight,
                             Origin = Anchor.TopRight,
@@ -188,6 +191,7 @@ namespace AWBWApp.Game.Game.Logic
             skipEndTurnBindable = configManager.GetBindable<bool>(AWBWSetting.ReplaySkipEndTurn);
             shortenActionTooltipsBindable = configManager.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips);
             showMovementArrowsBindable = configManager.GetBindable<bool>(AWBWSetting.ReplayShowMovementArrows);
+            CurrentFogView.BindValueChanged(_ => UpdateFogOfWar());
         }
 
         protected override void Update()
@@ -724,8 +728,9 @@ namespace AWBWApp.Game.Game.Logic
             }
 
             if (reset)
-                playerList.CreateNewListForPlayers(Players, this, replayData.ReplayInfo.ReplayVersion <= 0);
+                playerList.CreateNewListForPlayers(Players, this, replayData.ReplayInfo.ReplayVersion <= 0, replayData.ReplayInfo.TeamMatch);
             playerList.SortList(currentTurn.ActivePlayerID, turnIdx);
+            playerList.SetGameHasFog(replayData.ReplayInfo.Fog);
         }
 
         public void UpdateFogOfWar()
@@ -737,9 +742,23 @@ namespace AWBWApp.Game.Game.Logic
                 return;
             }
 
-            calculateFogForPlayer(currentTurn.ActivePlayerID, true);
+            var fogView = CurrentFogView.Value;
 
-            if (!currentTurn.ActiveTeam.IsNullOrEmpty())
+            if (fogView is long fogPlayer)
+            {
+                calculateFogForPlayer(fogPlayer, true);
+                return;
+            }
+
+            var team = CurrentFogView.Value as string;
+
+            if (team == "" || ActivePlayer.Team == team)
+            {
+                calculateFogForPlayer(currentTurn.ActivePlayerID, true);
+                team = currentTurn.ActiveTeam;
+            }
+
+            if (!team.IsNullOrEmpty())
             {
                 foreach (var player in replayData.ReplayInfo.Players)
                 {
@@ -766,6 +785,33 @@ namespace AWBWApp.Game.Game.Logic
         public void AddGenericActionAnimation(Drawable animatingDrawable) => powerLayer.Add(animatingDrawable);
 
         public bool SkipEndTurnPopup() => skipEndTurnBindable.Value;
+
+        public bool ShouldPlayerActionBeHidden(Vector2I position)
+        {
+            if (Map.ShowUnitsInFog.Value)
+                return false;
+
+            if (IsFogOnActivePlayer())
+                return false;
+
+            return Map.IsTileFoggy(position);
+        }
+
+        public bool IsFogOnActivePlayer()
+        {
+            var activeFog = CurrentFogView.Value;
+
+            if (activeFog is string team)
+            {
+                //Dropdown value cannot be null, so we used this instead.
+                if (team == "")
+                    return true;
+
+                return ActivePlayer.Team == team;
+            }
+
+            return ActivePlayer.ID == (long)activeFog;
+        }
 
         public void RegisterPower(PowerAction power, ReplaySetupContext context)
         {

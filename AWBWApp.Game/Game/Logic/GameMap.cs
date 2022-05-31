@@ -66,6 +66,9 @@ namespace AWBWApp.Game.Game.Logic
         private bool animatingMapStart;
 
         private Bindable<bool> showUnitsInFog;
+
+        public IBindable<bool> ShowUnitsInFog => showUnitsInFog;
+
         private Bindable<bool> showGridlines;
 
         private DetailedInformationPopup infoPopup;
@@ -437,6 +440,14 @@ namespace AWBWApp.Game.Game.Logic
         public void ClearFog(bool makeFoggy, bool triggerChange) => fogOfWarGenerator.ClearFog(makeFoggy, triggerChange);
         public void UpdateFogOfWar(long playerId, int rangeIncrease, bool canSeeIntoHiddenTiles, bool resetFog = true) => fogOfWarGenerator.GenerateFogForPlayer(playerId, rangeIncrease, canSeeIntoHiddenTiles, resetFog);
 
+        public bool IsTileFoggy(Vector2I position)
+        {
+            if (fogOfWarGenerator.FogOfWar.Value == null)
+                return false;
+
+            return !fogOfWarGenerator.FogOfWar.Value[position.X, position.Y];
+        }
+
         public DrawableUnit AddUnit(ReplayUnit unit, bool schedule = true)
         {
             var unitData = unitStorage.GetUnitByCode(unit.UnitName);
@@ -464,7 +475,7 @@ namespace AWBWApp.Game.Game.Logic
             if (!units.Remove(unitId, out DrawableUnit unit))
                 return null;
 
-            if (explode)
+            if (explode && !replayController.ShouldPlayerActionBeHidden(unit.MapPosition))
                 playExplosion(unit.UnitData.MovementType, unit.MapPosition);
 
             unitsDrawable.Remove(unit);
@@ -599,6 +610,7 @@ namespace AWBWApp.Game.Game.Logic
                     var playerID = getPlayerIDFromCountryID(buildingTile.CountryID);
                     var country = playerID.HasValue ? replayController.Players[playerID.Value].Country : null;
                     var drawableBuilding = new DrawableBuilding(buildingTile, tilePosition, playerID, country);
+                    drawableBuilding.FogOfWarActive.Value = IsTileFoggy(awbwBuilding.Position);
                     buildingGrid.AddTile(drawableBuilding, tilePosition);
                     return;
                 }
@@ -622,6 +634,7 @@ namespace AWBWApp.Game.Game.Logic
                         var playerID = getPlayerIDFromCountryID(buildingTile.CountryID);
                         var country = playerID.HasValue ? replayController.Players[playerID.Value].Country : null;
                         building = new DrawableBuilding(buildingTile, tilePosition, playerID, country);
+                        building.FogOfWarActive.Value = IsTileFoggy(awbwBuilding.Position);
                         buildingGrid.AddTile(building, tilePosition);
                     }
                     else if (terrainTileStorage.TryGetTileByAWBWId(awbwBuilding.TerrainID.Value, out var terrainTile))
@@ -632,12 +645,10 @@ namespace AWBWApp.Game.Game.Logic
 
                         if (tile.TerrainTile != terrainTile)
                         {
-                            //Todo: Likely messes with drawing order. May need to see if this can be fixed up if it causes some issues
                             var newTile = new DrawableTile(terrainTile);
 
                             tileGrid.AddTile(newTile, tilePosition);
-                            //newTile.Position = GetDrawablePositionForBottomOfTile(tilePosition);
-                            newTile.FogOfWarActive.Value = tile.FogOfWarActive.Value;
+                            newTile.FogOfWarActive.Value = IsTileFoggy(tilePosition);
                         }
                     }
                 }

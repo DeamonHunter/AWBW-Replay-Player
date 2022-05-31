@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.Game.Logic;
+using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Components.Menu;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -27,8 +28,9 @@ namespace AWBWApp.Game.UI.Replay
         private Bindable<bool> playerListLeftSide;
 
         private MenuItem[] contextMenuItems;
+        private TeamOrPlayerDropdown fogDropdown;
 
-        public ReplayPlayerList()
+        public ReplayPlayerList(ReplayController controller)
         {
             Masking = true;
             EdgeEffect = new EdgeEffectParameters
@@ -60,8 +62,16 @@ namespace AWBWApp.Game.UI.Replay
                         LayoutDuration = 450,
                         LayoutEasing = Easing.OutQuint
                     }
+                },
+                fogDropdown = new TeamOrPlayerDropdown()
+                {
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.BottomCentre,
+                    RelativeSizeAxes = Axes.X
                 }
             };
+
+            fogDropdown.Current.BindTo(controller.CurrentFogView);
         }
 
         [BackgroundDependencyLoader]
@@ -91,7 +101,15 @@ namespace AWBWApp.Game.UI.Replay
             };
         }
 
-        public void CreateNewListForPlayers(Dictionary<long, PlayerInfo> players, ReplayController controller, bool usePercentagePowers)
+        public void SetGameHasFog(bool hasFog)
+        {
+            if (hasFog)
+                fogDropdown.Show();
+            else
+                fogDropdown.Hide();
+        }
+
+        public void CreateNewListForPlayers(Dictionary<long, PlayerInfo> players, ReplayController controller, bool usePercentagePowers, bool teamGame)
         {
             Schedule(() =>
             {
@@ -107,6 +125,8 @@ namespace AWBWApp.Game.UI.Replay
                     drawablePlayers.Add(drawable);
                     fillContainer.Add(drawable);
                 }
+
+                fogDropdown.SetDropdownItems(players, teamGame);
 
                 SortList(drawablePlayers[0].PlayerID, 0);
                 fillContainer.FinishTransforms(true);
