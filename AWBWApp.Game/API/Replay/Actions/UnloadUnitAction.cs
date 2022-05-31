@@ -91,7 +91,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             unloadingUnit.BeingCarried.Value = false;
             transportUnit.Cargo.Remove(unloadingUnit.UnitID);
 
-            unloadingUnit.FollowPath(new List<UnitPosition>
+            unloadingUnit.FollowPath(controller, new List<UnitPosition>
             {
                 new UnitPosition(transportUnit.MapPosition),
                 new UnitPosition(UnloadedUnit.Position!.Value)

@@ -115,6 +115,9 @@ namespace AWBWApp.Game.API.Replay.Actions
             controller.ActivePlayer.UnitValue.Value += repairValue;
             controller.Stats.CurrentTurnStatsReadout[controller.ActivePlayer.ID].MoneySpentOnRepairingUnits += repairCost;
 
+            if (controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+                yield break;
+
             controller.Map.PlayEffect("Effects/Supplied", 600, unit.MapPosition, 0,
                 x => x.ScaleTo(new Vector2(0, 1))
                       .ScaleTo(1, 250, Easing.OutQuint)

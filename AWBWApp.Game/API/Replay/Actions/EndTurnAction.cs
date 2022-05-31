@@ -227,6 +227,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                     unit.Ammo.Value = unit.UnitData.MaxAmmo;
                     unit.Fuel.Value = unit.UnitData.MaxFuel;
 
+                    if (controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+                        continue;
+
                     controller.Map.PlayEffect("Effects/Supplied", 600, unit.MapPosition, 0,
                         x => x.ScaleTo(new Vector2(0, 1))
                               .ScaleTo(1, 250, Easing.OutQuint)
@@ -247,6 +250,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                     unit.Ammo.Value = unit.UnitData.MaxAmmo;
                     unit.Fuel.Value = unit.UnitData.MaxFuel;
 
+                    if (controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+                        continue;
+
                     controller.Map.PlayEffect("Effects/Supplied", 600, unit.MapPosition, 0,
                         x => x.ScaleTo(new Vector2(0, 1))
                               .ScaleTo(1, 250, Easing.OutQuint)
@@ -257,10 +263,9 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             foreach (var destroyedUnit in unitsToDestroy)
-                controller.Map.DeleteUnit(destroyedUnit.Key, false);
+                controller.Map.DeleteUnit(destroyedUnit.Key, true);
 
-            //Todo: Ignore Funds after turn start and next weather? These are already handled by GoToNextTurn()
-            //Maybe have a weather changing animation?
+            //Todo: Maybe have a weather changing animation?
             controller.GoToNextTurn(false);
         }
 

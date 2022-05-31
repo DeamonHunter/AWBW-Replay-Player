@@ -138,14 +138,21 @@ namespace AWBWApp.Game.API.Replay.Actions
                     yield return transformable;
             }
 
+            var actionHidden = controller.ShouldPlayerActionBeHidden(Building.Position);
+
             if (controller.Map.TryGetDrawableUnit(Building.Position, out var capturingUnit))
             {
-                capturingUnit.FadeTo(0.5f, 250, Easing.OutCubic);
-                var anim = controller.Map.PlaySelectionAnimation(capturingUnit);
+                if (!actionHidden)
+                    capturingUnit.FadeTo(0.5f, 250, Easing.OutCubic);
 
-                yield return ReplayWait.WaitForTransformable(anim);
+                if (MoveUnit == null || !actionHidden)
+                {
+                    var anim = controller.Map.PlaySelectionAnimation(capturingUnit);
+                    yield return ReplayWait.WaitForTransformable(anim);
+                }
 
-                capturingUnit.CanMove.Value = false;
+                if (!actionHidden)
+                    capturingUnit.CanMove.Value = false;
             }
 
             if (controller.Map.TryGetDrawableBuilding(Building.Position, out var capturingBuilding))
@@ -156,9 +163,11 @@ namespace AWBWApp.Game.API.Replay.Actions
                     yield return ReplayWait.WaitForTransformable(anim);
                 }
 
-                capturingBuilding.MoveToOffset(new Vector2(3, 0), 30).Then().MoveToOffset(new Vector2(-6, 0), 60).Then().MoveToOffset(new Vector2(3, 0), 30);
-
-                yield return ReplayWait.WaitForTransformable(capturingBuilding);
+                if (!actionHidden)
+                {
+                    capturingBuilding.MoveToOffset(new Vector2(3, 0), 30).Then().MoveToOffset(new Vector2(-6, 0), 60).Then().MoveToOffset(new Vector2(3, 0), 30);
+                    yield return ReplayWait.WaitForTransformable(capturingBuilding);
+                }
             }
 
             controller.Map.UpdateBuilding(Building, false); //This will set the unit above to be capturing
@@ -184,10 +193,13 @@ namespace AWBWApp.Game.API.Replay.Actions
                 yield return ReplayWait.WaitForTransformable(capturingBuilding);
             }
 
-            if (capturingUnit != null)
+            if (!actionHidden)
             {
-                capturingUnit?.FadeTo(capturingUnit.Dived.Value ? 0.7f : 1, 250, Easing.OutCubic);
-                yield return ReplayWait.WaitForTransformable(capturingUnit);
+                if (capturingUnit != null)
+                {
+                    capturingUnit?.FadeTo(capturingUnit.Dived.Value ? 0.7f : 1, 250, Easing.OutCubic);
+                    yield return ReplayWait.WaitForTransformable(capturingUnit);
+                }
             }
 
             //Capturing a building can eliminate a player. i.e. They have no buildings left or reached the total building goal.

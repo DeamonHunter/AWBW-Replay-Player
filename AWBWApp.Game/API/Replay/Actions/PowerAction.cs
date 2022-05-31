@@ -579,9 +579,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                         if (change.Value.FuelGainPercentage.HasValue)
                             unit.Fuel.Value = Math.Max(0, Math.Min(unit.UnitData.MaxFuel, (int)Math.Ceiling(unit.Fuel.Value * change.Value.FuelGainPercentage.Value)));
 
-                        playEffectForUnitChange(controller, unit);
-
-                        yield return ReplayWait.WaitForMilliseconds(75);
+                        if (playEffectForUnitChange(controller, unit))
+                            yield return ReplayWait.WaitForMilliseconds(75);
                     }
                 }
             }
@@ -618,11 +617,12 @@ namespace AWBWApp.Game.API.Replay.Actions
                             controller.Map.DeleteUnit(unit.UnitID, true);
                         else
                             playEffectForUnitChange(controller, unit);
+
+                        if (!controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+                            yield return ReplayWait.WaitForMilliseconds(75);
                     }
                     else
                         throw new Exception("Unable to find unit: " + change.Key);
-
-                    yield return ReplayWait.WaitForMilliseconds(75);
                 }
             }
 
@@ -671,9 +671,13 @@ namespace AWBWApp.Game.API.Replay.Actions
             };
         }
 
-        private void playEffectForUnitChange(ReplayController controller, DrawableUnit unit)
+        private bool playEffectForUnitChange(ReplayController controller, DrawableUnit unit)
         {
+            if (controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+                return false;
+
             controller.Map.PlaySelectionAnimation(unit);
+            return true;
         }
 
         public void UndoAction(ReplayController controller)

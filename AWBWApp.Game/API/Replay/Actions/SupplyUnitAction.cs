@@ -105,6 +105,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                 suppliedUnit.Ammo.Value = suppliedUnit.UnitData.MaxAmmo;
                 suppliedUnit.Fuel.Value = suppliedUnit.UnitData.MaxFuel;
 
+                if (controller.ShouldPlayerActionBeHidden(suppliedUnit.MapPosition))
+                    continue;
+
                 controller.Map.PlayEffect("Effects/Supplied", 600, suppliedUnit.MapPosition, 0,
                     x => x.ScaleTo(new Vector2(0, 1))
                           .ScaleTo(1, 250, Easing.OutQuint)

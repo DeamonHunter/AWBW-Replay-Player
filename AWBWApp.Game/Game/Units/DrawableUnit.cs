@@ -201,29 +201,33 @@ namespace AWBWApp.Game.Game.Units
             return Vec2IHelper.ScalarMultiply(position, BASE_SIZE) + new Vector2I(0, BASE_SIZE.Y);
         }
 
-        public TransformSequence<DrawableUnit> FollowPath(IList<UnitPosition> path, bool reverse = false)
+        public TransformSequence<DrawableUnit> FollowPath(ReplayController controller, IList<UnitPosition> path, bool reverse = false)
         {
             if (path.Count < 1)
                 throw new Exception("Path must contain at least 1 position.");
 
             var transformSequence = this.MoveTo(GetRealPositionFromMapTiles(new Vector2I(path[0].X, path[0].Y)));
 
+            bool fogActive(UnitPosition position) => controller.ShouldPlayerActionBeHidden(new Vector2I(position.X, position.Y));
+
             if (path.Count == 2)
             {
                 //Only moving 1 tile
-                transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(path[1].X, path[1].Y)), 400, Easing.InOutQuad);
+                transformSequence.Then().TransformBindableTo(FogOfWarActive, fogActive(path[1])).MoveTo(GetRealPositionFromMapTiles(new Vector2I(path[1].X, path[1].Y)), 400, Easing.InOutQuad);
                 return transformSequence;
             }
 
             for (int i = 1; i < path.Count; i++)
             {
                 var pathNode = path[i];
+                transformSequence.Then().TransformBindableTo(FogOfWarActive, fogActive(pathNode));
+
                 if (i == 1)
-                    transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 350, Easing.InQuad);
+                    transformSequence.MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 350, Easing.InQuad);
                 else if (i == path.Count - 1)
-                    transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 350, Easing.OutQuad);
+                    transformSequence.MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 350, Easing.OutQuad);
                 else
-                    transformSequence.Then().MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 140);
+                    transformSequence.MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 140);
             }
 
             return transformSequence;

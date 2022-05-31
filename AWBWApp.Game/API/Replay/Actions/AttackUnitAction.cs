@@ -299,7 +299,14 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             //Perform Attack vs Defender
-            var reticule = PlayAttackAnimation(controller, attackerUnit.MapPosition, defenderUnit.MapPosition, attackerUnit, false);
+
+            EffectAnimation reticule;
+
+            if (controller.ShouldPlayerActionBeHidden(attackerUnit.MapPosition))
+                reticule = PlayAttackAnimation(controller, attackerUnit.MapPosition, defenderUnit.MapPosition, attackerUnit, false);
+            else //If we can't see the attacker just play the animation on them.
+                reticule = PlayAttackAnimation(controller, defenderUnit.MapPosition, defenderUnit.MapPosition, defenderUnit, false);
+
             yield return ReplayWait.WaitForTransformable(reticule);
 
             attackerUnit.CanMove.Value = false;

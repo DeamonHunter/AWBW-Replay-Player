@@ -110,7 +110,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (Path.Length > 1)
             {
-                unit.FollowPath(Path);
+                unit.FollowPath(controller, Path);
                 yield return ReplayWait.WaitForTransformable(unit);
             }
 
@@ -131,8 +131,12 @@ namespace AWBWApp.Game.API.Replay.Actions
             //Skip the zeroth index as we don't want to show an arrow over the top of the unit.
             for (int i = 1; i < path.Length - 1; i++)
             {
-                var prev = path[i - 1];
                 var current = path[i];
+
+                if (controller.ShouldPlayerActionBeHidden(new Vector2I(current.X, current.Y)))
+                    continue;
+
+                var prev = path[i - 1];
                 var next = path[i + 1];
 
                 var diffX = next.X - prev.X;
@@ -162,6 +166,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             var beforeHead = path[^2];
             var head = path[^1];
+
+            if (controller.ShouldPlayerActionBeHidden(new Vector2I(head.X, head.Y)))
+                return;
 
             var headDiffX = head.X - beforeHead.X;
             var headDiffY = head.Y - beforeHead.Y;
