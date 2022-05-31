@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Country;
@@ -63,8 +64,9 @@ namespace AWBWApp.Game.UI.Replay
         private Action<long> openPlayerStats;
 
         private bool usePercentagePowers;
+        private ReplayPlayerList playerList;
 
-        public ReplayPlayerListItem(PlayerInfo info, Action<long> openPlayerStats, bool usePercentagePowers)
+        public ReplayPlayerListItem(ReplayPlayerList playerList, PlayerInfo info, Action<long> openPlayerStats, bool usePercentagePowers)
         {
             PlayerID = info.ID;
             RoundOrder = info.RoundOrder;
@@ -73,6 +75,7 @@ namespace AWBWApp.Game.UI.Replay
 
             this.openPlayerStats = openPlayerStats;
             this.usePercentagePowers = usePercentagePowers;
+            this.playerList = playerList;
 
             faceDirection = info.UnitFaceDirection.GetBoundCopy();
 
@@ -522,12 +525,17 @@ namespace AWBWApp.Game.UI.Replay
                 }).ToArray()
             };
 
-            return new MenuItem[]
+            var items = new List<MenuItem>()
             {
                 new MenuItem("Open Stats", () => openPlayerStats?.Invoke(PlayerID)),
                 new EnumMenuItem<FaceDirection>("Unit Face Direction", faceDirection),
                 countryMenuItem
             };
+
+            if (playerList != null)
+                items.AddRange(playerList.ContextMenuItems);
+
+            return items.ToArray();
         }
 
         private class ReplayPlayerInfo : Container

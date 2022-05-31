@@ -109,7 +109,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                         Colour = new Color4(42, 91, 139, 255).Lighten(0.2f),
                         Size = new Vector2(2)
                     },
-                    new ReplayPlayerListItem(playerInfo, null, false)
+                    new ReplayPlayerListItem(null, playerInfo, null, false)
                 }
             };
         }
