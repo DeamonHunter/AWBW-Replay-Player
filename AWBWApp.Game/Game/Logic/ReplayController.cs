@@ -797,6 +797,28 @@ namespace AWBWApp.Game.Game.Logic
             return Map.IsTileFoggy(position);
         }
 
+        public bool ShouldPlayerActionBeHidden(Vector2I position, PlayerInfo player)
+        {
+            if (Map.ShowUnitsInFog.Value)
+                return false;
+
+            var activeFog = CurrentFogView.Value;
+
+            if (activeFog is string team)
+            {
+                //Dropdown value cannot be null, so we used this instead.
+                if (team == "")
+                    return true;
+
+                if (player.Team == team)
+                    return true;
+            }
+            else if (player.ID == (long)activeFog)
+                return true;
+
+            return Map.IsTileFoggy(position);
+        }
+
         public bool IsFogOnActivePlayer()
         {
             var activeFog = CurrentFogView.Value;

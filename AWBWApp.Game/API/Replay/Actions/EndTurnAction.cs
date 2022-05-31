@@ -227,7 +227,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     unit.Ammo.Value = unit.UnitData.MaxAmmo;
                     unit.Fuel.Value = unit.UnitData.MaxFuel;
 
-                    if (controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+                    if (controller.ShouldPlayerActionBeHidden(unit.MapPosition, player))
                         continue;
 
                     controller.Map.PlayEffect("Effects/Supplied", 600, unit.MapPosition, 0,
@@ -250,7 +250,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     unit.Ammo.Value = unit.UnitData.MaxAmmo;
                     unit.Fuel.Value = unit.UnitData.MaxFuel;
 
-                    if (controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+                    if (controller.ShouldPlayerActionBeHidden(unit.MapPosition, player))
                         continue;
 
                     controller.Map.PlayEffect("Effects/Supplied", 600, unit.MapPosition, 0,
