@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.IO;
 using AWBWApp.Game.UI.Components;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Caching;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -16,6 +18,7 @@ using osu.Framework.Layout;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
+using Container = osu.Framework.Graphics.Containers.Container;
 
 namespace AWBWApp.Game.UI.Select
 {
@@ -40,6 +43,10 @@ namespace AWBWApp.Game.UI.Select
         private CarouselReplay selectedReplay;
         private TextBox searchTextBox;
         private FilterDropdown searchDropdown;
+        private SortDropdown sortDropdown;
+
+        private Bindable<CarouselSort> carouselSort;
+
         private Container searchContainer;
 
         private const float pixels_offscreen_before_unloading_replay = 1024;
@@ -118,22 +125,45 @@ namespace AWBWApp.Game.UI.Select
                                     Height = 30,
                                     Colour = new Color4(20, 20, 20, 200)
                                 },
-                                searchTextBox = new BasicTextBox
+                                new GridContainer()
                                 {
                                     RelativeSizeAxes = Axes.X,
-                                    Position = new Vector2(0, 30),
-                                    Height = 35f,
-                                    Padding = new MarginPadding { Top = 5, Horizontal = 5 },
-                                    Anchor = Anchor.TopRight,
-                                    Origin = Anchor.TopRight,
-                                    PlaceholderText = "Search Here"
-                                },
-                                searchDropdown = new FilterDropdown()
-                                {
-                                    Position = new Vector2(-5, 35),
-                                    Size = new Vector2(100, 25),
-                                    Anchor = Anchor.TopRight,
-                                    Origin = Anchor.TopRight,
+                                    AutoSizeAxes = Axes.Y,
+                                    Position = new Vector2(0, 35),
+                                    Content = new Drawable[][]
+                                    {
+                                        new Drawable[]
+                                        {
+                                            searchTextBox = new BasicTextBox
+                                            {
+                                                RelativeSizeAxes = Axes.X,
+                                                Height = 30f,
+                                                Padding = new MarginPadding { Left = 5 },
+                                                Anchor = Anchor.TopCentre,
+                                                Origin = Anchor.TopCentre,
+                                                PlaceholderText = "Search Here"
+                                            },
+                                            searchDropdown = new FilterDropdown()
+                                            {
+                                                Size = new Vector2(60, 25),
+                                                Anchor = Anchor.TopCentre,
+                                                Origin = Anchor.TopCentre,
+                                            },
+                                            sortDropdown = new SortDropdown()
+                                            {
+                                                Size = new Vector2(135, 25),
+                                                Anchor = Anchor.TopCentre,
+                                                Origin = Anchor.TopCentre,
+                                                Margin = new MarginPadding { Right = 5 },
+                                            },
+                                        }
+                                    },
+                                    ColumnDimensions = new Dimension[]
+                                    {
+                                        new Dimension(),
+                                        new Dimension(mode: GridSizeMode.Absolute, 65),
+                                        new Dimension(mode: GridSizeMode.Absolute, 140)
+                                    }
                                 }
                             }
                         }
@@ -146,8 +176,12 @@ namespace AWBWApp.Game.UI.Select
         }
 
         [BackgroundDependencyLoader]
-        private void load()
+        private void load(AWBWConfigManager manager)
         {
+            carouselSort = manager.GetBindable<CarouselSort>(AWBWSetting.ReplayListSort);
+            sortDropdown.Current.BindTo(carouselSort);
+            carouselSort.BindValueChanged(x => Sort(x.NewValue));
+
             replayManager.ReplayAdded += replayAdded;
             replayManager.ReplayChanged += replayAdded;
             replayManager.ReplayRemoved += replayRemoved;
@@ -160,15 +194,19 @@ namespace AWBWApp.Game.UI.Select
         {
             CarouselRoot newRoot = new CarouselRoot(this);
 
+            var originalSelection = selectedReplay;
             newRoot.AddChildren(replays.Select(createCarouselReplay));
 
             rootCarouselItem = newRoot;
-            if (selectedReplay != null && !replays.Contains(selectedReplay.ReplayInfo))
-                selectedReplay = null;
-
             Scroll.Clear(false);
-            itemsCache.Invalidate();
-            ScrollToSelected();
+
+            Sort(carouselSort.Value);
+
+            if (originalSelection != null)
+            {
+                if (replays.Contains(originalSelection.ReplayInfo))
+                    Select(originalSelection.ReplayInfo);
+            }
 
             ScheduleAfterChildren(() =>
             {
@@ -176,8 +214,6 @@ namespace AWBWApp.Game.UI.Select
                 ReplaysLoaded = true;
                 if (selectedReplay == null)
                     SelectionChanged?.Invoke(null);
-
-                itemsCache.Invalidate();
             });
         }
 
@@ -456,6 +492,62 @@ namespace AWBWApp.Game.UI.Select
             if (item == null) return;
 
             item.State.Value = CarouselItemState.Selected;
+        }
+
+        public void Sort(CarouselSort sort)
+        {
+            Comparison<CarouselItem> comparison;
+
+            switch (sort)
+            {
+                default:
+                    throw new InvalidEnumArgumentException(nameof(sort), (int)sort, typeof(CarouselSort));
+
+                case CarouselSort.Alphabetical:
+                case CarouselSort.AlphabeticalDescending:
+                {
+                    comparison = (x, y) =>
+                    {
+                        if (x is CarouselReplay xReplay && y is CarouselReplay yReplay)
+                            return (sort == CarouselSort.Alphabetical ? 1 : -1) * string.CompareOrdinal(xReplay.ReplayInfo.Name, yReplay.ReplayInfo.Name);
+
+                        throw new NotImplementedException("Currently not supporting other types of carousel items for sorting.");
+                    };
+                    break;
+                }
+
+                case CarouselSort.EndDate:
+                case CarouselSort.EndDateDescending:
+                {
+                    comparison = (x, y) =>
+                    {
+                        if (x is CarouselReplay xReplay && y is CarouselReplay yReplay)
+                            return (sort == CarouselSort.EndDate ? -1 : 1) * xReplay.ReplayInfo.EndDate.CompareTo(yReplay.ReplayInfo.EndDate);
+
+                        throw new NotImplementedException("Currently not supporting other types of carousel items for sorting.");
+                    };
+                    break;
+                }
+
+                case CarouselSort.StartDate:
+                case CarouselSort.StartDateDescending:
+                {
+                    comparison = (x, y) =>
+                    {
+                        if (x is CarouselReplay xReplay && y is CarouselReplay yReplay)
+                            return (sort == CarouselSort.StartDate ? -1 : 1) * xReplay.ReplayInfo.StartDate.CompareTo(yReplay.ReplayInfo.StartDate);
+
+                        throw new NotImplementedException("Currently not supporting other types of carousel items for sorting.");
+                    };
+                    break;
+                }
+            }
+
+            rootCarouselItem.Sort(comparison);
+            itemsCache.Invalidate();
+
+            rootCarouselItem.Children.First().State.Value = CarouselItemState.Selected;
+            ScrollToSelected();
         }
 
         private string lastSearchText;

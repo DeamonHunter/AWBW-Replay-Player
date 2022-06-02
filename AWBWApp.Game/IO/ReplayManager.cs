@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Threading.Tasks;
 using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
@@ -61,12 +60,7 @@ namespace AWBWApp.Game.IO
             checkAllReplays();
         }
 
-        public IEnumerable<ReplayInfo> GetAllKnownReplays()
-        {
-            var replays = _knownReplays.Values.ToList();
-            replays.Sort((x, y) => y.EndDate.CompareTo(x.EndDate));
-            return replays;
-        }
+        public IEnumerable<ReplayInfo> GetAllKnownReplays() => _knownReplays.Values;
 
         private void checkAllReplays()
         {

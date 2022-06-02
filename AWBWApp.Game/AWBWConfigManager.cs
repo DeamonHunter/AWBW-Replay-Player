@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AWBWApp.Game.UI.Select;
 using osu.Framework.Configuration;
 using osu.Framework.Platform;
 
@@ -25,6 +26,7 @@ namespace AWBWApp.Game
             SetDefault(AWBWSetting.ReplayBarControlScale, 1f);
             SetDefault(AWBWSetting.ReplayBarControlPositionX, 0f);
             SetDefault(AWBWSetting.ReplayBarControlPositionY, 0f);
+            SetDefault(AWBWSetting.ReplayListSort, CarouselSort.EndDate);
         }
     }
 
@@ -41,5 +43,6 @@ namespace AWBWApp.Game
         ReplayBarControlScale,
         ReplayBarControlPositionX,
         ReplayBarControlPositionY,
+        ReplayListSort
     }
 }

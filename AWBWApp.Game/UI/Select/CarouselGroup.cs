@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace AWBWApp.Game.UI.Select
 {
@@ -68,6 +69,11 @@ namespace AWBWApp.Game.UI.Select
         {
             foreach (var child in InternalChildren)
                 child.Filter(textParts, filter);
+        }
+
+        public virtual void Sort(Comparison<CarouselItem> comparison)
+        {
+            InternalChildren.Sort(comparison);
         }
     }
 }
