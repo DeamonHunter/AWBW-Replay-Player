@@ -1,14 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Toolbar;
+using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
+using osu.Framework.IO.Stores;
 using osu.Framework.Layout;
 using osu.Framework.Localisation;
+using osu.Framework.Text;
 using osuTK;
 using osuTK.Graphics;
 
@@ -47,6 +53,11 @@ namespace AWBWApp.Game.UI.Replay
             return $"{item.Day} - {item.Player ?? $"[Unknown Username:{item.PlayerID}]"}";
         }
 
+        public void SetSizeToLargestPlayerName(Dictionary<long, PlayerInfo> players)
+        {
+            ((ReplayBarDownHeader)Header).SetSizeToLargestPlayerName(players);
+        }
+
         public class ReplayBarDownHeader : DropdownHeader
         {
             protected readonly TextFlowContainer Text;
@@ -58,6 +69,12 @@ namespace AWBWApp.Game.UI.Replay
                 get => text;
                 set => setText(value);
             }
+
+            [Resolved]
+            private FontStore fontStore { get; set; }
+
+            private const float text_padding = 10f;
+            private const float minimum_width = 125f;
 
             public ReplayBarDownHeader()
             {
@@ -80,17 +97,35 @@ namespace AWBWApp.Game.UI.Replay
                     {
                         Anchor = Anchor.TopCentre,
                         Origin = Anchor.TopCentre,
-                        Size = new Vector2(125, 35)
+                        Size = new Vector2(minimum_width, 35)
                     },
                     Text = new TextFlowContainer()
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         TextAnchor = Anchor.Centre,
-                        AutoSizeAxes = Axes.Both,
+                        AutoSizeAxes = Axes.Y,
                         Padding = new MarginPadding { Horizontal = 5 }
                     }
                 };
+            }
+
+            public void SetSizeToLargestPlayerName(Dictionary<long, PlayerInfo> players)
+            {
+                var textBuilder = new TextBuilder(fontStore, FontUsage.Default);
+
+                var maxWidth = 125f;
+
+                foreach (var player in players)
+                {
+                    textBuilder.Reset();
+                    textBuilder.AddText(player.Value.Username ?? $"[Unknown Username:{player.Value.UserID}]");
+
+                    if (textBuilder.Bounds.X + text_padding > maxWidth)
+                        maxWidth = textBuilder.Bounds.X + text_padding;
+                }
+
+                Text.Width = maxWidth;
             }
 
             private void setText(LocalisableString localisable)

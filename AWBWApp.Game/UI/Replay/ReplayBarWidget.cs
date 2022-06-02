@@ -275,6 +275,8 @@ namespace AWBWApp.Game.UI.Replay
             sliderBarContainer.ScaleTo(visible ? Vector2.One : new Vector2(0, 0.1f), 250, Easing.OutQuint);
         }
 
+        public void SetSizeToLargestPlayerName(Dictionary<long, PlayerInfo> players) => dropdown.SetSizeToLargestPlayerName(players);
+
         private void updateTurnText()
         {
             if (!replayController.HasLoadedReplay)

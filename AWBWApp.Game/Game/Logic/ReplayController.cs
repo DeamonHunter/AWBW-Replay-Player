@@ -728,9 +728,13 @@ namespace AWBWApp.Game.Game.Logic
             }
 
             if (reset)
+            {
                 playerList.CreateNewListForPlayers(Players, this, replayData.ReplayInfo.ReplayVersion <= 0, replayData.ReplayInfo.TeamMatch);
+                barWidget.SetSizeToLargestPlayerName(Players);
+                playerList.SetGameHasFog(replayData.ReplayInfo.Fog);
+            }
+
             playerList.SortList(currentTurn.ActivePlayerID, turnIdx);
-            playerList.SetGameHasFog(replayData.ReplayInfo.Fog);
         }
 
         public void UpdateFogOfWar()
