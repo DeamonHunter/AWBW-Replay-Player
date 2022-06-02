@@ -64,7 +64,7 @@ namespace AWBWApp.Game.UI.Replay
                                     AutoSizeAxes = Axes.Y,
                                     TextAnchor = Anchor.TopCentre,
                                     Colour = new Color4(30, 30, 30, 255),
-                                    Text = resigned ? $"{playerInfo.Username}\nhas Resigned!" : $"{playerInfo.Username}\nwas Eliminated!"
+                                    Text = resigned ? $"{playerInfo.Username ?? $"[Unknown Username:{playerInfo.UserID}]"}\nhas Resigned!" : $"{playerInfo.Username}\nwas Eliminated!"
                                 },
                                 new Container()
                                 {

@@ -75,7 +75,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (shortName)
                 return Resigned ? "Resigned" : "Eliminated";
 
-            return $"{controller.Players[EliminatedPlayerID].Username} {(Resigned ? "Resigned" : "Eliminated")}";
+            var playerInfo = controller.Players[EliminatedPlayerID];
+            return $"{playerInfo.Username ?? $"[Unknown Username:{playerInfo.UserID}]"} {(Resigned ? "Resigned" : "Eliminated")}";
         }
 
         public bool EndsGame() => GameOverAction != null;

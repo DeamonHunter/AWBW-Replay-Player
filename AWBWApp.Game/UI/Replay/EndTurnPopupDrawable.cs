@@ -109,7 +109,7 @@ namespace AWBWApp.Game.UI.Replay
                                     RelativeSizeAxes = Axes.X,
                                     AutoSizeAxes = Axes.Y,
                                     Padding = new MarginPadding { Bottom = 5 },
-                                    Text = $"{playerInfo.Username}'s Turn",
+                                    Text = $"{playerInfo.Username ?? $"[Unknown Username:{playerInfo.UserID}]"}'s Turn",
                                     Colour = new Color4(10, 10, 10, 255)
                                 }
                             }
