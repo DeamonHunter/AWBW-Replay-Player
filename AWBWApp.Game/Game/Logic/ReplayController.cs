@@ -757,12 +757,14 @@ namespace AWBWApp.Game.Game.Logic
                 calculateFogForPlayer(currentTurn.ActivePlayerID, true);
                 team = currentTurn.ActiveTeam;
             }
+            else
+                Map.ClearFog(true, false);
 
             if (!team.IsNullOrEmpty())
             {
                 foreach (var player in replayData.ReplayInfo.Players)
                 {
-                    if (player.Value.TeamName != currentTurn.ActiveTeam || player.Key == currentTurn.ActivePlayerID)
+                    if (player.Value.TeamName != team || player.Key == currentTurn.ActivePlayerID)
                         continue;
 
                     calculateFogForPlayer(player.Key, false);
