@@ -106,7 +106,7 @@ namespace AWBWApp.Game.Game.Units
             MovementRange.Value = unitData.MovementRange;
             AttackRange.Value = unitData.AttackRange;
 
-            HealthPoints.BindValueChanged(updateHp);
+            HealthPoints.BindValueChanged(updateHp, true);
             BeingCarried.BindValueChanged(x => updateUnitColour(x.NewValue));
             unitFaceDirection?.BindValueChanged(x => updateFaceDirection(x.NewValue), true);
 
@@ -269,16 +269,7 @@ namespace AWBWApp.Game.Game.Units
 
         private void updateHp(ValueChangedEvent<int> healthPoints)
         {
-            if (healthPoints.NewValue >= 10)
-            {
-                healthSpriteText.Hide();
-                return;
-            }
-
-            if (healthPoints.OldValue >= 10)
-                healthSpriteText.Show();
-
-            healthSpriteText.Text = healthPoints.NewValue.ToString();
+            healthSpriteText.Text = healthPoints.NewValue >= 10 ? "" : healthPoints.NewValue.ToString();
         }
 
         private void updateStatIndicators(bool unitRevealed)
