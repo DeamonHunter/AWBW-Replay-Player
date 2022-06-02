@@ -346,10 +346,18 @@ namespace AWBWApp.Game.Game.Units
 
         private class UnitTextureAnimation : Animation<Texture>
         {
+            private float greyscaleAmount;
+
             public float GreyscaleAmount
             {
-                get => textureHolder.GreyscaleAmount;
-                set => textureHolder.GreyscaleAmount = value;
+                get => greyscaleAmount;
+                set
+                {
+                    greyscaleAmount = value;
+
+                    if (textureHolder != null)
+                        textureHolder.GreyscaleAmount = value;
+                }
             }
 
             private GreyscaleSprite textureHolder;
@@ -364,7 +372,8 @@ namespace AWBWApp.Game.Game.Units
                 {
                     RelativeSizeAxes = Axes.Both,
                     Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre
+                    Origin = Anchor.Centre,
+                    GreyscaleAmount = greyscaleAmount
                 };
 
             protected override void ClearDisplay() => textureHolder.Texture = null;
