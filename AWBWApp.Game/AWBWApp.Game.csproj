@@ -10,7 +10,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageReference Include="ppy.osu.Framework" Version="2022.528.0" />
+    <PackageReference Include="ppy.osu.Framework" Version="2022.611.0" />
     <PackageReference Include="System.ComponentModel.Composition" Version="5.0.0" />
   </ItemGroup>
 </Project>
