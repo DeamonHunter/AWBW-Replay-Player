@@ -317,9 +317,17 @@ namespace AWBWApp.Game.UI.Replay
             if (Parent == null)
                 return;
 
+            var drawSize = Parent.DrawSize;
+            if (drawSize.X < 0)
+                drawSize.X = 0;
+            if (drawSize.Y < 0)
+                drawSize.Y = 0;
+
+            var xOffsetMax = Math.Abs((Parent.DrawSize.X - DrawSize.X * Scale.X) * 0.5f);
+
             var newPosition = new Vector2(
-                Math.Clamp(offset.X, (Parent.DrawSize.X - DrawSize.X * Scale.X) * -0.5f, (Parent.DrawSize.X - DrawSize.X * Scale.X) * 0.5f),
-                Math.Clamp(offset.Y, -Parent.DrawSize.Y + DrawSize.Y * Scale.Y, 0)
+                Math.Clamp(offset.X, -xOffsetMax, xOffsetMax),
+                Math.Clamp(offset.Y, Math.Min(-Parent.DrawSize.Y + DrawSize.Y * Scale.Y, 0), 0)
             );
 
             if (Precision.AlmostEquals(newPosition, Position))
