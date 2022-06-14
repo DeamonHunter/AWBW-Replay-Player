@@ -382,15 +382,22 @@ namespace AWBWApp.Game.Game.Logic
                     }
                 }
 
-                setupContext.SetupForTurn(nextTurn, i);
-
-                if (nextTurn.Actions == null || nextTurn.Actions.Count == 0)
-                    continue;
-
-                for (int j = 0; j < setupContext.CurrentTurn.Actions.Count; j++)
+                try
                 {
-                    setupContext.CurrentActionIndex = j;
-                    nextTurn.Actions[j].SetupAndUpdate(this, setupContext);
+                    setupContext.SetupForTurn(nextTurn, i);
+
+                    if (nextTurn.Actions == null || nextTurn.Actions.Count == 0)
+                        continue;
+
+                    for (int j = 0; j < setupContext.CurrentTurn.Actions.Count; j++)
+                    {
+                        setupContext.CurrentActionIndex = j;
+                        nextTurn.Actions[j].SetupAndUpdate(this, setupContext);
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw new AggregateException($"Failed to setup turn {i}.", e);
                 }
             }
 
