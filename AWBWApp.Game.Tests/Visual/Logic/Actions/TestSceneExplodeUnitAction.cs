@@ -42,17 +42,17 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         }
 
         [Test]
-        public void TestExplodeUnitCausingDeath()
+        public void TestExplodeUnitCausingNearDeath()
         {
             AddStep("Setup", () => explodeTest(false, true));
             AddStep("Explode Unit", ReplayController.GoToNextAction);
             AddUntilStep("Unit was deleted", () => !HasUnit(explodingUnit.ID));
             AddAssert("Unit Value is 0", () => ReplayController.Players[0].UnitValue.Value == 0);
-            AddAssert("Opponent Unit Value is 0", () => ReplayController.Players[1].UnitValue.Value == 0);
+            AddAssert("Opponent Unit Value is 2400", () => ReplayController.Players[1].UnitValue.Value == 2400);
             AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Unit reverted correctly", () => DoesUnitMatchData(explodingUnit.ID, explodingUnit));
             AddAssert("Unit Value is 25000", () => ReplayController.Players[0].UnitValue.Value == 25000);
-            AddAssert("Opponent Unit Value is 3900", () => ReplayController.Players[1].UnitValue.Value == 7200);
+            AddAssert("Opponent Unit Value is 7200", () => ReplayController.Players[1].UnitValue.Value == 7200);
         }
 
         private void explodeTest(bool move, bool opponentLowHp)

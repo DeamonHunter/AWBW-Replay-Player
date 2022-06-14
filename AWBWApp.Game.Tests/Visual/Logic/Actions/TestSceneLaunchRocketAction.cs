@@ -43,13 +43,13 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         }
 
         [Test]
-        public void TestLaunchCausingDeath()
+        public void TestExplodeUnitCausingNearDeath()
         {
             AddStep("Setup", () => launchTest(false, true));
             AddStep("Launch Rocket", ReplayController.GoToNextAction);
             AddUntilStep("Rocket Launched", () => !ReplayController.HasOngoingAction());
             AddAssert("No Missile", () => !ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out _));
-            AddAssert("Opponent Unit Value is 0", () => ReplayController.Players[1].UnitValue.Value == 0);
+            AddAssert("Opponent Unit Value is 2500", () => ReplayController.Players[1].UnitValue.Value == 2500);
             AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Unit reverted correctly", () => DoesUnitMatchData(launchingUnit.ID, launchingUnit));
             AddAssert("Missile Exists", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out _));
