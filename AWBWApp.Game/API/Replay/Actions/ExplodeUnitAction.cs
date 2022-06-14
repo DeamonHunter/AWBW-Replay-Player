@@ -75,8 +75,6 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             originalExplodingUnit = explodedUnit.Clone();
 
-            var destroyedUnits = new HashSet<long>();
-
             foreach (var unit in context.Units)
             {
                 if (!unit.Value.PlayerID.HasValue)
@@ -93,14 +91,10 @@ namespace AWBWApp.Game.API.Replay.Actions
                     originalUnits.Add(unit.Key, unit.Value.Clone());
 
                     unit.Value.HitPoints = unit.Value.HitPoints!.Value + HPChange;
-
-                    if (unit.Value.HitPoints <= 0)
-                        destroyedUnits.Add(unit.Key);
+                    if (unit.Value.HitPoints < 0.1f)
+                        unit.Value.HitPoints = 0.1f;
                 }
             }
-
-            foreach (var unit in destroyedUnits)
-                context.RemoveUnitFromSetupContext(unit, originalUnits, out _);
 
             context.AdjustStatReadoutsFromUnitList(context.ActivePlayerID, originalUnits.Values, ExplodedUnitId);
         }
@@ -137,10 +131,10 @@ namespace AWBWApp.Game.API.Replay.Actions
                         var owner = controller.Players[unit.OwnerID.Value];
                         var originalValue = ReplayActionHelper.CalculateUnitCost(unit, owner.ActiveCO.Value.CO.DayToDayPower, null);
                         unit.HealthPoints.Value += (int)HPChange;
-                        owner.UnitValue.Value -= (originalValue - ReplayActionHelper.CalculateUnitCost(unit, owner.ActiveCO.Value.CO.DayToDayPower, null));
+                        if (unit.HealthPoints.Value < 0.1f)
+                            unit.HealthPoints.Value = 1;
 
-                        if (unit.HealthPoints.Value <= 0)
-                            controller.Map.DeleteUnit(unit.UnitID, true);
+                        owner.UnitValue.Value -= (originalValue - ReplayActionHelper.CalculateUnitCost(unit, owner.ActiveCO.Value.CO.DayToDayPower, null));
                     }
                 }
                 yield return ReplayWait.WaitForMilliseconds(100);
