@@ -546,7 +546,8 @@ namespace AWBWApp.Game.UI.Select
             rootCarouselItem.Sort(comparison);
             itemsCache.Invalidate();
 
-            rootCarouselItem.Children.First().State.Value = CarouselItemState.Selected;
+            if (rootCarouselItem.Children.Any())
+                rootCarouselItem.Children.First().State.Value = CarouselItemState.Selected;
             ScrollToSelected();
         }
 
