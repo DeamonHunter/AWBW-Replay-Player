@@ -2950,8 +2950,9 @@
             "Air": 1
         },
         "frames": [
+            900,
             400,
-            1200
+            300
         ],
         "Textures": {
             "Clear": "Team/WhiteNova/HQ",
