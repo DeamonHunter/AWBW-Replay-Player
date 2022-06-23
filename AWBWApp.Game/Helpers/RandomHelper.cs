@@ -22,5 +22,14 @@ namespace AWBWApp.Game.Helpers
             var element = random.Next(set.Count);
             return set.ElementAt(element).Value;
         }
+
+        public static void Shuffle<T>(this Random random, List<T> list)
+        {
+            for (int i = 0; i < list.Count - 1; i++)
+            {
+                var j = random.Next(i + 1);
+                (list[i], list[j]) = (list[j], list[i]);
+            }
+        }
     }
 }

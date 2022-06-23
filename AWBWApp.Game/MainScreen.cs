@@ -28,6 +28,7 @@ namespace AWBWApp.Game
         private AWBWLogo logo;
 
         private FillFlowContainer buttonsContainer;
+        private HintBox hintBox;
 
         [Resolved]
         private GameHost host { get; set; }
@@ -64,7 +65,7 @@ namespace AWBWApp.Game
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.TopCentre,
-                    Position = new Vector2(0, 100),
+                    Position = new Vector2(0, 50),
                     Direction = FillDirection.Vertical,
                     AutoSizeAxes = Axes.Y,
                     Spacing = new Vector2(0, 10),
@@ -82,6 +83,13 @@ namespace AWBWApp.Game
                             Action = openGetNewReplayInterrupt
                         }
                     }
+                },
+                hintBox = new HintBox()
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.TopCentre,
+                    Position = new Vector2(0, 220),
+                    Width = 400,
                 }
             };
 
@@ -102,12 +110,15 @@ namespace AWBWApp.Game
             if (buttonsContainer.IsPresent)
                 return base.OnClick(e);
 
-            logo.MoveTo(new Vector2(0, -100), 250, Easing.OutQuint);
+            logo.MoveTo(new Vector2(0, -150), 250, Easing.OutQuint);
 
             buttonsContainer.FadeIn();
+            hintBox.FadeIn();
 
             foreach (var child in buttonsContainer.Children)
                 child.ScaleTo(new Vector2(0, 0.75f)).ScaleTo(1, 300, Easing.OutQuint);
+
+            hintBox.ScaleTo(new Vector2(0, 0.75f)).ScaleTo(1, 300, Easing.OutQuint);
 
             return true;
         }
@@ -115,6 +126,7 @@ namespace AWBWApp.Game
         public override void OnEntering(IScreen last)
         {
             buttonsContainer.FadeOut();
+            hintBox.FadeOut();
             this.FadeIn();
             logo.Animate();
         }
