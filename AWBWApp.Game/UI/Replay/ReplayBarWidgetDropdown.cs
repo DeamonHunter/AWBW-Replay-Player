@@ -60,8 +60,6 @@ namespace AWBWApp.Game.UI.Replay
 
         public class ReplayBarDownHeader : DropdownHeader
         {
-            protected readonly TextFlowContainer Text;
-
             private string text;
 
             protected override LocalisableString Label
@@ -69,6 +67,10 @@ namespace AWBWApp.Game.UI.Replay
                 get => text;
                 set => setText(value);
             }
+
+            protected readonly FillFlowContainer<SpriteText> TextContainer;
+            protected readonly SpriteText DayText;
+            protected readonly SpriteText UsernameText;
 
             [Resolved]
             private FontStore fontStore { get; set; }
@@ -99,13 +101,26 @@ namespace AWBWApp.Game.UI.Replay
                         Origin = Anchor.TopCentre,
                         Size = new Vector2(minimum_width, 35)
                     },
-                    Text = new TextFlowContainer()
+                    TextContainer = new FillFlowContainer<SpriteText>()
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        TextAnchor = Anchor.Centre,
                         AutoSizeAxes = Axes.Y,
-                        Padding = new MarginPadding { Horizontal = 5 }
+                        Direction = FillDirection.Vertical,
+                        Padding = new MarginPadding { Horizontal = 5 },
+                        Children = new SpriteText[]
+                        {
+                            DayText = new SpriteText()
+                            {
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre
+                            },
+                            UsernameText = new SpriteText()
+                            {
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre
+                            },
+                        }
                     }
                 };
             }
@@ -125,7 +140,7 @@ namespace AWBWApp.Game.UI.Replay
                         maxWidth = textBuilder.Bounds.X + text_padding;
                 }
 
-                Text.Width = maxWidth;
+                TextContainer.Width = maxWidth;
             }
 
             private void setText(LocalisableString localisable)
@@ -135,7 +150,8 @@ namespace AWBWApp.Game.UI.Replay
                 if (localisedText.IsNullOrEmpty())
                 {
                     text = "";
-                    Text.Text = "";
+                    DayText.Text = "";
+                    UsernameText.Text = "";
                     return;
                 }
 
@@ -145,7 +161,9 @@ namespace AWBWApp.Game.UI.Replay
                     throw new Exception("Failed to split text.");
 
                 text = $"Day {splits[0]}\n{splits[1]}";
-                Text.Text = text;
+
+                DayText.Text = $"Day {splits[0]}";
+                UsernameText.Text = splits[1];
             }
         }
 

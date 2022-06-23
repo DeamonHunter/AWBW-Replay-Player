@@ -20,6 +20,8 @@ namespace AWBWApp.Game.UI.Replay
 {
     public class ReplayPlayerList : Container, IHasContextMenu
     {
+        public ReplayBarWidget ReplayBarWidget;
+
         private FillFlowContainer fillContainer;
 
         private SortedList<ReplayPlayerListItem> drawablePlayers = new SortedList<ReplayPlayerListItem>();
@@ -27,6 +29,7 @@ namespace AWBWApp.Game.UI.Replay
         private Bindable<float> playerListScale;
         private Bindable<bool> playerListLeftSide;
         private Bindable<bool> playerListDontReorder;
+        private IBindable<bool> replayBarInPlayerList;
 
         private MenuItem[] contextMenuItems;
         private TeamOrPlayerDropdown fogDropdown;
@@ -67,12 +70,30 @@ namespace AWBWApp.Game.UI.Replay
                         LayoutEasing = Easing.OutQuint
                     }
                 },
-                fogDropdown = new TeamOrPlayerDropdown()
+                new FillFlowContainer()
                 {
                     Anchor = Anchor.BottomCentre,
                     Origin = Anchor.BottomCentre,
                     RelativeSizeAxes = Axes.X,
-                    Prefix = "Fog: "
+                    AutoSizeAxes = Axes.Y,
+                    Direction = FillDirection.Vertical,
+                    AutoSizeEasing = Easing.OutQuint,
+                    AutoSizeDuration = 150,
+                    Children = new Drawable[]
+                    {
+                        fogDropdown = new TeamOrPlayerDropdown()
+                        {
+                            Anchor = Anchor.BottomCentre,
+                            Origin = Anchor.BottomCentre,
+                            RelativeSizeAxes = Axes.X,
+                            Prefix = "Fog: "
+                        },
+                        ReplayBarWidget = new ReplayPlayerListControlWidget(controller)
+                        {
+                            Anchor = Anchor.BottomCentre,
+                            Origin = Anchor.BottomCentre,
+                        }
+                    }
                 }
             };
 
@@ -98,6 +119,15 @@ namespace AWBWApp.Game.UI.Replay
             }, true);
             playerListDontReorder = configManager.GetBindable<bool>(AWBWSetting.PlayerListKeepOrderStatic);
             playerListDontReorder.BindValueChanged(_ => Schedule(() => SortList(currentActivePlayer, currentTurn)), true);
+
+            replayBarInPlayerList = configManager.GetBindable<bool>(AWBWSetting.ReplayCombineReplayListAndControlBar);
+            replayBarInPlayerList.BindValueChanged(x =>
+            {
+                if (x.NewValue)
+                    ReplayBarWidget.AnimateShow();
+                else
+                    ReplayBarWidget.AnimateHide();
+            }, true);
 
             contextMenuItems = new[]
             {

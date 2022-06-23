@@ -73,6 +73,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private IBindable<bool> skipEndTurnBindable;
         private IBindable<bool> shortenActionTooltipsBindable;
+        private IBindable<bool> replayBarInPlayerList;
 
         public Dictionary<long, PlayerInfo> Players { get; private set; } = new Dictionary<long, PlayerInfo>();
         public PlayerInfo ActivePlayer => currentTurn != null ? Players[currentTurn.ActivePlayerID] : null;
@@ -137,7 +138,7 @@ namespace AWBWApp.Game.Game.Logic
                             RelativeSizeAxes = Axes.Y,
                             Size = new Vector2(player_list_width, 1)
                         },
-                        barWidget = new ReplayBarWidget(this),
+                        barWidget = new MoveableReplayBarWidget(this),
                         Stats = new StatsHandler(CurrentTurnIndex)
                         {
                             RelativeSizeAxes = Axes.Both,
@@ -192,6 +193,15 @@ namespace AWBWApp.Game.Game.Logic
             shortenActionTooltipsBindable = configManager.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips);
             showMovementArrowsBindable = configManager.GetBindable<bool>(AWBWSetting.ReplayShowMovementArrows);
             CurrentFogView.BindValueChanged(_ => UpdateFogOfWar());
+
+            replayBarInPlayerList = configManager.GetBindable<bool>(AWBWSetting.ReplayCombineReplayListAndControlBar);
+            replayBarInPlayerList.BindValueChanged(x =>
+            {
+                if (!x.NewValue)
+                    barWidget.AnimateShow();
+                else
+                    barWidget.AnimateHide();
+            }, true);
         }
 
         protected override void Update()
@@ -324,8 +334,8 @@ namespace AWBWApp.Game.Game.Logic
                     updatePlayerList(0, false, false);
                     cameraControllerWithGrid.FitMapToSpace();
                     CurrentTurnIndex.TriggerChange();
-                    barWidget.UpdateActions();
-                    barWidget.UpdateTurns(replayData.TurnData);
+                    updateReplayBarActions();
+                    updateReplayBarTurns();
                     loadingLayer.Hide();
                 });
             }
@@ -548,7 +558,7 @@ namespace AWBWApp.Game.Game.Logic
                 return;
             }
 
-            barWidget.UpdateActions();
+            updateReplayBarActions();
         }
 
         public void GoToPreviousAction()
@@ -590,7 +600,7 @@ namespace AWBWApp.Game.Game.Logic
                 ScheduleAfterChildren(() =>
                 {
                     updatePlayerList(previousTurnIndex, false, true);
-                    barWidget.UpdateActions();
+                    updateReplayBarActions();
                 });
 
                 var lastAction = turn.Actions[^1];
@@ -613,7 +623,7 @@ namespace AWBWApp.Game.Game.Logic
 
             currentActionIndex--;
 
-            barWidget.UpdateActions();
+            updateReplayBarActions();
         }
 
         public bool HasOngoingAction() => currentOngoingActions.Count > 0;
@@ -691,7 +701,7 @@ namespace AWBWApp.Game.Game.Logic
             ScheduleAfterChildren(() =>
             {
                 updatePlayerList(turnIdx, false, false);
-                barWidget.UpdateActions();
+                updateReplayBarActions();
             });
         }
 
@@ -737,7 +747,7 @@ namespace AWBWApp.Game.Game.Logic
             if (reset)
             {
                 playerList.CreateNewListForPlayers(Players, this, replayData.ReplayInfo.ReplayVersion <= 0, replayData.ReplayInfo.TeamMatch);
-                barWidget.SetSizeToLargestPlayerName(Players);
+                updateReplayBarTurns();
                 playerList.SetGameHasFog(replayData.ReplayInfo.Fog);
             }
 
@@ -924,11 +934,16 @@ namespace AWBWApp.Game.Game.Logic
             }
 
             if (autoAdvance.HasValue)
+            {
                 barWidget.CancelAutoAdvance(autoAdvance.Value);
+                playerList.ReplayBarWidget.CancelAutoAdvance(autoAdvance.Value);
+            }
 
             autoAdvance = action;
             currentAutoAdvanceDelay = AutoAdvanceDelay.Value * 1000;
-            barWidget.SetSliderVisibility(true);
+
+            barWidget.StartAutoAdvance(action);
+            playerList.ReplayBarWidget.StartAutoAdvance(action);
 
             cancelAutoAdvanceIfCantContinue();
         }
@@ -962,9 +977,26 @@ namespace AWBWApp.Game.Game.Logic
         public void CancelAutoAdvance()
         {
             if (autoAdvance.HasValue)
+            {
                 barWidget.CancelAutoAdvance(autoAdvance.Value);
+                playerList.ReplayBarWidget.CancelAutoAdvance(autoAdvance.Value);
+            }
+
             barWidget.SetSliderVisibility(false);
+            playerList.ReplayBarWidget.SetSliderVisibility(false);
             autoAdvance = null;
+        }
+
+        private void updateReplayBarActions()
+        {
+            barWidget.UpdateActions();
+            playerList.ReplayBarWidget.UpdateActions();
+        }
+
+        private void updateReplayBarTurns()
+        {
+            barWidget.UpdateTurns(replayData.TurnData);
+            playerList.ReplayBarWidget.UpdateTurns(replayData.TurnData);
         }
 
         public void ClearAllEffects()
