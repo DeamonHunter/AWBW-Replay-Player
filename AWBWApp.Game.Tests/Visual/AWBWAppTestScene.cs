@@ -50,7 +50,6 @@ namespace AWBWApp.Game.Tests.Visual
         {
             var dependencies = base.CreateChildDependencies(parent);
             RecycleLocalStorage();
-
             return dependencies;
         }
 
