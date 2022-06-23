@@ -26,9 +26,13 @@ namespace AWBWApp.Game.UI.Replay
 
         private Bindable<float> playerListScale;
         private Bindable<bool> playerListLeftSide;
+        private Bindable<bool> playerListDontReorder;
 
         private MenuItem[] contextMenuItems;
         private TeamOrPlayerDropdown fogDropdown;
+
+        private long currentActivePlayer;
+        private int currentTurn;
 
         public ReplayPlayerList(ReplayController controller)
         {
@@ -92,6 +96,8 @@ namespace AWBWApp.Game.UI.Replay
                 Anchor = x.NewValue ? Anchor.TopLeft : Anchor.TopRight;
                 Origin = x.NewValue ? Anchor.TopLeft : Anchor.TopRight;
             }, true);
+            playerListDontReorder = configManager.GetBindable<bool>(AWBWSetting.PlayerListKeepOrderStatic);
+            playerListDontReorder.BindValueChanged(_ => Schedule(() => SortList(currentActivePlayer, currentTurn)), true);
 
             contextMenuItems = new[]
             {
@@ -99,6 +105,7 @@ namespace AWBWApp.Game.UI.Replay
                 {
                     Items = createPlayerListScaleItems(configManager)
                 },
+                new ToggleMenuItem("Keep Order Static", configManager.GetBindable<bool>(AWBWSetting.PlayerListKeepOrderStatic)),
                 new ToggleMenuItem("Swap Sides", configManager.GetBindable<bool>(AWBWSetting.PlayerListLeftSide)),
             };
         }
@@ -142,6 +149,26 @@ namespace AWBWApp.Game.UI.Replay
         {
             if (drawablePlayers.Count <= 0)
                 return;
+
+            currentActivePlayer = playerID;
+            currentTurn = turnNumber;
+
+            if (playerListDontReorder.Value)
+            {
+                for (int i = 0; i < drawablePlayers.Count; i++)
+                {
+                    var player = drawablePlayers[i];
+
+                    if (player.PlayerID == currentActivePlayer)
+                        player.ResizeTo(new Vector2(1, player.Height), 200, Easing.In);
+                    else
+                        player.ResizeTo(new Vector2(0.9f, player.Height), 200, Easing.In);
+
+                    fillContainer.SetLayoutPosition(player, i);
+                }
+
+                return;
+            }
 
             var list = new List<ReplayPlayerListItem>();
             var topPlayer = drawablePlayers.Find(x => x.PlayerID == playerID);

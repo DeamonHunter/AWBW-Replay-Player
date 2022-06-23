@@ -27,6 +27,7 @@ namespace AWBWApp.Game
             SetDefault(AWBWSetting.ReplayBarControlPositionX, 0f);
             SetDefault(AWBWSetting.ReplayBarControlPositionY, 0f);
             SetDefault(AWBWSetting.ReplayListSort, CarouselSort.EndDate);
+            SetDefault(AWBWSetting.PlayerListKeepOrderStatic, false);
         }
     }
 
@@ -43,6 +44,7 @@ namespace AWBWApp.Game
         ReplayBarControlScale,
         ReplayBarControlPositionX,
         ReplayBarControlPositionY,
-        ReplayListSort
+        ReplayListSort,
+        PlayerListKeepOrderStatic
     }
 }
