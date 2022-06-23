@@ -172,7 +172,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                 (replayPlayerTurn.RequiredPowerForSuper, replayPlayerTurn.TagRequiredPowerForSuper) = (replayPlayerTurn.TagRequiredPowerForSuper, replayPlayerTurn.RequiredPowerForSuper);
             }
 
-            if (activatePower != null)
+            if (activatePower != ActiveCOPower.None)
                 replayPlayerTurn.Power = 0;
 
             var unitCount = playerInfo.UnitCount.Value + (gainUnits ?? 0);

@@ -67,7 +67,7 @@ namespace AWBWApp.Game.UI.Components
 
             protected readonly TextFlowContainer Text;
 
-            private string text;
+            private LocalisableString text;
 
             protected override LocalisableString Label
             {
@@ -109,6 +109,10 @@ namespace AWBWApp.Game.UI.Components
 
             private void setText(LocalisableString localisable)
             {
+                if (text == localisable)
+                    return;
+
+                text = localisable;
                 Text.Text = $"{Prefix}{localisable}";
             }
         }

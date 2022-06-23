@@ -18,28 +18,28 @@ namespace AWBWApp.Game.UI
             return base.OnKeyDown(e);
         }
 
-        public override void OnEntering(IScreen last)
+        public override void OnEntering(ScreenTransitionEvent e)
         {
             this.FadeInFromZero(250, Easing.OutQuint);
-            base.OnEntering(last);
+            base.OnEntering(e);
         }
 
-        public override void OnResuming(IScreen last)
+        public override void OnResuming(ScreenTransitionEvent e)
         {
             this.FadeIn(250, Easing.OutQuint);
-            base.OnResuming(last);
+            base.OnResuming(e);
         }
 
-        public override void OnSuspending(IScreen next)
+        public override void OnSuspending(ScreenTransitionEvent e)
         {
             this.FadeOut(250, Easing.In);
-            base.OnSuspending(next);
+            base.OnSuspending(e);
         }
 
-        public override bool OnExiting(IScreen next)
+        public override bool OnExiting(ScreenExitEvent e)
         {
             this.FadeOut(125, Easing.Out);
-            return base.OnExiting(next);
+            return base.OnExiting(e);
         }
     }
 }

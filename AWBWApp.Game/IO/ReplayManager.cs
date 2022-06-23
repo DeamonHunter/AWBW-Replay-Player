@@ -25,9 +25,9 @@ namespace AWBWApp.Game.IO
 
         public Action<ReplayInfo> ReplayRemoved;
 
-        private readonly Dictionary<long, ReplayInfo> _knownReplays = new Dictionary<long, ReplayInfo>();
+        private readonly Dictionary<long, ReplayInfo> knownReplays = new Dictionary<long, ReplayInfo>();
 
-        private readonly Dictionary<long, string> _playerNames = new Dictionary<long, string>();
+        private readonly Dictionary<long, string> playerNames = new Dictionary<long, string>();
 
         private readonly AWBWJsonReplayParser jsonParser = new AWBWJsonReplayParser();
         private readonly AWBWXmlReplayParser xmlParser = new AWBWXmlReplayParser();
@@ -41,7 +41,7 @@ namespace AWBWApp.Game.IO
                 using (var stream = underlyingStorage.GetStream(replay_storage))
                 {
                     using (var sr = new StreamReader(stream))
-                        _knownReplays = JsonConvert.DeserializeObject<Dictionary<long, ReplayInfo>>(sr.ReadToEnd()) ?? _knownReplays;
+                        knownReplays = JsonConvert.DeserializeObject<Dictionary<long, ReplayInfo>>(sr.ReadToEnd()) ?? knownReplays;
                 }
             }
 
@@ -50,7 +50,7 @@ namespace AWBWApp.Game.IO
                 using (var stream = underlyingStorage.GetStream(username_storage))
                 {
                     using (var sr = new StreamReader(stream))
-                        _playerNames = JsonConvert.DeserializeObject<Dictionary<long, string>>(sr.ReadToEnd()) ?? _playerNames;
+                        playerNames = JsonConvert.DeserializeObject<Dictionary<long, string>>(sr.ReadToEnd()) ?? playerNames;
                 }
             }
         }
@@ -60,7 +60,7 @@ namespace AWBWApp.Game.IO
             checkAllReplays();
         }
 
-        public IEnumerable<ReplayInfo> GetAllKnownReplays() => _knownReplays.Values;
+        public IEnumerable<ReplayInfo> GetAllKnownReplays() => knownReplays.Values;
 
         private void checkAllReplays()
         {
@@ -78,7 +78,7 @@ namespace AWBWApp.Game.IO
                 if (extension != ".zip" || !int.TryParse(fileName, out int replayNumber))
                     continue;
 
-                if (!_knownReplays.TryGetValue(replayNumber, out var replayInfo))
+                if (!knownReplays.TryGetValue(replayNumber, out var replayInfo))
                 {
                     newReplays.Add(file);
                     continue;
@@ -133,7 +133,6 @@ namespace AWBWApp.Game.IO
                 playerQueue.Enqueue(player.Value);
 
             int errorCount = 0;
-            bool first = true;
 
             while (playerQueue.Count > 0)
             {
@@ -144,14 +143,14 @@ namespace AWBWApp.Game.IO
 
                 if (player.Username != null)
                 {
-                    if (!_playerNames.ContainsKey(player.UserId))
-                        _playerNames[player.UserId] = player.Username;
+                    if (!playerNames.ContainsKey(player.UserId))
+                        playerNames[player.UserId] = player.Username;
                     continue;
                 }
 
                 savePlayers = true;
 
-                if (_playerNames.TryGetValue(player.UserId, out var username))
+                if (playerNames.TryGetValue(player.UserId, out var username))
                 {
                     player.Username = username;
                     continue;
@@ -173,7 +172,7 @@ namespace AWBWApp.Game.IO
                     }
 
                     player.Username = usernameRequest.Username;
-                    _playerNames[player.UserId] = usernameRequest.Username;
+                    playerNames[player.UserId] = usernameRequest.Username;
 
                     if (playerQueue.Count > 0)
                         await Task.Delay(150);
@@ -202,9 +201,9 @@ namespace AWBWApp.Game.IO
 
         private void addReplay(ReplayData data)
         {
-            var containedAlready = _knownReplays.ContainsKey(data.ReplayInfo.ID);
+            var containedAlready = knownReplays.ContainsKey(data.ReplayInfo.ID);
 
-            _knownReplays[data.ReplayInfo.ID] = data.ReplayInfo;
+            knownReplays[data.ReplayInfo.ID] = data.ReplayInfo;
             saveReplays();
 
             if (containedAlready)
@@ -215,7 +214,7 @@ namespace AWBWApp.Game.IO
 
         private void saveReplays()
         {
-            var contents = JsonConvert.SerializeObject(_knownReplays, Formatting.Indented);
+            var contents = JsonConvert.SerializeObject(knownReplays, Formatting.Indented);
 
             using (var stream = underlyingStorage.GetStream(replay_storage, FileAccess.Write, FileMode.Create))
             {
@@ -223,7 +222,7 @@ namespace AWBWApp.Game.IO
                     sw.Write(contents);
             }
 
-            contents = JsonConvert.SerializeObject(_playerNames, Formatting.Indented);
+            contents = JsonConvert.SerializeObject(playerNames, Formatting.Indented);
 
             using (var stream = underlyingStorage.GetStream(username_storage, FileAccess.Write, FileMode.Create))
             {
@@ -232,7 +231,7 @@ namespace AWBWApp.Game.IO
             }
         }
 
-        public bool TryGetReplayInfo(long id, out ReplayInfo info) => _knownReplays.TryGetValue(id, out info);
+        public bool TryGetReplayInfo(long id, out ReplayInfo info) => knownReplays.TryGetValue(id, out info);
 
         public async Task<ReplayData> GetReplayData(ReplayInfo info) => await GetReplayData(info.ID);
 
@@ -471,7 +470,7 @@ namespace AWBWApp.Game.IO
         //Todo: Possibly do what osu does and not commit this until shutdown (aka allow it to be restored.)
         public void DeleteReplay(ReplayInfo replayInfo)
         {
-            _knownReplays.Remove(replayInfo.ID);
+            knownReplays.Remove(replayInfo.ID);
             underlyingStorage.Delete($"{replayInfo.ID}.zip");
             ReplayRemoved?.Invoke(replayInfo);
         }

@@ -123,7 +123,7 @@ namespace AWBWApp.Game.UI.Interrupts
                         return;
                     }
                 }
-                catch (TaskCanceledException e)
+                catch (TaskCanceledException)
                 {
                     failed(sessionHandler.LoginError);
                     return;

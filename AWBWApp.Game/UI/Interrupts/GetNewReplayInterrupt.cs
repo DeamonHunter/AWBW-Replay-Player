@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.IO;
+using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
@@ -115,26 +116,25 @@ namespace AWBWApp.Game.UI.Interrupts
             Schedule(attemptDownload);
         }
 
-        public static long ParseReplayString(string replay)
+        public static long ParseReplayString([NotNull] string replay)
         {
-            const string siteLink = "https://awbw.amarriner.com/2030.php?games_id=";
+            const string site_link = "https://awbw.amarriner.com/2030.php?games_id=";
 
-            long replayId;
-            if (long.TryParse(replay, out replayId))
-                return replayId;
+            if (long.TryParse(replay, out var replayID))
+                return replayID;
 
-            if (replay.StartsWith(siteLink))
+            if (replay.StartsWith(site_link))
             {
-                var turnIndex = replay.IndexOf("&ndx=");
+                var turnIndex = replay.IndexOf("&ndx=", StringComparison.InvariantCulture);
 
                 string possibleId;
-                if (turnIndex >= 0 && turnIndex > siteLink.Length)
-                    possibleId = replay.Substring(siteLink.Length, turnIndex - siteLink.Length);
+                if (turnIndex >= 0 && turnIndex > site_link.Length)
+                    possibleId = replay[site_link.Length..turnIndex];
                 else
-                    possibleId = replay.Substring(siteLink.Length);
+                    possibleId = replay[site_link.Length..];
 
-                if (long.TryParse(possibleId, out replayId))
-                    return replayId;
+                if (long.TryParse(possibleId, out replayID))
+                    return replayID;
 
                 throw new Exception("Was unable to parse the replay in the website URL: " + replay);
             }
@@ -150,7 +150,7 @@ namespace AWBWApp.Game.UI.Interrupts
             {
                 gameID = ParseReplayString(replayInput.Text);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 failed("Failed to parse the replay id. Must either be of the form '123456' or  'https://awbw.amarriner.com/2030.php?games_id=123456'");
                 return;

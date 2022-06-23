@@ -22,9 +22,7 @@ namespace AWBWApp.Game.API.Replay
         {
             var action = (string)jObject["action"];
 
-            IReplayActionBuilder actionBuilder;
-
-            if (!actionBuilders.TryGetValue(action, out actionBuilder))
+            if (!actionBuilders.TryGetValue(action, out var actionBuilder))
                 throw new Exception($"Unknown replay action type: {action}\nJson String:\n{jObject.ToString(Formatting.Indented)}");
 
             return actionBuilder.ParseJObjectIntoReplayAction(jObject, replayData, turnData);

@@ -123,7 +123,7 @@ namespace AWBWApp.Game
             return true;
         }
 
-        public override void OnEntering(IScreen last)
+        public override void OnEntering(ScreenTransitionEvent e)
         {
             buttonsContainer.FadeOut();
             hintBox.FadeOut();
@@ -131,10 +131,9 @@ namespace AWBWApp.Game
             logo.Animate();
         }
 
-        public override void OnResuming(IScreen last)
+        public override void OnResuming(ScreenTransitionEvent e)
         {
-            base.OnResuming(last);
-
+            base.OnResuming(e);
             preLoadReplaySelect();
         }
 

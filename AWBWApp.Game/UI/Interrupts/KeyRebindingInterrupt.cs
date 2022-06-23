@@ -130,7 +130,6 @@ namespace AWBWApp.Game.UI.Interrupts
             private GlobalActionContainer globalActionContainer { get; set; }
 
             private AWBWGlobalAction currentAction;
-            private KeyRebindRow rowToUpdate;
             private KeyCombination currentCombination;
 
             private KeyRebindingInterrupt interrupt;

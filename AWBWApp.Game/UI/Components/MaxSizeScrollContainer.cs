@@ -144,7 +144,7 @@ namespace AWBWApp.Game.UI.Components
             }
         }
 
-        public class SizeCacheFillFlowContainer<T> : FillFlowContainer<T> where T : Drawable
+        public class SizeCacheFillFlowContainer<U> : FillFlowContainer<U> where U : Drawable
         {
             public readonly LayoutValue SizeCache = new LayoutValue(Invalidation.RequiredParentSizeToFit, InvalidationSource.Self);
 

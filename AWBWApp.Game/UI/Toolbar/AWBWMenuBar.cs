@@ -8,7 +8,6 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
-using osu.Framework.Localisation;
 using osu.Framework.Threading;
 using osuTK;
 using osuTK.Graphics;
@@ -198,12 +197,6 @@ namespace AWBWApp.Game.UI.Toolbar
 
         private class NotificationButton : Button
         {
-            public LocalisableString Text
-            {
-                get => text.Text;
-                set => text.Text = value;
-            }
-
             public int UnreadNotifications
             {
                 get => unreadNotifcations;
@@ -218,11 +211,8 @@ namespace AWBWApp.Game.UI.Toolbar
 
             private int unreadNotifcations;
 
-            private BasicButton button;
-
             private Box backgroundBox;
             private Box hoverBox;
-            private SpriteText text;
 
             private CircularContainer countContainer;
             private SpriteText countText;

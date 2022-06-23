@@ -82,7 +82,7 @@ namespace AWBWApp.Game.Input
             public override string ToString() => $"{KeyCombination}=>{Action}";
         }
 
-        protected class KeyBindingConfigManager<T> : IniConfigManager<T> where T : struct, Enum
+        protected class KeyBindingConfigManager<U> : IniConfigManager<U> where U : struct, Enum
         {
             protected override string Filename => "keybindings.ini";
 
@@ -91,7 +91,7 @@ namespace AWBWApp.Game.Input
             {
             }
 
-            public bool Has(T key)
+            public bool Has(U key)
             {
                 return ConfigStore.ContainsKey(key);
             }

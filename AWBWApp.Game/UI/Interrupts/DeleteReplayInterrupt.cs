@@ -89,7 +89,7 @@ namespace AWBWApp.Game.UI.Interrupts
             });
         }
 
-        private async void attemptDelete()
+        private void attemptDelete()
         {
             try
             {

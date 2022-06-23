@@ -97,12 +97,10 @@ namespace AWBWApp.Game.UI.Select
 
         public void SetGridOffset(Vector2 offset) => grid.GridOffset = offset;
 
-        public override void OnEntering(IScreen last)
+        public override void OnEntering(ScreenTransitionEvent e)
         {
-            base.OnEntering(last);
-
+            base.OnEntering(e);
             Carousel.OnEnter();
-
             background.FadeColour(backgroundColor).FadeColour(backgroundColor.Darken(0.2f), 500, Easing.In);
         }
 
@@ -164,9 +162,9 @@ namespace AWBWApp.Game.UI.Select
             return true;
         }
 
-        public override void OnResuming(IScreen last)
+        public override void OnResuming(ScreenTransitionEvent e)
         {
-            base.OnResuming(last);
+            base.OnResuming(e);
 
             if (replayController == null || !replayController.IsLoaded)
                 tokenSource.Cancel();
