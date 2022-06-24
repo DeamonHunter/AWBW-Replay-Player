@@ -72,6 +72,7 @@ namespace AWBWApp.Game.Game.Units
 
         private IBindable<bool> showUnitInFog;
         private IBindable<CountryData> country;
+        private IBindable<bool> movementAnimations;
 
         [Resolved]
         private NearestNeighbourTextureStore textureStore { get; set; }
@@ -111,7 +112,7 @@ namespace AWBWApp.Game.Game.Units
             BeingCarried.BindValueChanged(x => updateUnitColour(x.NewValue));
             unitFaceDirection?.BindValueChanged(x => spriteContainer.UpdateFaceDirection(x.NewValue, this.country.Value), true);
             movementState = new Bindable<MovementState>();
-            movementState.BindValueChanged(x => spriteContainer.SetMovementState(x.NewValue));
+            movementState.BindValueChanged(x => spriteContainer.SetMovementState(movementAnimations.Value ? x.NewValue : MovementState.Idle));
 
             UpdateUnit(unit);
         }
@@ -162,6 +163,8 @@ namespace AWBWApp.Game.Game.Units
 
             showUnitInFog = configManager.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits);
             showUnitInFog.BindValueChanged(x => updateUnitColour(x.NewValue));
+
+            movementAnimations = configManager.GetBindable<bool>(AWBWSetting.ReplayMovementAnimations);
 
             CanMove.BindValueChanged(x => updateUnitColour(x.NewValue));
             FogOfWarActive.BindValueChanged(x => updateUnitColour(x.NewValue));
