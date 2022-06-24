@@ -639,7 +639,7 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     if (ongoingAction.Current?.Transformable != null)
                     {
-                        ongoingAction.Current.Transformable.FinishTransforms();
+                        ongoingAction.Current.Transformable.FinishTransforms(true);
                         if (ongoingAction.Current.Transformable.LifetimeEnd != double.MaxValue)
                             ongoingAction.Current.Transformable.Expire();
                     }

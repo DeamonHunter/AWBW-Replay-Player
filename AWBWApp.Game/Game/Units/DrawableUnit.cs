@@ -200,6 +200,7 @@ namespace AWBWApp.Game.Game.Units
             {
                 FinishTransforms();
                 Position = getRealPositionFromMapTiles(MapPosition);
+                movementState.Value = MovementState.Idle;
             }
         }
 
@@ -243,8 +244,7 @@ namespace AWBWApp.Game.Game.Units
                 }
             }
 
-            transformSequence.OnComplete(_ => movementState.Value = MovementState.Idle);
-            transformSequence.OnAbort(_ => movementState.Value = MovementState.Idle);
+            transformSequence.Then().TransformBindableTo(movementState, MovementState.Idle);
             return transformSequence;
         }
 
@@ -381,7 +381,7 @@ namespace AWBWApp.Game.Game.Units
                 textureStore.LoadIntoAnimation($"{countryData.Path}/{unitData.MoveUpAnimation.Texture}", moveUpAnim, unitData.MoveUpAnimation.Frames, unitData.MoveUpAnimation.FrameOffset);
                 textureStore.LoadIntoAnimation($"{countryData.Path}/{unitData.MoveDownAnimation.Texture}", moveDownAnim, unitData.MoveDownAnimation.Frames, unitData.MoveDownAnimation.FrameOffset);
 
-                SetMovementState(currentMovementState);
+                SetMovementState(currentMovementState, true);
             }
 
             public void UpdateFaceDirection(FaceDirection faceDirection, CountryData countryData)
@@ -390,8 +390,12 @@ namespace AWBWApp.Game.Game.Units
                 idleAnim.Origin = faceDirection == countryData.FaceDirection ? Anchor.BottomLeft : Anchor.BottomRight;
             }
 
-            public void SetMovementState(MovementState state)
+            public void SetMovementState(MovementState state, bool forceUpdate = false)
             {
+                if (!forceUpdate && currentMovementState == state)
+                    return;
+
+                currentMovementState = state;
                 idleAnim.Hide();
                 idleAnim.Stop();
                 moveUpAnim.Hide();
