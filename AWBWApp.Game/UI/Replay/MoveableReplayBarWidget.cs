@@ -203,9 +203,9 @@ namespace AWBWApp.Game.UI.Replay
             moveBarToOffset(new Vector2(replayBarOffsetX.Value, replayBarOffsetY.Value));
         }
 
-        public override void UpdateTurns(List<TurnData> turns)
+        public override void UpdateTurns(List<TurnData> turns, int activeTurn)
         {
-            base.UpdateTurns(turns);
+            base.UpdateTurns(turns, activeTurn);
             TurnSelectDropdown.SetSizeToLargestPlayerName(ReplayController.Players);
         }
 

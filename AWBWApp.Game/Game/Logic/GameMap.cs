@@ -315,14 +315,18 @@ namespace AWBWApp.Game.Game.Logic
                     tile.FadeOut().Delay((x + y) * 40 * inverseSpeed).FadeIn().MoveToOffset(offsetPosition).MoveTo(tilePos, 275 * inverseSpeed, Easing.OutCubic);
 
                     var coord = new Vector2I(x, y);
+
                     if (buildingGrid.TryGet(coord, out var building))
-                        building.FadeOut().Delay(((x + y) * 40 + 25) * inverseSpeed).FadeIn().MoveToOffset(offsetPosition).MoveTo(building.Position, 275 * inverseSpeed, Easing.OutCubic);
+                    {
+                        building.FadeOut().Delay(((x + y) * 40 + 25) * inverseSpeed).FadeIn().MoveToOffset(offsetPosition)
+                                .MoveTo(building.Position, 275 * inverseSpeed, Easing.OutCubic);
+                    }
 
                     if (TryGetDrawableUnit(coord, out var unit))
                     {
                         unit.UnitAnimatingIn = true;
-                        unit.FadeOut().Delay(((x + y) * 40 + 50) * inverseSpeed).FadeInFromZero();
-                        unit.Delay(((x + y) * 40 + 50) * inverseSpeed).MoveToOffset(offsetPosition).MoveTo(unit.Position, 275 * inverseSpeed, Easing.OutCubic).OnComplete(x => x.UnitAnimatingIn = false);
+                        unit.FadeOut().Delay(((x + y) * 40 + 50) * inverseSpeed).FadeInFromZero().MoveToOffset(offsetPosition)
+                            .MoveTo(unit.Position, 275 * inverseSpeed, Easing.OutCubic).OnComplete(x => x.UnitAnimatingIn = false);
                     }
                 }
             }

@@ -42,8 +42,11 @@ namespace AWBWApp.Game.UI.Replay
             SetSliderVisibility(false);
         }
 
-        public virtual void UpdateTurns(List<TurnData> turns)
+        public virtual void UpdateTurns(List<TurnData> turns, int activeTurn)
         {
+            if (turns.Count < 1)
+                throw new ArgumentException("There should always be at least 1 turn", nameof(turns));
+
             var items = new Turn[turns.Count];
 
             for (int i = 0; i < turns.Count; i++)
@@ -57,6 +60,7 @@ namespace AWBWApp.Game.UI.Replay
                 };
             }
 
+            TurnSelectDropdown.Current.Value = items[activeTurn];
             TurnSelectDropdown.Items = items;
         }
 

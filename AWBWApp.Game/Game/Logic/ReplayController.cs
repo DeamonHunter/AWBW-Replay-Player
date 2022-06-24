@@ -995,8 +995,8 @@ namespace AWBWApp.Game.Game.Logic
 
         private void updateReplayBarTurns()
         {
-            barWidget.UpdateTurns(replayData.TurnData);
-            playerList.ReplayBarWidget.UpdateTurns(replayData.TurnData);
+            barWidget.UpdateTurns(replayData.TurnData, CurrentTurnIndex.Value);
+            playerList.ReplayBarWidget.UpdateTurns(replayData.TurnData, CurrentTurnIndex.Value);
         }
 
         public void ClearAllEffects()
