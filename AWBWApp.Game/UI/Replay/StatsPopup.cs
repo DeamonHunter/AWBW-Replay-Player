@@ -62,8 +62,8 @@ namespace AWBWApp.Game.UI.Replay
                         Tooltip = $"Spent on Building: {readout.MoneySpentOnBuildingUnits}\nSpent On Repairing: {readout.MoneySpentOnRepairingUnits}"
                     },
                     new StatLine("Powers Used", $"{readout.PowersUsed} COP / {readout.SuperPowersUsed} SCOP"),
-                    new UnitFlowContainer("Built/Value", players[playerID].Country.Value.Code, readout.BuildStats, "Total Built Value", readout.TotalValueBuilt),
-                    new UnitFlowContainer("Deaths/Value Damage Taken", players[playerID].Country.Value.Code, readout.LostStats, "Total Value of Damage", readout.TotalValueLost),
+                    new UnitFlowContainer("Built/Value", players[playerID].Country.Value.Path, readout.BuildStats, "Total Built Value", readout.TotalValueBuilt),
+                    new UnitFlowContainer("Deaths/Value Damage Taken", players[playerID].Country.Value.Path, readout.LostStats, "Total Value of Damage", readout.TotalValueLost),
                     new UnitFlowContainer("Kills/Value Damage Dealt", players, readout.DamageOtherStats, "Total Value of Damage", readout.TotalValueDamaged),
                 }
             };
@@ -263,7 +263,7 @@ namespace AWBWApp.Game.UI.Replay
                 rollingCounter.Current.Value = totalValue;
             }
 
-            public UnitFlowContainer(string heading, string countryCode, Dictionary<string, (int, long)> units, string valueDesc, long totalValue)
+            public UnitFlowContainer(string heading, string countryPath, Dictionary<string, (int, long)> units, string valueDesc, long totalValue)
                 : this(heading, valueDesc, totalValue)
             {
                 var content = new Drawable[(units.Count / 3) + 1][];
@@ -277,7 +277,7 @@ namespace AWBWApp.Game.UI.Replay
                     if (content[row] == null)
                         content[row] = new Drawable[3];
 
-                    content[row][idx % 3] = new UnitStats(null, stat.Key, countryCode, stat.Value.Item1, stat.Value.Item2);
+                    content[row][idx % 3] = new UnitStats(null, stat.Key, countryPath, stat.Value.Item1, stat.Value.Item2);
                     idx++;
                 }
                 setContent(content);
@@ -304,7 +304,7 @@ namespace AWBWApp.Game.UI.Replay
 
                 foreach (var playerStats in units)
                 {
-                    var countryCode = players[playerStats.Key].Country.Value.Code;
+                    var countryPath = players[playerStats.Key].Country.Value.Path;
 
                     var idx = 0;
 
@@ -313,7 +313,7 @@ namespace AWBWApp.Game.UI.Replay
                         if (content[rowIdx] == null)
                             content[rowIdx] = new Drawable[3];
 
-                        content[rowIdx][idx % 3] = new UnitStats(players[playerStats.Key].Username, stat.Key, countryCode, stat.Value.Item1, stat.Value.Item2);
+                        content[rowIdx][idx % 3] = new UnitStats(players[playerStats.Key].Username, stat.Key, countryPath, stat.Value.Item1, stat.Value.Item2);
                         idx++;
 
                         if (idx % 3 == 0)
@@ -353,17 +353,17 @@ namespace AWBWApp.Game.UI.Replay
             private TextureAnimation spriteAnimation;
 
             private string unitType;
-            private string countryCode;
+            private string countryPath;
             private long unitValue;
             private string playerUsername;
 
-            public UnitStats(string playerUsername, string unitType, string countryCode, int unitCount, long value)
+            public UnitStats(string playerUsername, string unitType, string countryPath, int unitCount, long value)
             {
                 AutoSizeAxes = Axes.X;
                 Height = 20;
 
                 this.unitType = unitType;
-                this.countryCode = countryCode;
+                this.countryPath = countryPath;
                 this.playerUsername = playerUsername;
                 unitValue = value;
 
@@ -407,25 +407,7 @@ namespace AWBWApp.Game.UI.Replay
             private void load(NearestNeighbourTextureStore textureStore, UnitStorage unitStorage)
             {
                 var unitData = unitStorage.GetUnitByCode(unitType);
-
-                if (unitData.Frames == null)
-                {
-                    var texture = textureStore.Get($"{unitData.BaseTextureByTeam[countryCode]}-0");
-                    spriteAnimation.Size = texture.Size;
-                    spriteAnimation.AddFrame(texture);
-                    return;
-                }
-
-                for (var i = 0; i < unitData.Frames.Length; i++)
-                {
-                    var texture = textureStore.Get($"{unitData.BaseTextureByTeam[countryCode]}-{i}");
-                    if (texture == null)
-                        throw new Exception("Improperly configured UnitData. Animation count wrong.");
-
-                    if (i == 0)
-                        spriteAnimation.Size = texture.Size;
-                    spriteAnimation.AddFrame(texture, unitData.Frames[i]);
-                }
+                textureStore.LoadIntoAnimation($"{countryPath}/{unitData.IdleAnimation.Texture}", spriteAnimation, unitData.IdleAnimation.Frames, unitData.IdleAnimation.FrameOffset);
             }
 
             public LocalisableString TooltipText => playerUsername;

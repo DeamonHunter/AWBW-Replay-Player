@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Animations;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.Transforms;
 
 namespace AWBWApp.Game.Helpers
@@ -17,35 +18,36 @@ namespace AWBWApp.Game.Helpers
             return drawable.Delay(other.LatestTransformEndTime - drawable.Time.Current);
         }
 
-        public static TransformSequence<TA> AddDelayDependingOnDifferenceBetweenEndTimes<TA, TB>(this TransformSequence<TA> transform, TA baseTransformable, TB otherTransformable)
-            where TA : Transformable
-            where TB : Transformable
+        public static void LoadIntoAnimation(this TextureStore textureStore, string baseTextureAnimation, Animation<Texture> animation, double[] frameTimes = null, double frameOffset = 0)
         {
-            if (otherTransformable.Clock == null)
-                return transform.Delay(0);
+            //We cannot be sure that the animation coming in is clear. So make sure it is before starting.
+            animation.ClearFrames();
 
-            if (baseTransformable.Clock != otherTransformable.Clock)
-                throw new InvalidOperationException("Cannot support 2 different clocks.");
+            if (frameTimes == null)
+            {
+                var texture = textureStore.Get($"{baseTextureAnimation}-0") ?? textureStore.Get(baseTextureAnimation);
 
-            return transform.Delay(Math.Max(0, otherTransformable.LatestTransformEndTime - baseTransformable.LatestTransformEndTime));
-        }
+                if (texture == null)
+                    throw new Exception($"Tried to load the image '{baseTextureAnimation}' but it is missing.");
 
-        public static IDisposable BeginSequenceAfterTransformablesFinish<TA, TB>(this TA transformable, List<TB> delayUntilCompleted, bool recusive = true)
-            where TA : Transformable
-            where TB : Transformable
-        {
-            if (delayUntilCompleted == null || delayUntilCompleted.Count == 0)
-                return transformable.BeginAbsoluteSequence(0, recusive);
+                animation.Size = texture.Size;
+                animation.AddFrame(texture);
+                return;
+            }
 
-            double delay = 0;
+            for (var i = 0; i < frameTimes.Length; i++)
+            {
+                var texture = textureStore.Get($"{baseTextureAnimation}-{i}");
+                if (texture == null)
+                    throw new Exception($"Improperly configured animation. Missing image '{baseTextureAnimation}-{i}'.");
 
-            foreach (var otherTransformable in delayUntilCompleted)
-                delay = Math.Max(delay, otherTransformable.LatestTransformEndTime - otherTransformable.Time.Current);
+                if (i == 0)
+                    animation.Size = texture.Size;
+                animation.AddFrame(texture, frameTimes[i]);
+            }
 
-            if (delay == 0)
-                return transformable.BeginAbsoluteSequence(0, recusive);
-
-            return transformable.BeginDelayedSequence(delay, recusive);
+            //Reset the animation to start where we expect
+            animation.Seek(frameOffset);
         }
     }
 }

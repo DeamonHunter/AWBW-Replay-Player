@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using AWBWApp.Game.Game.Logic;
+﻿using AWBWApp.Game.Game.Logic;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Game.Units
@@ -16,9 +15,17 @@ namespace AWBWApp.Game.Game.Units
         public Vector2I AttackRange { get; set; }
         public int Cost { get; set; }
         public MovementType MovementType { get; set; }
-        public Dictionary<string, string> BaseTextureByTeam { get; set; }
-        public double[] Frames { get; set; }
-        public double FrameOffset { get; set; }
         public bool SecondWeapon { get; set; }
+        public Animation IdleAnimation;
+        public Animation MoveSideAnimation;
+        public Animation MoveUpAnimation;
+        public Animation MoveDownAnimation;
+    }
+
+    public class Animation
+    {
+        public string Texture;
+        public double[] Frames;
+        public double FrameOffset;
     }
 }

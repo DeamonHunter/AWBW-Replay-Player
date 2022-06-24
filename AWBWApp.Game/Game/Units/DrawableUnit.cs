@@ -60,7 +60,7 @@ namespace AWBWApp.Game.Game.Units
         public BindableBool Dived = new BindableBool();
         public Vector2I MapPosition { get; private set; }
 
-        private UnitTextureAnimation textureAnimation;
+        private DrawableUnitSpriteContainer spriteContainer;
         private TextureAnimation statsAnimation;
         private TextureSpriteText healthSpriteText;
 
@@ -68,9 +68,10 @@ namespace AWBWApp.Game.Game.Units
 
         public HashSet<long> Cargo = new HashSet<long>();
 
+        private Bindable<MovementState> movementState;
+
         private IBindable<bool> showUnitInFog;
         private IBindable<CountryData> country;
-        private FaceDirection faceDirection;
 
         [Resolved]
         private NearestNeighbourTextureStore textureStore { get; set; }
@@ -83,7 +84,7 @@ namespace AWBWApp.Game.Game.Units
 
             InternalChildren = new Drawable[]
             {
-                textureAnimation = new UnitTextureAnimation()
+                spriteContainer = new DrawableUnitSpriteContainer
                 {
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft
@@ -108,7 +109,9 @@ namespace AWBWApp.Game.Game.Units
 
             HealthPoints.BindValueChanged(updateHp, true);
             BeingCarried.BindValueChanged(x => updateUnitColour(x.NewValue));
-            unitFaceDirection?.BindValueChanged(x => updateFaceDirection(x.NewValue), true);
+            unitFaceDirection?.BindValueChanged(x => spriteContainer.UpdateFaceDirection(x.NewValue, this.country.Value), true);
+            movementState = new Bindable<MovementState>();
+            movementState.BindValueChanged(x => spriteContainer.SetMovementState(x.NewValue));
 
             UpdateUnit(unit);
         }
@@ -155,7 +158,7 @@ namespace AWBWApp.Game.Game.Units
         [BackgroundDependencyLoader]
         private void load(AWBWConfigManager configManager)
         {
-            country.BindValueChanged(x => updateAnimation(), true);
+            country.BindValueChanged(x => spriteContainer.LoadAnimations(UnitData, x.NewValue, textureStore), true);
 
             showUnitInFog = configManager.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits);
             showUnitInFog.BindValueChanged(x => updateUnitColour(x.NewValue));
@@ -170,7 +173,7 @@ namespace AWBWApp.Game.Game.Units
 
             updateUnitColour(true);
 
-            textureAnimation.FinishTransforms();
+            spriteContainer.FinishTransforms(true);
             statsAnimation.FinishTransforms();
         }
 
@@ -192,12 +195,12 @@ namespace AWBWApp.Game.Game.Units
 
             if (updateVisual)
             {
-                ClearTransforms();
-                this.MoveTo(GetRealPositionFromMapTiles(MapPosition));
+                FinishTransforms();
+                Position = getRealPositionFromMapTiles(MapPosition);
             }
         }
 
-        Vector2 GetRealPositionFromMapTiles(Vector2I position)
+        Vector2 getRealPositionFromMapTiles(Vector2I position)
         {
             return Vec2IHelper.ScalarMultiply(position, BASE_SIZE) + new Vector2I(0, BASE_SIZE.Y);
         }
@@ -207,64 +210,53 @@ namespace AWBWApp.Game.Game.Units
             if (path.Count < 1)
                 throw new Exception("Path must contain at least 1 position.");
 
-            var transformSequence = this.MoveTo(GetRealPositionFromMapTiles(new Vector2I(path[0].X, path[0].Y)));
+            var transformSequence = this.MoveTo(getRealPositionFromMapTiles(new Vector2I(path[0].X, path[0].Y)));
 
             bool fogActive(UnitPosition position) => controller.ShouldPlayerActionBeHidden(new Vector2I(position.X, position.Y));
 
             if (path.Count == 2)
             {
                 //Only moving 1 tile
-                transformSequence.Then().TransformBindableTo(FogOfWarActive, fogActive(path[1])).MoveTo(GetRealPositionFromMapTiles(new Vector2I(path[1].X, path[1].Y)), 400, Easing.InOutQuad);
-                return transformSequence;
-            }
 
-            for (int i = 1; i < path.Count; i++)
+                var movementDirection = GetMovementDirection(path[0], path[1]);
+                transformSequence.Then().TransformBindableTo(FogOfWarActive, fogActive(path[1])).TransformBindableTo(movementState, movementDirection)
+                                 .MoveTo(getRealPositionFromMapTiles(new Vector2I(path[1].X, path[1].Y)), 400, Easing.InOutQuad);
+            }
+            else
             {
-                var pathNode = path[i];
-                transformSequence.Then().TransformBindableTo(FogOfWarActive, fogActive(pathNode));
+                for (int i = 1; i < path.Count; i++)
+                {
+                    var pathNode = path[i];
+                    var movementDirection = GetMovementDirection(path[i - 1], pathNode);
 
-                if (i == 1)
-                    transformSequence.MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 350, Easing.InQuad);
-                else if (i == path.Count - 1)
-                    transformSequence.MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 350, Easing.OutQuad);
-                else
-                    transformSequence.MoveTo(GetRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 140);
+                    transformSequence.Then().TransformBindableTo(FogOfWarActive, fogActive(pathNode)).TransformBindableTo(movementState, movementDirection);
+
+                    if (i == 1)
+                        transformSequence.MoveTo(getRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 350, Easing.InQuad);
+                    else if (i == path.Count - 1)
+                        transformSequence.MoveTo(getRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 350, Easing.OutQuad);
+                    else
+                        transformSequence.MoveTo(getRealPositionFromMapTiles(new Vector2I(pathNode.X, pathNode.Y)), 140);
+                }
             }
 
+            transformSequence.OnComplete(_ => movementState.Value = MovementState.Idle);
+            transformSequence.OnAbort(_ => movementState.Value = MovementState.Idle);
             return transformSequence;
         }
 
-        private void updateAnimation()
+        private MovementState GetMovementDirection(UnitPosition a, UnitPosition b)
         {
-            textureAnimation.ClearFrames();
+            if (a.X < b.X)
+                return MovementState.MoveRight;
+            if (a.X > b.X)
+                return MovementState.MoveLeft;
+            if (a.Y < b.Y)
+                return MovementState.MoveDown;
+            if (a.Y > b.Y)
+                return MovementState.MoveUp;
 
-            if (UnitData.Frames == null)
-            {
-                var texture = textureStore.Get($"{UnitData.BaseTextureByTeam[Country.Code]}-0");
-                textureAnimation.Size = texture.Size;
-                textureAnimation.AddFrame(texture);
-                return;
-            }
-
-            for (var i = 0; i < UnitData.Frames.Length; i++)
-            {
-                var texture = textureStore.Get($"{UnitData.BaseTextureByTeam[Country.Code]}-{i}");
-                if (texture == null)
-                    throw new Exception("Improperly configured UnitData. Animation count wrong.");
-
-                if (i == 0)
-                    textureAnimation.Size = texture.Size;
-                textureAnimation.AddFrame(texture, UnitData.Frames[i]);
-            }
-            textureAnimation.Seek(UnitData.FrameOffset);
-            updateFaceDirection(faceDirection);
-        }
-
-        private void updateFaceDirection(FaceDirection faceDirection)
-        {
-            textureAnimation.Scale = new Vector2(faceDirection == Country.FaceDirection ? 1 : -1, 1);
-            textureAnimation.Anchor = faceDirection == Country.FaceDirection ? Anchor.BottomLeft : Anchor.BottomRight;
-            this.faceDirection = faceDirection;
+            return MovementState.Idle;
         }
 
         private void updateHp(ValueChangedEvent<int> healthPoints)
@@ -326,8 +318,8 @@ namespace AWBWApp.Game.Game.Units
             if (!CanMove.Value)
                 colour = colour.Darken(0.25f);
 
-            textureAnimation.FadeColour(colour, 250, newValue ? Easing.OutQuint : Easing.InQuint);
-            textureAnimation.TransformTo("GreyscaleAmount", CanMove.Value ? 0f : 0.5f, 250, newValue ? Easing.OutQuint : Easing.InQuint);
+            spriteContainer.FadeColour(colour, 250, newValue ? Easing.OutQuint : Easing.InQuint);
+            spriteContainer.TransformTo("GreyscaleAmount", CanMove.Value ? 0f : 0.5f, 250, newValue ? Easing.OutQuint : Easing.InQuint);
 
             float alpha = 1;
             if (unitHidden())
@@ -335,7 +327,7 @@ namespace AWBWApp.Game.Game.Units
             else if (Dived.Value)
                 alpha = 0.7f;
 
-            textureAnimation.FadeTo(alpha, 250, Easing.OutQuint);
+            spriteContainer.FadeTo(alpha, 250, Easing.OutQuint);
 
             updateStatIndicators(alpha > 0);
             statsAnimation.FadeTo(alpha > 0 ? 1 : 0, 250, Easing.OutQuint);
@@ -343,6 +335,106 @@ namespace AWBWApp.Game.Game.Units
         }
 
         private bool unitHidden() => BeingCarried.Value || (FogOfWarActive.Value && !(showUnitInFog?.Value ?? true));
+
+        private class DrawableUnitSpriteContainer : Container
+        {
+            private readonly UnitTextureAnimation idleAnim;
+            private readonly UnitTextureAnimation moveUpAnim;
+            private readonly UnitTextureAnimation moveDownAnim;
+            private readonly UnitTextureAnimation moveSideAnim;
+
+            private MovementState currentMovementState;
+
+            private float greyscaleAmount;
+
+            public float GreyscaleAmount
+            {
+                get => greyscaleAmount;
+                set
+                {
+                    greyscaleAmount = value;
+                    idleAnim.GreyscaleAmount = value;
+                    moveUpAnim.GreyscaleAmount = value;
+                    moveDownAnim.GreyscaleAmount = value;
+                    moveSideAnim.GreyscaleAmount = value;
+                }
+            }
+
+            public DrawableUnitSpriteContainer()
+            {
+                Children = new Drawable[]
+                {
+                    idleAnim = new UnitTextureAnimation(),
+                    moveUpAnim = new UnitTextureAnimation(),
+                    moveDownAnim = new UnitTextureAnimation(),
+                    moveSideAnim = new UnitTextureAnimation()
+                };
+            }
+
+            public void LoadAnimations(UnitData unitData, CountryData countryData, NearestNeighbourTextureStore textureStore)
+            {
+                textureStore.LoadIntoAnimation($"{countryData.Path}/{unitData.IdleAnimation.Texture}", idleAnim, unitData.IdleAnimation.Frames, unitData.IdleAnimation.FrameOffset);
+                textureStore.LoadIntoAnimation($"{countryData.Path}/{unitData.MoveSideAnimation.Texture}", moveSideAnim, unitData.MoveSideAnimation.Frames, unitData.MoveSideAnimation.FrameOffset);
+                textureStore.LoadIntoAnimation($"{countryData.Path}/{unitData.MoveUpAnimation.Texture}", moveUpAnim, unitData.MoveUpAnimation.Frames, unitData.MoveUpAnimation.FrameOffset);
+                textureStore.LoadIntoAnimation($"{countryData.Path}/{unitData.MoveDownAnimation.Texture}", moveDownAnim, unitData.MoveDownAnimation.Frames, unitData.MoveDownAnimation.FrameOffset);
+
+                SetMovementState(currentMovementState);
+            }
+
+            public void UpdateFaceDirection(FaceDirection faceDirection, CountryData countryData)
+            {
+                idleAnim.Scale = new Vector2(faceDirection == countryData.FaceDirection ? 1 : -1, 1);
+                idleAnim.Origin = faceDirection == countryData.FaceDirection ? Anchor.BottomLeft : Anchor.BottomRight;
+            }
+
+            public void SetMovementState(MovementState state)
+            {
+                idleAnim.Hide();
+                idleAnim.Stop();
+                moveUpAnim.Hide();
+                moveUpAnim.Stop();
+                moveDownAnim.Hide();
+                moveDownAnim.Stop();
+                moveSideAnim.Hide();
+                moveSideAnim.Stop();
+
+                switch (state)
+                {
+                    case MovementState.Idle:
+                        idleAnim.Show();
+                        idleAnim.Play();
+                        break;
+
+                    case MovementState.MoveUp:
+                        moveUpAnim.Show();
+                        moveUpAnim.Play();
+                        break;
+
+                    case MovementState.MoveDown:
+                        moveDownAnim.Show();
+                        moveDownAnim.Play();
+                        break;
+
+                    case MovementState.MoveLeft:
+                    case MovementState.MoveRight:
+                        moveSideAnim.Show();
+                        moveSideAnim.Play();
+
+                        moveSideAnim.Scale = new Vector2(state == MovementState.MoveRight ? 1 : -1, 1);
+                        moveSideAnim.Origin = state == MovementState.MoveRight ? Anchor.BottomLeft : Anchor.BottomRight;
+                        break;
+                }
+            }
+        }
+
+        private enum MovementState
+        {
+            Idle,
+            MoveUp,
+            MoveDown,
+            MoveLeft,
+            MoveRight
+        }
 
         private class UnitTextureAnimation : Animation<Texture>
         {
@@ -365,6 +457,8 @@ namespace AWBWApp.Game.Game.Units
             public UnitTextureAnimation(bool startAtCurrentTime = true)
                 : base(startAtCurrentTime)
             {
+                Anchor = Anchor.BottomLeft;
+                Origin = Anchor.BottomLeft;
             }
 
             public override Drawable CreateContent() =>

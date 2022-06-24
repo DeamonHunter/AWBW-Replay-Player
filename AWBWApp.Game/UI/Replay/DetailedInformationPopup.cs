@@ -326,11 +326,8 @@ namespace AWBWApp.Game.UI.Replay
                 };
                 spriteContainer.Child = unitSprite;
 
-                var firstTexture = textureStore.Get(unit.UnitData.BaseTextureByTeam[unit.Country.Code] + "-0");
-                unitSprite.AddFrame(firstTexture, unit.UnitData.Frames[0]);
-                unitSprite.Size = firstTexture.Size * 2;
-                for (int i = 1; i < unit.UnitData.Frames.Length; i++)
-                    unitSprite.AddFrame(textureStore.Get(unit.UnitData.BaseTextureByTeam[unit.Country.Code] + "-" + i), unit.UnitData.Frames[i]);
+                textureStore.LoadIntoAnimation($"{unit.Country.Path}/{unit.UnitData.IdleAnimation.Texture}", unitSprite, unit.UnitData.IdleAnimation.Frames, unit.UnitData.IdleAnimation.FrameOffset);
+                unitSprite.Size *= 2;
 
                 Show();
                 unitHPCounter.BindTo(unit.HealthPoints);

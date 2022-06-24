@@ -12,25 +12,22 @@
         "MovementType": "LightInf",
         "SecondWeapon": false,
         "Symbol": "A",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Infantry",
-            "ab": "Team/AmberBlaze/Infantry",
-            "bh": "Team/BlackHole/Infantry",
-            "bm": "Team/BlueMoon/Infantry",
-            "bd": "Team/BrownDesert/Infantry",
-            "ci": "Team/CobaltIce/Infantry",
-            "ge": "Team/GreenEarth/Infantry",
-            "gs": "Team/GreySky/Infantry",
-            "js": "Team/JadeSun/Infantry",
-            "os": "Team/OrangeStar/Infantry",
-            "pc": "Team/PinkCosmos/Infantry",
-            "pl": "Team/PurpleLightning/Infantry",
-            "rf": "Team/RedFire/Infantry",
-            "tg": "Team/TealGalaxy/Infantry",
-            "wn": "Team/WhiteNova/Infantry",
-            "yc": "Team/YellowComet/Infantry"
+        "IdleAnimation": {
+            "Texture": "Infantry",
+            "Frames": [160, 160, 320, 160]
         },
-        "Frames": [160, 160, 320, 160]
+        "MoveSideAnimation": {
+            "Texture": "Infantry_MSide",
+            "Frames": [120, 120, 120, 120]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Infantry_MUp",
+            "Frames": [120, 120, 120, 120]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Infantry_MDown",
+            "Frames": [120, 120, 120, 120]
+        }
     },
     "Mech": {
         "Name": "Mech",
@@ -45,25 +42,22 @@
         "MovementType": "HeavyInf",
         "SecondWeapon": true,
         "Symbol": "B",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Mech",
-            "ab": "Team/AmberBlaze/Mech",
-            "bh": "Team/BlackHole/Mech",
-            "bm": "Team/BlueMoon/Mech",
-            "bd": "Team/BrownDesert/Mech",
-            "ci": "Team/CobaltIce/Mech",
-            "ge": "Team/GreenEarth/Mech",
-            "gs": "Team/GreySky/Mech",
-            "js": "Team/JadeSun/Mech",
-            "os": "Team/OrangeStar/Mech",
-            "pc": "Team/PinkCosmos/Mech",
-            "pl": "Team/PurpleLightning/Mech",
-            "rf": "Team/RedFire/Mech",
-            "tg": "Team/TealGalaxy/Mech",
-            "wn": "Team/WhiteNova/Mech",
-            "yc": "Team/YellowComet/Mech"
+        "IdleAnimation": {
+            "Texture": "Mech",
+            "Frames": [480, 320]
         },
-        "Frames": [480, 320]
+        "MoveSideAnimation": {
+            "Texture": "Mech_MSide",
+            "Frames": [120, 120, 120, 120]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Mech_MUp",
+            "Frames": [120, 120, 120, 120]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Mech_MDown",
+            "Frames": [120, 120, 120, 120]
+        }
     },
     "Md.Tank": {
         "Name": "Md.Tank",
@@ -78,25 +72,22 @@
         "MovementType": "Tread",
         "SecondWeapon": true,
         "Symbol": "C",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/MdTank",
-            "ab": "Team/AmberBlaze/MdTank",
-            "bh": "Team/BlackHole/MdTank",
-            "bm": "Team/BlueMoon/MdTank",
-            "bd": "Team/BrownDesert/MdTank",
-            "ci": "Team/CobaltIce/MdTank",
-            "ge": "Team/GreenEarth/MdTank",
-            "gs": "Team/GreySky/MdTank",
-            "js": "Team/JadeSun/MdTank",
-            "os": "Team/OrangeStar/MdTank",
-            "pc": "Team/PinkCosmos/MdTank",
-            "pl": "Team/PurpleLightning/MdTank",
-            "rf": "Team/RedFire/MdTank",
-            "tg": "Team/TealGalaxy/MdTank",
-            "wn": "Team/WhiteNova/MdTank",
-            "yc": "Team/YellowComet/MdTank"
+        "IdleAnimation": {
+            "Texture": "MdTank",
+            "Frames": [160, 160, 320, 160]
         },
-        "Frames": [160, 160, 320, 160]
+        "MoveSideAnimation": {
+            "Texture": "MdTank_MSide",
+            "Frames": [80, 80, 80]
+        },
+        "MoveUpAnimation": {
+            "Texture": "MdTank_MUp",
+            "Frames": [80, 80, 80]
+        },
+        "MoveDownAnimation": {
+            "Texture": "MdTank_MDown",
+            "Frames": [80, 80, 80]
+        }
     },
     "Tank": {
         "Name": "Tank",
@@ -111,25 +102,22 @@
         "MovementType": "Tread",
         "SecondWeapon": true,
         "Symbol": "D",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Tank",
-            "ab": "Team/AmberBlaze/Tank",
-            "bh": "Team/BlackHole/Tank",
-            "bm": "Team/BlueMoon/Tank",
-            "bd": "Team/BrownDesert/Tank",
-            "ci": "Team/CobaltIce/Tank",
-            "ge": "Team/GreenEarth/Tank",
-            "gs": "Team/GreySky/Tank",
-            "js": "Team/JadeSun/Tank",
-            "os": "Team/OrangeStar/Tank",
-            "pc": "Team/PinkCosmos/Tank",
-            "pl": "Team/PurpleLightning/Tank",
-            "rf": "Team/RedFire/Tank",
-            "tg": "Team/TealGalaxy/Tank",
-            "wn": "Team/WhiteNova/Tank",
-            "yc": "Team/YellowComet/Tank"
+        "IdleAnimation": {
+            "Texture": "Tank",
+            "Frames": [160, 160, 320, 160]
         },
-        "Frames": [160, 160, 320, 160]
+        "MoveSideAnimation": {
+            "Texture": "Tank_MSide",
+            "Frames": [80, 80, 80]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Tank_MUp",
+            "Frames": [80, 80, 80]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Tank_MDown",
+            "Frames": [80, 80, 80]
+        }
     },
     "Recon": {
         "Name": "Recon",
@@ -144,25 +132,22 @@
         "MovementType": "Tire",
         "SecondWeapon": false,
         "Symbol": "E",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Recon",
-            "ab": "Team/AmberBlaze/Recon",
-            "bh": "Team/BlackHole/Recon",
-            "bm": "Team/BlueMoon/Recon",
-            "bd": "Team/BrownDesert/Recon",
-            "ci": "Team/CobaltIce/Recon",
-            "ge": "Team/GreenEarth/Recon",
-            "gs": "Team/GreySky/Recon",
-            "js": "Team/JadeSun/Recon",
-            "os": "Team/OrangeStar/Recon",
-            "pc": "Team/PinkCosmos/Recon",
-            "pl": "Team/PurpleLightning/Recon",
-            "rf": "Team/RedFire/Recon",
-            "tg": "Team/TealGalaxy/Recon",
-            "wn": "Team/WhiteNova/Recon",
-            "yc": "Team/YellowComet/Recon"
+        "IdleAnimation": {
+            "Texture": "Recon",
+            "Frames": [160, 160, 320, 160]
         },
-        "Frames": [160, 160, 320, 160]
+        "MoveSideAnimation": {
+            "Texture": "Recon_MSide",
+            "Frames": [80, 80, 80]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Recon_MUp",
+            "Frames": [80, 80, 80]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Recon_MDown",
+            "Frames": [80, 80, 80]
+        }
     },
     "APC": {
         "Name": "APC",
@@ -177,25 +162,22 @@
         "MovementType": "Tread",
         "SecondWeapon": false,
         "Symbol": "F",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/APC",
-            "ab": "Team/AmberBlaze/APC",
-            "bh": "Team/BlackHole/APC",
-            "bm": "Team/BlueMoon/APC",
-            "bd": "Team/BrownDesert/APC",
-            "ci": "Team/CobaltIce/APC",
-            "ge": "Team/GreenEarth/APC",
-            "gs": "Team/GreySky/APC",
-            "js": "Team/JadeSun/APC",
-            "os": "Team/OrangeStar/APC",
-            "pc": "Team/PinkCosmos/APC",
-            "pl": "Team/PurpleLightning/APC",
-            "rf": "Team/RedFire/APC",
-            "tg": "Team/TealGalaxy/APC",
-            "wn": "Team/WhiteNova/APC",
-            "yc": "Team/YellowComet/APC"
+        "IdleAnimation": {
+            "Texture": "APC",
+            "Frames": [160, 160, 320, 160]
         },
-        "Frames": [160, 160, 320, 160]
+        "MoveSideAnimation": {
+            "Texture": "APC_MSide",
+            "Frames": [80, 80, 80]
+        },
+        "MoveUpAnimation": {
+            "Texture": "APC_MUp",
+            "Frames": [80, 80, 80]
+        },
+        "MoveDownAnimation": {
+            "Texture": "APC_MDown",
+            "Frames": [80, 80, 80]
+        }
     },
     "Artillery": {
         "Name": "Artillery",
@@ -210,25 +192,22 @@
         "MovementType": "Tread",
         "SecondWeapon": false,
         "Symbol": "G",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Artillery",
-            "ab": "Team/AmberBlaze/Artillery",
-            "bh": "Team/BlackHole/Artillery",
-            "bm": "Team/BlueMoon/Artillery",
-            "bd": "Team/BrownDesert/Artillery",
-            "ci": "Team/CobaltIce/Artillery",
-            "ge": "Team/GreenEarth/Artillery",
-            "gs": "Team/GreySky/Artillery",
-            "js": "Team/JadeSun/Artillery",
-            "os": "Team/OrangeStar/Artillery",
-            "pc": "Team/PinkCosmos/Artillery",
-            "pl": "Team/PurpleLightning/Artillery",
-            "rf": "Team/RedFire/Artillery",
-            "tg": "Team/TealGalaxy/Artillery",
-            "wn": "Team/WhiteNova/Artillery",
-            "yc": "Team/YellowComet/Artillery"
+        "IdleAnimation": {
+            "Texture": "Artillery",
+            "Frames": [160, 160, 320, 160]
         },
-        "Frames": [160, 160, 320, 160]
+        "MoveSideAnimation": {
+            "Texture": "Artillery_MSide",
+            "Frames": [80, 80, 80]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Artillery_MUp",
+            "Frames": [80, 80, 80]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Artillery_MDown",
+            "Frames": [80, 80, 80]
+        }
     },
     "Rocket": {
         "Name": "Rocket",
@@ -243,25 +222,22 @@
         "MovementType": "Tire",
         "SecondWeapon": false,
         "Symbol": "H",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Rocket",
-            "ab": "Team/AmberBlaze/Rocket",
-            "bh": "Team/BlackHole/Rocket",
-            "bm": "Team/BlueMoon/Rocket",
-            "bd": "Team/BrownDesert/Rocket",
-            "ci": "Team/CobaltIce/Rocket",
-            "ge": "Team/GreenEarth/Rocket",
-            "gs": "Team/GreySky/Rocket",
-            "js": "Team/JadeSun/Rocket",
-            "os": "Team/OrangeStar/Rocket",
-            "pc": "Team/PinkCosmos/Rocket",
-            "pl": "Team/PurpleLightning/Rocket",
-            "rf": "Team/RedFire/Rocket",
-            "tg": "Team/TealGalaxy/Rocket",
-            "wn": "Team/WhiteNova/Rocket",
-            "yc": "Team/YellowComet/Rocket"
+        "IdleAnimation": {
+            "Texture": "Rocket",
+            "Frames": [320, 480]
         },
-        "Frames": [320, 480]
+        "MoveSideAnimation": {
+            "Texture": "Rocket_MSide",
+            "Frames": [80, 80, 80]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Rocket_MUp",
+            "Frames": [80, 80, 80]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Rocket_MDown",
+            "Frames": [80, 80, 80]
+        }
     },
     "Anti-Air": {
         "Name": "Anti-Air",
@@ -276,25 +252,22 @@
         "MovementType": "Tread",
         "SecondWeapon": false,
         "Symbol": "I",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Anti-Air",
-            "ab": "Team/AmberBlaze/Anti-Air",
-            "bh": "Team/BlackHole/Anti-Air",
-            "bm": "Team/BlueMoon/Anti-Air",
-            "bd": "Team/BrownDesert/Anti-Air",
-            "ci": "Team/CobaltIce/Anti-Air",
-            "ge": "Team/GreenEarth/Anti-Air",
-            "gs": "Team/GreySky/Anti-Air",
-            "js": "Team/JadeSun/Anti-Air",
-            "os": "Team/OrangeStar/Anti-Air",
-            "pc": "Team/PinkCosmos/Anti-Air",
-            "pl": "Team/PurpleLightning/Anti-Air",
-            "rf": "Team/RedFire/Anti-Air",
-            "tg": "Team/TealGalaxy/Anti-Air",
-            "wn": "Team/WhiteNova/Anti-Air",
-            "yc": "Team/YellowComet/Anti-Air"
+        "IdleAnimation": {
+            "Texture": "Anti-Air",
+            "Frames": [160, 160, 320, 160]
         },
-        "Frames": [160, 160, 320, 160]
+        "MoveSideAnimation": {
+            "Texture": "Anti-Air_MSide",
+            "Frames": [80, 80, 80]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Anti-Air_MUp",
+            "Frames": [80, 80, 80]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Anti-Air_MDown",
+            "Frames": [80, 80, 80]
+        }
     },
     "Missile": {
         "Name": "Missile",
@@ -309,25 +282,22 @@
         "MovementType": "Tire",
         "SecondWeapon": false,
         "Symbol": "J",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Missile",
-            "ab": "Team/AmberBlaze/Missile",
-            "bh": "Team/BlackHole/Missile",
-            "bm": "Team/BlueMoon/Missile",
-            "bd": "Team/BrownDesert/Missile",
-            "ci": "Team/CobaltIce/Missile",
-            "ge": "Team/GreenEarth/Missile",
-            "gs": "Team/GreySky/Missile",
-            "js": "Team/JadeSun/Missile",
-            "os": "Team/OrangeStar/Missile",
-            "pc": "Team/PinkCosmos/Missile",
-            "pl": "Team/PurpleLightning/Missile",
-            "rf": "Team/RedFire/Missile",
-            "tg": "Team/TealGalaxy/Missile",
-            "wn": "Team/WhiteNova/Missile",
-            "yc": "Team/YellowComet/Missile"
+        "IdleAnimation": {
+            "Texture": "Missile",
+            "Frames": [480, 320]
         },
-        "Frames": [480, 320]
+        "MoveSideAnimation": {
+            "Texture": "Missile_MSide",
+            "Frames": [80, 80, 80]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Missile_MUp",
+            "Frames": [80, 80, 80]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Missile_MDown",
+            "Frames": [80, 80, 80]
+        }
     },
     "Fighter": {
         "Name": "Fighter",
@@ -342,25 +312,22 @@
         "MovementType": "Air",
         "SecondWeapon": false,
         "Symbol": "L",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Fighter",
-            "ab": "Team/AmberBlaze/Fighter",
-            "bh": "Team/BlackHole/Fighter",
-            "bm": "Team/BlueMoon/Fighter",
-            "bd": "Team/BrownDesert/Fighter",
-            "ci": "Team/CobaltIce/Fighter",
-            "ge": "Team/GreenEarth/Fighter",
-            "gs": "Team/GreySky/Fighter",
-            "js": "Team/JadeSun/Fighter",
-            "os": "Team/OrangeStar/Fighter",
-            "pc": "Team/PinkCosmos/Fighter",
-            "pl": "Team/PurpleLightning/Fighter",
-            "rf": "Team/RedFire/Fighter",
-            "tg": "Team/TealGalaxy/Fighter",
-            "wn": "Team/WhiteNova/Fighter",
-            "yc": "Team/YellowComet/Fighter"
+        "IdleAnimation": {
+            "Texture": "Fighter",
+            "Frames": [320, 480]
         },
-        "Frames": [320, 480]
+        "MoveSideAnimation": {
+            "Texture": "Fighter_MSide",
+            "Frames": [120, 120, 120]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Fighter_MUp",
+            "Frames": [120, 120, 120]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Fighter_MDown",
+            "Frames": [120, 120, 120]
+        }
     },
     "Bomber": {
         "Name": "Bomber",
@@ -375,25 +342,22 @@
         "MovementType": "Air",
         "SecondWeapon": false,
         "Symbol": "M",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Bomber",
-            "ab": "Team/AmberBlaze/Bomber",
-            "bh": "Team/BlackHole/Bomber",
-            "bm": "Team/BlueMoon/Bomber",
-            "bd": "Team/BrownDesert/Bomber",
-            "ci": "Team/CobaltIce/Bomber",
-            "ge": "Team/GreenEarth/Bomber",
-            "gs": "Team/GreySky/Bomber",
-            "js": "Team/JadeSun/Bomber",
-            "os": "Team/OrangeStar/Bomber",
-            "pc": "Team/PinkCosmos/Bomber",
-            "pl": "Team/PurpleLightning/Bomber",
-            "rf": "Team/RedFire/Bomber",
-            "tg": "Team/TealGalaxy/Bomber",
-            "wn": "Team/WhiteNova/Bomber",
-            "yc": "Team/YellowComet/Bomber"
+        "IdleAnimation": {
+            "Texture": "Bomber",
+            "Frames": [480, 320]
         },
-        "Frames": [480, 320]
+        "MoveSideAnimation": {
+            "Texture": "Bomber_MSide",
+            "Frames": [120, 120, 120]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Bomber_MUp",
+            "Frames": [120, 120, 120]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Bomber_MDown",
+            "Frames": [120, 120, 120]
+        }
     },
     "B-Copter": {
         "Name": "B-Copter",
@@ -408,25 +372,22 @@
         "MovementType": "Air",
         "SecondWeapon": true,
         "Symbol": "N",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/B-Copter",
-            "ab": "Team/AmberBlaze/B-Copter",
-            "bh": "Team/BlackHole/B-Copter",
-            "bm": "Team/BlueMoon/B-Copter",
-            "bd": "Team/BrownDesert/B-Copter",
-            "ci": "Team/CobaltIce/B-Copter",
-            "ge": "Team/GreenEarth/B-Copter",
-            "gs": "Team/GreySky/B-Copter",
-            "js": "Team/JadeSun/B-Copter",
-            "os": "Team/OrangeStar/B-Copter",
-            "pc": "Team/PinkCosmos/B-Copter",
-            "pl": "Team/PurpleLightning/B-Copter",
-            "rf": "Team/RedFire/B-Copter",
-            "tg": "Team/TealGalaxy/B-Copter",
-            "wn": "Team/WhiteNova/B-Copter",
-            "yc": "Team/YellowComet/B-Copter"
+        "IdleAnimation": {
+            "Texture": "B-Copter",
+            "Frames": [160, 160, 320, 160]
         },
-        "Frames": [160, 160, 320, 160]
+        "MoveSideAnimation": {
+            "Texture": "B-Copter_MSide",
+            "Frames": [30, 30]
+        },
+        "MoveUpAnimation": {
+            "Texture": "B-Copter_MUp",
+            "Frames": [30, 30]
+        },
+        "MoveDownAnimation": {
+            "Texture": "B-Copter_MDown",
+            "Frames": [30, 30]
+        }
     },
     "T-Copter": {
         "Name": "T-Copter",
@@ -441,25 +402,22 @@
         "MovementType": "Air",
         "SecondWeapon": false,
         "Symbol": "O",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/T-Copter",
-            "ab": "Team/AmberBlaze/T-Copter",
-            "bh": "Team/BlackHole/T-Copter",
-            "bm": "Team/BlueMoon/T-Copter",
-            "bd": "Team/BrownDesert/T-Copter",
-            "ci": "Team/CobaltIce/T-Copter",
-            "ge": "Team/GreenEarth/T-Copter",
-            "gs": "Team/GreySky/T-Copter",
-            "js": "Team/JadeSun/T-Copter",
-            "os": "Team/OrangeStar/T-Copter",
-            "pc": "Team/PinkCosmos/T-Copter",
-            "pl": "Team/PurpleLightning/T-Copter",
-            "rf": "Team/RedFire/T-Copter",
-            "tg": "Team/TealGalaxy/T-Copter",
-            "wn": "Team/WhiteNova/T-Copter",
-            "yc": "Team/YellowComet/T-Copter"
+        "IdleAnimation": {
+            "Texture": "T-Copter",
+            "Frames": [160, 160, 320, 160]
         },
-        "Frames": [160, 160, 320, 160]
+        "MoveSideAnimation": {
+            "Texture": "T-Copter_MSide",
+            "Frames": [30, 30]
+        },
+        "MoveUpAnimation": {
+            "Texture": "T-Copter_MUp",
+            "Frames": [30, 30]
+        },
+        "MoveDownAnimation": {
+            "Texture": "T-Copter_MDown",
+            "Frames": [30, 30]
+        }
     },
     "Battleship": {
         "Name": "Battleship",
@@ -474,25 +432,22 @@
         "MovementType": "Sea",
         "SecondWeapon": false,
         "Symbol": "P",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Battleship",
-            "ab": "Team/AmberBlaze/Battleship",
-            "bh": "Team/BlackHole/Battleship",
-            "bm": "Team/BlueMoon/Battleship",
-            "bd": "Team/BrownDesert/Battleship",
-            "ci": "Team/CobaltIce/Battleship",
-            "ge": "Team/GreenEarth/Battleship",
-            "gs": "Team/GreySky/Battleship",
-            "js": "Team/JadeSun/Battleship",
-            "os": "Team/OrangeStar/Battleship",
-            "pc": "Team/PinkCosmos/Battleship",
-            "pl": "Team/PurpleLightning/Battleship",
-            "rf": "Team/RedFire/Battleship",
-            "tg": "Team/TealGalaxy/Battleship",
-            "wn": "Team/WhiteNova/Battleship",
-            "yc": "Team/YellowComet/Battleship"
+        "IdleAnimation": {
+            "Texture": "Battleship",
+            "Frames": [320, 480]
         },
-        "Frames": [320, 480]
+        "MoveSideAnimation": {
+            "Texture": "Battleship_MSide",
+            "Frames": [480, 160]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Battleship_MUp",
+            "Frames": [480, 160]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Battleship_MDown",
+            "Frames": [480, 160]
+        }
     },
     "Cruiser": {
         "Name": "Cruiser",
@@ -507,25 +462,22 @@
         "MovementType": "Sea",
         "SecondWeapon": false,
         "Symbol": "Q",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Cruiser",
-            "ab": "Team/AmberBlaze/Cruiser",
-            "bh": "Team/BlackHole/Cruiser",
-            "bm": "Team/BlueMoon/Cruiser",
-            "bd": "Team/BrownDesert/Cruiser",
-            "ci": "Team/CobaltIce/Cruiser",
-            "ge": "Team/GreenEarth/Cruiser",
-            "gs": "Team/GreySky/Cruiser",
-            "js": "Team/JadeSun/Cruiser",
-            "os": "Team/OrangeStar/Cruiser",
-            "pc": "Team/PinkCosmos/Cruiser",
-            "pl": "Team/PurpleLightning/Cruiser",
-            "rf": "Team/RedFire/Cruiser",
-            "tg": "Team/TealGalaxy/Cruiser",
-            "wn": "Team/WhiteNova/Cruiser",
-            "yc": "Team/YellowComet/Cruiser"
+        "IdleAnimation": {
+            "Texture": "Cruiser",
+            "Frames": [480, 320]
         },
-        "Frames": [480, 320]
+        "MoveSideAnimation": {
+            "Texture": "Cruiser_MSide",
+            "Frames": [160, 480]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Cruiser_MUp",
+            "Frames": [480, 160]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Cruiser_MDown",
+            "Frames": [480, 160]
+        }
     },
     "Lander": {
         "Name": "Lander",
@@ -540,25 +492,22 @@
         "MovementType": "Lander",
         "SecondWeapon": false,
         "Symbol": "R",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Lander",
-            "ab": "Team/AmberBlaze/Lander",
-            "bh": "Team/BlackHole/Lander",
-            "bm": "Team/BlueMoon/Lander",
-            "bd": "Team/BrownDesert/Lander",
-            "ci": "Team/CobaltIce/Lander",
-            "ge": "Team/GreenEarth/Lander",
-            "gs": "Team/GreySky/Lander",
-            "js": "Team/JadeSun/Lander",
-            "os": "Team/OrangeStar/Lander",
-            "pc": "Team/PinkCosmos/Lander",
-            "pl": "Team/PurpleLightning/Lander",
-            "rf": "Team/RedFire/Lander",
-            "tg": "Team/TealGalaxy/Lander",
-            "wn": "Team/WhiteNova/Lander",
-            "yc": "Team/YellowComet/Lander"
+        "IdleAnimation": {
+            "Texture": "Lander",
+            "Frames": [320, 480]
         },
-        "Frames": [320, 480]
+        "MoveSideAnimation": {
+            "Texture": "Lander_MSide",
+            "Frames": [480, 160]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Lander_MUp",
+            "Frames": [480, 160]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Lander_MDown",
+            "Frames": [480, 160]
+        }
     },
     "Sub": {
         "Name": "Sub",
@@ -573,25 +522,22 @@
         "MovementType": "Sea",
         "SecondWeapon": false,
         "Symbol": "S",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Sub",
-            "ab": "Team/AmberBlaze/Sub",
-            "bh": "Team/BlackHole/Sub",
-            "bm": "Team/BlueMoon/Sub",
-            "bd": "Team/BrownDesert/Sub",
-            "ci": "Team/CobaltIce/Sub",
-            "ge": "Team/GreenEarth/Sub",
-            "gs": "Team/GreySky/Sub",
-            "js": "Team/JadeSun/Sub",
-            "os": "Team/OrangeStar/Sub",
-            "pc": "Team/PinkCosmos/Sub",
-            "pl": "Team/PurpleLightning/Sub",
-            "rf": "Team/RedFire/Sub",
-            "tg": "Team/TealGalaxy/Sub",
-            "wn": "Team/WhiteNova/Sub",
-            "yc": "Team/YellowComet/Sub"
+        "IdleAnimation": {
+            "Texture": "Sub",
+            "Frames": [160, 160, 320, 160]
         },
-        "Frames": [160, 160, 320, 160]
+        "MoveSideAnimation": {
+            "Texture": "Sub_MSide",
+            "Frames": [480, 160]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Sub_MUp",
+            "Frames": [480, 160]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Sub_MDown",
+            "Frames": [480, 160]
+        }
     },
     "Black Boat": {
         "Name": "Black Boat",
@@ -606,25 +552,22 @@
         "MovementType": "Lander",
         "SecondWeapon": false,
         "Symbol": "A",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/BlackBoat",
-            "ab": "Team/AmberBlaze/BlackBoat",
-            "bh": "Team/BlackHole/BlackBoat",
-            "bm": "Team/BlueMoon/BlackBoat",
-            "bd": "Team/BrownDesert/BlackBoat",
-            "ci": "Team/CobaltIce/BlackBoat",
-            "ge": "Team/GreenEarth/BlackBoat",
-            "gs": "Team/GreySky/BlackBoat",
-            "js": "Team/JadeSun/BlackBoat",
-            "os": "Team/OrangeStar/BlackBoat",
-            "pc": "Team/PinkCosmos/BlackBoat",
-            "pl": "Team/PurpleLightning/BlackBoat",
-            "rf": "Team/RedFire/BlackBoat",
-            "tg": "Team/TealGalaxy/BlackBoat",
-            "wn": "Team/WhiteNova/BlackBoat",
-            "yc": "Team/YellowComet/BlackBoat"
+        "IdleAnimation": {
+            "Texture": "BlackBoat",
+            "Frames": [320, 160, 160, 160]
         },
-        "Frames": [320, 160, 160, 160]
+        "MoveSideAnimation": {
+            "Texture": "BlackBoat_MSide",
+            "Frames": [480, 160]
+        },
+        "MoveUpAnimation": {
+            "Texture": "BlackBoat_MUp",
+            "Frames": [480, 160]
+        },
+        "MoveDownAnimation": {
+            "Texture": "BlackBoat_MDown",
+            "Frames": [480, 160]
+        }
     },
     "Carrier": {
         "Name": "Carrier",
@@ -639,25 +582,22 @@
         "MovementType": "Sea",
         "SecondWeapon": false,
         "Symbol": "B",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Carrier",
-            "ab": "Team/AmberBlaze/Carrier",
-            "bh": "Team/BlackHole/Carrier",
-            "bm": "Team/BlueMoon/Carrier",
-            "bd": "Team/BrownDesert/Carrier",
-            "ci": "Team/CobaltIce/Carrier",
-            "ge": "Team/GreenEarth/Carrier",
-            "gs": "Team/GreySky/Carrier",
-            "js": "Team/JadeSun/Carrier",
-            "os": "Team/OrangeStar/Carrier",
-            "pc": "Team/PinkCosmos/Carrier",
-            "pl": "Team/PurpleLightning/Carrier",
-            "rf": "Team/RedFire/Carrier",
-            "tg": "Team/TealGalaxy/Carrier",
-            "wn": "Team/WhiteNova/Carrier",
-            "yc": "Team/YellowComet/Carrier"
+        "IdleAnimation": {
+            "Texture": "Carrier",
+            "Frames": [320, 480]
         },
-        "Frames": [320, 480]
+        "MoveSideAnimation": {
+            "Texture": "Carrier_MSide",
+            "Frames": [480, 160]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Carrier_MUp",
+            "Frames": [480, 160]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Carrier_MDown",
+            "Frames": [480, 160]
+        }
     },
     "Stealth": {
         "Name": "Stealth",
@@ -672,25 +612,22 @@
         "MovementType": "Air",
         "SecondWeapon": false,
         "Symbol": "D",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/Stealth",
-            "ab": "Team/AmberBlaze/Stealth",
-            "bh": "Team/BlackHole/Stealth",
-            "bm": "Team/BlueMoon/Stealth",
-            "bd": "Team/BrownDesert/Stealth",
-            "ci": "Team/CobaltIce/Stealth",
-            "ge": "Team/GreenEarth/Stealth",
-            "gs": "Team/GreySky/Stealth",
-            "js": "Team/JadeSun/Stealth",
-            "os": "Team/OrangeStar/Stealth",
-            "pc": "Team/PinkCosmos/Stealth",
-            "pl": "Team/PurpleLightning/Stealth",
-            "rf": "Team/RedFire/Stealth",
-            "tg": "Team/TealGalaxy/Stealth",
-            "wn": "Team/WhiteNova/Stealth",
-            "yc": "Team/YellowComet/Stealth"
+        "IdleAnimation": {
+            "Texture": "Stealth",
+            "Frames": [480, 320]
         },
-        "Frames": [480, 320]
+        "MoveSideAnimation": {
+            "Texture": "Stealth_MSide",
+            "Frames": [120, 120, 120]
+        },
+        "MoveUpAnimation": {
+            "Texture": "Stealth_MUp",
+            "Frames": [120, 120, 120]
+        },
+        "MoveDownAnimation": {
+            "Texture": "Stealth_MDown",
+            "Frames": [120, 120, 120]
+        }
     },
     "Neotank": {
         "Name": "Neotank",
@@ -705,25 +642,22 @@
         "MovementType": "Tread",
         "SecondWeapon": true,
         "Symbol": "T",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/NeoTank",
-            "ab": "Team/AmberBlaze/NeoTank",
-            "bh": "Team/BlackHole/NeoTank",
-            "bm": "Team/BlueMoon/NeoTank",
-            "bd": "Team/BrownDesert/NeoTank",
-            "ci": "Team/CobaltIce/NeoTank",
-            "ge": "Team/GreenEarth/NeoTank",
-            "gs": "Team/GreySky/NeoTank",
-            "js": "Team/JadeSun/NeoTank",
-            "os": "Team/OrangeStar/NeoTank",
-            "pc": "Team/PinkCosmos/NeoTank",
-            "pl": "Team/PurpleLightning/NeoTank",
-            "rf": "Team/RedFire/NeoTank",
-            "tg": "Team/TealGalaxy/NeoTank",
-            "wn": "Team/WhiteNova/NeoTank",
-            "yc": "Team/YellowComet/NeoTank"
+        "IdleAnimation": {
+            "Texture": "NeoTank",
+            "Frames": [160, 160, 320, 160]
         },
-        "Frames": [160, 160, 320, 160]
+        "MoveSideAnimation": {
+            "Texture": "NeoTank_MSide",
+            "Frames": [80, 80, 80]
+        },
+        "MoveUpAnimation": {
+            "Texture": "NeoTank_MUp",
+            "Frames": [80, 80, 80]
+        },
+        "MoveDownAnimation": {
+            "Texture": "NeoTank_MDown",
+            "Frames": [80, 80, 80]
+        }
     },
     "Piperunner": {
         "Name": "Piperunner",
@@ -738,25 +672,22 @@
         "MovementType": "Pipe",
         "SecondWeapon": true,
         "Symbol": "U",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/PipeRunner",
-            "ab": "Team/AmberBlaze/PipeRunner",
-            "bh": "Team/BlackHole/PipeRunner",
-            "bm": "Team/BlueMoon/PipeRunner",
-            "bd": "Team/BrownDesert/PipeRunner",
-            "ci": "Team/CobaltIce/PipeRunner",
-            "ge": "Team/GreenEarth/PipeRunner",
-            "gs": "Team/GreySky/PipeRunner",
-            "js": "Team/JadeSun/PipeRunner",
-            "os": "Team/OrangeStar/PipeRunner",
-            "pc": "Team/PinkCosmos/PipeRunner",
-            "pl": "Team/PurpleLightning/PipeRunner",
-            "rf": "Team/RedFire/PipeRunner",
-            "tg": "Team/TealGalaxy/PipeRunner",
-            "wn": "Team/WhiteNova/PipeRunner",
-            "yc": "Team/YellowComet/PipeRunner"
+        "IdleAnimation": {
+            "Texture": "PipeRunner",
+            "Frames": [480, 320]
         },
-        "Frames": [480, 320]
+        "MoveSideAnimation": {
+            "Texture": "PipeRunner_MSide",
+            "Frames": [80, 80, 80]
+        },
+        "MoveUpAnimation": {
+            "Texture": "PipeRunner_MUp",
+            "Frames": [80, 80, 80]
+        },
+        "MoveDownAnimation": {
+            "Texture": "PipeRunner_MDown",
+            "Frames": [80, 80, 80]
+        }
     },
     "Black Bomb": {
         "Name": "Black Bomb",
@@ -771,25 +702,22 @@
         "MovementType": "Air",
         "SecondWeapon": false,
         "Symbol": "V",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/BlackBomb",
-            "ab": "Team/AmberBlaze/BlackBomb",
-            "bh": "Team/BlackHole/BlackBomb",
-            "bm": "Team/BlueMoon/BlackBomb",
-            "bd": "Team/BrownDesert/BlackBomb",
-            "ci": "Team/CobaltIce/BlackBomb",
-            "ge": "Team/GreenEarth/BlackBomb",
-            "gs": "Team/GreySky/BlackBomb",
-            "js": "Team/JadeSun/BlackBomb",
-            "os": "Team/OrangeStar/BlackBomb",
-            "pc": "Team/PinkCosmos/BlackBomb",
-            "pl": "Team/PurpleLightning/BlackBomb",
-            "rf": "Team/RedFire/BlackBomb",
-            "tg": "Team/TealGalaxy/BlackBomb",
-            "wn": "Team/WhiteNova/BlackBomb",
-            "yc": "Team/YellowComet/BlackBomb"
+        "IdleAnimation": {
+            "Texture": "BlackBomb",
+            "Frames": [220, 220, 220, 220]
         },
-        "Frames": [220, 220, 220, 220]
+        "MoveSideAnimation": {
+            "Texture": "BlackBomb_MSide",
+            "Frames": [120, 120, 120]
+        },
+        "MoveUpAnimation": {
+            "Texture": "BlackBomb_MUp",
+            "Frames": [120, 120, 120]
+        },
+        "MoveDownAnimation": {
+            "Texture": "BlackBomb_MDown",
+            "Frames": [120, 120, 120]
+        }
     },
     "Mega Tank": {
         "Name": "Mega Tank",
@@ -804,24 +732,21 @@
         "MovementType": "Tread",
         "SecondWeapon": true,
         "Symbol": "Z",
-        "BaseTextureByTeam": {
-            "ar": "Team/AcidRain/MegaTank",
-            "ab": "Team/AmberBlaze/MegaTank",
-            "bh": "Team/BlackHole/MegaTank",
-            "bm": "Team/BlueMoon/MegaTank",
-            "bd": "Team/BrownDesert/MegaTank",
-            "ci": "Team/CobaltIce/MegaTank",
-            "ge": "Team/GreenEarth/MegaTank",
-            "gs": "Team/GreySky/MegaTank",
-            "js": "Team/JadeSun/MegaTank",
-            "os": "Team/OrangeStar/MegaTank",
-            "pc": "Team/PinkCosmos/MegaTank",
-            "pl": "Team/PurpleLightning/MegaTank",
-            "rf": "Team/RedFire/MegaTank",
-            "tg": "Team/TealGalaxy/MegaTank",
-            "wn": "Team/WhiteNova/MegaTank",
-            "yc": "Team/YellowComet/MegaTank"
+        "IdleAnimation": {
+            "Texture": "MegaTank",
+            "Frames": [160, 160, 320, 160]
         },
-        "Frames": [160, 160, 320, 160]
+        "MoveSideAnimation": {
+            "Texture": "MegaTank_MSide",
+            "Frames": [80, 80, 80]
+        },
+        "MoveUpAnimation": {
+            "Texture": "MegaTank_MUp",
+            "Frames": [80, 80, 80]
+        },
+        "MoveDownAnimation": {
+            "Texture": "MegaTank_MDown",
+            "Frames": [80, 80, 80]
+        }
     }
 }
