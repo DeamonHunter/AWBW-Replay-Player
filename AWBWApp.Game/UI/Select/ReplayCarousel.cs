@@ -276,6 +276,12 @@ namespace AWBWApp.Game.UI.Select
 
         public void OnEnter()
         {
+            //This is ugly but this may be called before this is loaded in some cases.
+            Schedule(() => onEnter());
+        }
+
+        private void onEnter()
+        {
             OnSizingChanged();
             searchContainer.FadeInFromZero(300, Easing.OutQuint);
             searchContainer.ScaleTo(new Vector2(1, 0.5f)).ScaleTo(Vector2.One, 500, Easing.OutQuint);
