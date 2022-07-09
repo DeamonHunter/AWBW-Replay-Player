@@ -45,8 +45,8 @@ namespace AWBWApp.Game.Tests.Visual.Components
         private ReplayUnit tankUnit;
         private DrawableUnit tank;
 
-        [Cached(type: typeof(IBindable<Weather>))]
-        private Bindable<Weather> weather = new Bindable<Weather>(Weather.Clear);
+        [Cached(type: typeof(IBindable<WeatherType>))]
+        private Bindable<WeatherType> weather = new Bindable<WeatherType>(WeatherType.Clear);
 
         private Random random;
 

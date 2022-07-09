@@ -16,7 +16,7 @@ namespace AWBWApp.Game.Game.Tile
 
         public Dictionary<MovementType, int> MovementCostsPerType { get; set; }
 
-        public Dictionary<Weather, string> Textures { get; set; }
+        public Dictionary<WeatherType, string> Textures { get; set; }
 
         public string Colour { get; set; }
 

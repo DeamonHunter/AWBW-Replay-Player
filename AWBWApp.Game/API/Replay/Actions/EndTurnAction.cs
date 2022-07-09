@@ -59,7 +59,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             var nextTeam = replayData.ReplayInfo.Players[action.NextPlayerID].TeamName;
 
             action.FundsAfterTurnStart = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)updatedInfo["nextFunds"], nextTeam, action.NextPlayerID);
-            action.NextWeather = WeatherHelper.ParseWeatherCode((string)updatedInfo["nextWeather"]);
+            action.NextWeatherType = WeatherHelper.ParseWeatherCode((string)updatedInfo["nextWeather"]);
 
             var suppliedData = updatedInfo["supplied"];
 
@@ -98,7 +98,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public int NextDay;
 
         public int FundsAfterTurnStart;
-        public Weather NextWeather;
+        public WeatherType NextWeatherType;
 
         public HashSet<long> SuppliedUnits;
         public Dictionary<long, int> RepairedUnits;

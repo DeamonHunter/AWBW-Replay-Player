@@ -31,8 +31,8 @@ namespace AWBWApp.Game.Game.COs
         public Vector2I? LuckRange;
 
         public int? MoveCostPerTile;
-        public Weather WeatherWithNoMovementAffect;
-        public Weather WeatherWithAdditionalMovementAffect;
+        public WeatherType WeatherWithNoMovementAffect;
+        public WeatherType WeatherWithAdditionalMovementAffect;
     }
 
     public class UnitPowerIncrease

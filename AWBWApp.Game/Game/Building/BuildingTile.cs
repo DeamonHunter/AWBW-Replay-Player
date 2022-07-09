@@ -21,7 +21,7 @@ namespace AWBWApp.Game.Game.Building
 
         public string Colour { get; set; }
 
-        public Dictionary<Weather, string> Textures { get; set; }
+        public Dictionary<WeatherType, string> Textures { get; set; }
 
         public double[] Frames { get; set; }
 

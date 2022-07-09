@@ -36,7 +36,7 @@ namespace AWBWApp.Game.Game.Logic
         //Todo: Possibly change how we calculate funds
         public BuildingStorage BuildingStorage;
         private COStorage coStorage;
-        public Weather Weather;
+        public WeatherType WeatherType;
 
         private int fundsPerBuilding;
 
@@ -90,7 +90,7 @@ namespace AWBWApp.Game.Game.Logic
 
             PropertyValuesForPlayers.Clear();
             FundsValuesForPlayers.Clear();
-            Weather = turn.StartWeather.Type;
+            WeatherType = turn.StartWeather.Type;
 
             foreach (var player in turn.Players)
             {

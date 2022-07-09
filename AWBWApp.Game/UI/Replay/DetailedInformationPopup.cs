@@ -162,7 +162,7 @@ namespace AWBWApp.Game.UI.Replay
 
                 boundToTile = tile;
 
-                terrainSprite.Texture = textureStore.Get(tile.TerrainTile.Textures[Weather.Clear]);
+                terrainSprite.Texture = textureStore.Get(tile.TerrainTile.Textures[WeatherType.Clear]);
                 terrainSprite.Size = terrainSprite.Texture.Size * 2;
                 Show();
                 terrainStarCounter.SetTo(tile.TerrainTile.BaseDefence);
@@ -237,17 +237,17 @@ namespace AWBWApp.Game.UI.Replay
                 };
                 spriteContainer.Child = unitSprite;
 
-                var firstTexture = textureStore.Get(building.BuildingTile.Textures[Weather.Clear] + "-0");
+                var firstTexture = textureStore.Get(building.BuildingTile.Textures[WeatherType.Clear] + "-0");
                 unitSprite.Size = firstTexture.Size * 2;
 
                 if (building.BuildingTile.Frames != null)
                 {
                     unitSprite.AddFrame(firstTexture, building.BuildingTile.Frames[0]);
                     for (int i = 1; i < building.BuildingTile.Frames.Length; i++)
-                        unitSprite.AddFrame(textureStore.Get(building.BuildingTile.Textures[Weather.Clear] + "-" + i), building.BuildingTile.Frames[i]);
+                        unitSprite.AddFrame(textureStore.Get(building.BuildingTile.Textures[WeatherType.Clear] + "-" + i), building.BuildingTile.Frames[i]);
                 }
                 else
-                    unitSprite.AddFrame(textureStore.Get(building.BuildingTile.Textures[Weather.Clear] + "-0"));
+                    unitSprite.AddFrame(textureStore.Get(building.BuildingTile.Textures[WeatherType.Clear] + "-0"));
 
                 Show();
                 terrainStarCounter.SetTo(building.BuildingTile.BaseDefence);

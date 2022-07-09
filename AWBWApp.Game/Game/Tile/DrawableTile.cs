@@ -25,10 +25,10 @@ namespace AWBWApp.Game.Game.Tile
 
         private Sprite texture;
 
-        private Dictionary<Weather, Texture> texturesByWeather;
+        private Dictionary<WeatherType, Texture> texturesByWeather;
 
         [Resolved]
-        private IBindable<Weather> currentWeather { get; set; }
+        private IBindable<WeatherType> currentWeather { get; set; }
 
         public DrawableTile(TerrainTile terrainTile)
         {
@@ -47,7 +47,7 @@ namespace AWBWApp.Game.Game.Tile
         [BackgroundDependencyLoader]
         private void load(NearestNeighbourTextureStore store)
         {
-            texturesByWeather = new Dictionary<Weather, Texture>();
+            texturesByWeather = new Dictionary<WeatherType, Texture>();
 
             foreach (var texturePair in TerrainTile.Textures)
             {
@@ -61,10 +61,10 @@ namespace AWBWApp.Game.Game.Tile
             currentWeather.BindValueChanged(x => changeWeather(x.NewValue), true);
         }
 
-        private void changeWeather(Weather weather)
+        private void changeWeather(WeatherType weatherType)
         {
-            if (!texturesByWeather.TryGetValue(weather, out var weatherTexture))
-                weatherTexture = texturesByWeather[Weather.Clear];
+            if (!texturesByWeather.TryGetValue(weatherType, out var weatherTexture))
+                weatherTexture = texturesByWeather[WeatherType.Clear];
 
             texture.Texture = weatherTexture;
             texture.Size = weatherTexture.Size;

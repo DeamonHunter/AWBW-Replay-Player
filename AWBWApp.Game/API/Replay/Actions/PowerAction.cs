@@ -349,7 +349,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public int SightRangeIncrease;
         public int MovementRangeIncrease;
 
-        public Weather? ChangeToWeather;
+        public WeatherType? ChangeToWeather;
 
         public Dictionary<long, PlayerChange> PlayerChanges;
         public Dictionary<long, PlayerWideUnitChange> PlayerWideChanges;
@@ -360,7 +360,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         private Dictionary<long, ReplayUnit> originalUnits = new Dictionary<long, ReplayUnit>();
         private Dictionary<long, int> originalPowers = new Dictionary<long, int>();
         private Dictionary<long, int> originalFunds = new Dictionary<long, int>();
-        private Weather originalWeather;
+        private WeatherType originalWeatherType;
 
         public string GetReadibleName(ReplayController controller, bool shortName)
         {
@@ -469,7 +469,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 }
             }
 
-            originalWeather = context.Weather;
+            originalWeatherType = context.WeatherType;
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -690,7 +690,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 controller.Stats.CurrentTurnStatsReadout[controller.ActivePlayer.ID].PowersUsed--;
 
             if (ChangeToWeather.HasValue)
-                controller.Map.CurrentWeather.Value = originalWeather;
+                controller.Map.CurrentWeather.Value = originalWeatherType;
 
             var co = controller.COStorage.GetCOByName(CombatOfficerName);
             var coValue = controller.ActivePlayer.ActiveCO.Value;

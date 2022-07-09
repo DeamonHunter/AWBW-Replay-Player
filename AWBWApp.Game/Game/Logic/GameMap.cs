@@ -31,7 +31,7 @@ namespace AWBWApp.Game.Game.Logic
     {
         public Vector2I MapSize { get; private set; }
 
-        public Bindable<Weather> CurrentWeather = new Bindable<Weather>();
+        public Bindable<WeatherType> CurrentWeather = new Bindable<WeatherType>();
 
         private readonly TileGridContainer<DrawableTile> tileGrid;
         private readonly TileGridContainer<DrawableBuilding> buildingGrid;
@@ -117,7 +117,7 @@ namespace AWBWApp.Game.Game.Logic
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
         {
             dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
-            dependencies.CacheAs<IBindable<Weather>>(CurrentWeather);
+            dependencies.CacheAs<IBindable<WeatherType>>(CurrentWeather);
             return dependencies;
         }
 
@@ -780,7 +780,7 @@ namespace AWBWApp.Game.Game.Logic
                     var sightRangeModifier = dayToDayPower.SightIncrease + (action?.SightRangeIncrease ?? 0);
                     sightRangeModifier += unit.UnitData.MovementType != MovementType.Air ? tileGrid[unit.MapPosition.X, unit.MapPosition.Y].TerrainTile.SightDistanceIncrease : 0;
 
-                    if (CurrentWeather.Value == Weather.Rain)
+                    if (CurrentWeather.Value == WeatherType.Rain)
                         sightRangeModifier -= 1;
 
                     var vision = Math.Max(1, unit.UnitData.Vision + sightRangeModifier);
@@ -910,9 +910,9 @@ namespace AWBWApp.Game.Game.Logic
 
                 if (moveCosts.TryGetValue(unit.UnitData.MovementType, out var cost))
                 {
-                    if (dayToDay.MoveCostPerTile != null && CurrentWeather.Value != Weather.Snow)
+                    if (dayToDay.MoveCostPerTile != null && CurrentWeather.Value != WeatherType.Snow)
                         cost = dayToDay.MoveCostPerTile.Value;
-                    else if (CurrentWeather.Value != Weather.Clear)
+                    else if (CurrentWeather.Value != WeatherType.Clear)
                         cost = movementForWeather(unit.UnitData.MovementType, dayToDay.WeatherWithNoMovementAffect, dayToDay.WeatherWithAdditionalMovementAffect, terrainType, cost);
 
                     if (movement + cost <= movementRange)
@@ -946,12 +946,12 @@ namespace AWBWApp.Game.Game.Logic
             }
         }
 
-        private int movementForWeather(MovementType moveType, Weather noAffect, Weather additionalEffect, TerrainType type, int cost)
+        private int movementForWeather(MovementType moveType, WeatherType noAffect, WeatherType additionalEffect, TerrainType type, int cost)
         {
-            if (CurrentWeather.Value == Weather.Clear || CurrentWeather.Value == noAffect)
+            if (CurrentWeather.Value == WeatherType.Clear || CurrentWeather.Value == noAffect)
                 return cost;
 
-            if (CurrentWeather.Value == Weather.Rain && additionalEffect != Weather.Rain)
+            if (CurrentWeather.Value == WeatherType.Rain && additionalEffect != WeatherType.Rain)
             {
                 if ((moveType & (MovementType.Tread | MovementType.Tire)) == 0)
                     return cost;

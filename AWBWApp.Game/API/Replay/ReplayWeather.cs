@@ -4,7 +4,7 @@ namespace AWBWApp.Game.API.Replay
 {
     public class ReplayWeather
     {
-        public Weather Type;
+        public WeatherType Type;
         public int? TurnStartID;
     }
 }

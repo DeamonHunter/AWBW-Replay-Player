@@ -799,7 +799,7 @@ namespace AWBWApp.Game.Game.Logic
             var action = GetActivePowerForPlayer(playerID);
             var sightRangeModifier = dayToDayPower.SightIncrease + (action?.SightRangeIncrease ?? 0);
 
-            if (Map.CurrentWeather.Value == Weather.Rain)
+            if (Map.CurrentWeather.Value == WeatherType.Rain)
                 sightRangeModifier -= 1;
 
             Map.UpdateFogOfWar(playerID, sightRangeModifier, action?.COPower.SeeIntoHiddenTiles ?? false, resetFog);

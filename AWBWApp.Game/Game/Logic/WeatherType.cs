@@ -2,7 +2,7 @@
 
 namespace AWBWApp.Game.Game.Logic
 {
-    public enum Weather
+    public enum WeatherType
     {
         Clear,
         Rain,
@@ -11,21 +11,21 @@ namespace AWBWApp.Game.Game.Logic
 
     public static class WeatherHelper
     {
-        public static Weather ParseWeatherCode(string code)
+        public static WeatherType ParseWeatherCode(string code)
         {
             switch (code)
             {
                 case "R":
                 case "r":
-                    return Weather.Rain;
+                    return WeatherType.Rain;
 
                 case "S":
                 case "s":
-                    return Weather.Snow;
+                    return WeatherType.Snow;
 
                 case "C":
                 case "c":
-                    return Weather.Clear;
+                    return WeatherType.Clear;
 
                 default:
                     throw new Exception("Unknown weather code: " + code);

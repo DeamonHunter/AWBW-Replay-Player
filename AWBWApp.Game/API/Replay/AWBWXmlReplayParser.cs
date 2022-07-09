@@ -432,7 +432,7 @@ namespace AWBWApp.Game.API.Replay
                             break;
 
                         case "Weather":
-                            turnData.StartWeather = new ReplayWeather { Type = Enum.Parse<Weather>(innerNode.InnerText) };
+                            turnData.StartWeather = new ReplayWeather { Type = Enum.Parse<WeatherType>(innerNode.InnerText) };
                             break;
 
                         case "EntityInfos":

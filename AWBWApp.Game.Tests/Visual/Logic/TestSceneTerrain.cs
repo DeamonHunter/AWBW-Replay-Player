@@ -160,7 +160,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 Players = new Dictionary<long, ReplayUserTurn> { { 0, new ReplayUserTurn { ActiveCOID = 1, RequiredPowerForNormal = 90000, RequiredPowerForSuper = 180000 } } },
                 ReplayUnit = turn.ReplayUnit,
                 Buildings = turn.Buildings,
-                StartWeather = new ReplayWeather { Type = Weather.Rain }
+                StartWeather = new ReplayWeather { Type = WeatherType.Rain }
             });
             replay.TurnData.Add(new TurnData
             {
@@ -168,7 +168,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 Players = new Dictionary<long, ReplayUserTurn> { { 0, new ReplayUserTurn { ActiveCOID = 1, RequiredPowerForNormal = 90000, RequiredPowerForSuper = 180000 } } },
                 ReplayUnit = turn.ReplayUnit,
                 Buildings = turn.Buildings,
-                StartWeather = new ReplayWeather { Type = Weather.Snow }
+                StartWeather = new ReplayWeather { Type = WeatherType.Snow }
             });
 
             ReplayController.LoadReplay(replay, gameMap);
@@ -239,7 +239,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 Players = new Dictionary<long, ReplayUserTurn> { { 0, new ReplayUserTurn { ActiveCOID = 1, RequiredPowerForNormal = 90000, RequiredPowerForSuper = 180000 } } },
                 ReplayUnit = new Dictionary<long, ReplayUnit>(),
                 Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
-                StartWeather = new ReplayWeather { Type = Weather.Rain }
+                StartWeather = new ReplayWeather { Type = WeatherType.Rain }
             });
             replay.TurnData.Add(new TurnData
             {
@@ -247,7 +247,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 Players = new Dictionary<long, ReplayUserTurn> { { 0, new ReplayUserTurn { ActiveCOID = 1, RequiredPowerForNormal = 90000, RequiredPowerForSuper = 180000 } } },
                 ReplayUnit = new Dictionary<long, ReplayUnit>(),
                 Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
-                StartWeather = new ReplayWeather { Type = Weather.Snow }
+                StartWeather = new ReplayWeather { Type = WeatherType.Snow }
             });
 
             return replay;

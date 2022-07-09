@@ -113,7 +113,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                         Players = new Dictionary<long, ReplayUserTurn> { { 0, new ReplayUserTurn { ActiveCOID = 1, RequiredPowerForNormal = 90000, RequiredPowerForSuper = 180000 } } },
                         ReplayUnit = new Dictionary<long, ReplayUnit>(),
                         Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
-                        StartWeather = new ReplayWeather { Type = Weather.Clear }
+                        StartWeather = new ReplayWeather { Type = WeatherType.Clear }
                     }
                 }
             };

@@ -31,7 +31,7 @@ namespace AWBWApp.Game.Game.Building
         public readonly BuildingTile BuildingTile;
 
         private TextureAnimation textureAnimation;
-        private Dictionary<Weather, List<Texture>> texturesByWeather;
+        private Dictionary<WeatherType, List<Texture>> texturesByWeather;
 
         [Resolved]
         private NearestNeighbourTextureStore textureStore { get; set; }
@@ -40,7 +40,7 @@ namespace AWBWApp.Game.Game.Building
         private BuildingStorage buildingStorage { get; set; }
 
         [Resolved]
-        private IBindable<Weather> currentWeather { get; set; }
+        private IBindable<WeatherType> currentWeather { get; set; }
 
         private IBindable<CountryData> countryBindindable;
 
@@ -75,7 +75,7 @@ namespace AWBWApp.Game.Game.Building
 
         private void updateAnimation()
         {
-            texturesByWeather = new Dictionary<Weather, List<Texture>>();
+            texturesByWeather = new Dictionary<WeatherType, List<Texture>>();
 
             var buildingTile = BuildingTile;
 
@@ -106,10 +106,10 @@ namespace AWBWApp.Game.Game.Building
             changeWeather(currentWeather.Value);
         }
 
-        private void changeWeather(Weather weather)
+        private void changeWeather(WeatherType weatherType)
         {
-            if (!texturesByWeather.TryGetValue(weather, out var weatherTextures))
-                weatherTextures = texturesByWeather[Weather.Clear];
+            if (!texturesByWeather.TryGetValue(weatherType, out var weatherTextures))
+                weatherTextures = texturesByWeather[WeatherType.Clear];
 
             var playbackPosition = textureAnimation.PlaybackPosition;
             if (double.IsNaN(playbackPosition))
