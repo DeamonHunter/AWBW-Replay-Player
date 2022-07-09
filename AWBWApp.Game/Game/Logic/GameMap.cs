@@ -660,7 +660,7 @@ namespace AWBWApp.Game.Game.Logic
             }
 
             //Todo: Is this always the case
-            if (!setBuildingToReady)
+            if (setBuildingToReady)
                 building.HasDoneAction.Value = false;
             building.CaptureHealth.Value = awbwBuilding.Capture ?? 20;
 
