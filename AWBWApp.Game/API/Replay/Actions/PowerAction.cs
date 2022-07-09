@@ -645,7 +645,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     controller.Stats.CurrentTurnStatsReadout[drawableUnit.OwnerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged, drawableUnit.UnitData.Name, drawableUnit.OwnerID!.Value, value);
 
                     controller.Map.PlaySelectionAnimation(drawableUnit);
-                    yield return ReplayWait.WaitForMilliseconds(50);
+                    yield return ReplayWait.WaitForMilliseconds(75);
                 }
             }
 
@@ -681,7 +681,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (controller.ShouldPlayerActionBeHidden(unit.MapPosition))
                 return false;
 
-            controller.Map.PlaySelectionAnimation(unit);
+            controller.Map.PlayEffect("Effects/PowerSelect/SelectCircle", 225, unit.MapPosition, 0, x => x.ScaleTo(0).ScaleTo(1, 200, Easing.Out));
+            controller.Map.PlayEffect("Effects/PowerSelect/Select", 550, unit.MapPosition, 225);
             return true;
         }
 
