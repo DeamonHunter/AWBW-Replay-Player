@@ -489,7 +489,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 controller.Map.CurrentWeather.Value = ChangeToWeather.Value;
                 controller.UpdateFogOfWar();
-                controller.WeatherController.ParticleMultiplier = 3;
+                controller.WeatherController.ParticleMultiplier = 4;
                 controller.WeatherController.ParticleVelocity = 1.15f;
             }
 
