@@ -6,7 +6,7 @@ namespace AWBWApp.Game.Helpers
 {
     public class NearestNeighbourTextureStore : TextureStore
     {
-        public NearestNeighbourTextureStore(IResourceStore<TextureUpload> store)
+        public NearestNeighbourTextureStore(IResourceStore<TextureUpload> store = null)
             : base(store, filteringMode: All.Nearest)
         {
         }
