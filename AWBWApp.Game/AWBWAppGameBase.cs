@@ -217,6 +217,8 @@ namespace AWBWApp.Game
 
         protected override UserInputManager CreateUserInputManager() => new AWBWAppUserInputManager();
 
+        protected override Storage CreateStorage(GameHost host, Storage defaultStorage) => new MigratableStorage(host, defaultStorage);
+
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
     }
 }
