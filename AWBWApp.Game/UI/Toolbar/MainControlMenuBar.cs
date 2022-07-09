@@ -39,6 +39,7 @@ namespace AWBWApp.Game.UI.Toolbar
                     Items = new[]
                     {
                         new MenuItem("Rebind Keys", () => interrupts.Push(new KeyRebindingInterrupt())),
+                        new ToggleMenuItem("Allow Left Mouse to Drag Map", configManager.GetBindable<bool>(AWBWSetting.ReplayAllowLeftMouseToDragMap)),
                         new ToggleMenuItem("Skip End Turn", configManager.GetBindable<bool>(AWBWSetting.ReplaySkipEndTurn)),
                         new ToggleMenuItem("Shorten Action Tooltips", configManager.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips)),
                         new ToggleMenuItem("Move Controls Bar to Player List", configManager.GetBindable<bool>(AWBWSetting.ReplayCombineReplayListAndControlBar)),

@@ -31,6 +31,7 @@ namespace AWBWApp.Game
             SetDefault(AWBWSetting.ReplayCombineReplayListAndControlBar, false);
             SetDefault(AWBWSetting.ReplayMovementAnimations, true);
             SetDefault(AWBWSetting.ReplayShowWeather, true);
+            SetDefault(AWBWSetting.ReplayAllowLeftMouseToDragMap, true);
         }
     }
 
@@ -52,5 +53,6 @@ namespace AWBWApp.Game
         ReplayCombineReplayListAndControlBar,
         ReplayMovementAnimations,
         ReplayShowWeather,
+        ReplayAllowLeftMouseToDragMap
     }
 }

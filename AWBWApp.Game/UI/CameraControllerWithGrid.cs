@@ -1,6 +1,8 @@
 ﻿using System;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.UI.Components;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -26,6 +28,8 @@ namespace AWBWApp.Game.UI
 
         private static readonly Vector2 grid_offset = new Vector2(-1, -2);
 
+        private IBindable<bool> allowLeftMouseToDragMap;
+
         public CameraControllerWithGrid()
         {
             InternalChildren = new Drawable[]
@@ -49,6 +53,12 @@ namespace AWBWApp.Game.UI
                     AutoSizeAxes = Axes.Both
                 }
             };
+        }
+
+        [BackgroundDependencyLoader]
+        private void load(AWBWConfigManager configManager)
+        {
+            allowLeftMouseToDragMap = configManager.GetBindable<bool>(AWBWSetting.ReplayAllowLeftMouseToDragMap);
         }
 
         //Todo: Center it as well
@@ -98,7 +108,12 @@ namespace AWBWApp.Game.UI
 
         protected override bool OnDragStart(DragStartEvent e)
         {
-            if (e.Button != MouseButton.Left && e.Button != MouseButton.Middle && e.Button != MouseButton.Right)
+            if (e.Button == MouseButton.Left)
+            {
+                if (!allowLeftMouseToDragMap.Value)
+                    return base.OnDragStart(e);
+            }
+            else if (e.Button != MouseButton.Middle && e.Button != MouseButton.Right)
                 return base.OnDragStart(e);
 
             return true;
@@ -118,7 +133,15 @@ namespace AWBWApp.Game.UI
 
         protected override void OnDrag(DragEvent e)
         {
-            if (e.Button != MouseButton.Left && e.Button != MouseButton.Middle && e.Button != MouseButton.Right)
+            if (e.Button == MouseButton.Left)
+            {
+                if (!allowLeftMouseToDragMap.Value)
+                {
+                    base.OnDrag(e);
+                    return;
+                }
+            }
+            else if (e.Button != MouseButton.Middle && e.Button != MouseButton.Right)
             {
                 base.OnDrag(e);
                 return;
