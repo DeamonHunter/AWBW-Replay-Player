@@ -8,8 +8,8 @@ namespace AWBWApp.Game.Game.Tile
 {
     public class TerrainTileStorage
     {
-        readonly Dictionary<int, TerrainTile> tilesByAWBWId = new Dictionary<int, TerrainTile>();
-        readonly Dictionary<string, TerrainTile> tilesByCode = new Dictionary<string, TerrainTile>();
+        private readonly Dictionary<int, TerrainTile> tilesByAWBWId = new Dictionary<int, TerrainTile>();
+        private readonly Dictionary<string, TerrainTile> tilesByCode = new Dictionary<string, TerrainTile>();
 
         public void LoadStream(Stream jsonStream)
         {

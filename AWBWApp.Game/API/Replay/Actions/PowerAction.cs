@@ -56,9 +56,11 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public IReplayAction ParseJObjectIntoReplayAction(JObject jObject, ReplayData replayData, TurnData turnData)
         {
-            var action = new PowerAction();
+            var action = new PowerAction
+            {
+                CombatOfficerName = (string)jObject["coName"]
+            };
 
-            action.CombatOfficerName = (string)jObject["coName"];
             var coPower = (string)jObject["coPower"];
 
             if (coPower != "Y" && coPower != "S")

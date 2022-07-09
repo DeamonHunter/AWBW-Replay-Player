@@ -33,9 +33,9 @@ namespace AWBWApp.Game.UI.Replay
         protected PowerStars BaseStars;
         protected PowerStars SuperStars;
 
-        private string COName;
+        private string coName;
 
-        public PowerDisplay(string COName, string powerName, bool super)
+        public PowerDisplay(string coName, string powerName, bool super)
         {
             RelativeSizeAxes = Axes.X;
             Anchor = Anchor.Centre;
@@ -43,7 +43,7 @@ namespace AWBWApp.Game.UI.Replay
             Size = new Vector2(0.66f, 80);
             Alpha = 0;
 
-            this.COName = COName;
+            this.coName = coName;
 
             AddInternal(contentContainer = new Container
             {
@@ -143,7 +143,7 @@ namespace AWBWApp.Game.UI.Replay
         [BackgroundDependencyLoader]
         private void load(NearestNeighbourTextureStore textureStore)
         {
-            CharacterSprite.Texture = textureStore.Get($"CO/{COName}-Full");
+            CharacterSprite.Texture = textureStore.Get($"CO/{coName}-Full");
             CharacterSprite.Size = CharacterSprite.Texture.Size;
 
             ScheduleAfterChildren(() =>

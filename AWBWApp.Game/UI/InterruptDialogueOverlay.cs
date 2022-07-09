@@ -94,7 +94,7 @@ namespace AWBWApp.Game.UI
 
         protected override void PopIn()
         {
-            this.FadeIn(BaseInterrupt.Enter_Duration, Easing.OutQuint);
+            this.FadeIn(BaseInterrupt.ENTER_DURATION, Easing.OutQuint);
         }
 
         protected override void PopOut()
@@ -102,7 +102,7 @@ namespace AWBWApp.Game.UI
             if (CurrentInterrupt?.State.Value == Visibility.Visible)
                 CurrentInterrupt.Close();
 
-            this.FadeOut(BaseInterrupt.Exit_Duration, Easing.OutSine);
+            this.FadeOut(BaseInterrupt.EXIT_DURATION, Easing.OutSine);
         }
     }
 }

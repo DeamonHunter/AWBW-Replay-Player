@@ -379,15 +379,14 @@ namespace AWBWApp.Game.API.Replay
                     {
                         foreach (XmlNode playerNode in node.ChildNodes)
                         {
-                            var user = new ReplayUser();
+                            var user = new ReplayUser
+                            {
+                                ID = data.ReplayInfo.Players.Count, // Ids are not provided
+                                UserId = -1,
+                                Username = playerNode.SelectSingleNode("Player")!.InnerText,
+                                CountryID = countryNameToAWBWID[playerNode.SelectSingleNode("Country")!.InnerText]
+                            };
 
-                            // Ids are not provided
-                            user.ID = data.ReplayInfo.Players.Count;
-                            user.UserId = -1;
-
-                            user.Username = playerNode.SelectSingleNode("Player")!.InnerText;
-
-                            user.CountryID = countryNameToAWBWID[playerNode.SelectSingleNode("Country")!.InnerText];
                             user.RoundOrder = user.CountryID;
                             user.COsUsedByPlayer.Add(coNameToAWBWId[playerNode.SelectSingleNode("CO")!.InnerText]);
 
@@ -411,10 +410,12 @@ namespace AWBWApp.Game.API.Replay
             {
                 int turnIndex = -1;
 
-                var turnData = new TurnData();
-                turnData.ReplayUnit = new Dictionary<long, ReplayUnit>();
-                turnData.Buildings = new Dictionary<Vector2I, ReplayBuilding>();
-                turnData.Players = new Dictionary<long, ReplayUserTurn>();
+                var turnData = new TurnData
+                {
+                    ReplayUnit = new Dictionary<long, ReplayUnit>(),
+                    Buildings = new Dictionary<Vector2I, ReplayBuilding>(),
+                    Players = new Dictionary<long, ReplayUserTurn>()
+                };
 
                 foreach (XmlNode innerNode in node.ChildNodes)
                 {
@@ -493,16 +494,17 @@ namespace AWBWApp.Game.API.Replay
 
                                 if (countryShortNameToAWBWID.TryGetValue(code, out var countryID))
                                 {
-                                    var replayUnit = new ReplayUnit();
-                                    replayUnit.ID = unitId++;
-                                    replayUnit.UnitName = unitNames[name.InnerText[2..]];
-                                    replayUnit.HitPoints = 10;
-                                    replayUnit.Position = position;
-                                    replayUnit.PlayerID = data.ReplayInfo.Players.First(p => p.Value.CountryID == countryID).Value.ID;
-
-                                    replayUnit.TimesMoved = 0;
-                                    replayUnit.Fuel = 99;
-                                    replayUnit.Ammo = 99;
+                                    var replayUnit = new ReplayUnit
+                                    {
+                                        ID = unitId++,
+                                        UnitName = unitNames[name.InnerText[2..]],
+                                        HitPoints = 10,
+                                        Position = position,
+                                        PlayerID = data.ReplayInfo.Players.First(p => p.Value.CountryID == countryID).Value.ID,
+                                        TimesMoved = 0,
+                                        Fuel = 99,
+                                        Ammo = 99
+                                    };
 
                                     turnData.ReplayUnit.Add(replayUnit.ID, replayUnit);
                                     continue;
@@ -513,12 +515,14 @@ namespace AWBWApp.Game.API.Replay
                                     //Is this a true building or a fake one.
                                     if (buildingID.Item1)
                                     {
-                                        var replayBuilding = new ReplayBuilding();
-                                        replayBuilding.ID = position.Y * 1000 + position.X;
-                                        replayBuilding.Capture = 20;
-                                        replayBuilding.LastCapture = 20;
-                                        replayBuilding.TerrainID = buildingID.Item2;
-                                        replayBuilding.Position = position;
+                                        var replayBuilding = new ReplayBuilding
+                                        {
+                                            ID = position.Y * 1000 + position.X,
+                                            Capture = 20,
+                                            LastCapture = 20,
+                                            TerrainID = buildingID.Item2,
+                                            Position = position
+                                        };
                                         turnData.Buildings.Add(position, replayBuilding);
                                     }
                                     continue;
@@ -562,8 +566,10 @@ namespace AWBWApp.Game.API.Replay
 
                                 var playerData = data.ReplayInfo.Players.First(p => p.Value.Username == playerName);
 
-                                var playerTurn = new ReplayUserTurn();
-                                playerTurn.ActiveCOID = playerData.Value.COsUsedByPlayer.First();
+                                var playerTurn = new ReplayUserTurn
+                                {
+                                    ActiveCOID = playerData.Value.COsUsedByPlayer.First()
+                                };
 
                                 foreach (XmlNode playerInfoNode in playerNode.SelectSingleNode("TurnInfo"))
                                 {

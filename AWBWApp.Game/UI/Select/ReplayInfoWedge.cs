@@ -146,7 +146,6 @@ namespace AWBWApp.Game.UI.Select
                 return;
             }
 
-            SmallMapTexture map;
             Children = new Drawable[]
             {
                 new Container()
@@ -172,7 +171,7 @@ namespace AWBWApp.Game.UI.Select
                     Children = new Drawable[]
                     {
                         createTextArea(countryStorage),
-                        map = new SmallMapTexture(replay.MapId)
+                        new SmallMapTexture(replay.MapId)
                         {
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,

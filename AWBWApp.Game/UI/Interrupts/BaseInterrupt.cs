@@ -15,8 +15,8 @@ namespace AWBWApp.Game.UI.Interrupts
     //Todo: Make distinct from Osu
     public abstract class BaseInterrupt : VisibilityContainer
     {
-        public const float Enter_Duration = 500;
-        public const float Exit_Duration = 200;
+        public const float ENTER_DURATION = 500;
+        public const float EXIT_DURATION = 200;
 
         private readonly float animationBaseXOffset = -50f;
 
@@ -167,11 +167,11 @@ namespace AWBWApp.Game.UI.Interrupts
                 interactablesContainer.MoveToX(animationBaseXOffset);
             }
 
-            content.FadeIn(Enter_Duration, Easing.OutQuint);
-            this.MoveToX(animationBaseXOffset).MoveToX(0, Enter_Duration, Easing.OutQuint);
+            content.FadeIn(ENTER_DURATION, Easing.OutQuint);
+            this.MoveToX(animationBaseXOffset).MoveToX(0, ENTER_DURATION, Easing.OutQuint);
 
-            interactablesContainer.TransformSpacingTo(baseSpacing, Enter_Duration, Easing.OutQuint);
-            interactablesContainer.MoveToX(0, Enter_Duration, Easing.OutQuint);
+            interactablesContainer.TransformSpacingTo(baseSpacing, ENTER_DURATION, Easing.OutQuint);
+            interactablesContainer.MoveToX(0, ENTER_DURATION, Easing.OutQuint);
         }
 
         protected override void PopOut()
@@ -179,11 +179,11 @@ namespace AWBWApp.Game.UI.Interrupts
             if (!actionWasInvoked && content.IsPresent)
                 CancelAction?.Invoke();
 
-            content.FadeOut(Exit_Duration, Easing.InSine);
-            this.MoveToX(0).MoveToX(animationBaseXOffset, Enter_Duration, Easing.OutQuint);
+            content.FadeOut(EXIT_DURATION, Easing.InSine);
+            this.MoveToX(0).MoveToX(animationBaseXOffset, ENTER_DURATION, Easing.OutQuint);
 
-            interactablesContainer.TransformSpacingTo(new Vector2(animationBaseXOffset, baseSpacing.Y), Enter_Duration, Easing.OutQuint);
-            interactablesContainer.MoveToX(animationBaseXOffset, Enter_Duration, Easing.OutQuint);
+            interactablesContainer.TransformSpacingTo(new Vector2(animationBaseXOffset, baseSpacing.Y), ENTER_DURATION, Easing.OutQuint);
+            interactablesContainer.MoveToX(animationBaseXOffset, ENTER_DURATION, Easing.OutQuint);
         }
 
         protected override bool OnClick(ClickEvent e)

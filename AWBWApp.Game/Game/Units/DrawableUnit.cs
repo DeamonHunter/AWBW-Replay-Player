@@ -25,7 +25,7 @@ namespace AWBWApp.Game.Game.Units
     public class DrawableUnit : CompositeDrawable, IHasMapPosition
     {
         public static readonly Vector2I BASE_SIZE = new Vector2I(16);
-        public static readonly Colour4 FogColor = new Colour4(150, 150, 150, 255);
+        public static readonly Colour4 FOG_COLOUR = new Colour4(150, 150, 150, 255);
 
         public readonly UnitData UnitData;
         public long UnitID { get; private set; }
@@ -204,7 +204,7 @@ namespace AWBWApp.Game.Game.Units
             }
         }
 
-        Vector2 getRealPositionFromMapTiles(Vector2I position)
+        private Vector2 getRealPositionFromMapTiles(Vector2I position)
         {
             return Vec2IHelper.ScalarMultiply(position, BASE_SIZE) + new Vector2I(0, BASE_SIZE.Y);
         }
@@ -222,7 +222,7 @@ namespace AWBWApp.Game.Game.Units
             {
                 //Only moving 1 tile
 
-                var movementDirection = GetMovementDirection(path[0], path[1]);
+                var movementDirection = getMovementDirection(path[0], path[1]);
                 transformSequence.Then().TransformBindableTo(FogOfWarActive, fogActive(path[1])).TransformBindableTo(movementState, movementDirection)
                                  .MoveTo(getRealPositionFromMapTiles(new Vector2I(path[1].X, path[1].Y)), 400, Easing.InOutQuad);
             }
@@ -231,7 +231,7 @@ namespace AWBWApp.Game.Game.Units
                 for (int i = 1; i < path.Count; i++)
                 {
                     var pathNode = path[i];
-                    var movementDirection = GetMovementDirection(path[i - 1], pathNode);
+                    var movementDirection = getMovementDirection(path[i - 1], pathNode);
 
                     transformSequence.Then().TransformBindableTo(FogOfWarActive, fogActive(pathNode)).TransformBindableTo(movementState, movementDirection);
 
@@ -248,7 +248,7 @@ namespace AWBWApp.Game.Game.Units
             return transformSequence;
         }
 
-        private MovementState GetMovementDirection(UnitPosition a, UnitPosition b)
+        private MovementState getMovementDirection(UnitPosition a, UnitPosition b)
         {
             if (a.X < b.X)
                 return MovementState.MoveRight;
@@ -314,7 +314,7 @@ namespace AWBWApp.Game.Game.Units
             Color4 colour;
 
             if (FogOfWarActive.Value)
-                colour = FogColor;
+                colour = FOG_COLOUR;
             else
                 colour = Color4.White;
 

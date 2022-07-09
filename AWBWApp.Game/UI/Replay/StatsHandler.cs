@@ -191,18 +191,17 @@ namespace AWBWApp.Game.UI.Replay
 
         public PlayerStatsReadout Clone()
         {
-            var readout = new PlayerStatsReadout();
-
-            readout.GeneratedMoney = GeneratedMoney;
-
-            readout.SuperPowersUsed = SuperPowersUsed;
-            readout.PowersUsed = PowersUsed;
-            readout.MoneySpentOnBuildingUnits = MoneySpentOnBuildingUnits;
-            readout.MoneySpentOnRepairingUnits = MoneySpentOnRepairingUnits;
-
-            readout.TotalValueBuilt = TotalValueBuilt;
-            readout.TotalValueLost = TotalValueLost;
-            readout.TotalValueDamaged = TotalValueDamaged;
+            var readout = new PlayerStatsReadout
+            {
+                GeneratedMoney = GeneratedMoney,
+                SuperPowersUsed = SuperPowersUsed,
+                PowersUsed = PowersUsed,
+                MoneySpentOnBuildingUnits = MoneySpentOnBuildingUnits,
+                MoneySpentOnRepairingUnits = MoneySpentOnRepairingUnits,
+                TotalValueBuilt = TotalValueBuilt,
+                TotalValueLost = TotalValueLost,
+                TotalValueDamaged = TotalValueDamaged
+            };
 
             foreach (var stat in BuildStats)
                 readout.BuildStats[stat.Key] = stat.Value;

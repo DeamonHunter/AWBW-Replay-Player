@@ -13,6 +13,8 @@ namespace AWBWApp.Game.UI
     {
         protected Color4 FlashColour = Color4.White.Opacity(0.3f);
 
+        private Color4 hoverColour = Color4.White.Opacity(0.3f);
+
         protected Color4 HoverColour
         {
             get => hoverColour;
@@ -22,8 +24,6 @@ namespace AWBWApp.Game.UI
                 hover.Colour = value;
             }
         }
-
-        Color4 hoverColour = Color4.White.Opacity(0.3f);
 
         protected override Container<Drawable> Content => content;
 

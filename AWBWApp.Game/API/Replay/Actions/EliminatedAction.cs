@@ -18,11 +18,13 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public IReplayAction ParseJObjectIntoReplayAction(JObject jObject, ReplayData replayData, TurnData turnData)
         {
-            var action = new EliminatedAction();
+            var action = new EliminatedAction()
+            {
+                CausedByPlayerID = (long?)jObject["eliminatedByPId"],
+                EliminatedPlayerID = (long)jObject["playerId"],
+                EliminationMessage = (string)jObject["message"]
+            };
 
-            action.CausedByPlayerID = (long?)jObject["eliminatedByPId"];
-            action.EliminatedPlayerID = (long)jObject["playerId"];
-            action.EliminationMessage = (string)jObject["message"];
             var resigned = (string)jObject["action"];
 
             if (resigned == "Resign")

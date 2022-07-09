@@ -31,7 +31,6 @@ namespace AWBWApp.Game.UI.Replay
         private Bindable<bool> playerListDontReorder;
         private IBindable<bool> replayBarInPlayerList;
 
-        private MenuItem[] contextMenuItems;
         private TeamOrPlayerDropdown fogDropdown;
 
         private long currentActivePlayer;
@@ -129,7 +128,7 @@ namespace AWBWApp.Game.UI.Replay
                     ReplayBarWidget.AnimateHide();
             }, true);
 
-            contextMenuItems = new[]
+            ContextMenuItems = new[]
             {
                 new MenuItem("Scale")
                 {
@@ -223,7 +222,7 @@ namespace AWBWApp.Game.UI.Replay
             }
         }
 
-        public MenuItem[] ContextMenuItems => contextMenuItems;
+        public MenuItem[] ContextMenuItems { get; private set; }
 
         private MenuItem[] createPlayerListScaleItems(AWBWConfigManager configManager)
         {

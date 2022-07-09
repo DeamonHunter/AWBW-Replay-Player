@@ -31,8 +31,10 @@ namespace AWBWApp.Game.API.Replay
 
         public static ReplayUnit ParseJObjectIntoReplayUnit(JObject jObject)
         {
-            var unit = new ReplayUnit();
-            unit.ID = (long)jObject["units_id"];
+            var unit = new ReplayUnit
+            {
+                ID = (long)jObject["units_id"]
+            };
 
             if (jObject.TryGetValue("units_players_id", out JToken playerId))
                 unit.PlayerID = (long)playerId;

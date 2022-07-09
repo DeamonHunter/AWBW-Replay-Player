@@ -144,15 +144,15 @@ namespace AWBWApp.Game.Game.Logic
                 newReadouts.Add(readout.Key, readout.Value.Clone());
             StatsReadouts = newReadouts;
 
-            var desync = new EndTurnDesync();
-            desync.TurnIndex = CurrentTurnIndex;
-            desync.NextPlayerID = nextTurn.ActivePlayerID;
+            var desync = new EndTurnDesync
+            {
+                TurnIndex = CurrentTurnIndex,
+                NextPlayerID = nextTurn.ActivePlayerID
+            };
 
             foreach (var unit in Units)
             {
-                ReplayUnit nextTurnUnit;
-
-                if (!nextTurn.ReplayUnit.TryGetValue(unit.Key, out nextTurnUnit))
+                if (!nextTurn.ReplayUnit.TryGetValue(unit.Key, out var nextTurnUnit))
                 {
                     desync.ChangedUnits.Add(unit.Key, unit.Value.Clone());
                     desync.DesyncRemovedUnitCount++;

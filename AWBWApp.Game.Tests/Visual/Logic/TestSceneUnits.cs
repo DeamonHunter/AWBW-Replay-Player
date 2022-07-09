@@ -120,8 +120,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                     healthAndLoaded.HitPoints = i + 1;
                     healthAndLoaded.Ammo = 99;
                     healthAndLoaded.Fuel = 99;
-                    healthAndLoaded.CargoUnits = new List<long>();
-                    healthAndLoaded.CargoUnits.Add(0);
+                    healthAndLoaded.CargoUnits = new List<long> { 0 };
                     turn.ReplayUnit.Add(healthAndLoaded.ID, healthAndLoaded);
                     turn2.ReplayUnit.Add(healthAndLoaded.ID, healthAndLoaded);
 
@@ -142,8 +141,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                     all.HitPoints = i + 1;
                     all.Ammo = 0;
                     all.Fuel = 0;
-                    all.CargoUnits = new List<long>();
-                    all.CargoUnits.Add(0);
+                    all.CargoUnits = new List<long> { 0 };
                     all.TimesCaptured = 1;
                     turn.ReplayUnit.Add(all.ID, all);
                     turn2.ReplayUnit.Add(all.ID, all);

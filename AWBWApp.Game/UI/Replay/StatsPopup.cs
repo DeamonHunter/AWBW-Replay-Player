@@ -212,7 +212,7 @@ namespace AWBWApp.Game.UI.Replay
         {
             private GridContainer statsContainer;
 
-            private readonly static Color4 seperator_color = new Colour4(150, 150, 150, 255);
+            private static readonly Color4 seperator_color = new Colour4(150, 150, 150, 255);
 
             private UnitFlowContainer(string heading, string valueDesc, long totalValue)
             {

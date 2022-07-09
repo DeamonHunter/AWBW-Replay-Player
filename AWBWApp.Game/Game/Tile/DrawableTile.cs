@@ -17,7 +17,7 @@ namespace AWBWApp.Game.Game.Tile
     {
         public static readonly Vector2I BASE_SIZE = new Vector2I(16);
         public static readonly Vector2I HALF_BASE_SIZE = new Vector2I(8);
-        public static readonly Colour4 FogColor = new Colour4(150, 150, 150, 255);
+        public static readonly Colour4 FOG_COLOUR = new Colour4(150, 150, 150, 255);
 
         public BindableBool FogOfWarActive = new BindableBool();
 
@@ -73,7 +73,7 @@ namespace AWBWApp.Game.Game.Tile
         private void updateFog(bool foggy)
         {
             if (foggy)
-                texture.FadeColour(FogColor, 150, Easing.OutQuint);
+                texture.FadeColour(FOG_COLOUR, 150, Easing.OutQuint);
             else
                 texture.FadeColour(Color4.White, 150, Easing.InQuint);
         }

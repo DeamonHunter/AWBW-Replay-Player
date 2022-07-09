@@ -16,10 +16,12 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public IReplayAction ParseJObjectIntoReplayAction(JObject jObject, ReplayData replayData, TurnData turnData)
         {
-            var action = new GameOverAction();
-            action.FinishedDay = (int)jObject["day"];
-            action.GameEndDate = (string)jObject["gameEndDate"];
-            action.EndMessage = (string)jObject["message"];
+            var action = new GameOverAction
+            {
+                FinishedDay = (int)jObject["day"],
+                GameEndDate = (string)jObject["gameEndDate"],
+                EndMessage = (string)jObject["message"]
+            };
 
             action.Winners = new List<long>();
             foreach (var winner in (JArray)jObject["winners"])

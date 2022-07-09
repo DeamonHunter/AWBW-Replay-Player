@@ -25,8 +25,6 @@ namespace AWBWApp.Game.UI.Replay
 {
     public class MoveableReplayBarWidget : ReplayBarWidget, IHasContextMenu
     {
-        private MenuItem[] contextMenuItems;
-
         private Bindable<float> replayBarScale;
         private Bindable<float> replayBarOffsetX;
         private Bindable<float> replayBarOffsetY;
@@ -187,7 +185,7 @@ namespace AWBWApp.Game.UI.Replay
 
             replayBarOffsetX = configManager.GetBindable<float>(AWBWSetting.ReplayBarControlPositionX);
             replayBarOffsetY = configManager.GetBindable<float>(AWBWSetting.ReplayBarControlPositionY);
-            contextMenuItems = new[]
+            ContextMenuItems = new[]
             {
                 new MenuItem("Scale")
                 {
@@ -257,7 +255,7 @@ namespace AWBWApp.Game.UI.Replay
             replayBarOffsetY.Value = Position.Y;
         }
 
-        public MenuItem[] ContextMenuItems => contextMenuItems;
+        public MenuItem[] ContextMenuItems { get; private set; }
 
         private MenuItem[] createPlayerListScaleItems(AWBWConfigManager configManager)
         {

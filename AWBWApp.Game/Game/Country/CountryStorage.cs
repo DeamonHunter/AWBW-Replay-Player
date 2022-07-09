@@ -7,9 +7,9 @@ namespace AWBWApp.Game.Game.Country
 {
     public class CountryStorage
     {
-        readonly Dictionary<int, CountryData> countriesByAWBWID = new Dictionary<int, CountryData>();
-        readonly Dictionary<string, CountryData> countriesByCode = new Dictionary<string, CountryData>();
-        readonly Dictionary<string, CountryData> countriesByName = new Dictionary<string, CountryData>();
+        private readonly Dictionary<int, CountryData> countriesByAWBWID = new Dictionary<int, CountryData>();
+        private readonly Dictionary<string, CountryData> countriesByCode = new Dictionary<string, CountryData>();
+        private readonly Dictionary<string, CountryData> countriesByName = new Dictionary<string, CountryData>();
 
         public void LoadStream(Stream jsonStream)
         {

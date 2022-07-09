@@ -7,8 +7,8 @@ namespace AWBWApp.Game.Game.COs
 {
     public class COStorage
     {
-        readonly Dictionary<int, COData> coByAWBWId = new Dictionary<int, COData>();
-        readonly Dictionary<string, COData> coByName = new Dictionary<string, COData>();
+        private readonly Dictionary<int, COData> coByAWBWId = new Dictionary<int, COData>();
+        private readonly Dictionary<string, COData> coByName = new Dictionary<string, COData>();
 
         public void LoadStream(Stream jsonStream)
         {

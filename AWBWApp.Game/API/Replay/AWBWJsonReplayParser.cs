@@ -890,7 +890,7 @@ namespace AWBWApp.Game.API.Replay
 
             for (int i = 0; i < numberOfBuildings; i++)
             {
-                var buildingIndex = readInteger(text, ref textIndex); //Likely not needed
+                readInteger(text, ref textIndex); //Building Index
 
                 if (!text.Slice(textIndex, building_start_text.Length).Equals(building_start_text, StringComparison.Ordinal))
                     throw new Exception("Building data does not start correctly.");
@@ -994,7 +994,7 @@ namespace AWBWApp.Game.API.Replay
 
             for (int i = 0; i < numberOfUnits; i++)
             {
-                var unitIndex = readInteger(text, ref textIndex); //Likely not needed
+                readInteger(text, ref textIndex); //Unit Index
                 if (!text.Slice(textIndex, units_start_text.Length).Equals(units_start_text, StringComparison.Ordinal))
                     throw new Exception("Unit data does not start correctly.");
 
@@ -1296,7 +1296,7 @@ namespace AWBWApp.Game.API.Replay
             if (readInteger(text, ref textIndex) != 1)
                 throw new Exception("Improper action turn start. 2nd array member not in right format.");
 
-            var playerTurnNumber = readInteger(text, ref textIndex);
+            readInteger(text, ref textIndex); //Player Turn Number
 
             if (readInteger(text, ref textIndex) != 2)
                 throw new Exception("Improper action turn start. 3rd array member not in right format.");
@@ -1351,8 +1351,8 @@ namespace AWBWApp.Game.API.Replay
 
                 for (int i = 0; i < actionCount; i++)
                 {
-                    var index = readInteger(text, ref textIndex);
-                    var actionString = readString(text, ref textIndex);
+                    readInteger(text, ref textIndex);
+                    readString(text, ref textIndex);
                 }
             }
 

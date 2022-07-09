@@ -395,8 +395,7 @@ namespace AWBWApp.Game.Game.Logic
             });
         }
 
-        //Todo: Save this data
-        void updateToGameState(TurnData gameState)
+        private void updateToGameState(TurnData gameState)
         {
             //Do units first, then buildings as buildings need to set capture status on units.
 

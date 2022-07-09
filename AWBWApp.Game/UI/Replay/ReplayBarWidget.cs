@@ -30,7 +30,7 @@ namespace AWBWApp.Game.UI.Replay
 
         public ReplayBarWidget(ReplayController replayController)
         {
-            this.ReplayController = replayController;
+            ReplayController = replayController;
             replayController.CurrentTurnIndex.BindValueChanged(_ => updateTurnText());
         }
 
