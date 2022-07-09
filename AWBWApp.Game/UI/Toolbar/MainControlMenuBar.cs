@@ -23,26 +23,27 @@ namespace AWBWApp.Game.UI.Toolbar
             Menu.Items = new MenuItem[]
             {
                 new MenuItem("Exit Screen", exitScreenAction),
-                new MenuItem("Unit Settings")
-                {
-                    Items = new[]
-                    {
-                        new ToggleMenuItem("Movement Animations", configManager.GetBindable<bool>(AWBWSetting.ReplayMovementAnimations)),
-                        new ToggleMenuItem("Show Hidden Units", configManager.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits)),
-                        new ToggleMenuItem("Show Movement Arrows", configManager.GetBindable<bool>(AWBWSetting.ReplayShowMovementArrows))
-                    }
-                },
-                new MenuItem("Menu Settings")
+                new MenuItem("Visual Settings")
                 {
                     Items = new[]
                     {
                         new ToggleMenuItem("Show Grid", configManager.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap)),
-                        new ToggleMenuItem("Skip End Turn", configManager.GetBindable<bool>(AWBWSetting.ReplaySkipEndTurn)),
-                        new ToggleMenuItem("Shorten Action Tooltips", configManager.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips)),
-                        new ToggleMenuItem("Move Controls Bar to Player List", configManager.GetBindable<bool>(AWBWSetting.ReplayCombineReplayListAndControlBar))
+                        new ToggleMenuItem("Show Hidden Units", configManager.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits)),
+                        new ToggleMenuItem("Show Weather", configManager.GetBindable<bool>(AWBWSetting.ReplayShowWeather)),
+                        new ToggleMenuItem("Movement Animations", configManager.GetBindable<bool>(AWBWSetting.ReplayMovementAnimations)),
+                        new ToggleMenuItem("Show Movement Arrows", configManager.GetBindable<bool>(AWBWSetting.ReplayShowMovementArrows)),
                     }
                 },
-                new MenuItem("Rebind Keys", () => interrupts.Push(new KeyRebindingInterrupt()))
+                new MenuItem("Control Settings")
+                {
+                    Items = new[]
+                    {
+                        new MenuItem("Rebind Keys", () => interrupts.Push(new KeyRebindingInterrupt())),
+                        new ToggleMenuItem("Skip End Turn", configManager.GetBindable<bool>(AWBWSetting.ReplaySkipEndTurn)),
+                        new ToggleMenuItem("Shorten Action Tooltips", configManager.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips)),
+                        new ToggleMenuItem("Move Controls Bar to Player List", configManager.GetBindable<bool>(AWBWSetting.ReplayCombineReplayListAndControlBar)),
+                    }
+                },
             };
         }
     }

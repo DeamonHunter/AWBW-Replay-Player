@@ -30,6 +30,7 @@ namespace AWBWApp.Game
             SetDefault(AWBWSetting.PlayerListKeepOrderStatic, false);
             SetDefault(AWBWSetting.ReplayCombineReplayListAndControlBar, false);
             SetDefault(AWBWSetting.ReplayMovementAnimations, true);
+            SetDefault(AWBWSetting.ReplayShowWeather, true);
         }
     }
 
@@ -49,6 +50,7 @@ namespace AWBWApp.Game
         ReplayListSort,
         PlayerListKeepOrderStatic,
         ReplayCombineReplayListAndControlBar,
-        ReplayMovementAnimations
+        ReplayMovementAnimations,
+        ReplayShowWeather,
     }
 }

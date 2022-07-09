@@ -14,6 +14,7 @@ using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Components.Tooltip;
 using AWBWApp.Game.UI.Notifications;
 using AWBWApp.Game.UI.Replay;
+using AWBWApp.Game.UI.Weather;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -90,6 +91,8 @@ namespace AWBWApp.Game.Game.Logic
         private AWBWGlobalAction? autoAdvance;
         private double currentAutoAdvanceDelay = -1;
 
+        public WeatherAnimationController WeatherController;
+
         public ReplayController()
         {
             //Offset so the centered position would be half the bar to the right, and half a tile up. Chosen to look nice.
@@ -125,6 +128,7 @@ namespace AWBWApp.Game.Game.Logic
                             RelativeSizeAxes = Axes.Both,
                             Child = Map = new GameMap(this),
                         },
+                        WeatherController = new WeatherAnimationController(),
                         powerLayer = new Container
                         {
                             Position = new Vector2(-100, 0),
@@ -202,6 +206,12 @@ namespace AWBWApp.Game.Game.Logic
                 else
                     barWidget.AnimateHide();
             }, true);
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+            WeatherController.CurrentWeather.BindTo(Map.CurrentWeather);
         }
 
         protected override void Update()

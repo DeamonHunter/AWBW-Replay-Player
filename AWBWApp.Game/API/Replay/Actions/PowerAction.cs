@@ -482,6 +482,15 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             var powerAnimation = new PowerDisplay(CombatOfficerName, PowerName, IsSuperPower);
             controller.AddGenericActionAnimation(powerAnimation);
+
+            if (ChangeToWeather.HasValue)
+            {
+                controller.Map.CurrentWeather.Value = ChangeToWeather.Value;
+                controller.UpdateFogOfWar();
+                controller.WeatherController.ParticleMultiplier = 3;
+                controller.WeatherController.ParticleVelocity = 1.15f;
+            }
+
             yield return ReplayWait.WaitForTransformable(powerAnimation);
 
             if (SightRangeIncrease != 0 || COPower.SeeIntoHiddenTiles)
@@ -525,12 +534,6 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                 foreach (var effect in waitForEffects)
                     yield return ReplayWait.WaitForTransformable(effect);
-            }
-
-            if (ChangeToWeather.HasValue)
-            {
-                controller.Map.CurrentWeather.Value = ChangeToWeather.Value;
-                controller.UpdateFogOfWar();
             }
 
             if (PlayerChanges != null)
@@ -646,6 +649,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                 }
             }
 
+            controller.WeatherController.ParticleMultiplier = 1;
+            controller.WeatherController.ParticleVelocity = 1;
             controller.UpdateFogOfWar();
         }
 
