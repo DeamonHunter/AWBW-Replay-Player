@@ -415,6 +415,9 @@ namespace AWBWApp.Game.API.Replay.Actions
             var scale = counterAttack ? 0.75f : 1f;
             var lengthModifier = counterAttack ? 0.66f : 0.9f;
 
+            if (!counterAttack)
+                controller.Map.PlayBattle(start, end);
+
             var effect = controller.Map.PlayEffect("Effects/Target", 600 * lengthModifier, start, 0, x =>
             {
                 x.WaitForTransformationToComplete(attacker)

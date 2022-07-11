@@ -10,6 +10,7 @@ using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.Input;
 using AWBWApp.Game.UI;
+using AWBWApp.Game.UI.Battle;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Replay;
 using NUnit.Framework;
@@ -77,6 +78,9 @@ namespace AWBWApp.Game.Game.Logic
         private ScheduledDelegate unitDeselectDelegate;
         private bool hasLoadedMap = false;
 
+        private BattleWindow battleWindow;
+        private BattleWindow battleWindow2;
+
         [Resolved]
         private AWBWAppUserInputManager inputManager { get; set; }
 
@@ -108,6 +112,14 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     Origin = Anchor.TopLeft,
                     Anchor = Anchor.TopLeft
+                },
+                battleWindow = new BattleWindow()
+                {
+                    Alpha = 0
+                },
+                battleWindow2 = new BattleWindow()
+                {
+                    Alpha = 0
                 }
             });
         }
@@ -534,6 +546,42 @@ namespace AWBWApp.Game.Game.Logic
         }
 
         public EffectAnimation PlayEffect(string animation, double duration, Vector2I mapPosition, double startDelay = 0, Action<EffectAnimation> onLoaded = null) => effectAnimationController.PlayAnimation(animation, duration, mapPosition, startDelay, onLoaded);
+
+        public void PlayBattle(Vector2I attacker, Vector2I defender)
+        {
+            Anchor anchor;
+            Anchor anchor2;
+            Vector2I offset;
+            Vector2I offset2;
+            bool flip;
+
+            if (attacker.X > defender.X)
+            {
+                anchor = Anchor.CentreLeft;
+                offset = new Vector2I(20, 8);
+                anchor2 = Anchor.CentreRight;
+                offset2 = new Vector2I(-4, 8);
+                flip = true;
+            }
+            else
+            {
+                anchor = Anchor.CentreRight;
+                offset = new Vector2I(-4, 8);
+                anchor2 = Anchor.CentreLeft;
+                offset2 = new Vector2I(20, 8);
+                flip = false;
+            }
+
+            battleWindow.Origin = anchor;
+            battleWindow.Position = GetDrawablePositionForBottomOfTile(attacker) + offset;
+            battleWindow.Show();
+            battleWindow.AnimateMove(flip);
+
+            battleWindow2.Origin = anchor2;
+            battleWindow2.Position = GetDrawablePositionForBottomOfTile(defender) + offset2;
+            battleWindow2.Show();
+            battleWindow2.AnimateCounter(flip);
+        }
 
         public EffectAnimation PlaySelectionAnimation(DrawableUnit unit)
         {
