@@ -42,6 +42,13 @@ namespace AWBWApp.Game.API.Replay.Actions
             action.Distance = ((int?)jObject["dist"]) ?? 0;
             action.Trapped = (bool)jObject["trapped"];
 
+            if (jObject.TryGetValue("discovered", out var discovered))
+            {
+                var collection = new DiscoveryCollection(discovered);
+                if (!collection.IsEmpty())
+                    action.Discovered = collection;
+            }
+
             return action;
         }
     }
@@ -52,6 +59,8 @@ namespace AWBWApp.Game.API.Replay.Actions
         public int Distance { get; set; }
         public UnitPosition[] Path { get; set; }
         public bool Trapped { get; set; }
+
+        public DiscoveryCollection Discovered;
 
         private ReplayUnit originalUnit;
         private int? belowBuildingHP;

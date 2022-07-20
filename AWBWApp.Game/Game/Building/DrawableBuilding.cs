@@ -28,6 +28,8 @@ namespace AWBWApp.Game.Game.Building
         public long? OwnerID { get; private set; }
         public Vector2I MapPosition { get; private set; }
 
+        public Dictionary<string, int> TeamKnowledge = new Dictionary<string, int>();
+
         public readonly BuildingTile BuildingTile;
 
         private TextureAnimation textureAnimation;

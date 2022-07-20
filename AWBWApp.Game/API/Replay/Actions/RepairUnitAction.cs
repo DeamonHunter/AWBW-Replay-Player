@@ -40,7 +40,6 @@ namespace AWBWApp.Game.API.Replay.Actions
             action.RepairedUnitID = (long)repairedUnit["units_id"];
             action.RepairedUnitHP = (int)repairedUnit["units_hit_points"];
             action.FundsAfterRepair = (int)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)supplyData["funds"], turnData.ActiveTeam, turnData.ActivePlayerID);
-
             return action;
         }
     }

@@ -25,6 +25,14 @@ namespace AWBWApp.Game.API.Replay.Actions
                 return null;
 
             action.NewUnit = ReplayActionHelper.ParseJObjectIntoReplayUnit((JObject)unit);
+
+            if (jObject.TryGetValue("discovered", out var discovered))
+            {
+                var collection = new DiscoveryCollection(discovered);
+                if (!collection.IsEmpty())
+                    action.Discovered = collection;
+            }
+
             return action;
         }
     }
@@ -34,6 +42,8 @@ namespace AWBWApp.Game.API.Replay.Actions
         public ReplayUnit NewUnit;
         private int unitCost;
         private int unitValue;
+
+        public DiscoveryCollection Discovered;
 
         public string GetReadibleName(ReplayController controller, bool shortName)
         {

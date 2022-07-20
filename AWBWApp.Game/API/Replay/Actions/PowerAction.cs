@@ -72,6 +72,13 @@ namespace AWBWApp.Game.API.Replay.Actions
             if ((long)jObject["playerID"] != turnData.ActivePlayerID)
                 throw new Exception("Active player did not use the power. Is this supposed to be possible?");
 
+            if (jObject.TryGetValue("discovered", out var discovered))
+            {
+                var collection = new DiscoveryCollection(discovered);
+                if (!collection.IsEmpty())
+                    action.Discovered = collection;
+            }
+
             action.IsSuperPower = coPower == "S";
             action.PowerName = (string)jObject["powerName"];
             action.LeftOverPower = (int)jObject["playersCOP"];
@@ -350,6 +357,8 @@ namespace AWBWApp.Game.API.Replay.Actions
         public COPower COPower;
         public int SightRangeIncrease;
         public int MovementRangeIncrease;
+
+        public DiscoveryCollection Discovered;
 
         public WeatherType? ChangeToWeather;
 

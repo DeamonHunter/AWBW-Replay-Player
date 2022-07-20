@@ -59,6 +59,24 @@ namespace AWBWApp.Game.API.Replay.Actions
                     throw new Exception("Capture action was expecting a elimination action.");
             }
 
+            if (captureData.TryGetValue("vision", out var visionData))
+            {
+                if (visionData.Type == JTokenType.Object)
+                {
+                    foreach (var team in (JObject)visionData)
+                    {
+                        if (team.Value == null || team.Value.Type == JTokenType.Null)
+                            continue;
+
+                        var teamData = (JObject)team.Value;
+                        if (!teamData.ContainsKey("onCapture"))
+                            continue;
+
+                        action.TeamsThatSawCapture.Add(team.Key);
+                    }
+                }
+            }
+
             return action;
         }
     }
@@ -74,6 +92,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         private ReplayBuilding originalBuilding;
         private Dictionary<long, int> originalIncomes;
+
+        public HashSet<string> TeamsThatSawCapture = new HashSet<string>();
 
         private ReplayUnit originalUnit;
 

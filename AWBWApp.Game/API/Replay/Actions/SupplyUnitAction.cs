@@ -45,7 +45,6 @@ namespace AWBWApp.Game.API.Replay.Actions
                 foreach (var id in (JArray)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)supplyData["supplied"], turnData.ActiveTeam, turnData.ActivePlayerID))
                     action.SuppliedUnitIds.Add((long)id);
             }
-
             return action;
         }
     }

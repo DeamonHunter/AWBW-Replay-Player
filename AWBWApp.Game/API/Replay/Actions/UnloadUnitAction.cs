@@ -32,6 +32,14 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             action.UnloadedUnit = ReplayActionHelper.ParseJObjectIntoReplayUnit(unit);
             action.TransportID = (long)jObject["transportID"];
+
+            if (jObject.TryGetValue("discovered", out var discovered))
+            {
+                var collection = new DiscoveryCollection(discovered);
+                if (!collection.IsEmpty())
+                    action.Discovered = collection;
+            }
+
             return action;
         }
     }
@@ -42,6 +50,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public long TransportID { get; set; }
         public ReplayUnit UnloadedUnit { get; set; }
+
+        public DiscoveryCollection Discovered;
 
         private ReplayUnit originalLoadedUnit;
 

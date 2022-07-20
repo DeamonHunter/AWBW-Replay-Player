@@ -38,7 +38,6 @@ namespace AWBWApp.Game.API.Replay.Actions
             action.SiloPosition = new Vector2I((int)launchData["siloX"], (int)launchData["siloY"]);
             action.TargetPosition = new Vector2I((int)launchData["targetX"], (int)launchData["targetY"]);
             action.HPChange = (float)launchData["hp"];
-
             return action;
         }
     }

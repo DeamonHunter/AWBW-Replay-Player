@@ -36,6 +36,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             action.HPChange = (float)explodeData["hp"];
             action.ExplodedUnitId = (long)explodeData["unitId"];
+
             return action;
         }
     }
