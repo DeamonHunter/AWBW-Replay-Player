@@ -351,17 +351,20 @@ namespace AWBWApp.Game.Game.Logic
             }
             catch (Exception e)
             {
-                ShowError(e);
+                ShowError(e, true);
             }
         }
 
-        public void ShowError(Exception e)
+        public void ShowError(Exception e, bool fatal)
         {
             Schedule(() =>
             {
-                loadingLayer.Hide();
-                errorContainer.Show();
-                notificationOverlay.Post(new SimpleErrorNotification("Failed to load replay: " + e.Message, e));
+                if (fatal)
+                {
+                    loadingLayer.Hide();
+                    errorContainer.Show();
+                }
+                notificationOverlay.Post(new SimpleErrorNotification("Failed to load replay: " + e.Message, e) { ShowClickMessage = fatal });
             });
         }
 

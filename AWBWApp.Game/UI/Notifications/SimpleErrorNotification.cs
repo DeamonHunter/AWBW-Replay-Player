@@ -8,6 +8,8 @@ namespace AWBWApp.Game.UI.Notifications
 {
     public class SimpleErrorNotification : SimpleNotification
     {
+        public bool ShowClickMessage = true;
+
         [Resolved(CanBeNull = true)]
         private Clipboard clipboard { get; set; }
 
@@ -37,8 +39,8 @@ namespace AWBWApp.Game.UI.Notifications
         [BackgroundDependencyLoader]
         private void load()
         {
-            if (clipboard != null)
-                Text += "\n\nPlease click this to copy the error and give that to the devs.";
+            if (clipboard != null && ShowClickMessage)
+                Text += "\n\nPlease click this to copy this message, and give that text to the devs.";
         }
 
         private bool copyErrorToClipboard()

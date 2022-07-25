@@ -154,7 +154,7 @@ namespace AWBWApp.Game.UI.Select
                     }
                     catch (Exception e)
                     {
-                        replayController.ShowError(e);
+                        replayController.ShowError(e, true);
                     }
                 }, cancellationToken);
             }, cancellationToken);

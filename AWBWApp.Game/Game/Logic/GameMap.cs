@@ -76,6 +76,7 @@ namespace AWBWApp.Game.Game.Logic
         private const int unit_deselect_delay = 500;
         private ScheduledDelegate unitDeselectDelegate;
         private bool hasLoadedMap = false;
+        private bool hasShownMapOutdatedWarning;
 
         [Resolved]
         private AWBWAppUserInputManager inputManager { get; set; }
@@ -236,8 +237,20 @@ namespace AWBWApp.Game.Game.Logic
                     var terrainId = map.Ids[mapIdx++];
 
                     TerrainTile terrainTile;
-                    if (buildingStorage.ContainsBuildingWithAWBWId(terrainId) && replayBuildings.TryGetValue(new Vector2I(x, y), out _))
+
+                    if (buildingStorage.ContainsBuildingWithAWBWId(terrainId))
+                    {
                         terrainTile = terrainTileStorage.GetTileByCode("Plain");
+
+                        if (!replayBuildings.TryGetValue(new Vector2I(x, y), out _))
+                        {
+                            if (!hasShownMapOutdatedWarning)
+                            {
+                                replayController.ShowError(new Exception("Buildings do not match replay due to a map update. This can cause further errors, proceed with caution."), false);
+                                hasShownMapOutdatedWarning = true;
+                            }
+                        }
+                    }
                     else
                         terrainTile = terrainTileStorage.GetTileByAWBWId(terrainId);
                     var tile = new DrawableTile(terrainTile);
