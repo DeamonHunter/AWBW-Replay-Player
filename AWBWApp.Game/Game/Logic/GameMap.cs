@@ -454,7 +454,7 @@ namespace AWBWApp.Game.Game.Logic
             CurrentWeather.Value = gameState.StartWeather.Type;
         }
 
-        public void ClearFog(bool makeFoggy, bool triggerChange) => fogOfWarGenerator.ClearFog(makeFoggy, triggerChange);
+        public void ClearFog(bool makeFoggy, bool triggerChange) => fogOfWarGenerator?.ClearFog(makeFoggy, triggerChange);
         public void UpdateFogOfWar(long playerId, int rangeIncrease, bool canSeeIntoHiddenTiles, bool resetFog = true) => fogOfWarGenerator.GenerateFogForPlayer(playerId, rangeIncrease, canSeeIntoHiddenTiles, resetFog);
 
         public bool IsTileFoggy(Vector2I position)
