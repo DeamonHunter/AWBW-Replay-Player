@@ -15,7 +15,7 @@ namespace AWBWApp.Game.Game.Country
         public int AWBWID { get; set; }
 
         [JsonProperty]
-        public string Path { get; set; }
+        public string UnitPath { get; set; }
 
         [JsonProperty]
         public FaceDirection FaceDirection { get; set; }

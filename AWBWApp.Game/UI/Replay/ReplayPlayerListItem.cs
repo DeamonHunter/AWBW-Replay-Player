@@ -86,8 +86,8 @@ namespace AWBWApp.Game.UI.Replay
                 info.Country.Value = countryStorage.GetCountryByCode((string)x.NewValue);
 
                 nameBox!.Colour = Color4Extensions.FromHex(info.Country.Value.Colours["playerList"]).Darken(0.1f);
-                unitCount!.UpdateIcon($"{info.Country.Value.Path}/Infantry-0");
-                unitValue!.UpdateIcon($"{info.Country.Value.Path}/Infantry-0");
+                unitCount!.UpdateIcon($"{info.Country.Value.UnitPath}/Infantry-0");
+                unitValue!.UpdateIcon($"{info.Country.Value.UnitPath}/Infantry-0");
             });
 
             RelativeSizeAxes = Axes.X;
@@ -315,8 +315,8 @@ namespace AWBWApp.Game.UI.Replay
                             Direction = FillDirection.Vertical,
                             Children = new Drawable[]
                             {
-                                unitCount = new ReplayPlayerInfo($"{info.Country.Value.Path}/Infantry-0", info.UnitCount),
-                                unitValue = new ReplayPlayerInfo($"{info.Country.Value.Path}/Infantry-0", info.UnitValue)
+                                unitCount = new ReplayPlayerInfo($"{info.Country.Value.UnitPath}/Infantry-0", info.UnitCount),
+                                unitValue = new ReplayPlayerInfo($"{info.Country.Value.UnitPath}/Infantry-0", info.UnitValue)
                                 {
                                     Position = new Vector2(0, 19),
                                 }

@@ -114,6 +114,9 @@ namespace AWBWApp.Game.UI.Replay
             [Resolved]
             private NearestNeighbourTextureStore textureStore { get; set; }
 
+            [Resolved]
+            private IBindable<MapSkin> currentSkin { get; set; }
+
             public TerrainPopup()
             {
                 Anchor = Anchor.CentreLeft;
@@ -162,7 +165,7 @@ namespace AWBWApp.Game.UI.Replay
 
                 boundToTile = tile;
 
-                terrainSprite.Texture = textureStore.Get(tile.TerrainTile.Textures[WeatherType.Clear]);
+                terrainSprite.Texture = textureStore.Get($"Map/{currentSkin.Value}/{tile.TerrainTile.BaseTextures[WeatherType.Clear]}");
                 terrainSprite.Size = terrainSprite.Texture.Size * 2;
                 Show();
                 terrainStarCounter.SetTo(tile.TerrainTile.BaseDefence);
@@ -186,6 +189,9 @@ namespace AWBWApp.Game.UI.Replay
 
             [Resolved]
             private NearestNeighbourTextureStore textureStore { get; set; }
+
+            [Resolved]
+            private IBindable<MapSkin> currentSkin { get; set; }
 
             public BuildingPopup()
             {
@@ -237,17 +243,17 @@ namespace AWBWApp.Game.UI.Replay
                 };
                 spriteContainer.Child = unitSprite;
 
-                var firstTexture = textureStore.Get(building.BuildingTile.Textures[WeatherType.Clear] + "-0");
+                var firstTexture = textureStore.Get($"Map/{currentSkin.Value}/{building.BuildingTile.Textures[WeatherType.Clear]}-0");
                 unitSprite.Size = firstTexture.Size * 2;
 
                 if (building.BuildingTile.Frames != null)
                 {
                     unitSprite.AddFrame(firstTexture, building.BuildingTile.Frames[0]);
                     for (int i = 1; i < building.BuildingTile.Frames.Length; i++)
-                        unitSprite.AddFrame(textureStore.Get(building.BuildingTile.Textures[WeatherType.Clear] + "-" + i), building.BuildingTile.Frames[i]);
+                        unitSprite.AddFrame(textureStore.Get($"Map/{currentSkin.Value}/{building.BuildingTile.Textures[WeatherType.Clear]}-{i}"), building.BuildingTile.Frames[i]);
                 }
                 else
-                    unitSprite.AddFrame(textureStore.Get(building.BuildingTile.Textures[WeatherType.Clear] + "-0"));
+                    unitSprite.AddFrame(firstTexture);
 
                 Show();
                 terrainStarCounter.SetTo(building.BuildingTile.BaseDefence);
@@ -326,7 +332,7 @@ namespace AWBWApp.Game.UI.Replay
                 };
                 spriteContainer.Child = unitSprite;
 
-                textureStore.LoadIntoAnimation($"{unit.Country.Path}/{unit.UnitData.IdleAnimation.Texture}", unitSprite, unit.UnitData.IdleAnimation.Frames, unit.UnitData.IdleAnimation.FrameOffset);
+                textureStore.LoadIntoAnimation($"{unit.Country.UnitPath}/{unit.UnitData.IdleAnimation.Texture}", unitSprite, unit.UnitData.IdleAnimation.Frames, unit.UnitData.IdleAnimation.FrameOffset);
                 unitSprite.Size *= 2;
 
                 Show();

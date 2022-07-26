@@ -44,7 +44,10 @@ namespace AWBWApp.Game.Game.Building
         [Resolved]
         private IBindable<WeatherType> currentWeather { get; set; }
 
-        private IBindable<CountryData> countryBindindable;
+        [Resolved]
+        private IBindable<MapSkin> currentSkin { get; set; }
+
+        private readonly IBindable<CountryData> countryBindindable;
 
         public DrawableBuilding(BuildingTile buildingTile, Vector2I tilePosition, long? ownerID, IBindable<CountryData> country)
         {
@@ -70,6 +73,7 @@ namespace AWBWApp.Game.Game.Building
         private void load()
         {
             countryBindindable?.BindValueChanged(_ => updateAnimation());
+            currentSkin?.BindValueChanged(_ => updateAnimation());
             currentWeather.BindValueChanged(x => changeWeather(x.NewValue));
 
             updateAnimation();
@@ -95,9 +99,16 @@ namespace AWBWApp.Game.Game.Building
 
                 for (int i = 0; i < frameLength; i++)
                 {
-                    var texture = textureStore.Get($"{texturePair.Value}-{i}");
+                    var texture = textureStore.Get($"Map/{currentSkin.Value}/{texturePair.Value}-{i}");
+
                     if (texture == null)
+                    {
+                        //AW1 skin doesn't have animations
+                        if (currentSkin.Value == MapSkin.AW1 && i != 0)
+                            break;
+
                         throw new Exception($"Improperly configured BuildingTile. Animation count wrong or image missing: {texturePair.Value}-{i}");
+                    }
 
                     textureList.Add(texture);
                 }
@@ -131,7 +142,7 @@ namespace AWBWApp.Game.Game.Building
 
             if (buildingTile.Frames != null)
             {
-                for (int i = 0; i < buildingTile.Frames.Length; i++)
+                for (int i = 0; i < weatherTextures.Count; i++)
                     textureAnimation.AddFrame(weatherTextures[i], buildingTile.Frames[i]);
             }
             else

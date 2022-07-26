@@ -127,7 +127,6 @@ namespace AWBWApp.Game.Game.Logic
         [BackgroundDependencyLoader]
         private void load(AWBWConfigManager settings)
         {
-            setToLoading();
             showUnitsInFog = settings.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits);
             showGridlines = settings.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap);
             showGridlines.BindValueChanged(x => grid.FadeTo(x.NewValue ? 1 : 0, 400, Easing.OutQuint), true);
@@ -234,7 +233,7 @@ namespace AWBWApp.Game.Game.Logic
             {
                 for (int x = 0; x < MapSize.X; x++)
                 {
-                    var terrainId = map.Ids[mapIdx++];
+                    var terrainId = map.Ids[y * MapSize.X + x];
 
                     TerrainTile terrainTile;
 

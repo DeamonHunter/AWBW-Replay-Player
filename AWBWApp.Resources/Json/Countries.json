@@ -4,7 +4,7 @@
         "code": "os",
         "name": "Orange Star",
         "faceDirection": "Right",
-        "path": "Team/OrangeStar",
+        "unitPath": "Units/OrangeStar",
         "colours": {
             "playerList": "#f00009",
             "replayList": "#f00009"
@@ -14,7 +14,7 @@
         "AWBWID": 2,
         "code": "bm",
         "name": "Blue Moon",
-        "path": "Team/BlueMoon",
+        "unitPath": "Units/BlueMoon",
         "faceDirection": "Left",
         "colours": {
             "playerList": "#0098f8",
@@ -25,7 +25,7 @@
         "AWBWID": 3,
         "code": "ge",
         "name": "Green Earth",
-        "path": "Team/GreenEarth",
+        "unitPath": "Units/GreenEarth",
         "faceDirection": "Right",
         "colours": {
             "playerList": "#00c010",
@@ -36,7 +36,7 @@
         "AWBWID": 4,
         "code": "yc",
         "name": "Yellow Comet",
-        "path": "Team/YellowComet",
+        "unitPath": "Units/YellowComet",
         "faceDirection": "Left",
         "colours": {
             "playerList": "#d08000",
@@ -47,7 +47,7 @@
         "AWBWID": 5,
         "code": "bh",
         "name": "Black Hole",
-        "path": "Team/BlackHole",
+        "unitPath": "Units/BlackHole",
         "faceDirection": "Left",
         "colours": {
             "playerList": "#653ba5",
@@ -58,7 +58,7 @@
         "AWBWID": 6,
         "code": "rf",
         "name": "Red Fire",
-        "path": "Team/RedFire",
+        "unitPath": "Units/RedFire",
         "faceDirection": "Left",
         "colours": {
             "playerList": "#c1463d",
@@ -69,7 +69,7 @@
         "AWBWID": 7,
         "code": "gs",
         "name": "Grey Sky",
-        "path": "Team/GreySky",
+        "unitPath": "Units/GreySky",
         "faceDirection": "Right",
         "colours": {
             "playerList": "#5d5d5d",
@@ -80,7 +80,7 @@
         "AWBWID": 8,
         "code": "bd",
         "name": "Grey Sky",
-        "path": "Team/BrownDesert",
+        "unitPath": "Units/BrownDesert",
         "faceDirection": "Right",
         "colours": {
             "playerList": "#bc8248",
@@ -91,7 +91,7 @@
         "AWBWID": 9,
         "code": "ab",
         "name": "Amber Blaze",
-        "path": "Team/AmberBlaze",
+        "unitPath": "Units/AmberBlaze",
         "faceDirection": "Left",
         "colours": {
             "playerList": "#e78716",
@@ -102,7 +102,7 @@
         "AWBWID": 10,
         "code": "js",
         "name": "Jade Sun",
-        "path": "Team/JadeSun",
+        "unitPath": "Units/JadeSun",
         "faceDirection": "Right",
         "colours": {
             "playerList": "#85927b",
@@ -113,7 +113,7 @@
         "AWBWID": 16,
         "code": "ci",
         "name": "Cobalt Ice",
-        "path": "Team/CobaltIce",
+        "unitPath": "Units/CobaltIce",
         "faceDirection": "Right",
         "colours": {
             "playerList": "#2342ba",
@@ -124,7 +124,7 @@
         "AWBWID": 17,
         "code": "pc",
         "name": "Pink Cosmos",
-        "path": "Team/PinkCosmos",
+        "unitPath": "Units/PinkCosmos",
         "faceDirection": "Left",
         "colours": {
             "playerList": "#ff33cc",
@@ -135,7 +135,7 @@
         "AWBWID": 19,
         "code": "tg",
         "name": "Teal Galaxy",
-        "path": "Team/TealGalaxy",
+        "unitPath": "Units/TealGalaxy",
         "faceDirection": "Left",
         "colours": {
             "playerList": "#1ba298",
@@ -146,7 +146,7 @@
         "AWBWID": 20,
         "code": "pl",
         "name": "Purple Lightning",
-        "path": "Team/PurpleLightning",
+        "unitPath": "Units/PurpleLightning",
         "faceDirection": "Right",
         "colours": {
             "playerList": "#cc00ff",
@@ -157,7 +157,7 @@
         "AWBWID": 21,
         "code": "ar",
         "name": "Acid Rain",
-        "path": "Team/AcidRain",
+        "unitPath": "Units/AcidRain",
         "faceDirection": "Left",
         "colours": {
             "playerList": "#52690c",
@@ -168,7 +168,7 @@
         "AWBWID": 22,
         "code": "wn",
         "name": "White Nova",
-        "path": "Team/WhiteNova",
+        "unitPath": "Units/WhiteNova",
         "faceDirection": "Right",
         "colours": {
             "playerList": "#e2ae93",

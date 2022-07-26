@@ -28,7 +28,13 @@ namespace AWBWApp.Game.Game.Tile
         private Dictionary<WeatherType, Texture> texturesByWeather;
 
         [Resolved]
+        private NearestNeighbourTextureStore textureStore { get; set; }
+
+        [Resolved]
         private IBindable<WeatherType> currentWeather { get; set; }
+
+        [Resolved]
+        private IBindable<MapSkin> currentSkin { get; set; }
 
         public DrawableTile(TerrainTile terrainTile)
         {
@@ -45,20 +51,27 @@ namespace AWBWApp.Game.Game.Tile
         }
 
         [BackgroundDependencyLoader]
-        private void load(NearestNeighbourTextureStore store)
+        private void load()
         {
-            texturesByWeather = new Dictionary<WeatherType, Texture>();
+            currentSkin.BindValueChanged(x => loadSkin(x.NewValue), true);
+            currentWeather.BindValueChanged(x => changeWeather(x.NewValue), true);
+        }
+        private void loadSkin(MapSkin skin)
+        {
+            texturesByWeather ??= new Dictionary<WeatherType, Texture>();
+            texturesByWeather.Clear();
 
             foreach (var texturePair in TerrainTile.Textures)
             {
-                var texture = store.Get(texturePair.Value);
-                if (texture == null)
+                var textureValue = textureStore.Get($"Map/{skin}/{texturePair.Value}");
+                if (textureValue == null)
                     throw new Exception("Unable to find texture: " + texturePair.Value);
 
-                texturesByWeather.Add(texturePair.Key, texture);
+                texturesByWeather.Add(texturePair.Key, textureValue);
             }
 
             currentWeather.BindValueChanged(x => changeWeather(x.NewValue), true);
+            changeWeather(currentWeather.Value);
         }
 
         private void changeWeather(WeatherType weatherType)

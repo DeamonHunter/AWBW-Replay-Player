@@ -75,6 +75,8 @@ namespace AWBWApp.Game.Game.Logic
         private IBindable<bool> skipEndTurnBindable;
         private IBindable<bool> shortenActionTooltipsBindable;
         private IBindable<bool> replayBarInPlayerList;
+        [Cached(typeof(IBindable<MapSkin>))]
+        private Bindable<MapSkin> selectedMapSkin = new Bindable<MapSkin>();
 
         public Dictionary<long, PlayerInfo> Players { get; private set; } = new Dictionary<long, PlayerInfo>();
         public PlayerInfo ActivePlayer => currentTurn != null ? Players[currentTurn.ActivePlayerID] : null;
@@ -196,6 +198,8 @@ namespace AWBWApp.Game.Game.Logic
             skipEndTurnBindable = configManager.GetBindable<bool>(AWBWSetting.ReplaySkipEndTurn);
             shortenActionTooltipsBindable = configManager.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips);
             showMovementArrowsBindable = configManager.GetBindable<bool>(AWBWSetting.ReplayShowMovementArrows);
+            selectedMapSkin.BindTo(configManager.GetBindable<MapSkin>(AWBWSetting.MapSkin));
+
             CurrentFogView.BindValueChanged(_ => UpdateFogOfWar());
 
             replayBarInPlayerList = configManager.GetBindable<bool>(AWBWSetting.ReplayCombineReplayListAndControlBar);
@@ -206,6 +210,8 @@ namespace AWBWApp.Game.Game.Logic
                 else
                     barWidget.AnimateHide();
             }, true);
+
+            Map.ScheduleSetToLoading();
         }
 
         protected override void LoadComplete()

@@ -62,8 +62,8 @@ namespace AWBWApp.Game.UI.Replay
                         Tooltip = $"Spent on Building: {readout.MoneySpentOnBuildingUnits}\nSpent On Repairing: {readout.MoneySpentOnRepairingUnits}"
                     },
                     new StatLine("Powers Used", $"{readout.PowersUsed} COP / {readout.SuperPowersUsed} SCOP"),
-                    new UnitFlowContainer("Built/Value", players[playerID].Country.Value.Path, readout.BuildStats, "Total Built Value", readout.TotalValueBuilt),
-                    new UnitFlowContainer("Deaths/Value Damage Taken", players[playerID].Country.Value.Path, readout.LostStats, "Total Value of Damage", readout.TotalValueLost),
+                    new UnitFlowContainer("Built/Value", players[playerID].Country.Value.UnitPath, readout.BuildStats, "Total Built Value", readout.TotalValueBuilt),
+                    new UnitFlowContainer("Deaths/Value Damage Taken", players[playerID].Country.Value.UnitPath, readout.LostStats, "Total Value of Damage", readout.TotalValueLost),
                     new UnitFlowContainer("Kills/Value Damage Dealt", players, readout.DamageOtherStats, "Total Value of Damage", readout.TotalValueDamaged),
                 }
             };
@@ -304,7 +304,7 @@ namespace AWBWApp.Game.UI.Replay
 
                 foreach (var playerStats in units)
                 {
-                    var countryPath = players[playerStats.Key].Country.Value.Path;
+                    var countryPath = players[playerStats.Key].Country.Value.UnitPath;
 
                     var idx = 0;
 

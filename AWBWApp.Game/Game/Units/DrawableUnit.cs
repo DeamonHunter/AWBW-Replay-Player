@@ -88,7 +88,8 @@ namespace AWBWApp.Game.Game.Units
                 spriteContainer = new DrawableUnitSpriteContainer
                 {
                     Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft
+                    Origin = Anchor.BottomLeft,
+                    Size = BASE_SIZE
                 },
                 healthSpriteText = new TextureSpriteText("UI/Healthv2")
                 {
@@ -376,10 +377,10 @@ namespace AWBWApp.Game.Game.Units
 
             public void LoadAnimations(UnitData unitData, CountryData countryData, NearestNeighbourTextureStore textureStore)
             {
-                textureStore.LoadIntoAnimation($"{countryData.Path}/{unitData.IdleAnimation.Texture}", idleAnim, unitData.IdleAnimation.Frames, unitData.IdleAnimation.FrameOffset);
-                textureStore.LoadIntoAnimation($"{countryData.Path}/{unitData.MoveSideAnimation.Texture}", moveSideAnim, unitData.MoveSideAnimation.Frames, unitData.MoveSideAnimation.FrameOffset);
-                textureStore.LoadIntoAnimation($"{countryData.Path}/{unitData.MoveUpAnimation.Texture}", moveUpAnim, unitData.MoveUpAnimation.Frames, unitData.MoveUpAnimation.FrameOffset);
-                textureStore.LoadIntoAnimation($"{countryData.Path}/{unitData.MoveDownAnimation.Texture}", moveDownAnim, unitData.MoveDownAnimation.Frames, unitData.MoveDownAnimation.FrameOffset);
+                textureStore.LoadIntoAnimation($"{countryData.UnitPath}/{unitData.IdleAnimation.Texture}", idleAnim, unitData.IdleAnimation.Frames, unitData.IdleAnimation.FrameOffset);
+                textureStore.LoadIntoAnimation($"{countryData.UnitPath}/{unitData.MoveSideAnimation.Texture}", moveSideAnim, unitData.MoveSideAnimation.Frames, unitData.MoveSideAnimation.FrameOffset);
+                textureStore.LoadIntoAnimation($"{countryData.UnitPath}/{unitData.MoveUpAnimation.Texture}", moveUpAnim, unitData.MoveUpAnimation.Frames, unitData.MoveUpAnimation.FrameOffset);
+                textureStore.LoadIntoAnimation($"{countryData.UnitPath}/{unitData.MoveDownAnimation.Texture}", moveDownAnim, unitData.MoveDownAnimation.Frames, unitData.MoveDownAnimation.FrameOffset);
 
                 SetMovementState(currentMovementState, true);
             }
