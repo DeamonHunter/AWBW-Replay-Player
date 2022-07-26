@@ -165,7 +165,7 @@ namespace AWBWApp.Game.UI.Replay
 
                 boundToTile = tile;
 
-                terrainSprite.Texture = textureStore.Get($"Map/{currentSkin.Value}/{tile.TerrainTile.BaseTextures[WeatherType.Clear]}");
+                terrainSprite.Texture = textureStore.Get($"Map/{currentSkin.Value}/{tile.TerrainTile.Textures[WeatherType.Clear]}");
                 terrainSprite.Size = terrainSprite.Texture.Size * 2;
                 Show();
                 terrainStarCounter.SetTo(tile.TerrainTile.BaseDefence);
