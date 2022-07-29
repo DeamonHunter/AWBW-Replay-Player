@@ -7,7 +7,7 @@ namespace AWBWApp.Game.Game.Building
     {
         public int AWBWID { get; set; }
 
-        public int CountryID { get; set; }
+        public int CountryID { get; set; } = -1;
 
         public int BaseDefence { get; set; }
 

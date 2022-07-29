@@ -22,7 +22,7 @@ namespace AWBWApp.Game.Game.Building
             {
                 buildingsByAWBWId.Add(tile.Value.AWBWID, tile.Value);
 
-                if (tile.Value.CountryID != 0)
+                if (tile.Value.CountryID != -1)
                 {
                     if (tile.Value.BuildingType == null)
                         throw new Exception($"Building with code `{tile.Key} has a country, but not a type");
