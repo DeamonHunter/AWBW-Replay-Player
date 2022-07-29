@@ -376,6 +376,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         private void afterAttackChanges(ReplayController controller)
         {
+            if ((Attacker.HitPoints ?? 0) <= 0 || (Defender.HitPoints ?? 0f) <= 0)
+                controller.UpdateFogOfWar();
+
             ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, false);
 
             //Note: All transports can't attack, so there should only ever be one unit here.
