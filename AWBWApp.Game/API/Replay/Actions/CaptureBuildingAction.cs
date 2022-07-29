@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using AWBWApp.Game.Exceptions;
+using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
@@ -69,7 +70,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                             continue;
 
                         var teamData = (JObject)team.Value;
-                        if (!teamData.ContainsKey("onCapture"))
+                        if (!teamData.TryGetValue("onCapture", out var token) || token.Type == JTokenType.String)
                             continue;
 
                         action.TeamsThatSawCapture.Add(team.Key);
@@ -96,6 +97,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public HashSet<string> TeamsThatSawCapture = new HashSet<string>();
 
         private ReplayUnit originalUnit;
+        private Dictionary<string, BuildingTile> originalDiscovery;
 
         public string GetReadibleName(ReplayController controller, bool shortName)
         {
@@ -146,6 +148,12 @@ namespace AWBWApp.Game.API.Replay.Actions
                     context.PropertyValuesForPlayers[incomeChange.Key] = incomeChange.Value;
                 }
             }
+
+            if (Building.TerrainID != null)
+            {
+                originalDiscovery = new Dictionary<string, BuildingTile>(context.BuildingKnowledge[Building.Position]);
+                context.UpdateBuildingAfterCapture(Building, TeamsThatSawCapture);
+            }
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -192,6 +200,12 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             controller.Map.UpdateBuilding(Building, false); //This will set the unit above to be capturing
 
+            if (TeamsThatSawCapture != null && TeamsThatSawCapture.Count > 0 && controller.Map.TryGetDrawableBuilding(Building.Position, out var building))
+            {
+                foreach (var team in TeamsThatSawCapture)
+                    building.TeamToTile[team] = building.BuildingTile;
+            }
+
             if (IncomeChanges != null)
             {
                 foreach (var incomeChange in IncomeChanges)
@@ -234,6 +248,12 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             Logger.Log("Undoing Capture Action.");
             controller.Map.UpdateBuilding(originalBuilding, true);
+
+            if (originalDiscovery != null)
+            {
+                if (controller.Map.TryGetDrawableBuilding(Building.Position, out var drawableBuilding))
+                    drawableBuilding.TeamToTile.SetTo(originalDiscovery);
+            }
 
             if (originalIncomes != null)
             {

@@ -28,9 +28,10 @@ namespace AWBWApp.Game.Game.Building
         public long? OwnerID { get; private set; }
         public Vector2I MapPosition { get; private set; }
 
-        public Dictionary<string, int> TeamKnowledge = new Dictionary<string, int>();
+        public Dictionary<string, BuildingTile> TeamToTile = new Dictionary<string, BuildingTile>();
 
         public readonly BuildingTile BuildingTile;
+        private BuildingTile shownBuildingTile;
 
         private TextureAnimation textureAnimation;
         private Dictionary<WeatherType, List<Texture>> texturesByWeather;
@@ -66,11 +67,18 @@ namespace AWBWApp.Game.Game.Building
 
             Size = BASE_SIZE;
             HasDoneAction.BindValueChanged(x => updateBuildingColour(x.NewValue));
-            FogOfWarActive.BindValueChanged(x => updateBuildingColour(x.NewValue));
+            FogOfWarActive.BindValueChanged(x =>
+            {
+                if (shownBuildingTile != BuildingTile && LoadState == LoadState.Loaded)
+                    updateAnimation();
+                updateBuildingColour(x.NewValue);
+            });
+
+            shownBuildingTile = BuildingTile;
         }
 
         [BackgroundDependencyLoader]
-        private void load()
+        private void load(AWBWConfigManager configManager)
         {
             countryBindindable?.BindValueChanged(_ => updateAnimation());
             currentSkin?.BindValueChanged(_ => updateAnimation());
@@ -79,13 +87,24 @@ namespace AWBWApp.Game.Game.Building
             updateAnimation();
         }
 
+        public void UpdateFogOfWarBuilding(bool unitsShown, string currentTeam)
+        {
+            var original = shownBuildingTile;
+
+            if (unitsShown || !TeamToTile.TryGetValue(currentTeam, out shownBuildingTile))
+                shownBuildingTile = BuildingTile;
+
+            if (shownBuildingTile != original && LoadState == LoadState.Loaded)
+                updateAnimation();
+        }
+
         private void updateAnimation()
         {
             texturesByWeather = new Dictionary<WeatherType, List<Texture>>();
 
-            var buildingTile = BuildingTile;
+            var buildingTile = FogOfWarActive.Value ? shownBuildingTile : BuildingTile;
 
-            if (countryBindindable != null)
+            if (countryBindindable != null && buildingTile.CountryID != -1)
             {
                 var country = countryBindindable.Value;
                 buildingTile = buildingStorage.GetBuildingByTypeAndCountry(buildingTile.BuildingType, country.AWBWID);

@@ -15,6 +15,8 @@ namespace AWBWApp.Game.Game.Logic
     {
         public Dictionary<long, ReplayUnit> Units = new Dictionary<long, ReplayUnit>();
         public Dictionary<Vector2I, ReplayBuilding> Buildings = new Dictionary<Vector2I, ReplayBuilding>();
+        public Dictionary<Vector2I, Dictionary<string, BuildingTile>> BuildingKnowledge = new Dictionary<Vector2I, Dictionary<string, BuildingTile>>();
+
         public Dictionary<long, ReplayUser> PlayerInfos = new Dictionary<long, ReplayUser>();
         public Dictionary<long, ReplayUserTurn> PlayerTurns = new Dictionary<long, ReplayUserTurn>();
 
@@ -48,18 +50,18 @@ namespace AWBWApp.Game.Game.Logic
             this.fundsPerBuilding = fundsPerBuilding;
         }
 
-        public void InitialSetup(StatsHandler statsReadout, List<TurnData> turns)
+        public void InitialSetup(StatsHandler statsReadout, ReplayData data)
         {
             //Correct the replay's initial funds per player. (Replays will always have funds at 0 until the player gets their first turn.)
-            for (int i = 1; i < turns[0].Players.Count && i < turns.Count; i++)
+            for (int i = 1; i < data.TurnData[0].Players.Count && i < data.TurnData.Count; i++)
             {
-                var activePlayer = turns[i].ActivePlayerID;
-                var activeFunds = turns[i].Players[activePlayer].Funds;
+                var activePlayer = data.TurnData[i].ActivePlayerID;
+                var activeFunds = data.TurnData[i].Players[activePlayer].Funds;
                 for (int j = i - 1; j >= 0; j--)
-                    turns[j].Players[activePlayer].Funds = activeFunds;
+                    data.TurnData[j].Players[activePlayer].Funds = activeFunds;
             }
 
-            foreach (var player in turns[0].Players)
+            foreach (var player in data.TurnData[0].Players)
             {
                 var readout = new PlayerStatsReadout
                 {
@@ -67,6 +69,18 @@ namespace AWBWApp.Game.Game.Logic
                 };
 
                 StatsReadouts.Add(player.Key, readout);
+            }
+
+            foreach (var building in data.TurnData[0].Buildings)
+            {
+                var knowledge = new Dictionary<string, BuildingTile>();
+                if (!BuildingStorage.TryGetBuildingByAWBWId(building.Value.TerrainID!.Value, out var tile))
+                    continue;
+
+                foreach (var player in data.ReplayInfo.Players)
+                    knowledge[player.Value.TeamName] = tile;
+
+                BuildingKnowledge.Add(building.Key, knowledge);
             }
 
             statsReadout.RegisterReadouts(StatsReadouts);
@@ -276,6 +290,44 @@ namespace AWBWApp.Game.Game.Logic
                 if (unit.PlayerID != ownerID)
                     StatsReadouts[ownerID].RegisterUnitStats(unitAlive ? UnitStatType.DamageUnit : UnitStatType.DamageUnit | UnitStatType.UnitCountChanged, unit.UnitName, unit.PlayerID!.Value, value);
             }
+        }
+
+        public void RegisterDiscoveryAndSetUndo(DiscoveryCollection collection)
+        {
+            collection.Undo.Clear();
+
+            foreach (var id in collection.DiscoveryByID)
+            {
+                foreach (var discovered in id.Value.DiscoveredBuildings)
+                {
+                    if (!BuildingKnowledge.TryGetValue(discovered.Key, out var discoveries))
+                        continue;
+
+                    if (!collection.Undo.TryGetValue(discovered.Key, out var registered))
+                    {
+                        registered = new Dictionary<string, BuildingTile>();
+                        collection.Undo.Add(discovered.Key, registered);
+                    }
+
+                    if (discoveries.TryGetValue(id.Key, out var before))
+                        registered[id.Key] = before;
+
+                    discoveries[id.Key] = BuildingStorage.GetBuildingByAWBWId(discovered.Value.TerrainID!.Value);
+                }
+            }
+        }
+
+        public void UpdateBuildingAfterCapture(ReplayBuilding building, HashSet<string> teamsWhoSaw)
+        {
+            if (!BuildingKnowledge.TryGetValue(building.Position, out var discoveries))
+                return;
+
+            var buildingData = BuildingStorage.GetBuildingByAWBWId(building.TerrainID!.Value);
+
+            discoveries[ActivePlayerTeam] = buildingData;
+
+            foreach (var team in teamsWhoSaw)
+                discoveries[team] = buildingData;
         }
     }
 

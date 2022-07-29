@@ -85,7 +85,8 @@ namespace AWBWApp.Game.Game.Logic
 
         private readonly Queue<IEnumerator<ReplayWait>> currentOngoingActions = new Queue<IEnumerator<ReplayWait>>();
 
-        private Dictionary<int, EndTurnDesync> endTurnDesyncs;
+        private Dictionary<int, EndTurnDesync> endTurnDesyncs = new Dictionary<int, EndTurnDesync>();
+        private BuildingDiscoveryController buildingDiscoveryController = new BuildingDiscoveryController();
 
         private const int player_list_width = 225;
 
@@ -314,6 +315,7 @@ namespace AWBWApp.Game.Game.Logic
             Players?.Clear();
             registeredPowers?.Clear();
             endTurnDesyncs?.Clear();
+            buildingDiscoveryController.Reset();
         }
 
         public void ScheduleLoadReplay(ReplayData replayData, ReplayMap map) => Schedule(() => LoadReplay(replayData, map));
@@ -390,13 +392,14 @@ namespace AWBWApp.Game.Game.Logic
         private void setupActions(bool logDesyncs = true)
         {
             var setupContext = new ReplaySetupContext(buildingStorage, COStorage, replayData.ReplayInfo.Players, replayData.ReplayInfo.FundsPerBuilding);
-            setupContext.InitialSetup(Stats, replayData.TurnData);
+            setupContext.InitialSetup(Stats, replayData);
 
             endTurnDesyncs = new Dictionary<int, EndTurnDesync>();
 
             for (int i = 0; i < replayData.TurnData.Count; i++)
             {
                 var nextTurn = replayData.TurnData[i];
+                buildingDiscoveryController.RegisterNewTurn(setupContext);
 
                 if (i != 0)
                 {
@@ -719,6 +722,7 @@ namespace AWBWApp.Game.Game.Logic
             Map.ScheduleUpdateToGameState(currentTurn, UpdateFogOfWar);
             ScheduleAfterChildren(() =>
             {
+                buildingDiscoveryController.SetDiscoveries(turnIdx, Map);
                 updatePlayerList(turnIdx, false, false);
                 updateReplayBarActions();
             });

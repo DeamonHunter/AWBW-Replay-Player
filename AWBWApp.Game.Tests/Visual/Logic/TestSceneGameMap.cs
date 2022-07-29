@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using AWBWApp.Game.API;
+using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.IO;
 using AWBWApp.Game.Tests.Replays;

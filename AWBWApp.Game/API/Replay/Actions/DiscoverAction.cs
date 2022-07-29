@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AWBWApp.Game.Game.Building;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics.Primitives;
 
@@ -8,6 +9,8 @@ namespace AWBWApp.Game.API.Replay.Actions
     public class DiscoveryCollection
     {
         public Dictionary<string, Discovery> DiscoveryByID = new Dictionary<string, Discovery>();
+
+        public Dictionary<Vector2I, Dictionary<string, BuildingTile>> Undo = new Dictionary<Vector2I, Dictionary<string, BuildingTile>>();
 
         public DiscoveryCollection(JToken discoveryCollection)
         {

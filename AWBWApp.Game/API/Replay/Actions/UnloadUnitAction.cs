@@ -83,6 +83,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             unloadedUnit.Overwrite(UnloadedUnit);
             ReplayActionHelper.UpdateUnitCargoPositions(context, unloadedUnit, unloadedUnit.Position!.Value);
             transportUnit.CargoUnits?.Remove(UnloadedUnit.ID);
+            if (Discovered != null)
+                context.RegisterDiscoveryAndSetUndo(Discovered);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -111,7 +113,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             unloadingUnit.MoveToPosition(UnloadedUnit.Position.Value);
             unloadingUnit.CanMove.Value = false;
+
             controller.UpdateFogOfWar();
+            if (Discovered != null)
+                controller.Map.RegisterDiscovery(Discovered);
         }
 
         public void UndoAction(ReplayController controller)

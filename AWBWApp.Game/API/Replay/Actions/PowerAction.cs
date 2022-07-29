@@ -480,6 +480,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                 }
             }
 
+            if (Discovered != null)
+                context.RegisterDiscoveryAndSetUndo(Discovered);
             originalWeatherType = context.WeatherType;
         }
 
@@ -662,7 +664,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             controller.WeatherController.ParticleMultiplier = 1;
             controller.WeatherController.ParticleVelocity = 1;
+
             controller.UpdateFogOfWar();
+            if (Discovered != null)
+                controller.Map.RegisterDiscovery(Discovered);
         }
 
         private ReplayUnit createUnit(CreateUnit unit, long playerID, UnitData unitData)

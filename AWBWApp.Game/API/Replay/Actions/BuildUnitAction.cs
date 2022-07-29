@@ -69,6 +69,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             context.StatsReadouts[NewUnit.PlayerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged, NewUnit.UnitName, NewUnit.PlayerID!.Value, unitValue);
             context.StatsReadouts[NewUnit.PlayerID!.Value].MoneySpentOnBuildingUnits += unitCost;
+            if (Discovered != null)
+                context.RegisterDiscoveryAndSetUndo(Discovered);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -91,6 +93,9 @@ namespace AWBWApp.Game.API.Replay.Actions
             controller.ActivePlayer.UnitValue.Value += unitValue;
 
             controller.UpdateFogOfWar();
+            if (Discovered != null)
+                controller.Map.RegisterDiscovery(Discovered);
+
             controller.Map.PlaySelectionAnimation(unit);
 
             controller.Stats.CurrentTurnStatsReadout[unit.OwnerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged, NewUnit.UnitName, NewUnit.PlayerID!.Value, unitValue);

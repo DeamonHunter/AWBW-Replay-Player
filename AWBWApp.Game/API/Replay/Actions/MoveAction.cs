@@ -88,6 +88,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                 belowBuilding.Capture = 20;
             }
 
+            if (Discovered != null)
+                context.RegisterDiscoveryAndSetUndo(Discovered);
             ReplayActionHelper.UpdateUnitCargoPositions(context, unit, unit.Position!.Value);
         }
 
@@ -126,7 +128,10 @@ namespace AWBWApp.Game.API.Replay.Actions
             unit.UpdateUnit(Unit);
 
             unit.CanMove.Value = false;
+
             controller.UpdateFogOfWar();
+            if (Discovered != null)
+                controller.Map.RegisterDiscovery(Discovered);
 
             if (Trapped)
                 controller.Map.PlayEffect("Effects/TrapMarker", 650, Unit.Position.Value, 0, x => x.ScaleTo(new Vector2(1, 0)).ScaleTo(new Vector2(1, 1), 250, Easing.OutBounce));

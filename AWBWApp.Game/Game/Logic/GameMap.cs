@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.API.Replay.Actions;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
@@ -134,6 +135,7 @@ namespace AWBWApp.Game.Game.Logic
         private void load(AWBWConfigManager settings)
         {
             showUnitsInFog = settings.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits);
+            showUnitsInFog.BindValueChanged(x => UpdateDiscoveredBuildings());
             showGridlines = settings.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap);
             showGridlines.BindValueChanged(x => grid.FadeTo(x.NewValue ? 1 : 0, 400, Easing.OutQuint), true);
             showTileCursor = settings.GetBindable<bool>(AWBWSetting.ShowTileCursor);
@@ -282,6 +284,14 @@ namespace AWBWApp.Game.Game.Logic
                 var playerID = getPlayerIDFromCountryID(building.CountryID);
                 var country = playerID.HasValue ? replayController.Players[playerID.Value].Country : null;
                 var drawableBuilding = new DrawableBuilding(building, position, playerID, country);
+
+                foreach (var player in gameState.ReplayInfo.Players)
+                {
+                    if (drawableBuilding.TeamToTile.ContainsKey(player.Value.TeamName))
+                        continue;
+
+                    drawableBuilding.TeamToTile[player.Value.TeamName] = drawableBuilding.BuildingTile;
+                }
 
                 //For testing purposes. Likely not used in any game.
                 if (awbwBuilding.Value.Capture.HasValue && awbwBuilding.Value.Capture != 0)
@@ -667,9 +677,10 @@ namespace AWBWApp.Game.Game.Logic
                     {
                         var playerID = getPlayerIDFromCountryID(buildingTile.CountryID);
                         var country = playerID.HasValue ? replayController.Players[playerID.Value].Country : null;
-                        building = new DrawableBuilding(buildingTile, tilePosition, playerID, country);
-                        building.FogOfWarActive.Value = IsTileFoggy(awbwBuilding.Position);
-                        buildingGrid.AddTile(building, tilePosition);
+                        var newBuilding = new DrawableBuilding(buildingTile, tilePosition, playerID, country);
+                        transferDiscovery(building, newBuilding);
+                        newBuilding.FogOfWarActive.Value = IsTileFoggy(awbwBuilding.Position);
+                        buildingGrid.AddTile(newBuilding, tilePosition);
                     }
                     else if (terrainTileStorage.TryGetTileByAWBWId(awbwBuilding.TerrainID.Value, out var terrainTile))
                     {
@@ -695,6 +706,50 @@ namespace AWBWApp.Game.Game.Logic
 
             if (TryGetDrawableUnit(awbwBuilding.Position, out var unit))
                 unit.IsCapturing.Value = awbwBuilding.Capture != awbwBuilding.LastCapture && awbwBuilding.Capture != 20 && awbwBuilding.Capture != 0;
+        }
+
+        public void RegisterDiscovery(DiscoveryCollection collection)
+        {
+            var team = getCurrentTeamVisibility();
+
+            foreach (var id in collection.DiscoveryByID)
+            {
+                foreach (var discovered in id.Value.DiscoveredBuildings)
+                {
+                    if (!TryGetDrawableBuilding(discovered.Key, out var discBuilding))
+                        continue;
+
+                    discBuilding.TeamToTile[id.Key] = buildingStorage.GetBuildingByAWBWId(discovered.Value.TerrainID!.Value);
+                    discBuilding.UpdateFogOfWarBuilding(showUnitsInFog.Value, team);
+                }
+            }
+        }
+
+        public void UpdateDiscoveredBuildings()
+        {
+            var team = getCurrentTeamVisibility();
+            foreach (var building in buildingGrid)
+                building.UpdateFogOfWarBuilding(showUnitsInFog.Value, team);
+        }
+
+        private void transferDiscovery(DrawableBuilding originalBuilding, DrawableBuilding newBuilding)
+        {
+            newBuilding.TeamToTile.SetTo(originalBuilding.TeamToTile);
+
+            if (originalBuilding.OwnerID.HasValue)
+                newBuilding.TeamToTile[replayController.Players[originalBuilding.OwnerID.Value].Team] = newBuilding.BuildingTile;
+            if (newBuilding.OwnerID.HasValue)
+                newBuilding.TeamToTile[replayController.Players[newBuilding.OwnerID.Value].Team] = newBuilding.BuildingTile;
+            newBuilding.UpdateFogOfWarBuilding(showUnitsInFog.Value, getCurrentTeamVisibility());
+        }
+
+        private string getCurrentTeamVisibility()
+        {
+            if (replayController.CurrentFogView.Value is long id)
+                return replayController.Players[id].Team;
+
+            var team = replayController.CurrentFogView.Value as string;
+            return team.IsNullOrEmpty() ? replayController.ActivePlayer.Team : team;
         }
 
         public bool OnPressed(KeyBindingPressEvent<AWBWGlobalAction> e)
