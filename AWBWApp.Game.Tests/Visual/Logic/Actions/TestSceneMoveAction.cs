@@ -2,6 +2,7 @@
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
 using NUnit.Framework;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Tests.Visual.Logic.Actions
@@ -9,6 +10,15 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
     [TestFixture]
     public class TestSceneMoveAction : BaseActionsTestScene
     {
+        private AWBWConfigManager config;
+
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        {
+            var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+            dependencies.Cache(config = new AWBWConfigManager(LocalStorage));
+            return dependencies;
+        }
+
         [TestCase(1)]
         [TestCase(3)]
         public void TestStraightLine(int spaces)
@@ -37,6 +47,24 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         public void TestTrapped()
         {
             AddStep("Setup", moveTestTrap);
+            AddStep("Set Vision to player 0", () => ReplayController.CurrentFogView.Value = 0L);
+            AddStep("Activate Seeing In Fog", () => config.SetValue(AWBWSetting.ReplayShowHiddenUnits, true));
+            AddStep("Move Right", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(4, 1));
+            AddStep("Undo", () => ReplayController.GoToPreviousAction());
+            AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(1, 1));
+            AddStep("Deactivate Seeing In Fog", () => config.SetValue(AWBWSetting.ReplayShowHiddenUnits, false));
+            AddStep("Move Right", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(4, 1));
+            AddStep("Undo", () => ReplayController.GoToPreviousAction());
+            AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(1, 1));
+            AddStep("Set Vision to player 1", () => ReplayController.CurrentFogView.Value = 1L);
+            AddStep("Activate Seeing In Fog", () => config.SetValue(AWBWSetting.ReplayShowHiddenUnits, true));
+            AddStep("Move Right", () => ReplayController.GoToNextAction());
+            AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(4, 1));
+            AddStep("Undo", () => ReplayController.GoToPreviousAction());
+            AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(1, 1));
+            AddStep("Deactivate Seeing In Fog", () => config.SetValue(AWBWSetting.ReplayShowHiddenUnits, false));
             AddStep("Move Right", () => ReplayController.GoToNextAction());
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(4, 1));
             AddStep("Undo", () => ReplayController.GoToPreviousAction());
@@ -63,6 +91,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             var replayData = CreateBasicReplayData(2);
             var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
+            ReplayController.CurrentFogView.Value = string.Empty;
 
             var mapSize = spaces + 1;
 
@@ -133,33 +162,32 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         private void moveTestTrap()
         {
             var replayData = CreateBasicReplayData(2);
+            replayData.ReplayInfo.Fog = true;
             var turn = CreateBasicTurnData(replayData);
             replayData.TurnData.Add(turn);
+            ReplayController.CurrentFogView.Value = string.Empty;
 
-            var movingUnit = CreateBasicReplayUnit(0, 0, "Recon", new Vector2I(1, 1));
+            var movingUnit = CreateBasicReplayUnit(0, 0, "Infantry", new Vector2I(1, 1));
             turn.ReplayUnit.Add(movingUnit.ID, movingUnit);
 
-            var stillUnit = CreateBasicReplayUnit(1, 1, "Recon", new Vector2I(5, 1));
+            var stillUnit = CreateBasicReplayUnit(1, 1, "Infantry", new Vector2I(5, 1));
             turn.ReplayUnit.Add(stillUnit.ID, stillUnit);
 
-            for (int i = 1; i < 5; i++)
+            var moveUnitAction = new MoveUnitAction
             {
-                var moveUnitAction = new MoveUnitAction
+                Unit = new ReplayUnit { ID = movingUnit.ID, Position = new Vector2I(4, 1) },
+                Path = new[]
                 {
-                    Unit = new ReplayUnit { ID = movingUnit.ID, Position = new Vector2I(4, 1) },
-                    Path = new[]
-                    {
-                        new UnitPosition(new Vector2I(1, 1)),
-                        new UnitPosition(new Vector2I(2, 1)),
-                        new UnitPosition(new Vector2I(3, 1)),
-                        new UnitPosition(new Vector2I(4, 1)),
-                    }
-                };
-                moveUnitAction.Distance = moveUnitAction.Path.Length;
-                moveUnitAction.Trapped = true;
+                    new UnitPosition(new Vector2I(1, 1)),
+                    new UnitPosition(new Vector2I(2, 1)),
+                    new UnitPosition(new Vector2I(3, 1)),
+                    new UnitPosition(new Vector2I(4, 1)),
+                }
+            };
+            moveUnitAction.Distance = moveUnitAction.Path.Length;
+            moveUnitAction.Trapped = true;
 
-                turn.Actions.Add(moveUnitAction);
-            }
+            turn.Actions.Add(moveUnitAction);
 
             var map = CreateBasicMap(7, 3);
             map.Ids[1 * 7 + 1] = 15;

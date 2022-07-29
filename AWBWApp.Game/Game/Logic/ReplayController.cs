@@ -775,6 +775,9 @@ namespace AWBWApp.Game.Game.Logic
 
         public void UpdateFogOfWar()
         {
+            if (replayData == null)
+                return;
+
             if (!replayData.ReplayInfo.Fog)
             {
                 //Todo: We don't need to clear this all the time
