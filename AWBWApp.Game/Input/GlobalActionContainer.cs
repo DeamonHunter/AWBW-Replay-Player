@@ -60,6 +60,7 @@ namespace AWBWApp.Game.Input
                 new CombinationTrackedKeyBinding(InputKey.L, AWBWGlobalAction.NextTurn, SetConfig),
                 new CombinationTrackedKeyBinding(InputKey.G, AWBWGlobalAction.ShowGridLines, SetConfig),
                 new CombinationTrackedKeyBinding(InputKey.F, AWBWGlobalAction.ShowUnitsInFog, SetConfig),
+                new CombinationTrackedKeyBinding(InputKey.C, AWBWGlobalAction.ShowTileCursor, SetConfig),
             };
 
         protected override IEnumerable<Drawable> KeyBindingInputQueue

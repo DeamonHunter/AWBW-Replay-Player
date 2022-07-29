@@ -33,6 +33,7 @@ namespace AWBWApp.Game
             SetDefault(AWBWSetting.ReplayShowWeather, true);
             SetDefault(AWBWSetting.ReplayAllowLeftMouseToDragMap, true);
             SetDefault(AWBWSetting.MapSkin, MapSkin.AW2);
+            SetDefault(AWBWSetting.ShowTileCursor, true);
         }
     }
 
@@ -55,7 +56,8 @@ namespace AWBWApp.Game
         ReplayMovementAnimations,
         ReplayShowWeather,
         ReplayAllowLeftMouseToDragMap,
-        MapSkin
+        MapSkin,
+        ShowTileCursor
     }
 
     public enum MapSkin

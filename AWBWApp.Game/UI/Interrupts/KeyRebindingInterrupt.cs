@@ -43,6 +43,7 @@ namespace AWBWApp.Game.UI.Interrupts
                 createKeyRebindRow(AWBWGlobalAction.NextAction),
                 createKeyRebindRow(AWBWGlobalAction.NextTurn),
                 createKeyRebindRow(AWBWGlobalAction.ShowGridLines),
+                createKeyRebindRow(AWBWGlobalAction.ShowTileCursor),
                 createKeyRebindRow(AWBWGlobalAction.ShowUnitsInFog),
                 new Container()
                 {

@@ -8,6 +8,7 @@
         NextTurn,
 
         ShowUnitsInFog,
-        ShowGridLines
+        ShowGridLines,
+        ShowTileCursor
     }
 }

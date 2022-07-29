@@ -40,6 +40,7 @@ namespace AWBWApp.Game.Game.Logic
         private Dictionary<long, DrawableUnit> units;
 
         private readonly UnitRangeIndicator rangeIndicator;
+        private readonly TileCursor tileCursor;
 
         [Resolved]
         private TerrainTileStorage terrainTileStorage { get; set; }
@@ -70,6 +71,7 @@ namespace AWBWApp.Game.Game.Logic
         public IBindable<bool> ShowUnitsInFog => showUnitsInFog;
 
         private Bindable<bool> showGridlines;
+        private Bindable<bool> showTileCursor;
 
         private DetailedInformationPopup infoPopup;
 
@@ -104,6 +106,10 @@ namespace AWBWApp.Game.Game.Logic
                     GridColor = new Color4(15, 15, 15, 255),
                 },
                 unitsDrawable = new Container<DrawableUnit>(),
+                tileCursor = new TileCursor()
+                {
+                    Alpha = 0f
+                },
                 rangeIndicator = new UnitRangeIndicator(),
                 effectAnimationController = new EffectAnimationController
                 {
@@ -130,6 +136,7 @@ namespace AWBWApp.Game.Game.Logic
             showUnitsInFog = settings.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits);
             showGridlines = settings.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap);
             showGridlines.BindValueChanged(x => grid.FadeTo(x.NewValue ? 1 : 0, 400, Easing.OutQuint), true);
+            showTileCursor = settings.GetBindable<bool>(AWBWSetting.ShowTileCursor);
         }
 
         private void setToLoading()
@@ -353,10 +360,21 @@ namespace AWBWApp.Game.Game.Logic
 
             var cursor = inputManager.CurrentState.Mouse.Position;
 
-            if (getUnitAndTileFromMousePosition(ToLocalSpace(cursor), out var tile, out var building, out var unit) && IsHovered)
+            if (getUnitAndTileFromMousePosition(ToLocalSpace(cursor), out var tilePosition, out var tile, out var building, out var unit) && IsHovered)
+            {
                 infoPopup.ShowDetails(tile, building, unit);
+
+                tileCursor.TilePosition = tilePosition;
+                if (showTileCursor.Value)
+                    tileCursor.Show();
+                else
+                    tileCursor.Hide();
+            }
             else
+            {
                 infoPopup.ShowDetails(null, null, null);
+                tileCursor.Hide();
+            }
 
             if (unit != selectedUnit)
             {
@@ -693,6 +711,10 @@ namespace AWBWApp.Game.Game.Logic
                 case AWBWGlobalAction.ShowGridLines:
                     showGridlines.Value = !showGridlines.Value;
                     return true;
+
+                case AWBWGlobalAction.ShowTileCursor:
+                    showTileCursor.Value = !showTileCursor.Value;
+                    return true;
             }
 
             return false;
@@ -855,17 +877,18 @@ namespace AWBWApp.Game.Game.Logic
             if (!hasLoadedMap)
                 return base.OnClick(e);
 
-            if (getUnitAndTileFromMousePosition(e.MousePosition, out _, out _, out var unit) && unit != null)
+            if (getUnitAndTileFromMousePosition(e.MousePosition, out _, out _, out _, out var unit) && unit != null)
                 return SetUnitAsSelected(unit);
 
             return base.OnClick(e);
         }
 
-        private bool getUnitAndTileFromMousePosition(Vector2 cursor, out DrawableTile tile, out DrawableBuilding building, out DrawableUnit unit)
+        private bool getUnitAndTileFromMousePosition(Vector2 cursor, out Vector2I tilePosition, out DrawableTile tile, out DrawableBuilding building, out DrawableUnit unit)
         {
             tile = null;
             building = null;
             unit = null;
+            tilePosition = Vector2I.Zero;
 
             if (cursor.X < 0 || cursor.X >= DrawSize.X)
                 return false;
@@ -875,7 +898,7 @@ namespace AWBWApp.Game.Game.Logic
             cursor.Y -= DrawableTile.BASE_SIZE.Y;
 
             //Doubly make sure that we aren't trying to get a tile outside of what we have.
-            var tilePosition = new Vector2I((int)(cursor.X / DrawableTile.BASE_SIZE.X), (int)(cursor.Y / DrawableTile.BASE_SIZE.Y));
+            tilePosition = new Vector2I((int)(cursor.X / DrawableTile.BASE_SIZE.X), (int)(cursor.Y / DrawableTile.BASE_SIZE.Y));
             if (tilePosition.X < 0 || tilePosition.X >= MapSize.X || tilePosition.Y < 0 || tilePosition.Y >= MapSize.Y)
                 return false;
 

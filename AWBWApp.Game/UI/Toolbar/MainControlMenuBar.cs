@@ -28,6 +28,7 @@ namespace AWBWApp.Game.UI.Toolbar
                     Items = new[]
                     {
                         new ToggleMenuItem("Show Grid", configManager.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap)),
+                        new ToggleMenuItem("Show Tile Cursor", configManager.GetBindable<bool>(AWBWSetting.ShowTileCursor)),
                         new ToggleMenuItem("Show Hidden Units", configManager.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits)),
                         new ToggleMenuItem("Show Weather", configManager.GetBindable<bool>(AWBWSetting.ReplayShowWeather)),
                         new ToggleMenuItem("Movement Animations", configManager.GetBindable<bool>(AWBWSetting.ReplayMovementAnimations)),
