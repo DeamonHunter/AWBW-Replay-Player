@@ -109,6 +109,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             controller.ActivePlayer.UnitValue.Value += valueChange;
 
             joinedUnit.UpdateUnit(JoinedUnit);
+            controller.UpdateFogOfWar();
         }
 
         public void UndoAction(ReplayController controller)
@@ -121,6 +122,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             controller.ActivePlayer.UnitValue.Value -= valueChange;
             controller.ActivePlayer.Funds.Value -= fundsChange;
 
+            controller.UpdateFogOfWar();
             MoveUnit?.UndoAction(controller);
         }
     }

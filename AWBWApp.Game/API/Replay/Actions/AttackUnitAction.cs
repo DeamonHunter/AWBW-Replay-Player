@@ -376,9 +376,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         private void afterAttackChanges(ReplayController controller)
         {
-            if ((Attacker.HitPoints ?? 0) <= 0 || (Defender.HitPoints ?? 0f) <= 0)
-                controller.UpdateFogOfWar();
-
+            controller.UpdateFogOfWar();
             ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, false);
 
             //Note: All transports can't attack, so there should only ever be one unit here.
@@ -467,13 +465,11 @@ namespace AWBWApp.Game.API.Replay.Actions
                     controller.Players[funds.Key].Funds.Value = funds.Value;
             }
 
+            controller.UpdateFogOfWar();
             if (MoveUnit != null)
                 MoveUnit.UndoAction(controller);
             else
-            {
                 controller.Map.GetDrawableUnit(originalAttacker.ID).CanMove.Value = true;
-                controller.UpdateFogOfWar();
-            }
         }
 
         public class COPowerChange

@@ -76,6 +76,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             controller.Map.DeleteUnit(DeletedUnitId, true);
             controller.ActivePlayer.UnitValue.Value -= unitValue;
+            controller.UpdateFogOfWar();
         }
 
         public void UndoAction(ReplayController controller)
@@ -86,10 +87,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             controller.ActivePlayer.UnitValue.Value += unitValue;
 
-            if (MoveUnit != null)
-                MoveUnit.UndoAction(controller);
-            else
-                controller.UpdateFogOfWar();
+            controller.UpdateFogOfWar();
+            MoveUnit?.UndoAction(controller);
         }
     }
 }

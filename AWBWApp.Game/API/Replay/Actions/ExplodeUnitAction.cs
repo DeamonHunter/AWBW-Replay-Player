@@ -141,6 +141,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 yield return ReplayWait.WaitForMilliseconds(100);
             }
 
+            controller.UpdateFogOfWar();
             ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, false, ExplodedUnitId);
         }
 
@@ -169,6 +170,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             controller.Map.AddUnit(originalExplodingUnit);
             controller.ActivePlayer.UnitValue.Value += ReplayActionHelper.CalculateUnitCost(originalExplodingUnit, controller.ActivePlayer.ActiveCO.Value.CO.DayToDayPower, null);
+
+            controller.UpdateFogOfWar();
             MoveUnit?.UndoAction(controller);
         }
     }

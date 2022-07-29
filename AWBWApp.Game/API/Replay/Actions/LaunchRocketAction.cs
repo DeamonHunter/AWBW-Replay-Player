@@ -168,6 +168,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 yield return ReplayWait.WaitForMilliseconds(100);
             }
 
+            controller.UpdateFogOfWar();
             ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, false);
         }
 
@@ -196,13 +197,11 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             controller.Map.UpdateBuilding(originalBuilding, true);
 
+            controller.UpdateFogOfWar();
             if (MoveUnit != null)
                 MoveUnit?.UndoAction(controller);
             else if (controller.Map.TryGetDrawableUnit(SiloPosition, out var launchingUnit))
-            {
                 launchingUnit.CanMove.Value = true;
-                controller.UpdateFogOfWar();
-            }
         }
     }
 }

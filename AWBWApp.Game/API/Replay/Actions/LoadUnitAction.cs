@@ -92,6 +92,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             loadingUnit.BeingCarried.Value = true;
             transportUnit.Cargo.Add(loadingUnit.UnitID);
+            controller.UpdateFogOfWar();
         }
 
         public void UndoAction(ReplayController controller)
@@ -104,6 +105,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             loadingUnit.UpdateUnit(originalLoadedUnit);
             transportUnit.UpdateUnit(originalTransportUnit);
 
+            controller.UpdateFogOfWar();
             MoveUnit?.UndoAction(controller);
         }
     }

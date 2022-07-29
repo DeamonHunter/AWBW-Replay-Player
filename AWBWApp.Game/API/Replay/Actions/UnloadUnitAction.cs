@@ -125,6 +125,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             transportUnit.Cargo ??= new HashSet<long>();
             transportUnit.Cargo.Remove(unloadingUnit.UnitID);
 
+            controller.UpdateFogOfWar();
             MoveUnit?.UndoAction(controller);
         }
     }
