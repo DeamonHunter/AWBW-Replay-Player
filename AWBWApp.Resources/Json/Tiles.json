@@ -729,9 +729,9 @@
         "Colour": "#b6b6aa",
         "TerrainType": "Plain",
         "Textures": {
-            "Clear": "Team/Neutral/SiloEmpty-0",
-            "Rain": "Team/Neutral/SiloEmpty_Rain-0",
-            "Snow": "Team/Neutral/SiloEmpty_Snow-0"
+            "Clear": "Neutral/SiloEmpty-0",
+            "Rain": "Neutral/SiloEmpty_Rain-0",
+            "Snow": "Neutral/SiloEmpty_Snow-0"
         }
     },
     "HPipe Rubble": {
@@ -747,9 +747,9 @@
         "Colour": "#c0e030",
         "TerrainType": "Plain",
         "Textures": {
-            "Clear": "Team/Neutral/HRubble-0",
-            "Rain": "Team/Neutral/HRubble_Rain-0",
-            "Snow": "Team/Neutral/HRubble_Snow-0"
+            "Clear": "Neutral/HRubble-0",
+            "Rain": "Neutral/HRubble_Rain-0",
+            "Snow": "Neutral/HRubble_Snow-0"
         }
     },
     "VPipe Rubble": {
@@ -765,9 +765,9 @@
         "Colour": "#c0e030",
         "TerrainType": "Plain",
         "Textures": {
-            "Clear": "Team/Neutral/VRubble-0",
-            "Rain": "Team/Neutral/VRubble_Rain-0",
-            "Snow": "Team/Neutral/VRubble_Snow-0"
+            "Clear": "Neutral/VRubble-0",
+            "Rain": "Neutral/VRubble_Rain-0",
+            "Snow": "Neutral/VRubble_Snow-0"
         }
     },
 

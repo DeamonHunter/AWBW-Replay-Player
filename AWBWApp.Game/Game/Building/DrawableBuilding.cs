@@ -107,7 +107,7 @@ namespace AWBWApp.Game.Game.Building
                         if (currentSkin.Value == MapSkin.AW1 && i != 0)
                             break;
 
-                        throw new Exception($"Improperly configured BuildingTile. Animation count wrong or image missing: {texturePair.Value}-{i}");
+                        throw new Exception($"Improperly configured BuildingTile. Animation count wrong or image missing: Map/{currentSkin.Value}/{texturePair.Value}-{i}");
                     }
 
                     textureList.Add(texture);

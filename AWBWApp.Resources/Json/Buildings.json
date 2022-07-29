@@ -12,9 +12,9 @@
             "Air": 1
         },
         "Textures": {
-            "Clear": "Team/Neutral/City",
-            "Rain": "Team/Neutral/City_Rain",
-            "Snow": "Team/Neutral/City_Snow"
+            "Clear": "Neutral/City",
+            "Rain": "Neutral/City_Rain",
+            "Snow": "Neutral/City_Snow"
         }
     },
     "Neutral Base": {
@@ -31,9 +31,9 @@
             "Pipe": 1
         },
         "Textures": {
-            "Clear": "Team/Neutral/Base",
-            "Rain": "Team/Neutral/Base_Rain",
-            "Snow": "Team/Neutral/Base_Snow"
+            "Clear": "Neutral/Base",
+            "Rain": "Neutral/Base_Rain",
+            "Snow": "Neutral/Base_Snow"
         }
     },
     "Neutral Airport": {
@@ -49,9 +49,9 @@
             "Air": 1
         },
         "Textures": {
-            "Clear": "Team/Neutral/Airport",
-            "Rain": "Team/Neutral/Airport_Rain",
-            "Snow": "Team/Neutral/Airport_Snow"
+            "Clear": "Neutral/Airport",
+            "Rain": "Neutral/Airport_Rain",
+            "Snow": "Neutral/Airport_Snow"
         }
     },
     "Neutral Port": {
@@ -69,9 +69,9 @@
             "Lander": 1
         },
         "Textures": {
-            "Clear": "Team/Neutral/Port",
-            "Rain": "Team/Neutral/Port_Rain",
-            "Snow": "Team/Neutral/Port_Snow"
+            "Clear": "Neutral/Port",
+            "Rain": "Neutral/Port_Rain",
+            "Snow": "Neutral/Port_Snow"
         }
     },
     "Neutral Com Tower": {
@@ -88,9 +88,9 @@
         },
         "GivesMoneyWhenCaptured": false,
         "Textures": {
-            "Clear": "Team/Neutral/ComTower",
-            "Rain": "Team/Neutral/ComTower_Rain",
-            "Snow": "Team/Neutral/ComTower_Snow"
+            "Clear": "Neutral/ComTower",
+            "Rain": "Neutral/ComTower_Rain",
+            "Snow": "Neutral/ComTower_Snow"
         }
     },
     "Neutral Lab": {
@@ -107,9 +107,9 @@
         },
         "GivesMoneyWhenCaptured": false,
         "Textures": {
-            "Clear": "Team/Neutral/Lab",
-            "Rain": "Team/Neutral/Lab_Rain",
-            "Snow": "Team/Neutral/Lab_Snow"
+            "Clear": "Neutral/Lab",
+            "Rain": "Neutral/Lab_Rain",
+            "Snow": "Neutral/Lab_Snow"
         }
     },
     "Missile Silo": {
@@ -125,9 +125,9 @@
             "Air": 1
         },
         "Textures": {
-            "Clear": "Team/Neutral/Silo",
-            "Rain": "Team/Neutral/Silo_Rain",
-            "Snow": "Team/Neutral/Silo_Snow"
+            "Clear": "Neutral/Silo",
+            "Rain": "Neutral/Silo_Rain",
+            "Snow": "Neutral/Silo_Snow"
         }
     },
     "Horizontal Pipe Seam": {
@@ -139,9 +139,9 @@
             "Pipe": 1
         },
         "Textures": {
-            "Clear": "Team/Neutral/HSeam",
-            "Rain": "Team/Neutral/HSeam_Rain",
-            "Snow": "Team/Neutral/HSeam_Snow"
+            "Clear": "Neutral/HSeam",
+            "Rain": "Neutral/HSeam_Rain",
+            "Snow": "Neutral/HSeam_Snow"
         }
     },
     "Vertical Pipe Seam": {
@@ -153,9 +153,9 @@
             "Pipe": 1
         },
         "Textures": {
-            "Clear": "Team/Neutral/VSeam",
-            "Rain": "Team/Neutral/VSeam_Rain",
-            "Snow": "Team/Neutral/VSeam_Snow"
+            "Clear": "Neutral/VSeam",
+            "Rain": "Neutral/VSeam_Rain",
+            "Snow": "Neutral/VSeam_Snow"
         }
     },
     /*
@@ -180,9 +180,9 @@
             100
         ],
         "Textures": {
-            "Clear": "Team/OrangeStar/Airport",
-            "Rain": "Team/OrangeStar/Airport_Rain",
-            "Snow": "Team/OrangeStar/Airport_Snow"
+            "Clear": "OrangeStar/Airport",
+            "Rain": "OrangeStar/Airport_Rain",
+            "Snow": "OrangeStar/Airport_Snow"
         }
     },
     "Orange Star Base": {
@@ -208,9 +208,9 @@
             100
         ],
         "Textures": {
-            "Clear": "Team/OrangeStar/Base",
-            "Rain": "Team/OrangeStar/Base_Rain",
-            "Snow": "Team/OrangeStar/Base_Snow"
+            "Clear": "OrangeStar/Base",
+            "Rain": "OrangeStar/Base_Rain",
+            "Snow": "OrangeStar/Base_Snow"
         }
     },
     "Orange Star City": {
@@ -232,9 +232,9 @@
             100
         ],
         "Textures": {
-            "Clear": "Team/OrangeStar/City",
-            "Rain": "Team/OrangeStar/City_Rain",
-            "Snow": "Team/OrangeStar/City_Snow"
+            "Clear": "OrangeStar/City",
+            "Rain": "OrangeStar/City_Rain",
+            "Snow": "OrangeStar/City_Snow"
         }
     },
     "Orange Star HQ": {
@@ -256,9 +256,9 @@
             100
         ],
         "Textures": {
-            "Clear": "Team/OrangeStar/HQ",
-            "Rain": "Team/OrangeStar/HQ_Rain",
-            "Snow": "Team/OrangeStar/HQ_Snow"
+            "Clear": "OrangeStar/HQ",
+            "Rain": "OrangeStar/HQ_Rain",
+            "Snow": "OrangeStar/HQ_Snow"
         }
     },
     "Orange Star Port": {
@@ -282,9 +282,9 @@
             100
         ],
         "Textures": {
-            "Clear": "Team/OrangeStar/Port",
-            "Rain": "Team/OrangeStar/Port_Rain",
-            "Snow": "Team/OrangeStar/Port_Snow"
+            "Clear": "OrangeStar/Port",
+            "Rain": "OrangeStar/Port_Rain",
+            "Snow": "OrangeStar/Port_Snow"
         }
     },
     "Orange Star Com Tower": {
@@ -307,9 +307,9 @@
             100
         ],
         "Textures": {
-            "Clear": "Team/OrangeStar/ComTower",
-            "Rain": "Team/OrangeStar/ComTower_Rain",
-            "Snow": "Team/OrangeStar/ComTower_Snow"
+            "Clear": "OrangeStar/ComTower",
+            "Rain": "OrangeStar/ComTower_Rain",
+            "Snow": "OrangeStar/ComTower_Snow"
         }
     },
     "Orange Star Lab": {
@@ -332,9 +332,9 @@
             100
         ],
         "Textures": {
-            "Clear": "Team/OrangeStar/Lab",
-            "Rain": "Team/OrangeStar/Lab_Rain",
-            "Snow": "Team/OrangeStar/Lab_Snow"
+            "Clear": "OrangeStar/Lab",
+            "Rain": "OrangeStar/Lab_Rain",
+            "Snow": "OrangeStar/Lab_Snow"
         }
     },
     /*
@@ -359,9 +359,9 @@
             200
         ],
         "Textures": {
-            "Clear": "Team/BlueMoon/Airport",
-            "Rain": "Team/BlueMoon/Airport_Rain",
-            "Snow": "Team/BlueMoon/Airport_Snow"
+            "Clear": "BlueMoon/Airport",
+            "Rain": "BlueMoon/Airport_Rain",
+            "Snow": "BlueMoon/Airport_Snow"
         }
     },
     "Blue Moon Base": {
@@ -387,9 +387,9 @@
             200
         ],
         "Textures": {
-            "Clear": "Team/BlueMoon/Base",
-            "Rain": "Team/BlueMoon/Base_Rain",
-            "Snow": "Team/BlueMoon/Base_Snow"
+            "Clear": "BlueMoon/Base",
+            "Rain": "BlueMoon/Base_Rain",
+            "Snow": "BlueMoon/Base_Snow"
         }
     },
     "Blue Moon City": {
@@ -411,9 +411,9 @@
             200
         ],
         "Textures": {
-            "Clear": "Team/BlueMoon/City",
-            "Rain": "Team/BlueMoon/City_Rain",
-            "Snow": "Team/BlueMoon/City_Snow"
+            "Clear": "BlueMoon/City",
+            "Rain": "BlueMoon/City_Rain",
+            "Snow": "BlueMoon/City_Snow"
         }
     },
     "Blue Moon HQ": {
@@ -435,9 +435,9 @@
             200
         ],
         "Textures": {
-            "Clear": "Team/BlueMoon/HQ",
-            "Rain": "Team/BlueMoon/HQ_Rain",
-            "Snow": "Team/BlueMoon/HQ_Snow"
+            "Clear": "BlueMoon/HQ",
+            "Rain": "BlueMoon/HQ_Rain",
+            "Snow": "BlueMoon/HQ_Snow"
         }
     },
     "Blue Moon Port": {
@@ -461,9 +461,9 @@
             200
         ],
         "Textures": {
-            "Clear": "Team/BlueMoon/Port",
-            "Rain": "Team/BlueMoon/Port_Rain",
-            "Snow": "Team/BlueMoon/Port_Snow"
+            "Clear": "BlueMoon/Port",
+            "Rain": "BlueMoon/Port_Rain",
+            "Snow": "BlueMoon/Port_Snow"
         }
     },
     "Blue Moon Com Tower": {
@@ -486,9 +486,9 @@
             200
         ],
         "Textures": {
-            "Clear": "Team/BlueMoon/ComTower",
-            "Rain": "Team/BlueMoon/ComTower_Rain",
-            "Snow": "Team/BlueMoon/ComTower_Snow"
+            "Clear": "BlueMoon/ComTower",
+            "Rain": "BlueMoon/ComTower_Rain",
+            "Snow": "BlueMoon/ComTower_Snow"
         }
     },
     "Blue Moon Lab": {
@@ -511,9 +511,9 @@
             200
         ],
         "Textures": {
-            "Clear": "Team/BlueMoon/Lab",
-            "Rain": "Team/BlueMoon/Lab_Rain",
-            "Snow": "Team/BlueMoon/Lab_Snow"
+            "Clear": "BlueMoon/Lab",
+            "Rain": "BlueMoon/Lab_Rain",
+            "Snow": "BlueMoon/Lab_Snow"
         }
     },
     /*
@@ -538,9 +538,9 @@
             300
         ],
         "Textures": {
-            "Clear": "Team/GreenEarth/Airport",
-            "Rain": "Team/GreenEarth/Airport_Rain",
-            "Snow": "Team/GreenEarth/Airport_Snow"
+            "Clear": "GreenEarth/Airport",
+            "Rain": "GreenEarth/Airport_Rain",
+            "Snow": "GreenEarth/Airport_Snow"
         }
     },
     "Green Earth Base": {
@@ -566,9 +566,9 @@
             300
         ],
         "Textures": {
-            "Clear": "Team/GreenEarth/Base",
-            "Rain": "Team/GreenEarth/Base_Rain",
-            "Snow": "Team/GreenEarth/Base_Snow"
+            "Clear": "GreenEarth/Base",
+            "Rain": "GreenEarth/Base_Rain",
+            "Snow": "GreenEarth/Base_Snow"
         }
     },
     "Green Earth City": {
@@ -590,9 +590,9 @@
             300
         ],
         "Textures": {
-            "Clear": "Team/GreenEarth/City",
-            "Rain": "Team/GreenEarth/City_Rain",
-            "Snow": "Team/GreenEarth/City_Snow"
+            "Clear": "GreenEarth/City",
+            "Rain": "GreenEarth/City_Rain",
+            "Snow": "GreenEarth/City_Snow"
         }
     },
     "Green Earth HQ": {
@@ -614,9 +614,9 @@
             300
         ],
         "Textures": {
-            "Clear": "Team/GreenEarth/HQ",
-            "Rain": "Team/GreenEarth/HQ_Rain",
-            "Snow": "Team/GreenEarth/HQ_Snow"
+            "Clear": "GreenEarth/HQ",
+            "Rain": "GreenEarth/HQ_Rain",
+            "Snow": "GreenEarth/HQ_Snow"
         }
     },
     "Green Earth Port": {
@@ -640,9 +640,9 @@
             300
         ],
         "Textures": {
-            "Clear": "Team/GreenEarth/Port",
-            "Rain": "Team/GreenEarth/Port_Rain",
-            "Snow": "Team/GreenEarth/Port_Snow"
+            "Clear": "GreenEarth/Port",
+            "Rain": "GreenEarth/Port_Rain",
+            "Snow": "GreenEarth/Port_Snow"
         }
     },
     "Green Earth Com Tower": {
@@ -665,9 +665,9 @@
             300
         ],
         "Textures": {
-            "Clear": "Team/GreenEarth/ComTower",
-            "Rain": "Team/GreenEarth/ComTower_Rain",
-            "Snow": "Team/GreenEarth/ComTower_Snow"
+            "Clear": "GreenEarth/ComTower",
+            "Rain": "GreenEarth/ComTower_Rain",
+            "Snow": "GreenEarth/ComTower_Snow"
         }
     },
     "Green Earth Lab": {
@@ -690,9 +690,9 @@
             300
         ],
         "Textures": {
-            "Clear": "Team/GreenEarth/Lab",
-            "Rain": "Team/GreenEarth/Lab_Rain",
-            "Snow": "Team/GreenEarth/Lab_Snow"
+            "Clear": "GreenEarth/Lab",
+            "Rain": "GreenEarth/Lab_Rain",
+            "Snow": "GreenEarth/Lab_Snow"
         }
     },
     /*
@@ -716,9 +716,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/YellowComet/Airport",
-            "Rain": "Team/YellowComet/Airport_Rain",
-            "Snow": "Team/YellowComet/Airport_Snow"
+            "Clear": "YellowComet/Airport",
+            "Rain": "YellowComet/Airport_Rain",
+            "Snow": "YellowComet/Airport_Snow"
         }
     },
     "Yellow Comet Base": {
@@ -742,9 +742,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/YellowComet/Base",
-            "Rain": "Team/YellowComet/Base_Rain",
-            "Snow": "Team/YellowComet/Base_Snow"
+            "Clear": "YellowComet/Base",
+            "Rain": "YellowComet/Base_Rain",
+            "Snow": "YellowComet/Base_Snow"
         }
     },
     "Yellow Comet City": {
@@ -765,9 +765,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/YellowComet/City",
-            "Rain": "Team/YellowComet/City_Rain",
-            "Snow": "Team/YellowComet/City_Snow"
+            "Clear": "YellowComet/City",
+            "Rain": "YellowComet/City_Rain",
+            "Snow": "YellowComet/City_Snow"
         }
     },
     "Yellow Comet HQ": {
@@ -788,9 +788,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/YellowComet/HQ",
-            "Rain": "Team/YellowComet/HQ_Rain",
-            "Snow": "Team/YellowComet/HQ_Snow"
+            "Clear": "YellowComet/HQ",
+            "Rain": "YellowComet/HQ_Rain",
+            "Snow": "YellowComet/HQ_Snow"
         }
     },
     "Yellow Comet Port": {
@@ -813,9 +813,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/YellowComet/Port",
-            "Rain": "Team/YellowComet/Port_Rain",
-            "Snow": "Team/YellowComet/Port_Snow"
+            "Clear": "YellowComet/Port",
+            "Rain": "YellowComet/Port_Rain",
+            "Snow": "YellowComet/Port_Snow"
         }
     },
     "Yellow Comet Com Tower": {
@@ -837,9 +837,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/YellowComet/ComTower",
-            "Rain": "Team/YellowComet/ComTower_Rain",
-            "Snow": "Team/YellowComet/ComTower_Snow"
+            "Clear": "YellowComet/ComTower",
+            "Rain": "YellowComet/ComTower_Rain",
+            "Snow": "YellowComet/ComTower_Snow"
         }
     },
     "Yellow Comet Lab": {
@@ -861,9 +861,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/YellowComet/Lab",
-            "Rain": "Team/YellowComet/Lab_Rain",
-            "Snow": "Team/YellowComet/Lab_Snow"
+            "Clear": "YellowComet/Lab",
+            "Rain": "YellowComet/Lab_Rain",
+            "Snow": "YellowComet/Lab_Snow"
         }
     },
     /*
@@ -888,9 +888,9 @@
             200
         ],
         "Textures": {
-            "Clear": "Team/RedFire/Airport",
-            "Rain": "Team/RedFire/Airport_Rain",
-            "Snow": "Team/RedFire/Airport_Snow"
+            "Clear": "RedFire/Airport",
+            "Rain": "RedFire/Airport_Rain",
+            "Snow": "RedFire/Airport_Snow"
         }
     },
     "Red Fire Base": {
@@ -916,9 +916,9 @@
             200
         ],
         "Textures": {
-            "Clear": "Team/RedFire/Base",
-            "Rain": "Team/RedFire/Base_Rain",
-            "Snow": "Team/RedFire/Base_Snow"
+            "Clear": "RedFire/Base",
+            "Rain": "RedFire/Base_Rain",
+            "Snow": "RedFire/Base_Snow"
         }
     },
     "Red Fire City": {
@@ -940,9 +940,9 @@
             200
         ],
         "Textures": {
-            "Clear": "Team/RedFire/City",
-            "Rain": "Team/RedFire/City_Rain",
-            "Snow": "Team/RedFire/City_Snow"
+            "Clear": "RedFire/City",
+            "Rain": "RedFire/City_Rain",
+            "Snow": "RedFire/City_Snow"
         }
     },
     "Red Fire HQ": {
@@ -973,9 +973,9 @@
             200
         ],
         "Textures": {
-            "Clear": "Team/RedFire/HQ",
-            "Rain": "Team/RedFire/HQ_Rain",
-            "Snow": "Team/RedFire/HQ_Snow"
+            "Clear": "RedFire/HQ",
+            "Rain": "RedFire/HQ_Rain",
+            "Snow": "RedFire/HQ_Snow"
         }
     },
     "Red Fire Port": {
@@ -999,9 +999,9 @@
             200
         ],
         "Textures": {
-            "Clear": "Team/RedFire/Port",
-            "Rain": "Team/RedFire/Port_Rain",
-            "Snow": "Team/RedFire/Port_Snow"
+            "Clear": "RedFire/Port",
+            "Rain": "RedFire/Port_Rain",
+            "Snow": "RedFire/Port_Snow"
         }
     },
     "Red Fire Com Tower": {
@@ -1024,9 +1024,9 @@
             200
         ],
         "Textures": {
-            "Clear": "Team/RedFire/ComTower",
-            "Rain": "Team/RedFire/ComTower_Rain",
-            "Snow": "Team/RedFire/ComTower_Snow"
+            "Clear": "RedFire/ComTower",
+            "Rain": "RedFire/ComTower_Rain",
+            "Snow": "RedFire/ComTower_Snow"
         }
     },
     "Red Fire Lab": {
@@ -1049,9 +1049,9 @@
             200
         ],
         "Textures": {
-            "Clear": "Team/RedFire/Lab",
-            "Rain": "Team/RedFire/Lab_Rain",
-            "Snow": "Team/RedFire/Lab_Snow"
+            "Clear": "RedFire/Lab",
+            "Rain": "RedFire/Lab_Rain",
+            "Snow": "RedFire/Lab_Snow"
         }
     },
     /*
@@ -1076,9 +1076,9 @@
             300
         ],
         "Textures": {
-            "Clear": "Team/GreySky/Airport",
-            "Rain": "Team/GreySky/Airport_Rain",
-            "Snow": "Team/GreySky/Airport_Snow"
+            "Clear": "GreySky/Airport",
+            "Rain": "GreySky/Airport_Rain",
+            "Snow": "GreySky/Airport_Snow"
         }
     },
     "Grey Sky Base": {
@@ -1104,9 +1104,9 @@
             300
         ],
         "Textures": {
-            "Clear": "Team/GreySky/Base",
-            "Rain": "Team/GreySky/Base_Rain",
-            "Snow": "Team/GreySky/Base_Snow"
+            "Clear": "GreySky/Base",
+            "Rain": "GreySky/Base_Rain",
+            "Snow": "GreySky/Base_Snow"
         }
     },
     "Grey Sky City": {
@@ -1128,9 +1128,9 @@
             300
         ],
         "Textures": {
-            "Clear": "Team/GreySky/City",
-            "Rain": "Team/GreySky/City_Rain",
-            "Snow": "Team/GreySky/City_Snow"
+            "Clear": "GreySky/City",
+            "Rain": "GreySky/City_Rain",
+            "Snow": "GreySky/City_Snow"
         }
     },
     "Grey Sky HQ": {
@@ -1152,9 +1152,9 @@
             300
         ],
         "Textures": {
-            "Clear": "Team/GreySky/HQ",
-            "Rain": "Team/GreySky/HQ_Rain",
-            "Snow": "Team/GreySky/HQ_Snow"
+            "Clear": "GreySky/HQ",
+            "Rain": "GreySky/HQ_Rain",
+            "Snow": "GreySky/HQ_Snow"
         }
     },
     "Grey Sky Port": {
@@ -1178,9 +1178,9 @@
             300
         ],
         "Textures": {
-            "Clear": "Team/GreySky/Port",
-            "Rain": "Team/GreySky/Port_Rain",
-            "Snow": "Team/GreySky/Port_Snow"
+            "Clear": "GreySky/Port",
+            "Rain": "GreySky/Port_Rain",
+            "Snow": "GreySky/Port_Snow"
         }
     },
     "Grey Sky Com Tower": {
@@ -1203,9 +1203,9 @@
             300
         ],
         "Textures": {
-            "Clear": "Team/GreySky/ComTower",
-            "Rain": "Team/GreySky/ComTower_Rain",
-            "Snow": "Team/GreySky/ComTower_Snow"
+            "Clear": "GreySky/ComTower",
+            "Rain": "GreySky/ComTower_Rain",
+            "Snow": "GreySky/ComTower_Snow"
         }
     },
     "Grey Sky Lab": {
@@ -1228,9 +1228,9 @@
             300
         ],
         "Textures": {
-            "Clear": "Team/GreySky/Lab",
-            "Rain": "Team/GreySky/Lab_Rain",
-            "Snow": "Team/GreySky/Lab_Snow"
+            "Clear": "GreySky/Lab",
+            "Rain": "GreySky/Lab_Rain",
+            "Snow": "GreySky/Lab_Snow"
         }
     },
     /*
@@ -1255,9 +1255,9 @@
             100
         ],
         "Textures": {
-            "Clear": "Team/BlackHole/Airport",
-            "Rain": "Team/BlackHole/Airport_Rain",
-            "Snow": "Team/BlackHole/Airport_Snow"
+            "Clear": "BlackHole/Airport",
+            "Rain": "BlackHole/Airport_Rain",
+            "Snow": "BlackHole/Airport_Snow"
         }
     },
     "Black Hole Base": {
@@ -1283,9 +1283,9 @@
             100
         ],
         "Textures": {
-            "Clear": "Team/BlackHole/Base",
-            "Rain": "Team/BlackHole/Base_Rain",
-            "Snow": "Team/BlackHole/Base_Snow"
+            "Clear": "BlackHole/Base",
+            "Rain": "BlackHole/Base_Rain",
+            "Snow": "BlackHole/Base_Snow"
         }
     },
     "Black Hole City": {
@@ -1307,9 +1307,9 @@
             100
         ],
         "Textures": {
-            "Clear": "Team/BlackHole/City",
-            "Rain": "Team/BlackHole/City_Rain",
-            "Snow": "Team/BlackHole/City_Snow"
+            "Clear": "BlackHole/City",
+            "Rain": "BlackHole/City_Rain",
+            "Snow": "BlackHole/City_Snow"
         }
     },
     "Black Hole HQ": {
@@ -1331,9 +1331,9 @@
             100
         ],
         "Textures": {
-            "Clear": "Team/BlackHole/HQ",
-            "Rain": "Team/BlackHole/HQ_Rain",
-            "Snow": "Team/BlackHole/HQ_Snow"
+            "Clear": "BlackHole/HQ",
+            "Rain": "BlackHole/HQ_Rain",
+            "Snow": "BlackHole/HQ_Snow"
         }
     },
     "Black Hole Port": {
@@ -1357,9 +1357,9 @@
             100
         ],
         "Textures": {
-            "Clear": "Team/BlackHole/Port",
-            "Rain": "Team/BlackHole/Port_Rain",
-            "Snow": "Team/BlackHole/Port_Snow"
+            "Clear": "BlackHole/Port",
+            "Rain": "BlackHole/Port_Rain",
+            "Snow": "BlackHole/Port_Snow"
         }
     },
     "Black Hole Com Tower": {
@@ -1382,9 +1382,9 @@
             100
         ],
         "Textures": {
-            "Clear": "Team/BlackHole/ComTower",
-            "Rain": "Team/BlackHole/ComTower_Rain",
-            "Snow": "Team/BlackHole/ComTower_Snow"
+            "Clear": "BlackHole/ComTower",
+            "Rain": "BlackHole/ComTower_Rain",
+            "Snow": "BlackHole/ComTower_Snow"
         }
     },
     "Black Hole Lab": {
@@ -1407,9 +1407,9 @@
             100
         ],
         "Textures": {
-            "Clear": "Team/BlackHole/Lab",
-            "Rain": "Team/BlackHole/Lab_Rain",
-            "Snow": "Team/BlackHole/Lab_Snow"
+            "Clear": "BlackHole/Lab",
+            "Rain": "BlackHole/Lab_Rain",
+            "Snow": "BlackHole/Lab_Snow"
         }
     },
     /*
@@ -1434,9 +1434,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/BrownDesert/Airport",
-            "Rain": "Team/BrownDesert/Airport_Rain",
-            "Snow": "Team/BrownDesert/Airport_Snow"
+            "Clear": "BrownDesert/Airport",
+            "Rain": "BrownDesert/Airport_Rain",
+            "Snow": "BrownDesert/Airport_Snow"
         }
     },
     "Brown Desert Base": {
@@ -1460,9 +1460,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/BrownDesert/Base",
-            "Rain": "Team/BrownDesert/Base_Rain",
-            "Snow": "Team/BrownDesert/Base_Snow"
+            "Clear": "BrownDesert/Base",
+            "Rain": "BrownDesert/Base_Rain",
+            "Snow": "BrownDesert/Base_Snow"
         }
     },
     "Brown Desert City": {
@@ -1484,9 +1484,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/BrownDesert/City",
-            "Rain": "Team/BrownDesert/City_Rain",
-            "Snow": "Team/BrownDesert/City_Snow"
+            "Clear": "BrownDesert/City",
+            "Rain": "BrownDesert/City_Rain",
+            "Snow": "BrownDesert/City_Snow"
         }
     },
     "Brown Desert HQ": {
@@ -1508,9 +1508,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/BrownDesert/HQ",
-            "Rain": "Team/BrownDesert/HQ_Rain",
-            "Snow": "Team/BrownDesert/HQ_Snow"
+            "Clear": "BrownDesert/HQ",
+            "Rain": "BrownDesert/HQ_Rain",
+            "Snow": "BrownDesert/HQ_Snow"
         }
     },
     "Brown Desert Port": {
@@ -1534,9 +1534,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/BrownDesert/Port",
-            "Rain": "Team/BrownDesert/Port_Rain",
-            "Snow": "Team/BrownDesert/Port_Snow"
+            "Clear": "BrownDesert/Port",
+            "Rain": "BrownDesert/Port_Rain",
+            "Snow": "BrownDesert/Port_Snow"
         }
     },
     "Brown Desert Com Tower": {
@@ -1559,9 +1559,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/BrownDesert/ComTower",
-            "Rain": "Team/BrownDesert/ComTower_Rain",
-            "Snow": "Team/BrownDesert/ComTower_Snow"
+            "Clear": "BrownDesert/ComTower",
+            "Rain": "BrownDesert/ComTower_Rain",
+            "Snow": "BrownDesert/ComTower_Snow"
         }
     },
     "Brown Desert Lab": {
@@ -1584,9 +1584,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/BrownDesert/Lab",
-            "Rain": "Team/BrownDesert/Lab_Rain",
-            "Snow": "Team/BrownDesert/Lab_Snow"
+            "Clear": "BrownDesert/Lab",
+            "Rain": "BrownDesert/Lab_Rain",
+            "Snow": "BrownDesert/Lab_Snow"
         }
     },
     /*
@@ -1611,9 +1611,9 @@
             500
         ],
         "Textures": {
-            "Clear": "Team/AmberBlaze/Airport",
-            "Rain": "Team/AmberBlaze/Airport_Rain",
-            "Snow": "Team/AmberBlaze/Airport_Snow"
+            "Clear": "AmberBlaze/Airport",
+            "Rain": "AmberBlaze/Airport_Rain",
+            "Snow": "AmberBlaze/Airport_Snow"
         }
     },
     "Amber Blaze Base": {
@@ -1639,9 +1639,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/AmberBlaze/Base",
-            "Rain": "Team/AmberBlaze/Base_Rain",
-            "Snow": "Team/AmberBlaze/Base_Snow"
+            "Clear": "AmberBlaze/Base",
+            "Rain": "AmberBlaze/Base_Rain",
+            "Snow": "AmberBlaze/Base_Snow"
         }
     },
     "Amber Blaze City": {
@@ -1663,9 +1663,9 @@
             500
         ],
         "Textures": {
-            "Clear": "Team/AmberBlaze/City",
-            "Rain": "Team/AmberBlaze/City_Rain",
-            "Snow": "Team/AmberBlaze/City_Snow"
+            "Clear": "AmberBlaze/City",
+            "Rain": "AmberBlaze/City_Rain",
+            "Snow": "AmberBlaze/City_Snow"
         }
     },
     "Amber Blaze HQ": {
@@ -1687,9 +1687,9 @@
             500
         ],
         "Textures": {
-            "Clear": "Team/AmberBlaze/HQ",
-            "Rain": "Team/AmberBlaze/HQ_Rain",
-            "Snow": "Team/AmberBlaze/HQ_Snow"
+            "Clear": "AmberBlaze/HQ",
+            "Rain": "AmberBlaze/HQ_Rain",
+            "Snow": "AmberBlaze/HQ_Snow"
         }
     },
     "Amber Blaze Port": {
@@ -1713,9 +1713,9 @@
             500
         ],
         "Textures": {
-            "Clear": "Team/AmberBlaze/Port",
-            "Rain": "Team/AmberBlaze/Port_Rain",
-            "Snow": "Team/AmberBlaze/Port_Snow"
+            "Clear": "AmberBlaze/Port",
+            "Rain": "AmberBlaze/Port_Rain",
+            "Snow": "AmberBlaze/Port_Snow"
         }
     },
     "Amber Blaze Com Tower": {
@@ -1738,9 +1738,9 @@
             500
         ],
         "Textures": {
-            "Clear": "Team/AmberBlaze/ComTower",
-            "Rain": "Team/AmberBlaze/ComTower_Rain",
-            "Snow": "Team/AmberBlaze/ComTower_Snow"
+            "Clear": "AmberBlaze/ComTower",
+            "Rain": "AmberBlaze/ComTower_Rain",
+            "Snow": "AmberBlaze/ComTower_Snow"
         }
     },
     "Amber Blaze Lab": {
@@ -1763,9 +1763,9 @@
             500
         ],
         "Textures": {
-            "Clear": "Team/AmberBlaze/Lab",
-            "Rain": "Team/AmberBlaze/Lab_Rain",
-            "Snow": "Team/AmberBlaze/Lab_Snow"
+            "Clear": "AmberBlaze/Lab",
+            "Rain": "AmberBlaze/Lab_Rain",
+            "Snow": "AmberBlaze/Lab_Snow"
         }
     },
     /*
@@ -1790,9 +1790,9 @@
             600
         ],
         "Textures": {
-            "Clear": "Team/JadeSun/Airport",
-            "Rain": "Team/JadeSun/Airport_Rain",
-            "Snow": "Team/JadeSun/Airport_Snow"
+            "Clear": "JadeSun/Airport",
+            "Rain": "JadeSun/Airport_Rain",
+            "Snow": "JadeSun/Airport_Snow"
         }
     },
     "Jade Sun Base": {
@@ -1818,9 +1818,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/JadeSun/Base",
-            "Rain": "Team/JadeSun/Base_Rain",
-            "Snow": "Team/JadeSun/Base_Snow"
+            "Clear": "JadeSun/Base",
+            "Rain": "JadeSun/Base_Rain",
+            "Snow": "JadeSun/Base_Snow"
         }
     },
     "Jade Sun City": {
@@ -1842,9 +1842,9 @@
             600
         ],
         "Textures": {
-            "Clear": "Team/JadeSun/City",
-            "Rain": "Team/JadeSun/City_Rain",
-            "Snow": "Team/JadeSun/City_Snow"
+            "Clear": "JadeSun/City",
+            "Rain": "JadeSun/City_Rain",
+            "Snow": "JadeSun/City_Snow"
         }
     },
     "Jade Sun HQ": {
@@ -1866,9 +1866,9 @@
             600
         ],
         "Textures": {
-            "Clear": "Team/JadeSun/HQ",
-            "Rain": "Team/JadeSun/HQ_Rain",
-            "Snow": "Team/JadeSun/HQ_Snow"
+            "Clear": "JadeSun/HQ",
+            "Rain": "JadeSun/HQ_Rain",
+            "Snow": "JadeSun/HQ_Snow"
         }
     },
     "Jade Sun Port": {
@@ -1892,9 +1892,9 @@
             600
         ],
         "Textures": {
-            "Clear": "Team/JadeSun/Port",
-            "Rain": "Team/JadeSun/Port_Rain",
-            "Snow": "Team/JadeSun/Port_Snow"
+            "Clear": "JadeSun/Port",
+            "Rain": "JadeSun/Port_Rain",
+            "Snow": "JadeSun/Port_Snow"
         }
     },
     "Jade Sun Com Tower": {
@@ -1917,9 +1917,9 @@
             600
         ],
         "Textures": {
-            "Clear": "Team/JadeSun/ComTower",
-            "Rain": "Team/JadeSun/ComTower_Rain",
-            "Snow": "Team/JadeSun/ComTower_Snow"
+            "Clear": "JadeSun/ComTower",
+            "Rain": "JadeSun/ComTower_Rain",
+            "Snow": "JadeSun/ComTower_Snow"
         }
     },
     "Jade Sun Lab": {
@@ -1942,9 +1942,9 @@
             600
         ],
         "Textures": {
-            "Clear": "Team/JadeSun/Lab",
-            "Rain": "Team/JadeSun/Lab_Rain",
-            "Snow": "Team/JadeSun/Lab_Snow"
+            "Clear": "JadeSun/Lab",
+            "Rain": "JadeSun/Lab_Rain",
+            "Snow": "JadeSun/Lab_Snow"
         }
     },
     /*
@@ -1969,9 +1969,9 @@
             700
         ],
         "Textures": {
-            "Clear": "Team/CobaltIce/Airport",
-            "Rain": "Team/CobaltIce/Airport_Rain",
-            "Snow": "Team/CobaltIce/Airport_Snow"
+            "Clear": "CobaltIce/Airport",
+            "Rain": "CobaltIce/Airport_Rain",
+            "Snow": "CobaltIce/Airport_Snow"
         }
     },
     "Cobalt Ice Base": {
@@ -1997,9 +1997,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/CobaltIce/Base",
-            "Rain": "Team/CobaltIce/Base_Rain",
-            "Snow": "Team/CobaltIce/Base_Snow"
+            "Clear": "CobaltIce/Base",
+            "Rain": "CobaltIce/Base_Rain",
+            "Snow": "CobaltIce/Base_Snow"
         }
     },
     "Cobalt Ice City": {
@@ -2021,9 +2021,9 @@
             700
         ],
         "Textures": {
-            "Clear": "Team/CobaltIce/City",
-            "Rain": "Team/CobaltIce/City_Rain",
-            "Snow": "Team/CobaltIce/City_Snow"
+            "Clear": "CobaltIce/City",
+            "Rain": "CobaltIce/City_Rain",
+            "Snow": "CobaltIce/City_Snow"
         }
     },
     "Cobalt Ice HQ": {
@@ -2064,9 +2064,9 @@
             700
         ],
         "Textures": {
-            "Clear": "Team/CobaltIce/HQ",
-            "Rain": "Team/CobaltIce/HQ_Rain",
-            "Snow": "Team/CobaltIce/HQ_Snow"
+            "Clear": "CobaltIce/HQ",
+            "Rain": "CobaltIce/HQ_Rain",
+            "Snow": "CobaltIce/HQ_Snow"
         }
     },
     "Cobalt Ice Port": {
@@ -2090,9 +2090,9 @@
             700
         ],
         "Textures": {
-            "Clear": "Team/CobaltIce/Port",
-            "Rain": "Team/CobaltIce/Port_Rain",
-            "Snow": "Team/CobaltIce/Port_Snow"
+            "Clear": "CobaltIce/Port",
+            "Rain": "CobaltIce/Port_Rain",
+            "Snow": "CobaltIce/Port_Snow"
         }
     },
     "Cobalt Ice Com Tower": {
@@ -2115,9 +2115,9 @@
             700
         ],
         "Textures": {
-            "Clear": "Team/CobaltIce/ComTower",
-            "Rain": "Team/CobaltIce/ComTower_Rain",
-            "Snow": "Team/CobaltIce/ComTower_Snow"
+            "Clear": "CobaltIce/ComTower",
+            "Rain": "CobaltIce/ComTower_Rain",
+            "Snow": "CobaltIce/ComTower_Snow"
         }
     },
     "Cobalt Ice Lab": {
@@ -2140,9 +2140,9 @@
             700
         ],
         "Textures": {
-            "Clear": "Team/CobaltIce/Lab",
-            "Rain": "Team/CobaltIce/Lab_Rain",
-            "Snow": "Team/CobaltIce/Lab_Snow"
+            "Clear": "CobaltIce/Lab",
+            "Rain": "CobaltIce/Lab_Rain",
+            "Snow": "CobaltIce/Lab_Snow"
         }
     },
     /*
@@ -2167,9 +2167,9 @@
             800
         ],
         "Textures": {
-            "Clear": "Team/PinkCosmos/Airport",
-            "Rain": "Team/PinkCosmos/Airport_Rain",
-            "Snow": "Team/PinkCosmos/Airport_Snow"
+            "Clear": "PinkCosmos/Airport",
+            "Rain": "PinkCosmos/Airport_Rain",
+            "Snow": "PinkCosmos/Airport_Snow"
         }
     },
     "Pink Cosmos Base": {
@@ -2193,9 +2193,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/PinkCosmos/Base",
-            "Rain": "Team/PinkCosmos/Base_Rain",
-            "Snow": "Team/PinkCosmos/Base_Snow"
+            "Clear": "PinkCosmos/Base",
+            "Rain": "PinkCosmos/Base_Rain",
+            "Snow": "PinkCosmos/Base_Snow"
         }
     },
     "Pink Cosmos City": {
@@ -2217,9 +2217,9 @@
             800
         ],
         "Textures": {
-            "Clear": "Team/PinkCosmos/City",
-            "Rain": "Team/PinkCosmos/City_Rain",
-            "Snow": "Team/PinkCosmos/City_Snow"
+            "Clear": "PinkCosmos/City",
+            "Rain": "PinkCosmos/City_Rain",
+            "Snow": "PinkCosmos/City_Snow"
         }
     },
     "Pink Cosmos HQ": {
@@ -2241,9 +2241,9 @@
             800
         ],
         "Textures": {
-            "Clear": "Team/PinkCosmos/HQ",
-            "Rain": "Team/PinkCosmos/HQ_Rain",
-            "Snow": "Team/PinkCosmos/HQ_Snow"
+            "Clear": "PinkCosmos/HQ",
+            "Rain": "PinkCosmos/HQ_Rain",
+            "Snow": "PinkCosmos/HQ_Snow"
         }
     },
     "Pink Cosmos Port": {
@@ -2267,9 +2267,9 @@
             800
         ],
         "Textures": {
-            "Clear": "Team/PinkCosmos/Port",
-            "Rain": "Team/PinkCosmos/Port_Rain",
-            "Snow": "Team/PinkCosmos/Port_Snow"
+            "Clear": "PinkCosmos/Port",
+            "Rain": "PinkCosmos/Port_Rain",
+            "Snow": "PinkCosmos/Port_Snow"
         }
     },
     "Pink Cosmos Com Tower": {
@@ -2292,9 +2292,9 @@
             800
         ],
         "Textures": {
-            "Clear": "Team/PinkCosmos/ComTower",
-            "Rain": "Team/PinkCosmos/ComTower_Rain",
-            "Snow": "Team/PinkCosmos/ComTower_Snow"
+            "Clear": "PinkCosmos/ComTower",
+            "Rain": "PinkCosmos/ComTower_Rain",
+            "Snow": "PinkCosmos/ComTower_Snow"
         }
     },
     "Pink Cosmos Lab": {
@@ -2317,9 +2317,9 @@
             800
         ],
         "Textures": {
-            "Clear": "Team/PinkCosmos/Lab",
-            "Rain": "Team/PinkCosmos/Lab_Rain",
-            "Snow": "Team/PinkCosmos/Lab_Snow"
+            "Clear": "PinkCosmos/Lab",
+            "Rain": "PinkCosmos/Lab_Rain",
+            "Snow": "PinkCosmos/Lab_Snow"
         }
     },
     /*
@@ -2344,9 +2344,9 @@
             900
         ],
         "Textures": {
-            "Clear": "Team/TealGalaxy/Airport",
-            "Rain": "Team/TealGalaxy/Airport_Rain",
-            "Snow": "Team/TealGalaxy/Airport_Snow"
+            "Clear": "TealGalaxy/Airport",
+            "Rain": "TealGalaxy/Airport_Rain",
+            "Snow": "TealGalaxy/Airport_Snow"
         }
     },
     "Teal Galaxy Base": {
@@ -2372,9 +2372,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/TealGalaxy/Base",
-            "Rain": "Team/TealGalaxy/Base_Rain",
-            "Snow": "Team/TealGalaxy/Base_Snow"
+            "Clear": "TealGalaxy/Base",
+            "Rain": "TealGalaxy/Base_Rain",
+            "Snow": "TealGalaxy/Base_Snow"
         }
     },
     "Teal Galaxy City": {
@@ -2396,9 +2396,9 @@
             900
         ],
         "Textures": {
-            "Clear": "Team/TealGalaxy/City",
-            "Rain": "Team/TealGalaxy/City_Rain",
-            "Snow": "Team/TealGalaxy/City_Snow"
+            "Clear": "TealGalaxy/City",
+            "Rain": "TealGalaxy/City_Rain",
+            "Snow": "TealGalaxy/City_Snow"
         }
     },
     "Teal Galaxy HQ": {
@@ -2420,9 +2420,9 @@
             900
         ],
         "Textures": {
-            "Clear": "Team/TealGalaxy/HQ",
-            "Rain": "Team/TealGalaxy/HQ_Rain",
-            "Snow": "Team/TealGalaxy/HQ_Snow"
+            "Clear": "TealGalaxy/HQ",
+            "Rain": "TealGalaxy/HQ_Rain",
+            "Snow": "TealGalaxy/HQ_Snow"
         }
     },
     "Teal Galaxy Port": {
@@ -2446,9 +2446,9 @@
             900
         ],
         "Textures": {
-            "Clear": "Team/TealGalaxy/Port",
-            "Rain": "Team/TealGalaxy/Port_Rain",
-            "Snow": "Team/TealGalaxy/Port_Snow"
+            "Clear": "TealGalaxy/Port",
+            "Rain": "TealGalaxy/Port_Rain",
+            "Snow": "TealGalaxy/Port_Snow"
         }
     },
     "Teal Galaxy Com Tower": {
@@ -2471,9 +2471,9 @@
             900
         ],
         "Textures": {
-            "Clear": "Team/TealGalaxy/ComTower",
-            "Rain": "Team/TealGalaxy/ComTower_Rain",
-            "Snow": "Team/TealGalaxy/ComTower_Snow"
+            "Clear": "TealGalaxy/ComTower",
+            "Rain": "TealGalaxy/ComTower_Rain",
+            "Snow": "TealGalaxy/ComTower_Snow"
         }
     },
     "Teal Galaxy Lab": {
@@ -2496,9 +2496,9 @@
             900
         ],
         "Textures": {
-            "Clear": "Team/TealGalaxy/Lab",
-            "Rain": "Team/TealGalaxy/Lab_Rain",
-            "Snow": "Team/TealGalaxy/Lab_Snow"
+            "Clear": "TealGalaxy/Lab",
+            "Rain": "TealGalaxy/Lab_Rain",
+            "Snow": "TealGalaxy/Lab_Snow"
         }
     },
     /*
@@ -2523,9 +2523,9 @@
             1000
         ],
         "Textures": {
-            "Clear": "Team/PurpleLightning/Airport",
-            "Rain": "Team/PurpleLightning/Airport_Rain",
-            "Snow": "Team/PurpleLightning/Airport_Snow"
+            "Clear": "PurpleLightning/Airport",
+            "Rain": "PurpleLightning/Airport_Rain",
+            "Snow": "PurpleLightning/Airport_Snow"
         }
     },
     "Purple Lightning Base": {
@@ -2551,9 +2551,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/PurpleLightning/Base",
-            "Rain": "Team/PurpleLightning/Base_Rain",
-            "Snow": "Team/PurpleLightning/Base_Snow"
+            "Clear": "PurpleLightning/Base",
+            "Rain": "PurpleLightning/Base_Rain",
+            "Snow": "PurpleLightning/Base_Snow"
         }
     },
     "Purple Lightning City": {
@@ -2575,9 +2575,9 @@
             1000
         ],
         "Textures": {
-            "Clear": "Team/PurpleLightning/City",
-            "Rain": "Team/PurpleLightning/City_Rain",
-            "Snow": "Team/PurpleLightning/City_Snow"
+            "Clear": "PurpleLightning/City",
+            "Rain": "PurpleLightning/City_Rain",
+            "Snow": "PurpleLightning/City_Snow"
         }
     },
     "Purple Lightning HQ": {
@@ -2599,9 +2599,9 @@
             1000
         ],
         "Textures": {
-            "Clear": "Team/PurpleLightning/HQ",
-            "Rain": "Team/PurpleLightning/HQ_Rain",
-            "Snow": "Team/PurpleLightning/HQ_Snow"
+            "Clear": "PurpleLightning/HQ",
+            "Rain": "PurpleLightning/HQ_Rain",
+            "Snow": "PurpleLightning/HQ_Snow"
         }
     },
     "Purple Lightning Port": {
@@ -2625,9 +2625,9 @@
             1000
         ],
         "Textures": {
-            "Clear": "Team/PurpleLightning/Port",
-            "Rain": "Team/PurpleLightning/Port_Rain",
-            "Snow": "Team/PurpleLightning/Port_Snow"
+            "Clear": "PurpleLightning/Port",
+            "Rain": "PurpleLightning/Port_Rain",
+            "Snow": "PurpleLightning/Port_Snow"
         }
     },
     "Purple Lightning Com Tower": {
@@ -2650,9 +2650,9 @@
             1000
         ],
         "Textures": {
-            "Clear": "Team/PurpleLightning/ComTower",
-            "Rain": "Team/PurpleLightning/ComTower_Rain",
-            "Snow": "Team/PurpleLightning/ComTower_Snow"
+            "Clear": "PurpleLightning/ComTower",
+            "Rain": "PurpleLightning/ComTower_Rain",
+            "Snow": "PurpleLightning/ComTower_Snow"
         }
     },
     "Purple Lightning Lab": {
@@ -2675,9 +2675,9 @@
             1000
         ],
         "Textures": {
-            "Clear": "Team/PurpleLightning/Lab",
-            "Rain": "Team/PurpleLightning/Lab_Rain",
-            "Snow": "Team/PurpleLightning/Lab_Snow"
+            "Clear": "PurpleLightning/Lab",
+            "Rain": "PurpleLightning/Lab_Rain",
+            "Snow": "PurpleLightning/Lab_Snow"
         }
     },
     /*
@@ -2702,9 +2702,9 @@
             1100
         ],
         "Textures": {
-            "Clear": "Team/AcidRain/Airport",
-            "Rain": "Team/AcidRain/Airport_Rain",
-            "Snow": "Team/AcidRain/Airport_Snow"
+            "Clear": "AcidRain/Airport",
+            "Rain": "AcidRain/Airport_Rain",
+            "Snow": "AcidRain/Airport_Snow"
         }
     },
     "Acid Rain Base": {
@@ -2730,9 +2730,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/AcidRain/Base",
-            "Rain": "Team/AcidRain/Base_Rain",
-            "Snow": "Team/AcidRain/Base_Snow"
+            "Clear": "AcidRain/Base",
+            "Rain": "AcidRain/Base_Rain",
+            "Snow": "AcidRain/Base_Snow"
         }
     },
     "Acid Rain City": {
@@ -2754,9 +2754,9 @@
             1100
         ],
         "Textures": {
-            "Clear": "Team/AcidRain/City",
-            "Rain": "Team/AcidRain/City_Rain",
-            "Snow": "Team/AcidRain/City_Snow"
+            "Clear": "AcidRain/City",
+            "Rain": "AcidRain/City_Rain",
+            "Snow": "AcidRain/City_Snow"
         }
     },
     "Acid Rain HQ": {
@@ -2778,9 +2778,9 @@
             1100
         ],
         "Textures": {
-            "Clear": "Team/AcidRain/HQ",
-            "Rain": "Team/AcidRain/HQ_Rain",
-            "Snow": "Team/AcidRain/HQ_Snow"
+            "Clear": "AcidRain/HQ",
+            "Rain": "AcidRain/HQ_Rain",
+            "Snow": "AcidRain/HQ_Snow"
         }
     },
     "Acid Rain Port": {
@@ -2804,9 +2804,9 @@
             1100
         ],
         "Textures": {
-            "Clear": "Team/AcidRain/Port",
-            "Rain": "Team/AcidRain/Port_Rain",
-            "Snow": "Team/AcidRain/Port_Snow"
+            "Clear": "AcidRain/Port",
+            "Rain": "AcidRain/Port_Rain",
+            "Snow": "AcidRain/Port_Snow"
         }
     },
     "Acid Rain Com Tower": {
@@ -2829,9 +2829,9 @@
             1100
         ],
         "Textures": {
-            "Clear": "Team/AcidRain/ComTower",
-            "Rain": "Team/AcidRain/ComTower_Rain",
-            "Snow": "Team/AcidRain/ComTower_Snow"
+            "Clear": "AcidRain/ComTower",
+            "Rain": "AcidRain/ComTower_Rain",
+            "Snow": "AcidRain/ComTower_Snow"
         }
     },
     "Acid Rain Lab": {
@@ -2854,9 +2854,9 @@
             1100
         ],
         "Textures": {
-            "Clear": "Team/AcidRain/Lab",
-            "Rain": "Team/AcidRain/Lab_Rain",
-            "Snow": "Team/AcidRain/Lab_Snow"
+            "Clear": "AcidRain/Lab",
+            "Rain": "AcidRain/Lab_Rain",
+            "Snow": "AcidRain/Lab_Snow"
         }
     },
     /*
@@ -2879,9 +2879,9 @@
             1200
         ],
         "Textures": {
-            "Clear": "Team/WhiteNova/Airport",
-            "Rain": "Team/WhiteNova/Airport_Rain",
-            "Snow": "Team/WhiteNova/Airport_Snow"
+            "Clear": "WhiteNova/Airport",
+            "Rain": "WhiteNova/Airport_Rain",
+            "Snow": "WhiteNova/Airport_Snow"
         }
     },
     "White Nova Base": {
@@ -2905,9 +2905,9 @@
             400
         ],
         "Textures": {
-            "Clear": "Team/WhiteNova/Base",
-            "Rain": "Team/WhiteNova/Base_Rain",
-            "Snow": "Team/WhiteNova/Base_Snow"
+            "Clear": "WhiteNova/Base",
+            "Rain": "WhiteNova/Base_Rain",
+            "Snow": "WhiteNova/Base_Snow"
         }
     },
     "White Nova City": {
@@ -2928,9 +2928,9 @@
             1200
         ],
         "Textures": {
-            "Clear": "Team/WhiteNova/City",
-            "Rain": "Team/WhiteNova/City_Rain",
-            "Snow": "Team/WhiteNova/City_Snow"
+            "Clear": "WhiteNova/City",
+            "Rain": "WhiteNova/City_Rain",
+            "Snow": "WhiteNova/City_Snow"
         }
     },
     "White Nova HQ": {
@@ -2951,9 +2951,9 @@
             1200
         ],
         "Textures": {
-            "Clear": "Team/WhiteNova/HQ",
-            "Rain": "Team/WhiteNova/HQ_Rain",
-            "Snow": "Team/WhiteNova/HQ_Snow"
+            "Clear": "WhiteNova/HQ",
+            "Rain": "WhiteNova/HQ_Rain",
+            "Snow": "WhiteNova/HQ_Snow"
         }
     },
     "White Nova Port": {
@@ -2976,9 +2976,9 @@
             1200
         ],
         "Textures": {
-            "Clear": "Team/WhiteNova/Port",
-            "Rain": "Team/WhiteNova/Port_Rain",
-            "Snow": "Team/WhiteNova/Port_Snow"
+            "Clear": "WhiteNova/Port",
+            "Rain": "WhiteNova/Port_Rain",
+            "Snow": "WhiteNova/Port_Snow"
         }
     },
     "White Nova Com Tower": {
@@ -3000,9 +3000,9 @@
             1200
         ],
         "Textures": {
-            "Clear": "Team/WhiteNova/ComTower",
-            "Rain": "Team/WhiteNova/ComTower_Rain",
-            "Snow": "Team/WhiteNova/ComTower_Snow"
+            "Clear": "WhiteNova/ComTower",
+            "Rain": "WhiteNova/ComTower_Rain",
+            "Snow": "WhiteNova/ComTower_Snow"
         }
     },
     "White Nova Lab": {
@@ -3024,9 +3024,9 @@
             1200
         ],
         "Textures": {
-            "Clear": "Team/WhiteNova/Lab",
-            "Rain": "Team/WhiteNova/Lab_Rain",
-            "Snow": "Team/WhiteNova/Lab_Snow"
+            "Clear": "WhiteNova/Lab",
+            "Rain": "WhiteNova/Lab_Rain",
+            "Snow": "WhiteNova/Lab_Snow"
         }
     }
 }

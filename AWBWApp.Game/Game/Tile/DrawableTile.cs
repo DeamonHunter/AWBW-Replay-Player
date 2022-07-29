@@ -56,6 +56,7 @@ namespace AWBWApp.Game.Game.Tile
             currentSkin.BindValueChanged(x => loadSkin(x.NewValue), true);
             currentWeather.BindValueChanged(x => changeWeather(x.NewValue), true);
         }
+
         private void loadSkin(MapSkin skin)
         {
             texturesByWeather ??= new Dictionary<WeatherType, Texture>();
@@ -65,7 +66,7 @@ namespace AWBWApp.Game.Game.Tile
             {
                 var textureValue = textureStore.Get($"Map/{skin}/{texturePair.Value}");
                 if (textureValue == null)
-                    throw new Exception("Unable to find texture: " + texturePair.Value);
+                    throw new Exception($"Unable to find texture: Map/{skin}/{texturePair.Value}");
 
                 texturesByWeather.Add(texturePair.Key, textureValue);
             }
