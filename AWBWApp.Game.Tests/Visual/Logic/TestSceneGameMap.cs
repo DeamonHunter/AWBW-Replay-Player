@@ -97,7 +97,16 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
             Logger.Log("Starting replay download.", level: LogLevel.Important);
 
-            var replay = await replayStorage.GetReplayData(gameID);
+            ReplayData replay;
+
+            try
+            {
+                replay = await replayStorage.GetReplayData(gameID);
+            }
+            catch (Exception e)
+            {
+                replay = null;
+            }
 
             if (replay == null)
             {
