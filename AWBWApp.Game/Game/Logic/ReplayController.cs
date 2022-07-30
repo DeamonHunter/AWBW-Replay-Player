@@ -369,6 +369,9 @@ namespace AWBWApp.Game.Game.Logic
 
         public void ShowError(Exception e, bool fatal)
         {
+            if (notificationOverlay == null && fatal)
+                throw new AggregateException("Failed to load Replay: " + e.Message, e);
+
             Schedule(() =>
             {
                 if (fatal)
@@ -376,7 +379,8 @@ namespace AWBWApp.Game.Game.Logic
                     loadingLayer.Hide();
                     errorContainer.Show();
                 }
-                notificationOverlay.Post(new SimpleErrorNotification("Failed to load replay: " + e.Message, e) { ShowClickMessage = fatal });
+
+                notificationOverlay?.Post(new SimpleErrorNotification("Failed to load replay: " + e.Message, e) { ShowClickMessage = fatal });
             });
         }
 
