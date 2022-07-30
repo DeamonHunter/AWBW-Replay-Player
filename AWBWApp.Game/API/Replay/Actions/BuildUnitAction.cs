@@ -114,6 +114,9 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (controller.Map.TryGetDrawableBuilding(unit.MapPosition, out DrawableBuilding building))
                 building.HasDoneAction.Value = false;
 
+            if (Discovered != null)
+                controller.Map.UndoDiscovery(Discovered);
+
             controller.ActivePlayer.Funds.Value += unitCost;
             controller.ActivePlayer.UnitValue.Value -= unitValue;
             controller.UpdateFogOfWar();

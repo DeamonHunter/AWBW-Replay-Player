@@ -294,7 +294,7 @@ namespace AWBWApp.Game.Game.Logic
 
         public void RegisterDiscoveryAndSetUndo(DiscoveryCollection collection)
         {
-            collection.Undo.Clear();
+            collection.OriginalDiscovery.Clear();
 
             foreach (var id in collection.DiscoveryByID)
             {
@@ -303,10 +303,10 @@ namespace AWBWApp.Game.Game.Logic
                     if (!BuildingKnowledge.TryGetValue(discovered.Key, out var discoveries))
                         continue;
 
-                    if (!collection.Undo.TryGetValue(discovered.Key, out var registered))
+                    if (!collection.OriginalDiscovery.TryGetValue(discovered.Key, out var registered))
                     {
                         registered = new Dictionary<string, BuildingTile>();
-                        collection.Undo.Add(discovered.Key, registered);
+                        collection.OriginalDiscovery.Add(discovered.Key, registered);
                     }
 
                     if (discoveries.TryGetValue(id.Key, out var before))

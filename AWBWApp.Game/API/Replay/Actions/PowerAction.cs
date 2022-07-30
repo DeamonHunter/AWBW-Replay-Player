@@ -763,6 +763,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                 }
             }
 
+            if (Discovered != null)
+                controller.Map.UndoDiscovery(Discovered);
             controller.UpdateFogOfWar();
         }
 

@@ -725,6 +725,20 @@ namespace AWBWApp.Game.Game.Logic
             }
         }
 
+        public void UndoDiscovery(DiscoveryCollection collection)
+        {
+            var team = getCurrentTeamVisibility();
+
+            foreach (var building in collection.OriginalDiscovery)
+            {
+                if (!TryGetDrawableBuilding(building.Key, out var discBuilding))
+                    continue;
+
+                discBuilding.TeamToTile.SetTo(building.Value);
+                discBuilding.UpdateFogOfWarBuilding(showUnitsInFog.Value, team);
+            }
+        }
+
         public void UpdateDiscoveredBuildings()
         {
             var team = getCurrentTeamVisibility();

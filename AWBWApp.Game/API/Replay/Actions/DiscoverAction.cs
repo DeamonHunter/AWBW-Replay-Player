@@ -10,7 +10,7 @@ namespace AWBWApp.Game.API.Replay.Actions
     {
         public Dictionary<string, Discovery> DiscoveryByID = new Dictionary<string, Discovery>();
 
-        public Dictionary<Vector2I, Dictionary<string, BuildingTile>> Undo = new Dictionary<Vector2I, Dictionary<string, BuildingTile>>();
+        public Dictionary<Vector2I, Dictionary<string, BuildingTile>> OriginalDiscovery = new Dictionary<Vector2I, Dictionary<string, BuildingTile>>();
 
         public DiscoveryCollection(JToken discoveryCollection)
         {
