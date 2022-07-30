@@ -85,7 +85,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             {
                 var data = CreateBasicReplayData(2);
                 data.ReplayInfo.Fog = true;
-                config.SetValue(AWBWSetting.ReplayShowHiddenUnits, true);
+                config.SetValue(AWBWSetting.ReplayOnlyShownKnownInfo, true);
 
                 var turn = CreateBasicTurnData(data);
                 data.TurnData.Add(turn);
@@ -157,7 +157,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             });
 
             AddStep("Go to Opponent Turn", () => ReplayController.GoToNextTurn());
-            AddStep("Toggle Fog Visibility", () => config.SetValue(AWBWSetting.ReplayShowHiddenUnits, !config.Get<bool>(AWBWSetting.ReplayShowHiddenUnits)));
+            AddStep("Toggle Fog Visibility", () => config.SetValue(AWBWSetting.ReplayOnlyShownKnownInfo, !config.Get<bool>(AWBWSetting.ReplayOnlyShownKnownInfo)));
         }
 
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)

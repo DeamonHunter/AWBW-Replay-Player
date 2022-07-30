@@ -7,7 +7,7 @@
         NextAction,
         NextTurn,
 
-        ShowUnitsInFog,
+        ShowUnitsAndBuildingsInFog,
         ShowGridLines,
         ShowTileCursor
     }

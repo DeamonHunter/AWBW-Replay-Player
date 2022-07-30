@@ -48,23 +48,23 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
         {
             AddStep("Setup", moveTestTrap);
             AddStep("Set Vision to player 0", () => ReplayController.CurrentFogView.Value = 0L);
-            AddStep("Activate Seeing In Fog", () => config.SetValue(AWBWSetting.ReplayShowHiddenUnits, true));
+            AddStep("Activate Seeing In Fog", () => config.SetValue(AWBWSetting.ReplayOnlyShownKnownInfo, true));
             AddStep("Move Right", () => ReplayController.GoToNextAction());
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(4, 1));
             AddStep("Undo", () => ReplayController.GoToPreviousAction());
             AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(1, 1));
-            AddStep("Deactivate Seeing In Fog", () => config.SetValue(AWBWSetting.ReplayShowHiddenUnits, false));
+            AddStep("Deactivate Seeing In Fog", () => config.SetValue(AWBWSetting.ReplayOnlyShownKnownInfo, false));
             AddStep("Move Right", () => ReplayController.GoToNextAction());
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(4, 1));
             AddStep("Undo", () => ReplayController.GoToPreviousAction());
             AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(1, 1));
             AddStep("Set Vision to player 1", () => ReplayController.CurrentFogView.Value = 1L);
-            AddStep("Activate Seeing In Fog", () => config.SetValue(AWBWSetting.ReplayShowHiddenUnits, true));
+            AddStep("Activate Seeing In Fog", () => config.SetValue(AWBWSetting.ReplayOnlyShownKnownInfo, true));
             AddStep("Move Right", () => ReplayController.GoToNextAction());
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(4, 1));
             AddStep("Undo", () => ReplayController.GoToPreviousAction());
             AddAssert("Undone Correctly", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(1, 1));
-            AddStep("Deactivate Seeing In Fog", () => config.SetValue(AWBWSetting.ReplayShowHiddenUnits, false));
+            AddStep("Deactivate Seeing In Fog", () => config.SetValue(AWBWSetting.ReplayOnlyShownKnownInfo, false));
             AddStep("Move Right", () => ReplayController.GoToNextAction());
             AddUntilStep("Wait for unit to move.", () => ReplayController.Map.GetDrawableUnit(0).MapPosition == new Vector2I(4, 1));
             AddStep("Undo", () => ReplayController.GoToPreviousAction());

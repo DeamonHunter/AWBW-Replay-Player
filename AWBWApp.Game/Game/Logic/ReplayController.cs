@@ -837,7 +837,7 @@ namespace AWBWApp.Game.Game.Logic
 
         public bool ShouldPlayerActionBeHidden(Vector2I position)
         {
-            if (Map.ShowUnitsInFog.Value)
+            if (Map.RevealUnknownInformation.Value)
                 return false;
 
             if (IsFogOnActivePlayer())
@@ -848,7 +848,7 @@ namespace AWBWApp.Game.Game.Logic
 
         public bool ShouldPlayerActionBeHidden(Vector2I position, PlayerInfo player)
         {
-            if (Map.ShowUnitsInFog.Value)
+            if (Map.RevealUnknownInformation.Value)
                 return false;
 
             var activeFog = CurrentFogView.Value;

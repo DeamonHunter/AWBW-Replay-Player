@@ -67,9 +67,9 @@ namespace AWBWApp.Game.Game.Logic
 
         private bool animatingMapStart;
 
-        private Bindable<bool> showUnitsInFog;
+        private Bindable<bool> revealUnknownInformation;
 
-        public IBindable<bool> ShowUnitsInFog => showUnitsInFog;
+        public IBindable<bool> RevealUnknownInformation => revealUnknownInformation;
 
         private Bindable<bool> showGridlines;
         private Bindable<bool> showTileCursor;
@@ -134,8 +134,8 @@ namespace AWBWApp.Game.Game.Logic
         [BackgroundDependencyLoader]
         private void load(AWBWConfigManager settings)
         {
-            showUnitsInFog = settings.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits);
-            showUnitsInFog.BindValueChanged(x => UpdateDiscoveredBuildings());
+            revealUnknownInformation = settings.GetBindable<bool>(AWBWSetting.ReplayOnlyShownKnownInfo);
+            revealUnknownInformation.BindValueChanged(x => UpdateDiscoveredBuildings());
             showGridlines = settings.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap);
             showGridlines.BindValueChanged(x => grid.FadeTo(x.NewValue ? 1 : 0, 400, Easing.OutQuint), true);
             showTileCursor = settings.GetBindable<bool>(AWBWSetting.ShowTileCursor);
@@ -233,8 +233,6 @@ namespace AWBWApp.Game.Game.Logic
             unitsDrawable.Clear();
 
             units = new Dictionary<long, DrawableUnit>();
-
-            var mapIdx = 0;
 
             var replayBuildings = gameState.TurnData[0].Buildings;
 
@@ -720,7 +718,7 @@ namespace AWBWApp.Game.Game.Logic
                         continue;
 
                     discBuilding.TeamToTile[id.Key] = buildingStorage.GetBuildingByAWBWId(discovered.Value.TerrainID!.Value);
-                    discBuilding.UpdateFogOfWarBuilding(showUnitsInFog.Value, team);
+                    discBuilding.UpdateFogOfWarBuilding(revealUnknownInformation.Value, team);
                 }
             }
         }
@@ -735,7 +733,7 @@ namespace AWBWApp.Game.Game.Logic
                     continue;
 
                 discBuilding.TeamToTile.SetTo(building.Value);
-                discBuilding.UpdateFogOfWarBuilding(showUnitsInFog.Value, team);
+                discBuilding.UpdateFogOfWarBuilding(revealUnknownInformation.Value, team);
             }
         }
 
@@ -743,7 +741,7 @@ namespace AWBWApp.Game.Game.Logic
         {
             var team = getCurrentTeamVisibility();
             foreach (var building in buildingGrid)
-                building.UpdateFogOfWarBuilding(showUnitsInFog.Value, team);
+                building.UpdateFogOfWarBuilding(revealUnknownInformation.Value, team);
         }
 
         private void transferDiscovery(DrawableBuilding originalBuilding, DrawableBuilding newBuilding)
@@ -754,7 +752,7 @@ namespace AWBWApp.Game.Game.Logic
                 newBuilding.TeamToTile[replayController.Players[originalBuilding.OwnerID.Value].Team] = newBuilding.BuildingTile;
             if (newBuilding.OwnerID.HasValue)
                 newBuilding.TeamToTile[replayController.Players[newBuilding.OwnerID.Value].Team] = newBuilding.BuildingTile;
-            newBuilding.UpdateFogOfWarBuilding(showUnitsInFog.Value, getCurrentTeamVisibility());
+            newBuilding.UpdateFogOfWarBuilding(revealUnknownInformation.Value, getCurrentTeamVisibility());
         }
 
         private string getCurrentTeamVisibility()
@@ -773,8 +771,8 @@ namespace AWBWApp.Game.Game.Logic
 
             switch (e.Action)
             {
-                case AWBWGlobalAction.ShowUnitsInFog:
-                    showUnitsInFog.Value = !showUnitsInFog.Value;
+                case AWBWGlobalAction.ShowUnitsAndBuildingsInFog:
+                    revealUnknownInformation.Value = !revealUnknownInformation.Value;
                     return true;
 
                 case AWBWGlobalAction.ShowGridLines:
@@ -808,7 +806,7 @@ namespace AWBWApp.Game.Game.Logic
 
             if (unit.BeingCarried.Value)
                 return false;
-            if (!showUnitsInFog.Value && unit.FogOfWarActive.Value)
+            if (!revealUnknownInformation.Value && unit.FogOfWarActive.Value)
                 return false;
 
             if (unit != selectedUnit)

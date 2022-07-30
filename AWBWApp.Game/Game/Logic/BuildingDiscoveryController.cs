@@ -7,11 +7,11 @@ namespace AWBWApp.Game.Game.Logic
 {
     public class BuildingDiscoveryController
     {
-        private List<BuildingDiscovery> discoveries;
+        private List<BuildingDiscovery> discoveries = new List<BuildingDiscovery>();
 
         public void Reset()
         {
-            discoveries = new List<BuildingDiscovery>();
+            discoveries.Clear();
         }
 
         public void RegisterNewTurn(ReplaySetupContext context)

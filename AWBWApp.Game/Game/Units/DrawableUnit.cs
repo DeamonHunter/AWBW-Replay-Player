@@ -70,7 +70,7 @@ namespace AWBWApp.Game.Game.Units
 
         private Bindable<MovementState> movementState;
 
-        private IBindable<bool> showUnitInFog;
+        private IBindable<bool> revealUnitInFog;
         private IBindable<CountryData> country;
         private IBindable<bool> movementAnimations;
 
@@ -162,8 +162,8 @@ namespace AWBWApp.Game.Game.Units
         {
             country.BindValueChanged(x => spriteContainer.LoadAnimations(UnitData, x.NewValue, textureStore), true);
 
-            showUnitInFog = configManager.GetBindable<bool>(AWBWSetting.ReplayShowHiddenUnits);
-            showUnitInFog.BindValueChanged(x => updateUnitColour(x.NewValue));
+            revealUnitInFog = configManager.GetBindable<bool>(AWBWSetting.ReplayOnlyShownKnownInfo);
+            revealUnitInFog.BindValueChanged(x => updateUnitColour(x.NewValue));
 
             movementAnimations = configManager.GetBindable<bool>(AWBWSetting.ReplayMovementAnimations);
 
@@ -338,7 +338,7 @@ namespace AWBWApp.Game.Game.Units
             healthSpriteText.FadeTo(alpha > 0 ? 1 : 0, 250, Easing.OutQuint);
         }
 
-        private bool unitHidden() => BeingCarried.Value || (FogOfWarActive.Value && !(showUnitInFog?.Value ?? true));
+        private bool unitHidden() => BeingCarried.Value || (FogOfWarActive.Value && !(revealUnitInFog?.Value ?? true));
 
         private class DrawableUnitSpriteContainer : Container
         {

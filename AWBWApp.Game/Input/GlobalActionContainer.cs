@@ -59,7 +59,7 @@ namespace AWBWApp.Game.Input
                 new CombinationTrackedKeyBinding(InputKey.K, AWBWGlobalAction.NextAction, SetConfig),
                 new CombinationTrackedKeyBinding(InputKey.L, AWBWGlobalAction.NextTurn, SetConfig),
                 new CombinationTrackedKeyBinding(InputKey.G, AWBWGlobalAction.ShowGridLines, SetConfig),
-                new CombinationTrackedKeyBinding(InputKey.F, AWBWGlobalAction.ShowUnitsInFog, SetConfig),
+                new CombinationTrackedKeyBinding(InputKey.F, AWBWGlobalAction.ShowUnitsAndBuildingsInFog, SetConfig),
                 new CombinationTrackedKeyBinding(InputKey.C, AWBWGlobalAction.ShowTileCursor, SetConfig),
             };
 

@@ -44,7 +44,7 @@ namespace AWBWApp.Game.UI.Interrupts
                 createKeyRebindRow(AWBWGlobalAction.NextTurn),
                 createKeyRebindRow(AWBWGlobalAction.ShowGridLines),
                 createKeyRebindRow(AWBWGlobalAction.ShowTileCursor),
-                createKeyRebindRow(AWBWGlobalAction.ShowUnitsInFog),
+                createKeyRebindRow(AWBWGlobalAction.ShowUnitsAndBuildingsInFog),
                 new Container()
                 {
                     RelativeSizeAxes = Axes.X,
