@@ -47,6 +47,8 @@ namespace AWBWApp.Game.Tests.Visual.Components
 
         [Cached(type: typeof(IBindable<WeatherType>))]
         private Bindable<WeatherType> weather = new Bindable<WeatherType>(WeatherType.Clear);
+        [Cached(type: typeof(IBindable<MapSkin>))]
+        private Bindable<MapSkin> mapSkin = new Bindable<MapSkin>(MapSkin.AW2);
 
         private Random random;
 

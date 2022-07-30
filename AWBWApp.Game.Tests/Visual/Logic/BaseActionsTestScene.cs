@@ -29,7 +29,8 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                     RoundOrder = i + 1,
                     UserId = i,
                     ID = i,
-                    ReplayIndex = i + 1
+                    ReplayIndex = i + 1,
+                    TeamName = i.ToString()
                 };
 
                 replayData.ReplayInfo.Players.Add(player.ID, player);
@@ -68,6 +69,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 ReplayUnit = new Dictionary<long, ReplayUnit>(),
                 Day = 0,
                 ActivePlayerID = activeId.ID,
+                ActiveTeam = activeId.TeamName,
                 Players = players,
                 StartWeather = new ReplayWeather()
             };

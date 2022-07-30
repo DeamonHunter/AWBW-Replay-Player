@@ -103,7 +103,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             {
                 ReplayInfo = new ReplayInfo
                 {
-                    Players = new Dictionary<long, ReplayUser> { { 0, new ReplayUser { CountryID = 1, ID = 0, UserId = 0 } } }
+                    Players = new Dictionary<long, ReplayUser> { { 0, new ReplayUser { CountryID = 1, ID = 0, UserId = 0, TeamName = "0" } } }
                 },
                 TurnData = new List<TurnData>
                 {
