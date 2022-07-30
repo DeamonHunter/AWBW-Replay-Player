@@ -87,6 +87,14 @@ namespace AWBWApp.Game.API.Replay.Actions
                 context.RegisterDiscoveryAndSetUndo(Discovered);
         }
 
+        public bool HasVisibleAction(ReplayController controller)
+        {
+            if (MoveUnit != null && MoveUnit.HasVisibleAction(controller))
+                return true;
+
+            return !controller.ShouldPlayerActionBeHidden(originalLoadedUnit.Position!.Value) || !controller.ShouldPlayerActionBeHidden(UnloadedUnit.Position!.Value);
+        }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Unload Action.");
@@ -102,6 +110,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             unloadingUnit.BeingCarried.Value = false;
             transportUnit.Cargo.Remove(unloadingUnit.UnitID);
+
+            yield return ReplayWait.WaitForMilliseconds(150);
 
             unloadingUnit.FollowPath(controller, new List<UnitPosition>
             {

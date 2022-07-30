@@ -75,6 +75,8 @@ namespace AWBWApp.Game.Game.Logic
         private IBindable<bool> skipEndTurnBindable;
         private IBindable<bool> shortenActionTooltipsBindable;
         private IBindable<bool> replayBarInPlayerList;
+        public IBindable<bool> ShowAnimationsWhenUnitsHidden;
+
         [Cached(typeof(IBindable<MapSkin>))]
         private Bindable<MapSkin> selectedMapSkin = new Bindable<MapSkin>();
 
@@ -200,6 +202,8 @@ namespace AWBWApp.Game.Game.Logic
             shortenActionTooltipsBindable = configManager.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips);
             showMovementArrowsBindable = configManager.GetBindable<bool>(AWBWSetting.ReplayShowMovementArrows);
             selectedMapSkin.BindTo(configManager.GetBindable<MapSkin>(AWBWSetting.MapSkin));
+
+            ShowAnimationsWhenUnitsHidden = configManager.GetBindable<bool>(AWBWSetting.ShowAnimationsForHiddenActions);
 
             CurrentFogView.BindValueChanged(_ => UpdateFogOfWar());
 

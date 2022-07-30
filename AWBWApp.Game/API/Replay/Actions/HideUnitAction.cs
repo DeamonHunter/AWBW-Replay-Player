@@ -4,6 +4,7 @@ using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
 using Newtonsoft.Json.Linq;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Logging;
 
 namespace AWBWApp.Game.API.Replay.Actions
@@ -40,6 +41,7 @@ namespace AWBWApp.Game.API.Replay.Actions
     public class HideUnitAction : IReplayAction
     {
         public long HidingUnitID { get; set; }
+        private Vector2I hidingUnitPosition;
 
         public MoveUnitAction MoveUnit;
 
@@ -64,6 +66,15 @@ namespace AWBWApp.Game.API.Replay.Actions
                 throw new ReplayMissingUnitException(HidingUnitID);
 
             unit.SubHasDived = true;
+            hidingUnitPosition = unit.Position!.Value;
+        }
+
+        public bool HasVisibleAction(ReplayController controller)
+        {
+            if (MoveUnit != null && MoveUnit.HasVisibleAction(controller))
+                return true;
+
+            return !controller.ShouldPlayerActionBeHidden(hidingUnitPosition);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)

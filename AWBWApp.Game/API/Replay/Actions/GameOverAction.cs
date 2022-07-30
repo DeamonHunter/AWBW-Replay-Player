@@ -67,6 +67,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context) { }
 
+        public bool HasVisibleAction(ReplayController controller) => true;
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Game Over Action.");

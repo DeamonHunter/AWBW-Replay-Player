@@ -100,6 +100,22 @@ namespace AWBWApp.Game.API.Replay.Actions
             context.AdjustStatReadoutsFromUnitList(context.ActivePlayerID, originalUnits.Values, ExplodedUnitId);
         }
 
+        public bool HasVisibleAction(ReplayController controller)
+        {
+            if (MoveUnit != null && MoveUnit.HasVisibleAction(controller))
+                return true;
+
+            foreach (var unit in originalUnits)
+            {
+                if (controller.ShouldPlayerActionBeHidden(unit.Value.Position!.Value))
+                    continue;
+
+                return true;
+            }
+
+            return false;
+        }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Explode Action.");

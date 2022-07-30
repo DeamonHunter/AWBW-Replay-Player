@@ -485,6 +485,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             originalWeatherType = context.WeatherType;
         }
 
+        public bool HasVisibleAction(ReplayController controller) => true;
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Power Action.");

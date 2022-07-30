@@ -172,6 +172,22 @@ namespace AWBWApp.Game.API.Replay.Actions
             ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, false);
         }
 
+        public bool HasVisibleAction(ReplayController controller)
+        {
+            if (MoveUnit != null && MoveUnit.HasVisibleAction(controller))
+                return true;
+
+            foreach (var unit in originalUnits)
+            {
+                if (controller.ShouldPlayerActionBeHidden(unit.Value.Position!.Value))
+                    continue;
+
+                return true;
+            }
+
+            return false;
+        }
+
         public void UndoAction(ReplayController controller)
         {
             Logger.Log("Undoing Launch Action.");

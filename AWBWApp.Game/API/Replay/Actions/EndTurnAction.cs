@@ -207,6 +207,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
         }
 
+        public bool HasVisibleAction(ReplayController controller) => true;
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing End Turn Action.");

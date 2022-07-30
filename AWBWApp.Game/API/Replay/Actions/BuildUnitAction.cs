@@ -73,6 +73,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                 context.RegisterDiscoveryAndSetUndo(Discovered);
         }
 
+        public bool HasVisibleAction(ReplayController controller) => !controller.ShouldPlayerActionBeHidden(NewUnit.Position!.Value);
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Build Action.");
@@ -96,7 +98,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (Discovered != null)
                 controller.Map.RegisterDiscovery(Discovered);
 
-            controller.Map.PlaySelectionAnimation(unit);
+            if (controller.ShowAnimationsWhenUnitsHidden.Value || !controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+                controller.Map.PlaySelectionAnimation(unit);
 
             controller.Stats.CurrentTurnStatsReadout[unit.OwnerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged, NewUnit.UnitName, NewUnit.PlayerID!.Value, unitValue);
             controller.Stats.CurrentTurnStatsReadout[unit.OwnerID!.Value].MoneySpentOnBuildingUnits += unitCost;

@@ -33,6 +33,7 @@ namespace AWBWApp.Game.UI.Toolbar
                         new ToggleMenuItem("Show Weather", configManager.GetBindable<bool>(AWBWSetting.ReplayShowWeather)),
                         new ToggleMenuItem("Movement Animations", configManager.GetBindable<bool>(AWBWSetting.ReplayMovementAnimations)),
                         new ToggleMenuItem("Show Movement Arrows", configManager.GetBindable<bool>(AWBWSetting.ReplayShowMovementArrows)),
+                        new ToggleMenuItem("Show Animations for Hidden Actions", configManager.GetBindable<bool>(AWBWSetting.ShowAnimationsForHiddenActions)),
                     }
                 },
                 new MenuItem("Control Settings")

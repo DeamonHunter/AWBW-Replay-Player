@@ -83,6 +83,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public bool EndsGame() => GameOverAction != null;
 
+        public bool HasVisibleAction(ReplayController controller) => true;
+
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
             if (GameOverAction != null)

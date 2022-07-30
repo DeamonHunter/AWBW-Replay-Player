@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.UI.Replay;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Primitives;
@@ -93,6 +94,19 @@ namespace AWBWApp.Game.API.Replay.Actions
             ReplayActionHelper.UpdateUnitCargoPositions(context, unit, unit.Position!.Value);
         }
 
+        public bool HasVisibleAction(ReplayController controller)
+        {
+            foreach (var position in Path)
+            {
+                if (controller.ShouldPlayerActionBeHidden(new Vector2I(position.X, position.Y)))
+                    continue;
+
+                return true;
+            }
+
+            return false;
+        }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Move Action.");
@@ -109,7 +123,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                 unit.IsCapturing.Value = false;
             }
 
-            var effect = controller.Map.PlaySelectionAnimation(unit);
+            EffectAnimation effect = null;
+            if (controller.ShowAnimationsWhenUnitsHidden.Value || !controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+                effect = controller.Map.PlaySelectionAnimation(unit);
 
             if (controller.ShowMovementArrows)
             {
@@ -117,7 +133,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                     renderPath(Path, controller);
             }
 
-            yield return ReplayWait.WaitForTransformable(effect);
+            if (effect != null)
+                yield return ReplayWait.WaitForTransformable(effect);
 
             if (Path.Length > 1)
             {

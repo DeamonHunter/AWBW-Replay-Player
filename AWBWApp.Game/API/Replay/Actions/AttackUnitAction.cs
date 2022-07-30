@@ -182,6 +182,14 @@ namespace AWBWApp.Game.API.Replay.Actions
             return $"{originalAttacker.UnitName} Moves + Attacks {originalDefender.UnitName}";
         }
 
+        public bool HasVisibleAction(ReplayController controller)
+        {
+            if (MoveUnit != null && MoveUnit.HasVisibleAction(controller))
+                return true;
+
+            return !controller.ShouldPlayerActionBeHidden(originalAttacker.Position!.Value) || !controller.ShouldPlayerActionBeHidden(originalDefender.Position!.Value);
+        }
+
         public bool EndsGame() => EliminatedAction?.EndsGame() ?? false;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)

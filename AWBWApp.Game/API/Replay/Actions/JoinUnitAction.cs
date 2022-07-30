@@ -90,6 +90,14 @@ namespace AWBWApp.Game.API.Replay.Actions
             valueChange = joinedUnitValueChange - ReplayActionHelper.CalculateUnitCost(originalJoiningUnit, dayToDay, null);
         }
 
+        public bool HasVisibleAction(ReplayController controller)
+        {
+            if (MoveUnit != null && MoveUnit.HasVisibleAction(controller))
+                return true;
+
+            return !controller.ShouldPlayerActionBeHidden(JoinedUnit.Position!.Value);
+        }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Join Action.");

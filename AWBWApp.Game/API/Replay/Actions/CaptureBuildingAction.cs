@@ -117,6 +117,14 @@ namespace AWBWApp.Game.API.Replay.Actions
             return moveUnitString + captureState + building.BuildingTile.Name;
         }
 
+        public bool HasVisibleAction(ReplayController controller)
+        {
+            if (MoveUnit != null && MoveUnit.HasVisibleAction(controller))
+                return true;
+
+            return !controller.ShouldPlayerActionBeHidden(Building.Position);
+        }
+
         public bool EndsGame() => EliminatedAction?.EndsGame() ?? false;
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
@@ -167,13 +175,14 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             var actionHidden = controller.ShouldPlayerActionBeHidden(Building.Position);
+            controller.Map.TryGetDrawableBuilding(Building.Position, out var capturingBuilding);
 
             if (controller.Map.TryGetDrawableUnit(Building.Position, out var capturingUnit))
             {
                 if (!actionHidden)
                     capturingUnit.FadeTo(0.5f, 250, Easing.OutCubic);
 
-                if (MoveUnit == null || !actionHidden)
+                if (MoveUnit == null && (controller.ShowAnimationsWhenUnitsHidden.Value || !actionHidden))
                 {
                     var anim = controller.Map.PlaySelectionAnimation(capturingUnit);
                     yield return ReplayWait.WaitForTransformable(anim);
@@ -182,23 +191,15 @@ namespace AWBWApp.Game.API.Replay.Actions
                 if (!actionHidden)
                     capturingUnit.CanMove.Value = false;
             }
-
-            if (controller.Map.TryGetDrawableBuilding(Building.Position, out var capturingBuilding))
+            else if (capturingBuilding != null && (controller.ShowAnimationsWhenUnitsHidden.Value || !actionHidden))
             {
-                if (capturingUnit == null)
-                {
-                    var anim = controller.Map.PlaySelectionAnimation(capturingBuilding);
-                    yield return ReplayWait.WaitForTransformable(anim);
-                }
-
-                if (!actionHidden)
-                {
-                    capturingBuilding.MoveToOffset(new Vector2(3, 0), 30).Then().MoveToOffset(new Vector2(-6, 0), 60).Then().MoveToOffset(new Vector2(3, 0), 30);
-                    yield return ReplayWait.WaitForTransformable(capturingBuilding);
-                }
+                var anim = controller.Map.PlaySelectionAnimation(capturingBuilding);
+                yield return ReplayWait.WaitForTransformable(anim);
             }
 
             controller.Map.UpdateBuilding(Building, false); //This will set the unit above to be capturing
+            //If the building changes, we no longer have the right building so get it again.
+            controller.Map.TryGetDrawableBuilding(Building.Position, out capturingBuilding);
 
             if (TeamsThatSawCapture != null && TeamsThatSawCapture.Count > 0 && controller.Map.TryGetDrawableBuilding(Building.Position, out var building))
             {
@@ -212,24 +213,19 @@ namespace AWBWApp.Game.API.Replay.Actions
                     controller.Players[incomeChange.Key].PropertyValue.Value = incomeChange.Value;
             }
 
-            if (controller.Map.TryGetDrawableBuilding(Building.Position, out capturingBuilding))
+            if (capturingBuilding != null && (!actionHidden || controller.ShowAnimationsWhenUnitsHidden.Value))
             {
-                capturingBuilding.MoveToOffset(new Vector2(3, 0), 30).Then().MoveToOffset(new Vector2(-6, 0), 60).Then().MoveToOffset(new Vector2(3, 0), 30);
+                shakeBuilding(capturingBuilding, actionHidden);
 
-                if (Building.TerrainID.HasValue && Building.TerrainID != originalBuilding.TerrainID)
+                if (MoveUnit != null && actionHidden)
                 {
-                    capturingBuilding.ScaleTo(new Vector2(1.25f), 200, Easing.InOutSine).MoveToOffset(new Vector2(-2, -4), 200, Easing.InOutSine)
-                                     .Then().ScaleTo(new Vector2(1f), 200, Easing.InOutSine).MoveToOffset(new Vector2(2, 4), 200, Easing.InOutSine);
+                    var anim = controller.Map.PlaySelectionAnimation(capturingBuilding);
+                    yield return ReplayWait.WaitForTransformable(anim);
                 }
-                else
-                    capturingBuilding.MoveToOffset(new Vector2(3, 0), 30).Then().MoveToOffset(new Vector2(-6, 0), 60).Then().MoveToOffset(new Vector2(3, 0), 30);
 
                 yield return ReplayWait.WaitForTransformable(capturingBuilding);
-            }
 
-            if (!actionHidden)
-            {
-                if (capturingUnit != null)
+                if (capturingUnit != null && !actionHidden)
                 {
                     capturingUnit?.FadeTo(capturingUnit.Dived.Value ? 0.7f : 1, 250, Easing.OutCubic);
                     yield return ReplayWait.WaitForTransformable(capturingUnit);
@@ -241,6 +237,26 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 foreach (var transformable in EliminatedAction.PerformAction(controller))
                     yield return transformable;
+            }
+        }
+
+        private void shakeBuilding(DrawableBuilding capturingBuilding, bool subtler)
+        {
+            if (Building.TerrainID.HasValue && Building.TerrainID != originalBuilding.TerrainID)
+            {
+                capturingBuilding.MoveToOffset(new Vector2(subtler ? 1.5f : 3, 0), 45)
+                                 .Then().MoveToOffset(new Vector2(subtler ? -3 : -6, 0), 90)
+                                 .Then().MoveToOffset(new Vector2(subtler ? 1.5f : 3, 0), 45)
+                                 .Then().ScaleTo(new Vector2(subtler ? 1.1f : 1.25f), 200, Easing.InOutSine).MoveToOffset(new Vector2(subtler ? -1 : -2, subtler ? -2 : -4), 200, Easing.InOutSine)
+                                 .Then().ScaleTo(new Vector2(1f), 200, Easing.InOutSine).MoveToOffset(new Vector2(subtler ? 1 : 2, subtler ? 2 : 4), 200, Easing.InOutSine);
+            }
+            else
+            {
+                capturingBuilding.MoveToOffset(new Vector2(subtler ? 1.5f : 3, 0), 45)
+                                 .Then().MoveToOffset(new Vector2(subtler ? -3 : -6, 0), 90)
+                                 .Then().MoveToOffset(new Vector2(subtler ? 3 : 6, 0), 45)
+                                 .Then().MoveToOffset(new Vector2(subtler ? -3 : -6, 0), 90)
+                                 .Then().MoveToOffset(new Vector2(subtler ? 1.5f : 3, 0), 45);
             }
         }
 

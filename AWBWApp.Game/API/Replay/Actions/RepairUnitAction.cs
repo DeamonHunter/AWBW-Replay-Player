@@ -56,6 +56,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public int FundsAfterRepair;
 
         private ReplayUnit originalRepairedUnit;
+        private ReplayUnit originalRepairingUnit;
         private int repairValue;
         private int repairCost;
 
@@ -77,6 +78,11 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             MoveUnit?.SetupAndUpdate(controller, context);
 
+            if (!context.Units.TryGetValue(RepairingUnitID, out var repairingUnit))
+                throw new ReplayMissingUnitException(RepairedUnitID);
+
+            originalRepairingUnit = repairingUnit.Clone();
+
             if (!context.Units.TryGetValue(RepairedUnitID, out var repairedUnit))
                 throw new ReplayMissingUnitException(RepairedUnitID);
 
@@ -93,6 +99,14 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             var co = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[context.ActivePlayerID].ActiveCOID);
             repairValue = ReplayActionHelper.CalculateUnitCost(repairedUnit, co.DayToDayPower, null) - ReplayActionHelper.CalculateUnitCost(originalRepairedUnit, co.DayToDayPower, null);
+        }
+
+        public bool HasVisibleAction(ReplayController controller)
+        {
+            if (MoveUnit != null && MoveUnit.HasVisibleAction(controller))
+                return true;
+
+            return !controller.ShouldPlayerActionBeHidden(originalRepairingUnit.Position!.Value) || !controller.ShouldPlayerActionBeHidden(originalRepairedUnit.Position!.Value);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)

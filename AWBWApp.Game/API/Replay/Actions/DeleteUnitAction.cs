@@ -64,6 +64,14 @@ namespace AWBWApp.Game.API.Replay.Actions
             context.AdjustStatReadoutsFromUnitList(context.ActivePlayerID, originalUnits.Values);
         }
 
+        public bool HasVisibleAction(ReplayController controller)
+        {
+            if (MoveUnit != null && MoveUnit.HasVisibleAction(controller))
+                return true;
+
+            return !controller.ShouldPlayerActionBeHidden(originalUnits[0].Position!.Value);
+        }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Delete Action.");

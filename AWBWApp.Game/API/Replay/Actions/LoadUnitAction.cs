@@ -76,6 +76,14 @@ namespace AWBWApp.Game.API.Replay.Actions
             transportUnit.CargoUnits.Add(LoadedID);
         }
 
+        public bool HasVisibleAction(ReplayController controller)
+        {
+            if (MoveUnit != null && MoveUnit.HasVisibleAction(controller))
+                return true;
+
+            return !controller.ShouldPlayerActionBeHidden(originalTransportUnit.Position!.Value);
+        }
+
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
             Logger.Log("Performing Load Action.");
