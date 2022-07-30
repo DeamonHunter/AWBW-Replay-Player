@@ -679,6 +679,7 @@ namespace AWBWApp.Game.Game.Logic
                         transferDiscovery(building, newBuilding);
                         newBuilding.FogOfWarActive.Value = IsTileFoggy(awbwBuilding.Position);
                         buildingGrid.AddTile(newBuilding, tilePosition);
+                        building = newBuilding;
                     }
                     else if (terrainTileStorage.TryGetTileByAWBWId(awbwBuilding.TerrainID.Value, out var terrainTile))
                     {
