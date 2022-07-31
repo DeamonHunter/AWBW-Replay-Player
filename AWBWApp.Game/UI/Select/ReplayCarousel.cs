@@ -222,17 +222,19 @@ namespace AWBWApp.Game.UI.Select
 
         public void UpdateReplay(ReplayInfo replayInfo)
         {
-            CarouselReplay existingReplay = replays.FirstOrDefault(r => r.ReplayInfo.ID == replayInfo.ID);
-            var newItem = createCarouselReplay(replayInfo);
+            Schedule(() =>
+            {
+                CarouselReplay existingReplay = replays.FirstOrDefault(r => r.ReplayInfo.ID == replayInfo.ID);
+                var newItem = createCarouselReplay(replayInfo);
 
-            if (existingReplay != null)
-                rootCarouselItem.RemoveChild(existingReplay);
-
-            rootCarouselItem.AddChild(newItem);
-            newItem.State.Value = CarouselItemState.Selected;
-
-            itemsCache.Invalidate();
-            Schedule(() => ReplaysChanged?.Invoke());
+                if (existingReplay != null)
+                    rootCarouselItem.RemoveChild(existingReplay);
+                rootCarouselItem.AddChild(newItem);
+                Sort(carouselSort.Value);
+                newItem.State.Value = CarouselItemState.Selected;
+                itemsCache.Invalidate();
+                ReplaysChanged?.Invoke();
+            });
         }
 
         public void RemoveReplay(ReplayInfo replayInfo) =>
