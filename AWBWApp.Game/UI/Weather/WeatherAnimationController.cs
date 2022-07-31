@@ -53,7 +53,7 @@ namespace AWBWApp.Game.UI.Weather
         private void load(AWBWConfigManager config)
         {
             showWeather = config.GetBindable<bool>(AWBWSetting.ReplayShowWeather);
-            showWeather.BindValueChanged(x => this.FadeTo(x.NewValue ? 1 : 0, 250, Easing.OutQuint));
+            showWeather.BindValueChanged(x => this.FadeTo(x.NewValue ? 1 : 0, 250, Easing.OutQuint), true);
         }
 
         protected override void LoadComplete()

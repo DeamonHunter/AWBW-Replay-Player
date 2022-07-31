@@ -30,7 +30,7 @@ namespace AWBWApp.Game.UI.Toolbar
                         new ToggleMenuItem("Show Grid", configManager.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap)),
                         new ToggleMenuItem("Show Tile Cursor", configManager.GetBindable<bool>(AWBWSetting.ShowTileCursor)),
                         new ToggleMenuItem("Show Buildings and Units in Fog", configManager.GetBindable<bool>(AWBWSetting.ReplayOnlyShownKnownInfo)),
-                        new ToggleMenuItem("Show Weather", configManager.GetBindable<bool>(AWBWSetting.ReplayShowWeather)),
+                        new ToggleMenuItem("Show Weather Particles", configManager.GetBindable<bool>(AWBWSetting.ReplayShowWeather)),
                         new ToggleMenuItem("Movement Animations", configManager.GetBindable<bool>(AWBWSetting.ReplayMovementAnimations)),
                         new ToggleMenuItem("Show Movement Arrows", configManager.GetBindable<bool>(AWBWSetting.ReplayShowMovementArrows)),
                         new ToggleMenuItem("Show Animations for Hidden Actions", configManager.GetBindable<bool>(AWBWSetting.ShowAnimationsForHiddenActions)),
