@@ -53,7 +53,7 @@ namespace AWBWApp.Game.API.Replay
                     }
                     else if (buildingStorage.TryGetBuildingByAWBWId(tileId, out var building))
                     {
-                        if (building.CountryID != 0)
+                        if (building.CountryID != -1)
                         {
                             var colour = Color4Extensions.FromHex(countryStorage.GetCountryByAWBWID(building.CountryID).Colours["playerList"]).Lighten(0.2f);
                             var darkenedColour = colour.Darken(0.4f);
