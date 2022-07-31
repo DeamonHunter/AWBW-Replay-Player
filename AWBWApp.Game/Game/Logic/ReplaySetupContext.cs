@@ -312,7 +312,8 @@ namespace AWBWApp.Game.Game.Logic
                     if (discoveries.TryGetValue(id.Key, out var before))
                         registered[id.Key] = before;
 
-                    discoveries[id.Key] = BuildingStorage.GetBuildingByAWBWId(discovered.Value.TerrainID!.Value);
+                    if (BuildingStorage.TryGetBuildingByAWBWId(discovered.Value.TerrainID!.Value, out var after))
+                        discoveries[id.Key] = after;
                 }
             }
         }
