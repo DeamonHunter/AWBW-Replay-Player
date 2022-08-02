@@ -848,10 +848,10 @@ namespace AWBWApp.Game.Game.Logic
                     var range = unit.AttackRange.Value;
 
                     var action = replayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
-                    range.Y += action?.COPower.PowerIncreases?.FirstOrDefault(x => x.AffectedUnits.Contains("all") || x.AffectedUnits.Contains(unit.Name))?.RangeIncrease ?? 0;
+                    range.Y += action?.COPower.PowerIncreases?.FirstOrDefault(x => x.AffectedUnits.Contains("all") || x.AffectedUnits.Contains(unit.UnitData.Name))?.RangeIncrease ?? 0;
 
                     var dayToDay = replayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
-                    range.Y += dayToDay.PowerIncreases?.FirstOrDefault(x => x.AffectedUnits.Contains("all") || x.AffectedUnits.Contains(unit.Name))?.RangeIncrease ?? 0;
+                    range.Y += dayToDay.PowerIncreases?.FirstOrDefault(x => x.AffectedUnits.Contains("all") || x.AffectedUnits.Contains(unit.UnitData.Name))?.RangeIncrease ?? 0;
 
                     if (unit.UnitData.AttackRange != Vector2I.One)
                     {
