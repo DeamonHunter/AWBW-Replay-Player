@@ -6,6 +6,7 @@ using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Components.Tooltip;
+using AWBWApp.Game.UI.Stats;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
@@ -27,15 +28,22 @@ namespace AWBWApp.Game.UI.Replay
         public long PlayerID;
 
         private StatScrollContainer scrollContainer;
+        private DayToDayStatGraph statGraph;
 
         private Dictionary<long, PlayerInfo> players;
+        private StatsHandler statsHandler;
+        private int turnNumber;
+        private int graphDepth;
+
         private Action<long, long> compareToAction;
 
-        public StatsPopup(Dictionary<long, PlayerInfo> players, long playerID, PlayerStatsReadout readout, Action<long, long> compareToAction)
+        public StatsPopup(StatsHandler statsHandler, Dictionary<long, PlayerInfo> players, long playerID, int turnNumber, Action<long, long> compareToAction)
         {
             PlayerID = playerID;
             this.players = players;
             this.compareToAction = compareToAction;
+            this.statsHandler = statsHandler;
+            this.turnNumber = turnNumber;
 
             AutoSizeAxes = Axes.Y;
 
@@ -45,6 +53,8 @@ namespace AWBWApp.Game.UI.Replay
 
             Masking = true;
             CornerRadius = 8;
+
+            var readout = statsHandler.CurrentTurnStatsReadout[PlayerID];
 
             var headerColor = Color4Extensions.FromHex(players[playerID].Country.Value.Colours["playerList"]).Darken(0.1f);
             var borderColor = headerColor.Darken(0.2f);
@@ -59,12 +69,20 @@ namespace AWBWApp.Game.UI.Replay
                 {
                     new StatLine("Total Generated Funds", readout.GeneratedMoney)
                     {
-                        Tooltip = $"Spent on Building: {readout.MoneySpentOnBuildingUnits}\nSpent On Repairing: {readout.MoneySpentOnRepairingUnits}"
+                        Tooltip = $"Spent on Building: {readout.MoneySpentOnBuildingUnits}\nSpent On Repairing: {readout.MoneySpentOnRepairingUnits}",
+                        OnClickAction = () => showGraphForStat(Stat.GeneratedMoney, 1)
                     },
                     new StatLine("Powers Used", $"{readout.PowersUsed} COP / {readout.SuperPowersUsed} SCOP"),
                     new UnitFlowContainer("Built/Value", players[playerID].Country.Value.UnitPath, readout.BuildStats, "Total Built Value", readout.TotalValueBuilt),
                     new UnitFlowContainer("Deaths/Value Damage Taken", players[playerID].Country.Value.UnitPath, readout.LostStats, "Total Value of Damage", readout.TotalValueLost),
                     new UnitFlowContainer("Kills/Value Damage Dealt", players, readout.DamageOtherStats, "Total Value of Damage", readout.TotalValueDamaged),
+                    statGraph = new DayToDayStatGraph()
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        Height = 150,
+                        Alpha = 0,
+                        Margin = new MarginPadding { Top = -5 }
+                    }
                 }
             };
 
@@ -125,6 +143,53 @@ namespace AWBWApp.Game.UI.Replay
             Expire();
         }
 
+        private void showGraphForStat(Stat stat, int depth)
+        {
+            if (statGraph.Alpha > 0 && graphDepth == depth)
+            {
+                statGraph.Hide();
+                return;
+            }
+
+            graphDepth = depth;
+            scrollContainer.ReorderChild(statGraph, depth - 0.5f);
+            statGraph.Show();
+
+            //Todo: Smooth popout doesn't look good due to invalidation issues with grid container
+            //statGraph.ScaleTo(new Vector2(1f, 0.05f)).ScaleTo(1, 150, Easing.OutQuint);
+
+            var stats = new List<float>();
+            var averages = new List<float>();
+
+            switch (stat)
+            {
+                case Stat.GeneratedMoney:
+                    for (int i = 0; i < turnNumber; i++)
+                    {
+                        stats.Add(statsHandler.RegisteredReadouts[i][PlayerID].GeneratedMoney);
+
+                        var average = 0f;
+                        foreach (var player in players)
+                            average += statsHandler.RegisteredReadouts[i][player.Key].GeneratedMoney;
+                        averages.Add(average / players.Count);
+                    }
+
+                    stats.Add(statsHandler.CurrentTurnStatsReadout[PlayerID].GeneratedMoney);
+                    averages.Add(statsHandler.CurrentTurnStatsReadout[PlayerID].GeneratedMoney);
+                    break;
+            }
+
+            statGraph.AddPath(Color4.Red, stats);
+            //statGraph.AddPath(Color4.Blue, averages);
+            statGraph.PlayerCount = players.Count;
+        }
+
+        private enum Stat
+        {
+            GeneratedMoney,
+            UnitValue
+        }
+
         protected override bool OnHover(HoverEvent e)
         {
             return true;
@@ -142,13 +207,14 @@ namespace AWBWApp.Game.UI.Replay
             protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) =>
                 new BasicScrollContainer(direction)
                 {
-                    ScrollbarOverlapsContent = false
+                    ScrollbarOverlapsContent = false,
                 };
         }
 
         private class StatLine : CompositeDrawable, IHasTooltip
         {
             public string Tooltip;
+            public Action OnClickAction;
 
             private StatLine(string description)
             {
@@ -206,6 +272,17 @@ namespace AWBWApp.Game.UI.Replay
             }
 
             public LocalisableString TooltipText => Tooltip;
+
+            protected override bool OnClick(ClickEvent e)
+            {
+                if (OnClickAction != null)
+                {
+                    OnClickAction.Invoke();
+                    return true;
+                }
+
+                return base.OnClick(e);
+            }
         }
 
         private class UnitFlowContainer : Container

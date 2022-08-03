@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.Game.Logic;
+using AWBWApp.Game.UI.Stats;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -16,45 +17,59 @@ namespace AWBWApp.Game.UI.Replay
         /// </summary>
         public Dictionary<long, PlayerStatsReadout> CurrentTurnStatsReadout = new Dictionary<long, PlayerStatsReadout>();
 
-        private readonly List<Dictionary<long, PlayerStatsReadout>> registeredReadouts = new List<Dictionary<long, PlayerStatsReadout>>();
+        public List<Dictionary<long, PlayerStatsReadout>> RegisteredReadouts = new List<Dictionary<long, PlayerStatsReadout>>();
 
         private FillFlowContainer<StatsPopup> fillFlowContainer;
+        private DayToDayStatGraph statGraph;
+        private int turn;
 
         public StatsHandler(Bindable<int> turnNumberBindable)
         {
             turnNumberBindable.BindValueChanged(x => turnChanged(x.NewValue));
 
-            Child = fillFlowContainer = new FillFlowContainer<StatsPopup>()
+            Children = new Drawable[]
             {
-                Direction = FillDirection.Horizontal,
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-                AutoSizeDuration = 15,
-                Spacing = new Vector2(5, 0)
+                statGraph = new DayToDayStatGraph()
+                {
+                    Size = new Vector2(400, 200),
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Alpha = 0
+                },
+                fillFlowContainer = new FillFlowContainer<StatsPopup>()
+                {
+                    Direction = FillDirection.Horizontal,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    AutoSizeDuration = 15,
+                    Spacing = new Vector2(5, 0)
+                }
             };
         }
 
         public void RegisterReadouts(Dictionary<long, PlayerStatsReadout> readouts)
         {
-            registeredReadouts.Add(readouts);
+            RegisteredReadouts.Add(readouts);
 
-            if (registeredReadouts.Count == 1)
+            if (RegisteredReadouts.Count == 1)
                 turnChanged(0);
         }
 
         public void ClearReadouts()
         {
             CurrentTurnStatsReadout.Clear();
-            registeredReadouts.Clear();
+            RegisteredReadouts.Clear();
         }
 
         private void turnChanged(int newTurn)
         {
-            if (registeredReadouts.Count == 0 || newTurn < 0)
+            if (RegisteredReadouts.Count == 0 || newTurn < 0)
                 return;
 
-            var readouts = registeredReadouts[newTurn];
+            turn = newTurn;
+
+            var readouts = RegisteredReadouts[newTurn];
 
             CurrentTurnStatsReadout.Clear();
 
@@ -78,7 +93,7 @@ namespace AWBWApp.Game.UI.Replay
             for (int i = childCount - 2; i >= 0; i--)
                 fillFlowContainer.Children[i].Close();
 
-            fillFlowContainer.Add(new StatsPopup(players, playerID, CurrentTurnStatsReadout[playerID], (p1, p2) => ComparePlayers(players, p1, p2)));
+            fillFlowContainer.Add(new StatsPopup(this, players, playerID, turn, (p1, p2) => ComparePlayers(players, p1, p2)));
         }
 
         public void ComparePlayers(Dictionary<long, PlayerInfo> players, long player1, long player2)
@@ -92,16 +107,18 @@ namespace AWBWApp.Game.UI.Replay
             }
 
             if (!fillFlowContainer.Children.Any(x => x.PlayerID == player1))
-                fillFlowContainer.Add(new StatsPopup(players, player1, CurrentTurnStatsReadout[player1], (p1, p2) => ComparePlayers(players, p1, p2)));
+                fillFlowContainer.Add(new StatsPopup(this, players, player1, turn, (p1, p2) => ComparePlayers(players, p1, p2)));
 
             if (!fillFlowContainer.Children.Any(x => x.PlayerID == player2))
-                fillFlowContainer.Add(new StatsPopup(players, player2, CurrentTurnStatsReadout[player2], (p1, p2) => ComparePlayers(players, p1, p2)));
+                fillFlowContainer.Add(new StatsPopup(this, players, player2, turn, (p1, p2) => ComparePlayers(players, p1, p2)));
         }
 
         public void CloseAllStats()
         {
             foreach (var popup in fillFlowContainer.Children)
                 popup.Close();
+
+            statGraph.Hide();
         }
     }
 

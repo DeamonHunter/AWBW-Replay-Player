@@ -145,6 +145,19 @@ namespace AWBWApp.Game.UI.Components
             }
         }
 
+        public void ReorderChild(T child, float depth)
+        {
+            var childID = 0f;
+
+            foreach (var internalChild in itemsFlow)
+            {
+                itemsFlow.SetLayoutPosition(internalChild, childID);
+                childID++;
+            }
+
+            itemsFlow.SetLayoutPosition(child, depth);
+        }
+
         public class SizeCacheFillFlowContainer<U> : FillFlowContainer<U> where U : Drawable
         {
             public readonly LayoutValue SizeCache = new LayoutValue(Invalidation.RequiredParentSizeToFit, InvalidationSource.Self);
