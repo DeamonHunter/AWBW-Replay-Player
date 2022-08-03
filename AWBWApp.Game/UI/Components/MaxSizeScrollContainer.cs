@@ -129,7 +129,7 @@ namespace AWBWApp.Game.UI.Components
                 // In the case of the auto-sized direction, we want to use its size. In the case of the relative-sized direction, we want
                 // to use the (above) computed size.
                 width = Direction == Direction.Horizontal ? ItemsContainer.Width : width;
-                height = Direction == Direction.Vertical ? ItemsContainer.Height : height;
+                height = Direction == Direction.Vertical ? (ItemsContainer.Height + 1) : height;
 
                 width = Math.Min(MaxWidth, width);
                 height = Math.Min(MaxHeight, height);
@@ -138,7 +138,8 @@ namespace AWBWApp.Game.UI.Components
                 width = RelativeSizeAxes.HasFlagFast(Axes.X) ? Width : width;
                 height = RelativeSizeAxes.HasFlagFast(Axes.Y) ? Height : height;
 
-                Size = new Vector2(width, height);
+                if (!Precision.AlmostEquals(Size, new Vector2(width, height), 0.1f))
+                    Size = new Vector2(width, height);
 
                 itemsFlow.SizeCache.Validate();
             }
