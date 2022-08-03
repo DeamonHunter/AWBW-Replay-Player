@@ -3,6 +3,7 @@ using AWBWApp.Game.UI.Components.Menu;
 using AWBWApp.Game.UI.Interrupts;
 using AWBWApp.Game.UI.Notifications;
 using osu.Framework.Allocation;
+using osu.Framework.Configuration;
 using osu.Framework.Graphics.UserInterface;
 
 namespace AWBWApp.Game.UI.Toolbar
@@ -18,15 +19,17 @@ namespace AWBWApp.Game.UI.Toolbar
         }
 
         [BackgroundDependencyLoader]
-        private void load(AWBWConfigManager configManager, InterruptDialogueOverlay interrupts)
+        private void load(AWBWConfigManager configManager, InterruptDialogueOverlay interrupts, FrameworkConfigManager frameworkConfig)
         {
             Menu.Items = new MenuItem[]
             {
                 new MenuItem("Exit Screen", exitScreenAction),
                 new MenuItem("Visual Settings")
                 {
-                    Items = new[]
+                    Items = new MenuItem[]
                     {
+                        //Todo: This is naive, should be double checking what is actually supported.
+                        new EnumMenuItem<WindowMode>("Fullscreen Mode", frameworkConfig.GetBindable<WindowMode>(FrameworkSetting.WindowMode)),
                         new ToggleMenuItem("Show Grid", configManager.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap)),
                         new ToggleMenuItem("Show Tile Cursor", configManager.GetBindable<bool>(AWBWSetting.ShowTileCursor)),
                         new ToggleMenuItem("Show Buildings and Units in Fog", configManager.GetBindable<bool>(AWBWSetting.ReplayOnlyShownKnownInfo)),
