@@ -41,6 +41,7 @@ namespace AWBWApp.Game.UI.Select
         public ReplayInfo SelectedReplayData => selectedReplay?.ReplayInfo;
 
         private CarouselReplay selectedReplay;
+        private ReplayInfo replayToSelect;
         private TextBox searchTextBox;
         private FilterDropdown searchDropdown;
         private SortDropdown sortDropdown;
@@ -206,6 +207,12 @@ namespace AWBWApp.Game.UI.Select
             {
                 if (replays.Contains(originalSelection.ReplayInfo))
                     Select(originalSelection.ReplayInfo);
+            }
+
+            if (replayToSelect != null)
+            {
+                Select(replayToSelect);
+                replayToSelect = null;
             }
 
             ScheduleAfterChildren(() =>
@@ -481,12 +488,22 @@ namespace AWBWApp.Game.UI.Select
 
         public void Select(ReplayInfo info)
         {
-            selectedReplay = (CarouselReplay)rootCarouselItem.Children.First(x =>
+            if (!ReplaysLoaded)
+            {
+                replayToSelect = info;
+                return;
+            }
+
+            selectedReplay = (CarouselReplay)rootCarouselItem.Children.FirstOrDefault(x =>
             {
                 var replay = (CarouselReplay)x;
 
                 return replay != null && replay.ReplayInfo.ID == info.ID;
             });
+
+            //Safety if the replay isn't ready yet
+            if (selectedReplay == null)
+                return;
 
             selectedReplay.State.Value = CarouselItemState.Selected;
             ScrollToSelected(true);

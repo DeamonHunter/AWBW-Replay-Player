@@ -75,7 +75,7 @@ namespace AWBWApp.Game
                         new MainMenuButton(false)
                         {
                             Text = "Select A Replay",
-                            Action = () => this.Push(consumeReplaySelect())
+                            Action = GoToReplaySelect
                         },
                         new MainMenuButton(false)
                         {
@@ -177,11 +177,11 @@ namespace AWBWApp.Game
                     return;
                 }
 
-                Schedule(() => this.Push(consumeReplaySelect(info)));
+                ScheduleAfterChildren(() => this.Push(consumeReplaySelect(info)));
             });
         }
 
-        public void GoToReplaySelect() => Schedule(() => this.Push(consumeReplaySelect()));
+        public void GoToReplaySelect() => ScheduleAfterChildren(() => this.Push(consumeReplaySelect()));
 
         private class MainMenuButton : BasicButton
         {
