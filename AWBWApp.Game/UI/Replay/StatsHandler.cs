@@ -114,12 +114,15 @@ namespace AWBWApp.Game.UI.Replay
         public int PowersUsed;
         public int SuperPowersUsed;
 
+        public int TotalCountBuilt;
         public long TotalValueBuilt;
         public Dictionary<string, (int, long)> BuildStats = new Dictionary<string, (int, long)>();
 
+        public int TotalCountLost;
         public long TotalValueLost;
         public Dictionary<string, (int, long)> LostStats = new Dictionary<string, (int, long)>();
 
+        public int TotalCountDamaged;
         public long TotalValueDamaged;
         public Dictionary<long, Dictionary<string, (int, long)>> DamageOtherStats = new Dictionary<long, Dictionary<string, (int, long)>>();
 
@@ -142,7 +145,10 @@ namespace AWBWApp.Game.UI.Replay
                         unitStats = (0, 0);
 
                     if (unitLostOrGained)
+                    {
                         unitStats.unitCount += undo ? -1 : 1;
+                        TotalCountBuilt += undo ? -1 : 1;
+                    }
 
                     var change = undo ? -valueChange : valueChange;
 
@@ -158,7 +164,10 @@ namespace AWBWApp.Game.UI.Replay
                         unitStats = (0, 0);
 
                     if (unitLostOrGained)
+                    {
                         unitStats.unitCount += undo ? -1 : 1;
+                        TotalCountLost += undo ? -1 : 1;
+                    }
 
                     var change = undo ? -valueChange : valueChange;
 
@@ -177,7 +186,10 @@ namespace AWBWApp.Game.UI.Replay
                         unitStats = (0, 0);
 
                     if (unitLostOrGained)
+                    {
                         unitStats.unitCount += undo ? -1 : 1;
+                        TotalCountDamaged += undo ? -1 : 1;
+                    }
 
                     var change = undo ? -valueChange : valueChange;
 
@@ -198,8 +210,11 @@ namespace AWBWApp.Game.UI.Replay
                 PowersUsed = PowersUsed,
                 MoneySpentOnBuildingUnits = MoneySpentOnBuildingUnits,
                 MoneySpentOnRepairingUnits = MoneySpentOnRepairingUnits,
+                TotalCountBuilt = TotalCountBuilt,
                 TotalValueBuilt = TotalValueBuilt,
+                TotalCountLost = TotalCountLost,
                 TotalValueLost = TotalValueLost,
+                TotalCountDamaged = TotalCountDamaged,
                 TotalValueDamaged = TotalValueDamaged
             };
 

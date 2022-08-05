@@ -62,9 +62,9 @@ namespace AWBWApp.Game.UI.Replay
                         Tooltip = $"Spent on Building: {readout.MoneySpentOnBuildingUnits}\nSpent On Repairing: {readout.MoneySpentOnRepairingUnits}"
                     },
                     new StatLine("Powers Used", $"{readout.PowersUsed} COP / {readout.SuperPowersUsed} SCOP"),
-                    new UnitFlowContainer("Built/Value", players[playerID].Country.Value.UnitPath, readout.BuildStats, "Total Built Value", readout.TotalValueBuilt),
-                    new UnitFlowContainer("Deaths/Value Damage Taken", players[playerID].Country.Value.UnitPath, readout.LostStats, "Total Value of Damage", readout.TotalValueLost),
-                    new UnitFlowContainer("Kills/Value Damage Dealt", players, readout.DamageOtherStats, "Total Value of Damage", readout.TotalValueDamaged),
+                    new UnitFlowContainer("Built/Value", players[playerID].Country.Value.UnitPath, readout.BuildStats, "Built Units/Built Unit Value", readout.TotalCountBuilt, readout.TotalValueBuilt),
+                    new UnitFlowContainer("Deaths/Value Damage Taken", players[playerID].Country.Value.UnitPath, readout.LostStats, "Lost Units/Unit Value Lost", readout.TotalCountLost, readout.TotalValueLost),
+                    new UnitFlowContainer("Kills/Value Damage Dealt", players, readout.DamageOtherStats, "Killed Units/Unit Value Damage", readout.TotalCountDamaged, readout.TotalValueDamaged),
                 }
             };
 
@@ -214,12 +214,13 @@ namespace AWBWApp.Game.UI.Replay
 
             private static readonly Color4 seperator_color = new Colour4(150, 150, 150, 255);
 
-            private UnitFlowContainer(string heading, string valueDesc, long totalValue)
+            private UnitFlowContainer(string heading, string description, int totalCount, long totalValue)
             {
                 RelativeSizeAxes = Axes.X;
                 AutoSizeAxes = Axes.Y;
 
-                RollingCounter<long> rollingCounter;
+                RollingCounter<long> countRollingCounter;
+                RollingCounter<long> valueRollingCounter;
                 Children = new Drawable[]
                 {
                     new Box()
@@ -234,14 +235,41 @@ namespace AWBWApp.Game.UI.Replay
                         Colour = new Color4(20, 20, 20, 255),
                         Text = heading
                     },
-                    rollingCounter = new RollingCounterWithTooltip<long>
+                    new FillFlowContainer()
                     {
-                        Tooltip = valueDesc,
+                        Position = new Vector2(-5, 0),
                         Anchor = Anchor.TopRight,
                         Origin = Anchor.TopRight,
-                        Position = new Vector2(-5, 0),
-                        Font = FontUsage.Default.With(size: 18),
-                        Colour = new Color4(20, 20, 20, 255)
+                        Height = 18,
+                        AutoSizeAxes = Axes.X,
+                        Direction = FillDirection.Horizontal,
+                        Children = new Drawable[]
+                        {
+                            valueRollingCounter = new RollingCounterWithTooltip<long>
+                            {
+                                Anchor = Anchor.CentreRight,
+                                Origin = Anchor.CentreRight,
+                                Tooltip = description,
+                                Font = FontUsage.Default.With(size: 14),
+                                Colour = new Color4(20, 20, 20, 255)
+                            },
+                            new SpriteText()
+                            {
+                                Anchor = Anchor.CentreRight,
+                                Origin = Anchor.CentreRight,
+                                Font = FontUsage.Default.With(size: 18),
+                                Text = " / ",
+                                Colour = new Color4(20, 20, 20, 255)
+                            },
+                            countRollingCounter = new RollingCounterWithTooltip<long>
+                            {
+                                Anchor = Anchor.CentreRight,
+                                Origin = Anchor.CentreRight,
+                                Tooltip = description,
+                                Font = FontUsage.Default.With(size: 18),
+                                Colour = new Color4(20, 20, 20, 255)
+                            },
+                        }
                     },
                     new Box()
                     {
@@ -260,11 +288,12 @@ namespace AWBWApp.Game.UI.Replay
                     }
                 };
 
-                rollingCounter.Current.Value = totalValue;
+                countRollingCounter.Current.Value = totalCount;
+                valueRollingCounter.Current.Value = totalValue;
             }
 
-            public UnitFlowContainer(string heading, string countryPath, Dictionary<string, (int, long)> units, string valueDesc, long totalValue)
-                : this(heading, valueDesc, totalValue)
+            public UnitFlowContainer(string heading, string countryPath, Dictionary<string, (int, long)> units, string desc, int totalCount, long totalValue)
+                : this(heading, desc, totalCount, totalValue)
             {
                 var content = new Drawable[(units.Count / 3) + 1][];
 
@@ -283,8 +312,8 @@ namespace AWBWApp.Game.UI.Replay
                 setContent(content);
             }
 
-            public UnitFlowContainer(string heading, Dictionary<long, PlayerInfo> players, Dictionary<long, Dictionary<string, (int, long)>> units, string valueDesc, long totalValue)
-                : this(heading, valueDesc, totalValue)
+            public UnitFlowContainer(string heading, Dictionary<long, PlayerInfo> players, Dictionary<long, Dictionary<string, (int, long)>> units, string desc, int totalCount, long totalValue)
+                : this(heading, desc, totalCount, totalValue)
             {
                 var rowCount = 0;
 
