@@ -4,6 +4,7 @@ using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Logic;
+using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.UI.Replay;
 using NUnit.Framework;
 using osu.Framework.Allocation;
@@ -109,7 +110,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                         Colour = new Color4(42, 91, 139, 255).Lighten(0.2f),
                         Size = new Vector2(2)
                     },
-                    new ReplayPlayerListItem(null, playerInfo, null, false)
+                    new ReplayPlayerListItem(null, playerInfo, null, false, x => new List<DrawableUnit>())
                 }
             };
         }
