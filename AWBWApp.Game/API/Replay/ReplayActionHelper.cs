@@ -234,7 +234,7 @@ namespace AWBWApp.Game.API.Replay
                     continue;
 
                 var additionalFlags = unitAlive ? UnitStatType.UnitCountChanged : UnitStatType.None;
-                additionalFlags |= undo ? UnitStatType.UnitCountChanged : UnitStatType.None;
+                additionalFlags |= undo ? UnitStatType.Undo : UnitStatType.None;
 
                 controller.Stats.CurrentTurnStatsReadout[unit.PlayerID!.Value].RegisterUnitStats(additionalFlags | UnitStatType.LostUnit, unit.UnitName, unit.PlayerID!.Value, value);
                 if (unit.PlayerID != ownerID)
