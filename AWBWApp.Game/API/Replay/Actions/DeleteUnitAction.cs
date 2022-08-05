@@ -61,7 +61,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             MoveUnit?.SetupAndUpdate(controller, context);
 
             context.RemoveUnitFromSetupContext(DeletedUnitId, originalUnits, out unitValue);
-            context.AdjustStatReadoutsFromUnitList(context.ActivePlayerID, originalUnits.Values);
+            context.AdjustStatsToPlayerAction(context.ActivePlayerID, originalUnits.Values);
         }
 
         public bool HasVisibleAction(ReplayController controller)

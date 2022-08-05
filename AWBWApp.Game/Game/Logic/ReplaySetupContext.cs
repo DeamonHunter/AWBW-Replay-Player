@@ -269,11 +269,11 @@ namespace AWBWApp.Game.Game.Logic
             return unitToRemove;
         }
 
-        public void AdjustStatReadoutsFromUnitList(long ownerID, IEnumerable<ReplayUnit> units, long? skipUnitId = null)
+        public void AdjustStatReadoutToAttack(IEnumerable<ReplayUnit> units, long player1, long player2)
         {
             foreach (var unit in units)
             {
-                if (unit.ID == skipUnitId)
+                if (unit.PlayerID != player1 && unit.PlayerID != player2)
                     continue;
 
                 var value = ReplayActionHelper.CalculateUnitCost(unit, coStorage.GetCOByAWBWId(PlayerTurns[unit.PlayerID!.Value].ActiveCOID).DayToDayPower, null);
@@ -286,9 +286,36 @@ namespace AWBWApp.Game.Game.Logic
                 if (value <= 0)
                     continue;
 
+                if (unit.PlayerID == player1)
+                {
+                    StatsReadouts[player1].RegisterUnitStats(unitAlive ? UnitStatType.LostUnit : UnitStatType.LostUnit | UnitStatType.UnitCountChanged, unit.UnitName, unit.PlayerID!.Value, value);
+                    StatsReadouts[player2].RegisterUnitStats(unitAlive ? UnitStatType.DamageUnit : UnitStatType.DamageUnit | UnitStatType.UnitCountChanged, unit.UnitName, unit.PlayerID!.Value, value);
+                }
+                else
+                {
+                    StatsReadouts[player2].RegisterUnitStats(unitAlive ? UnitStatType.LostUnit : UnitStatType.LostUnit | UnitStatType.UnitCountChanged, unit.UnitName, unit.PlayerID!.Value, value);
+                    StatsReadouts[player1].RegisterUnitStats(unitAlive ? UnitStatType.DamageUnit : UnitStatType.DamageUnit | UnitStatType.UnitCountChanged, unit.UnitName, unit.PlayerID!.Value, value);
+                }
+            }
+        }
+
+        public void AdjustStatsToPlayerAction(long causedBy, IEnumerable<ReplayUnit> units)
+        {
+            foreach (var unit in units)
+            {
+                var value = ReplayActionHelper.CalculateUnitCost(unit, coStorage.GetCOByAWBWId(PlayerTurns[unit.PlayerID!.Value].ActiveCOID).DayToDayPower, null);
+
+                bool unitAlive = Units.TryGetValue(unit.ID, out var changedUnit);
+                if (unitAlive)
+                    value -= ReplayActionHelper.CalculateUnitCost(changedUnit, coStorage.GetCOByAWBWId(PlayerTurns[changedUnit.PlayerID!.Value].ActiveCOID).DayToDayPower, null);
+
+                //Don't care if the unit change doesn't affect value. In repairing/resupplying units.
+                if (value <= 0)
+                    continue;
+
                 StatsReadouts[unit.PlayerID!.Value].RegisterUnitStats(unitAlive ? UnitStatType.LostUnit : UnitStatType.LostUnit | UnitStatType.UnitCountChanged, unit.UnitName, unit.PlayerID!.Value, value);
-                if (unit.PlayerID != ownerID)
-                    StatsReadouts[ownerID].RegisterUnitStats(unitAlive ? UnitStatType.DamageUnit : UnitStatType.DamageUnit | UnitStatType.UnitCountChanged, unit.UnitName, unit.PlayerID!.Value, value);
+                if (unit.PlayerID != causedBy)
+                    StatsReadouts[causedBy].RegisterUnitStats(unitAlive ? UnitStatType.DamageUnit : UnitStatType.DamageUnit | UnitStatType.UnitCountChanged, unit.UnitName, unit.PlayerID!.Value, value);
             }
         }
 

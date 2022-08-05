@@ -215,30 +215,61 @@ namespace AWBWApp.Game.API.Replay
             }
         }
 
-        public static void AdjustStatReadoutsFromUnitList(ReplayController controller, long ownerID, IEnumerable<ReplayUnit> units, bool undo, long? skipUnitID = null)
+        public static void AdjustStatsToAttack(ReplayController controller, IEnumerable<ReplayUnit> units, long player1, long player2, bool undo)
         {
             foreach (var unit in units)
             {
-                if (unit.ID == skipUnitID)
+                if (unit.PlayerID != player1 && unit.PlayerID != player2)
                     continue;
 
-                var dayToDay = controller.Players[unit.PlayerID!.Value].ActiveCO.Value.CO.DayToDayPower;
-                var value = CalculateUnitCost(unit, dayToDay, null);
+                var co = controller.Players[unit.PlayerID!.Value].ActiveCO.Value.CO;
+                var value = ReplayActionHelper.CalculateUnitCost(unit, co.DayToDayPower, null);
 
                 bool unitAlive = controller.Map.TryGetDrawableUnit(unit.ID, out var changedUnit);
                 if (unitAlive)
-                    value -= CalculateUnitCost(changedUnit, dayToDay, null);
+                    value -= ReplayActionHelper.CalculateUnitCost(changedUnit, co.DayToDayPower, null);
 
                 //Don't care if the unit change doesn't affect value. In repairing/resupplying units.
                 if (value <= 0)
                     continue;
 
-                var additionalFlags = unitAlive ? UnitStatType.UnitCountChanged : UnitStatType.None;
-                additionalFlags |= undo ? UnitStatType.Undo : UnitStatType.None;
+                var stats = undo ? UnitStatType.Undo : UnitStatType.None;
+                stats |= unitAlive ? UnitStatType.None : UnitStatType.UnitCountChanged;
 
-                controller.Stats.CurrentTurnStatsReadout[unit.PlayerID!.Value].RegisterUnitStats(additionalFlags | UnitStatType.LostUnit, unit.UnitName, unit.PlayerID!.Value, value);
-                if (unit.PlayerID != ownerID)
-                    controller.Stats.CurrentTurnStatsReadout[ownerID].RegisterUnitStats(additionalFlags | UnitStatType.DamageUnit, unit.UnitName, unit.PlayerID!.Value, value);
+                if (unit.PlayerID == player1)
+                {
+                    controller.Stats.CurrentTurnStatsReadout[player1].RegisterUnitStats(stats | UnitStatType.LostUnit, unit.UnitName, unit.PlayerID!.Value, value);
+                    controller.Stats.CurrentTurnStatsReadout[player2].RegisterUnitStats(stats | UnitStatType.DamageUnit, unit.UnitName, unit.PlayerID!.Value, value);
+                }
+                else
+                {
+                    controller.Stats.CurrentTurnStatsReadout[player2].RegisterUnitStats(stats | UnitStatType.LostUnit, unit.UnitName, unit.PlayerID!.Value, value);
+                    controller.Stats.CurrentTurnStatsReadout[player1].RegisterUnitStats(stats | UnitStatType.DamageUnit, unit.UnitName, unit.PlayerID!.Value, value);
+                }
+            }
+        }
+
+        public static void AdjustStatsToPlayerAction(ReplayController controller, long causedBy, IEnumerable<ReplayUnit> units, bool undo)
+        {
+            foreach (var unit in units)
+            {
+                var co = controller.Players[unit.PlayerID!.Value].ActiveCO.Value.CO;
+                var value = ReplayActionHelper.CalculateUnitCost(unit, co.DayToDayPower, null);
+
+                bool unitAlive = controller.Map.TryGetDrawableUnit(unit.ID, out var changedUnit);
+                if (unitAlive)
+                    value -= ReplayActionHelper.CalculateUnitCost(changedUnit, co.DayToDayPower, null);
+
+                //Don't care if the unit change doesn't affect value. In repairing/resupplying units.
+                if (value <= 0)
+                    continue;
+
+                var stats = undo ? UnitStatType.Undo : UnitStatType.None;
+                stats |= unitAlive ? UnitStatType.None : UnitStatType.UnitCountChanged;
+
+                controller.Stats.CurrentTurnStatsReadout[unit.PlayerID!.Value].RegisterUnitStats(stats | UnitStatType.LostUnit, unit.UnitName, unit.PlayerID!.Value, value);
+                if (unit.PlayerID != causedBy)
+                    controller.Stats.CurrentTurnStatsReadout[causedBy].RegisterUnitStats(stats | UnitStatType.DamageUnit, unit.UnitName, unit.PlayerID!.Value, value);
             }
         }
     }
