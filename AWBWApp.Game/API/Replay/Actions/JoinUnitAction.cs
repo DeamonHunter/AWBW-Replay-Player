@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.UI.Replay;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Logging;
 
@@ -86,8 +87,13 @@ namespace AWBWApp.Game.API.Replay.Actions
             context.FundsValuesForPlayers[context.ActivePlayerID] = FundsAfterJoin;
 
             var dayToDay = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[context.ActivePlayerID].ActiveCOID).DayToDayPower;
-            var joinedUnitValueChange = ReplayActionHelper.CalculateUnitCost(JoinedUnit, dayToDay, null) - ReplayActionHelper.CalculateUnitCost(originalJoinedUnit, dayToDay, null);
-            valueChange = joinedUnitValueChange - ReplayActionHelper.CalculateUnitCost(originalJoiningUnit, dayToDay, null);
+            var originalJoiningUnitValue = ReplayActionHelper.CalculateUnitCost(originalJoiningUnit, dayToDay, null);
+            var originalJoinedUnitValue = ReplayActionHelper.CalculateUnitCost(originalJoinedUnit, dayToDay, null);
+            var joinedUnitValueChange = ReplayActionHelper.CalculateUnitCost(JoinedUnit, dayToDay, null);
+            valueChange = joinedUnitValueChange - (originalJoinedUnitValue + originalJoiningUnitValue);
+
+            var valueLost = Math.Max(-valueChange, 0);
+            context.StatsReadouts[originalJoinedUnit.PlayerID!.Value].RegisterUnitStats(UnitStatType.LostUnit | UnitStatType.UnitCountChanged, originalJoiningUnit.UnitName, originalJoiningUnit.PlayerID!.Value, valueLost);
         }
 
         public bool HasVisibleAction(ReplayController controller)
@@ -115,6 +121,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             var joinedUnit = controller.Map.GetDrawableUnit(JoinedUnit.ID);
 
             controller.ActivePlayer.UnitValue.Value += valueChange;
+            controller.Stats.CurrentTurnStatsReadout[originalJoinedUnit.PlayerID!.Value].RegisterUnitStats(UnitStatType.LostUnit | UnitStatType.UnitCountChanged, originalJoiningUnit.UnitName, originalJoiningUnit.PlayerID!.Value, Math.Max(-valueChange, 0));
 
             joinedUnit.UpdateUnit(JoinedUnit);
             controller.UpdateFogOfWar();
@@ -126,6 +133,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             controller.Map.AddUnit(originalJoiningUnit);
             controller.Map.GetDrawableUnit(originalJoinedUnit.ID).UpdateUnit(originalJoinedUnit);
+            controller.Stats.CurrentTurnStatsReadout[originalJoinedUnit.PlayerID!.Value].RegisterUnitStats(UnitStatType.LostUnit | UnitStatType.UnitCountChanged | UnitStatType.Undo, originalJoiningUnit.UnitName, originalJoiningUnit.PlayerID!.Value, Math.Max(-valueChange, 0));
 
             controller.ActivePlayer.UnitValue.Value -= valueChange;
             controller.ActivePlayer.Funds.Value -= fundsChange;
