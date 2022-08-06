@@ -83,6 +83,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             controller.Map.DeleteUnit(DeletedUnitId, true);
+            ReplayActionHelper.AdjustStatsToPlayerAction(controller, originalUnits[0].PlayerID!.Value, originalUnits.Values, false);
             controller.ActivePlayer.UnitValue.Value -= unitValue;
             controller.UpdateFogOfWar();
         }
@@ -93,6 +94,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             foreach (var unit in originalUnits)
                 controller.Map.AddUnit(unit.Value);
 
+            ReplayActionHelper.AdjustStatsToPlayerAction(controller, originalUnits[0].PlayerID!.Value, originalUnits.Values, true);
             controller.ActivePlayer.UnitValue.Value += unitValue;
 
             controller.UpdateFogOfWar();
