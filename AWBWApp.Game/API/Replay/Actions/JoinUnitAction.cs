@@ -93,7 +93,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             valueChange = joinedUnitValueChange - (originalJoinedUnitValue + originalJoiningUnitValue);
 
             var valueLost = Math.Max(-valueChange, 0);
-            context.StatsReadouts[originalJoinedUnit.PlayerID!.Value].RegisterUnitStats(UnitStatType.LostUnit | UnitStatType.UnitCountChanged, originalJoiningUnit.UnitName, originalJoiningUnit.PlayerID!.Value, valueLost);
+            context.StatsReadouts[originalJoinedUnit.PlayerID!.Value].RegisterUnitStats(UnitStatType.JoinUnit | UnitStatType.UnitCountChanged, originalJoiningUnit.UnitName, originalJoiningUnit.PlayerID!.Value, valueLost);
         }
 
         public bool HasVisibleAction(ReplayController controller)
@@ -121,7 +121,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             var joinedUnit = controller.Map.GetDrawableUnit(JoinedUnit.ID);
 
             controller.ActivePlayer.UnitValue.Value += valueChange;
-            controller.Stats.CurrentTurnStatsReadout[originalJoinedUnit.PlayerID!.Value].RegisterUnitStats(UnitStatType.LostUnit | UnitStatType.UnitCountChanged, originalJoiningUnit.UnitName, originalJoiningUnit.PlayerID!.Value, Math.Max(-valueChange, 0));
+            controller.Stats.CurrentTurnStatsReadout[originalJoinedUnit.PlayerID!.Value].RegisterUnitStats(UnitStatType.JoinUnit | UnitStatType.UnitCountChanged, originalJoiningUnit.UnitName, originalJoiningUnit.PlayerID!.Value, Math.Max(-valueChange, 0));
 
             joinedUnit.UpdateUnit(JoinedUnit);
             controller.UpdateFogOfWar();
@@ -133,7 +133,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             controller.Map.AddUnit(originalJoiningUnit);
             controller.Map.GetDrawableUnit(originalJoinedUnit.ID).UpdateUnit(originalJoinedUnit);
-            controller.Stats.CurrentTurnStatsReadout[originalJoinedUnit.PlayerID!.Value].RegisterUnitStats(UnitStatType.LostUnit | UnitStatType.UnitCountChanged | UnitStatType.Undo, originalJoiningUnit.UnitName, originalJoiningUnit.PlayerID!.Value, Math.Max(-valueChange, 0));
+            controller.Stats.CurrentTurnStatsReadout[originalJoinedUnit.PlayerID!.Value].RegisterUnitStats(UnitStatType.JoinUnit | UnitStatType.UnitCountChanged | UnitStatType.Undo, originalJoiningUnit.UnitName, originalJoiningUnit.PlayerID!.Value, Math.Max(-valueChange, 0));
 
             controller.ActivePlayer.UnitValue.Value -= valueChange;
             controller.ActivePlayer.Funds.Value -= fundsChange;

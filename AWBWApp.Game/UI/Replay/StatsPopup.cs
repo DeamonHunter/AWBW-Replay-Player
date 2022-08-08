@@ -63,6 +63,7 @@ namespace AWBWApp.Game.UI.Replay
                     },
                     new StatLine("Powers Used", $"{readout.PowersUsed} COP / {readout.SuperPowersUsed} SCOP"),
                     new UnitFlowContainer("Built/Value", players[playerID].Country.Value.UnitPath, readout.BuildStats, "Built Units/Built Unit Value", readout.TotalCountBuilt, readout.TotalValueBuilt),
+                    new UnitFlowContainer("Joined Units/Funds Gained", players[playerID].Country.Value.UnitPath, readout.JoinStats, "Joined Units/Funds Gained", readout.TotalCountJoin, readout.TotalValueJoin),
                     new UnitFlowContainer("Deaths/Value Damage Taken", players[playerID].Country.Value.UnitPath, readout.LostStats, "Lost Units/Unit Value Lost", readout.TotalCountLost, readout.TotalValueLost),
                     new UnitFlowContainer("Kills/Value Damage Dealt", players, readout.DamageOtherStats, "Killed Units/Unit Value Damage", readout.TotalCountDamaged, readout.TotalValueDamaged),
                 }

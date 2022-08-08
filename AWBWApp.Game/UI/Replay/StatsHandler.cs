@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.Game.Logic;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osuTK;
@@ -20,10 +19,8 @@ namespace AWBWApp.Game.UI.Replay
 
         private FillFlowContainer<StatsPopup> fillFlowContainer;
 
-        public StatsHandler(Bindable<int> turnNumberBindable)
+        public StatsHandler()
         {
-            turnNumberBindable.BindValueChanged(x => turnChanged(x.NewValue));
-
             Child = fillFlowContainer = new FillFlowContainer<StatsPopup>()
             {
                 Direction = FillDirection.Horizontal,
@@ -35,31 +32,31 @@ namespace AWBWApp.Game.UI.Replay
             };
         }
 
+        public void SetStatsToTurn(int turnID)
+        {
+            if (registeredReadouts.Count == 0 || turnID < 0)
+                return;
+
+            var readouts = registeredReadouts[turnID];
+
+            CurrentTurnStatsReadout.Clear();
+
+            foreach (var readout in readouts)
+                CurrentTurnStatsReadout.Add(readout.Key, readout.Value.Clone());
+        }
+
         public void RegisterReadouts(Dictionary<long, PlayerStatsReadout> readouts)
         {
             registeredReadouts.Add(readouts);
 
             if (registeredReadouts.Count == 1)
-                turnChanged(0);
+                SetStatsToTurn(0);
         }
 
         public void ClearReadouts()
         {
             CurrentTurnStatsReadout.Clear();
             registeredReadouts.Clear();
-        }
-
-        private void turnChanged(int newTurn)
-        {
-            if (registeredReadouts.Count == 0 || newTurn < 0)
-                return;
-
-            var readouts = registeredReadouts[newTurn];
-
-            CurrentTurnStatsReadout.Clear();
-
-            foreach (var readout in readouts)
-                CurrentTurnStatsReadout.Add(readout.Key, readout.Value.Clone());
         }
 
         public void ShowStatsForPlayer(Dictionary<long, PlayerInfo> players, long playerID)
@@ -118,6 +115,10 @@ namespace AWBWApp.Game.UI.Replay
         public long TotalValueBuilt;
         public Dictionary<string, (int, long)> BuildStats = new Dictionary<string, (int, long)>();
 
+        public int TotalCountJoin;
+        public long TotalValueJoin;
+        public Dictionary<string, (int, long)> JoinStats = new Dictionary<string, (int, long)>();
+
         public int TotalCountLost;
         public long TotalValueLost;
         public Dictionary<string, (int, long)> LostStats = new Dictionary<string, (int, long)>();
@@ -155,6 +156,25 @@ namespace AWBWApp.Game.UI.Replay
                     TotalValueBuilt += change;
                     unitStats.unitValue += change;
                     BuildStats[unitName] = unitStats;
+                    break;
+                }
+
+                case UnitStatType.JoinUnit:
+                {
+                    if (!JoinStats.TryGetValue(unitName, out (int unitCount, long unitValue) unitStats))
+                        unitStats = (0, 0);
+
+                    if (unitLostOrGained)
+                    {
+                        unitStats.unitCount += undo ? -1 : 1;
+                        TotalCountJoin += undo ? -1 : 1;
+                    }
+
+                    var change = undo ? -valueChange : valueChange;
+
+                    TotalValueJoin += change;
+                    unitStats.unitValue += change;
+                    JoinStats[unitName] = unitStats;
                     break;
                 }
 
@@ -212,6 +232,8 @@ namespace AWBWApp.Game.UI.Replay
                 MoneySpentOnRepairingUnits = MoneySpentOnRepairingUnits,
                 TotalCountBuilt = TotalCountBuilt,
                 TotalValueBuilt = TotalValueBuilt,
+                TotalCountJoin = TotalCountJoin,
+                TotalValueJoin = TotalValueJoin,
                 TotalCountLost = TotalCountLost,
                 TotalValueLost = TotalValueLost,
                 TotalCountDamaged = TotalCountDamaged,
@@ -220,6 +242,9 @@ namespace AWBWApp.Game.UI.Replay
 
             foreach (var stat in BuildStats)
                 readout.BuildStats[stat.Key] = stat.Value;
+
+            foreach (var stat in JoinStats)
+                readout.JoinStats[stat.Key] = stat.Value;
 
             foreach (var stat in LostStats)
                 readout.LostStats[stat.Key] = stat.Value;
@@ -245,10 +270,11 @@ namespace AWBWApp.Game.UI.Replay
         BuildUnit = 1 << 0,
         LostUnit = 1 << 1,
         DamageUnit = 1 << 2,
+        JoinUnit = 1 << 3,
 
-        UnitStatsMask = BuildUnit | LostUnit | DamageUnit,
+        UnitStatsMask = BuildUnit | LostUnit | DamageUnit | JoinUnit,
 
-        UnitCountChanged = 1 << 3,
-        Undo = 1 << 4,
+        UnitCountChanged = 1 << 4,
+        Undo = 1 << 5,
     }
 }
