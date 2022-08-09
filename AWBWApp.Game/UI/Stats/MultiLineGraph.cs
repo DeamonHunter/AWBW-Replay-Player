@@ -12,13 +12,18 @@ namespace AWBWApp.Game.UI.Stats
 {
     public class MultiLineGraph : Container
     {
-        public float ActualMaxValue { get; private set; } = float.MinValue;
-        public float ActualMinValue { get; private set; } = float.MaxValue;
+        public float ActualMaxValue { get; private set; } = 0;
+        public float ActualMinValue { get; private set; } = 0;
+
+        public float ShownMaxValue => Math.Max(0, pathValues.Max(x => x.Active ? x.MaxValue : 0));
+        public float ShownMinValue => Math.Min(0, pathValues.Min(x => x.Active ? x.MaxValue : 0));
+
         public int NumberOfValues { get; private set; } = 0;
+        public int NumberOfLines => pathValues.Count;
 
         private readonly Container<Path> maskingContainer;
         private readonly List<Path> paths = new List<Path>();
-        private readonly List<(float[], Color4)> pathValues = new List<(float[], Color4)>();
+        private readonly List<LineData> pathValues = new List<LineData>();
 
         private readonly LayoutValue pathCached = new LayoutValue(Invalidation.DrawSize);
         private const double transform_duration = 1500;
@@ -60,43 +65,59 @@ namespace AWBWApp.Game.UI.Stats
                     {
                         AutoSizeAxes = Axes.None,
                         RelativeSizeAxes = Axes.Both,
-                        PathRadius = 1f
+                        PathRadius = 1f,
                     };
                     maskingContainer.Add(newPath);
                     paths.Add(newPath);
                 }
             }
 
+            var maxValue = ShownMaxValue;
+            var minValue = ShownMinValue;
+
             for (int i = 0; i < pathValues.Count; i++)
             {
-                (var values, var colour) = pathValues[i];
+                var data = pathValues[i];
+                if (!data.Active)
+                    continue;
 
                 var path = paths[i];
-                path.Colour = colour;
+                path.Colour = data.DisplayColor;
 
-                for (int j = 0; j < values.Length; j++)
+                if (NumberOfValues == 1)
                 {
-                    float x = j / (float)(NumberOfValues - 1) * (DrawWidth - 2 * path.PathRadius);
-                    float y = GetYPosition(values[j]) * (DrawHeight - 2 * path.PathRadius);
-                    path.AddVertex(new Vector2(x, y));
+                    path.AddVertex(new Vector2(0, 0));
+                    path.AddVertex(new Vector2((DrawWidth - 2 * path.PathRadius), 0));
+                }
+                else
+                {
+                    for (int j = 0; j < data.Values.Length; j++)
+                    {
+                        float x = j / (float)(NumberOfValues - 1) * (DrawWidth - 2 * path.PathRadius);
+                        float y = GetYPosition(data.Values[j], maxValue, minValue) * (DrawHeight - 2 * path.PathRadius);
+                        path.AddVertex(new Vector2(x, y));
+                    }
                 }
             }
         }
 
-        protected float GetYPosition(float value)
+        protected float GetYPosition(float value, float maxValue, float minValue)
         {
-            if (ActualMinValue == ActualMaxValue)
-                return value > 1 ? 0 : 1;
+            if (maxValue == minValue)
+            {
+                minValue -= 1;
+                maxValue += 1;
+            }
 
-            return (ActualMaxValue - value) / (ActualMaxValue - ActualMinValue);
+            return (maxValue - value) / (maxValue - minValue);
         }
 
         public void ClearPaths()
         {
             pathValues.Clear();
 
-            ActualMaxValue = float.MinValue;
-            ActualMinValue = float.MaxValue;
+            ActualMaxValue = 0;
+            ActualMinValue = 0;
             NumberOfValues = 0;
             pathCached.Invalidate();
         }
@@ -104,10 +125,11 @@ namespace AWBWApp.Game.UI.Stats
         public void AddPath(Color4 colour, IEnumerable<float> values)
         {
             var array = values.ToArray();
-            pathValues.Add((array, colour));
 
             var max = array.Max();
             var min = array.Min();
+
+            pathValues.Add(new LineData { Values = array, Active = true, DisplayColor = colour, MaxValue = max, MinValue = min });
 
             ActualMaxValue = Math.Max(ActualMaxValue, max);
             ActualMinValue = Math.Min(ActualMinValue, min);
@@ -120,6 +142,23 @@ namespace AWBWApp.Game.UI.Stats
                 maskingContainer.Width = 0;
                 maskingContainer.ResizeWidthTo(1, transform_duration, Easing.OutQuint);
             }
+        }
+
+        public void SetVisibilityOfLine(int lineNum, bool visible)
+        {
+            pathValues[lineNum].Active = visible;
+            pathCached.Invalidate();
+        }
+
+        public bool GetVisibilityOfLine(int lineNum) => pathValues[lineNum].Active;
+
+        private class LineData
+        {
+            public float[] Values;
+            public float MaxValue;
+            public float MinValue;
+            public Color4 DisplayColor;
+            public bool Active;
         }
     }
 }

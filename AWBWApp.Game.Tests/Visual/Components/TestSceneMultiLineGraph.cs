@@ -51,8 +51,8 @@ namespace AWBWApp.Game.Tests.Visual.Components
                     averagePlayer1Stats.Add(player1Stats[i] - average);
                 }
 
-                lineGraph.AddPath(Color4.Red, player1Stats);
-                lineGraph.AddPath(Color4.Green, averagePlayer1Stats);
+                lineGraph.AddPath("Generated Funds", Color4.Red, player1Stats);
+                lineGraph.AddPath("Average Generated Funds", Color4.Green, averagePlayer1Stats);
             });
         }
 
@@ -70,8 +70,8 @@ namespace AWBWApp.Game.Tests.Visual.Components
                     averagePlayer2Stats.Add(player2Stats[i] - average);
                 }
 
-                lineGraph.AddPath(Color4.Red, player2Stats);
-                lineGraph.AddPath(Color4.Green, averagePlayer2Stats);
+                lineGraph.AddPath("Generated Funds", Color4.Red, player2Stats);
+                lineGraph.AddPath("Average Generated Funds", Color4.Green, averagePlayer2Stats);
             });
         }
     }

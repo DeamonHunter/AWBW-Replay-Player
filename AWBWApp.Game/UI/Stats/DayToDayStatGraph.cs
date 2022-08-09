@@ -5,6 +5,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Layout;
 using osu.Framework.Utils;
 using osuTK;
@@ -22,6 +23,7 @@ namespace AWBWApp.Game.UI.Stats
 
         private readonly LayoutValue pathCached = new LayoutValue(Invalidation.RequiredParentSizeToFit);
         private readonly MultiLineGraph graph;
+        private readonly FillFlowContainer<LegendButton> legend;
 
         public int PlayerCount = 2;
 
@@ -29,6 +31,8 @@ namespace AWBWApp.Game.UI.Stats
         {
             Masking = true;
             CornerRadius = 5;
+            RelativeSizeAxes = Axes.X;
+            AutoSizeAxes = Axes.Y;
 
             InternalChildren = new Drawable[]
             {
@@ -37,58 +41,79 @@ namespace AWBWApp.Game.UI.Stats
                     RelativeSizeAxes = Axes.Both,
                     Colour = new Color4(200, 200, 200, 255)
                 },
-                new GridContainer()
+                new FillFlowContainer
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(0.95f),
-                    ColumnDimensions = new[]
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Direction = FillDirection.Vertical,
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.TopCentre,
+
+                    Children = new Drawable[]
                     {
-                        new Dimension(GridSizeMode.AutoSize),
-                        new Dimension()
-                    },
-                    RowDimensions = new[]
-                    {
-                        new Dimension(),
-                        new Dimension(GridSizeMode.AutoSize),
-                    },
-                    Content = new[]
-                    {
-                        new Drawable[]
+                        new GridContainer()
                         {
-                            rowTicksContainer = new Container<SpriteText>
+                            RelativeSizeAxes = Axes.X,
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            Size = new Vector2(0.95f, 200),
+                            ColumnDimensions = new[]
                             {
-                                RelativeSizeAxes = Axes.Y,
-                                AutoSizeAxes = Axes.X
+                                new Dimension(GridSizeMode.AutoSize),
+                                new Dimension()
                             },
-                            new Container()
+                            RowDimensions = new[]
                             {
-                                RelativeSizeAxes = Axes.Both,
-                                Children = new Drawable[]
+                                new Dimension(),
+                                new Dimension(GridSizeMode.AutoSize),
+                            },
+                            Content = new[]
+                            {
+                                new Drawable[]
                                 {
+                                    rowTicksContainer = new Container<SpriteText>
+                                    {
+                                        RelativeSizeAxes = Axes.Y,
+                                        AutoSizeAxes = Axes.X
+                                    },
                                     new Container()
                                     {
                                         RelativeSizeAxes = Axes.Both,
-                                        Children = new[]
+                                        Children = new Drawable[]
                                         {
-                                            rowLinesContainer = new Container<Box> { RelativeSizeAxes = Axes.Both },
-                                            columnLinesContainer = new Container<Box> { RelativeSizeAxes = Axes.Both },
+                                            new Container()
+                                            {
+                                                RelativeSizeAxes = Axes.Both,
+                                                Children = new[]
+                                                {
+                                                    rowLinesContainer = new Container<Box> { RelativeSizeAxes = Axes.Both },
+                                                    columnLinesContainer = new Container<Box> { RelativeSizeAxes = Axes.Both },
+                                                }
+                                            },
+                                            graph = new MultiLineGraph { RelativeSizeAxes = Axes.Both }
                                         }
-                                    },
-                                    graph = new MultiLineGraph { RelativeSizeAxes = Axes.Both }
+                                    }
+                                },
+                                new Drawable[]
+                                {
+                                    Empty(),
+                                    columnTicksContainer = new Container<SpriteText>()
+                                    {
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        Padding = new MarginPadding { Top = 5, Right = 5 }
+                                    }
                                 }
                             }
                         },
-                        new Drawable[]
+                        legend = new FillFlowContainer<LegendButton>()
                         {
-                            Empty(),
-                            columnTicksContainer = new Container<SpriteText>()
-                            {
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Padding = new MarginPadding { Top = 5, Right = 5 }
-                            }
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            AutoSizeAxes = Axes.Y,
+                            RelativeSizeAxes = Axes.X,
+                            Direction = FillDirection.Full,
+                            Spacing = new Vector2(2, 0)
                         }
                     }
                 }
@@ -100,12 +125,27 @@ namespace AWBWApp.Game.UI.Stats
         public void ClearPaths()
         {
             graph.ClearPaths();
+            legend.Clear();
             pathCached.Invalidate();
         }
 
-        public void AddPath(Color4 colour, IEnumerable<float> values)
+        public void AddPath(string legendName, Color4 colour, IEnumerable<float> values)
         {
+            var lineNumber = graph.NumberOfLines;
             graph.AddPath(colour, values);
+            legend.Add(new LegendButton(colour)
+            {
+                Text = legendName,
+                Action = () => setVisibilityOfLine(lineNumber)
+            });
+            pathCached.Invalidate();
+        }
+
+        private void setVisibilityOfLine(int lineNumber)
+        {
+            var active = !graph.GetVisibilityOfLine(lineNumber);
+            graph.SetVisibilityOfLine(lineNumber, active);
+            legend[lineNumber].SetActive(active);
             pathCached.Invalidate();
         }
 
@@ -128,10 +168,14 @@ namespace AWBWApp.Game.UI.Stats
             if (graph.NumberOfValues <= 0)
                 return;
 
-            var min = (long)graph.ActualMinValue;
-            var max = (long)graph.ActualMaxValue;
-            if (graph.NumberOfValues == 1)
-                min = 0;
+            var min = (long)graph.ShownMinValue;
+            var max = (long)graph.ShownMaxValue;
+
+            if (min == max)
+            {
+                min -= 1;
+                max += 1;
+            }
 
             var tickInterval = getTickInterval(max - min, 6);
 
@@ -213,7 +257,7 @@ namespace AWBWApp.Game.UI.Stats
                 Text = value.ToLocalisableString("N0"),
                 Colour = new Color4(20, 20, 20, 255),
                 Font = FontUsage.Default.With(size: 12),
-                Y = y
+                Y = Math.Max(y, -0.98f)
             });
 
             rowLinesContainer.Add(new Box()
@@ -238,8 +282,8 @@ namespace AWBWApp.Game.UI.Stats
                 Text = value.ToString(),
                 Font = FontUsage.Default.With(size: 12),
                 Colour = new Color4(20, 20, 20, 255),
-                Rotation = 45,
-                X = x
+                Rotation = 15,
+                X = Math.Min(x, 0.98f)
             });
 
             columnLinesContainer.Add(new Box
@@ -252,6 +296,46 @@ namespace AWBWApp.Game.UI.Stats
                 EdgeSmoothness = Vector2.One,
                 X = x
             });
+        }
+
+        private class LegendButton : BasicButton
+        {
+            private Box activeBox;
+
+            public LegendButton(Color4 lineColour)
+            {
+                Anchor = Anchor.TopCentre;
+                Origin = Anchor.TopCentre;
+                AutoSizeAxes = Axes.X;
+                Height = 20;
+                BackgroundColour = new Color4(200, 200, 200, 255);
+
+                SpriteText.Position = new Vector2(8, 0);
+                SpriteText.Colour = new Color4(20, 20, 20, 255);
+                SpriteText.Font = SpriteText.Font.With(size: 14);
+                AddRange(new Drawable[]
+                {
+                    new Box
+                    {
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
+                        Position = new Vector2(2, 0),
+                        Colour = lineColour,
+                        Size = new Vector2(12, 3)
+                    },
+                    activeBox = new Box()
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = new Color4(20, 20, 20, 50),
+                        Alpha = 0
+                    }
+                });
+            }
+
+            public void SetActive(bool active)
+            {
+                activeBox.FadeTo(active ? 0 : 1, 150, Easing.OutQuint);
+            }
         }
     }
 }

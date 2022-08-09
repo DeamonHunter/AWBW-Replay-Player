@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.UI.Stats;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osuTK;
@@ -29,7 +28,6 @@ namespace AWBWApp.Game.UI.Replay
             {
                 statGraph = new DayToDayStatGraph()
                 {
-                    Size = new Vector2(400, 200),
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Alpha = 0
@@ -48,10 +46,11 @@ namespace AWBWApp.Game.UI.Replay
 
         public void SetStatsToTurn(int turnID)
         {
-            if (registeredReadouts.Count == 0 || turnID < 0)
+            if (RegisteredReadouts.Count == 0 || turnID < 0)
                 return;
 
-            var readouts = registeredReadouts[turnID];
+            turn = turnID;
+            var readouts = RegisteredReadouts[turnID];
 
             CurrentTurnStatsReadout.Clear();
 
