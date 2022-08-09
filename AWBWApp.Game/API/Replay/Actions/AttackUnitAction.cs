@@ -242,10 +242,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 }
             }
 
-            context.AdjustStatReadoutsFromUnitList(originalAttacker.PlayerID!.Value, originalUnits.Values);
-
-            //Note: All transports can't attack, so there should only ever be one unit here.
-            controller.Stats.CurrentTurnStatsReadout[originalDefender.PlayerID!.Value].RegisterUnitStats(UnitStatType.DamageUnit, originalAttacker.UnitName, originalAttacker.PlayerID!.Value, attackerValueLost);
+            context.AdjustStatReadoutToAttack(originalUnits.Values, attacker.PlayerID!.Value, defender.PlayerID!.Value);
 
             foreach (var powerChange in PowerChanges)
             {
@@ -385,10 +382,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         private void afterAttackChanges(ReplayController controller)
         {
             controller.UpdateFogOfWar();
-            ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, false);
-
-            //Note: All transports can't attack, so there should only ever be one unit here.
-            controller.Stats.CurrentTurnStatsReadout[originalDefender.PlayerID!.Value].RegisterUnitStats(UnitStatType.DamageUnit, originalAttacker.UnitName, originalAttacker.PlayerID!.Value, attackerValueLost);
+            ReplayActionHelper.AdjustStatsToAttack(controller, originalUnits.Values, originalAttacker.PlayerID!.Value, originalDefender.PlayerID!.Value, false);
 
             if (GainedFunds != null)
             {
@@ -438,10 +432,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public void UndoAction(ReplayController controller)
         {
             Logger.Log("Undoing Attack Action.");
-            ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, true);
-
-            //Note: All transports can't attack, so there should only ever be one unit here.
-            controller.Stats.CurrentTurnStatsReadout[originalDefender.PlayerID!.Value].RegisterUnitStats(UnitStatType.DamageUnit | UnitStatType.Undo, originalAttacker.UnitName, originalAttacker.PlayerID!.Value, attackerValueLost);
+            ReplayActionHelper.AdjustStatsToAttack(controller, originalUnits.Values, originalAttacker.PlayerID!.Value, originalDefender.PlayerID!.Value, true);
 
             foreach (var originalUnit in originalUnits)
             {

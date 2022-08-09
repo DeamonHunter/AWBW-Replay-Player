@@ -19,7 +19,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
     public class TestSceneGameMap : BaseGameMapTestScene
     {
         //private const int default_game_id = 545975;
-        private const int default_game_id = 478996; //14 player tag team
+        private const int default_game_id = 496916; //14 player tag team
 
         [Resolved]
         private ReplayManager replayStorage { get; set; }

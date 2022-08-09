@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Units;
+using AWBWApp.Game.UI.Replay;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Tests.Visual.Logic
@@ -138,6 +140,106 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 return false;
 
             return test(drawableUnit);
+        }
+
+        protected bool DoesStatsMatch(UnitStatType type, string unitName, int player1Count, long player1Value, int player2Count, int player2Value)
+        {
+            switch (type)
+            {
+                case UnitStatType.LostUnit:
+                {
+                    if (ReplayController.Stats.CurrentTurnStatsReadout[0].LostStats.Count > 0)
+                    {
+                        var player1Stat = ReplayController.Stats.CurrentTurnStatsReadout[0].LostStats[unitName];
+                        if (player1Stat.Item1 != player1Count || player1Stat.Item2 != player1Value)
+                            return false;
+                    }
+                    else if (player1Count != 0 || player1Value != 0)
+                        return false;
+
+                    if (ReplayController.Stats.CurrentTurnStatsReadout[1].LostStats.Count > 0)
+                    {
+                        var player2Stat = ReplayController.Stats.CurrentTurnStatsReadout[1].LostStats[unitName];
+                        if (player2Stat.Item1 != player2Count || player2Stat.Item2 != player2Value)
+                            return false;
+                    }
+                    else if (player2Count != 0 || player2Value != 0)
+                        return false;
+
+                    return true;
+                }
+
+                case UnitStatType.DamageUnit:
+                {
+                    if (ReplayController.Stats.CurrentTurnStatsReadout[0].DamageOtherStats.Count > 0)
+                    {
+                        var player1Stat = ReplayController.Stats.CurrentTurnStatsReadout[0].DamageOtherStats[1][unitName];
+                        if (player1Stat.Item1 != player1Count || player1Stat.Item2 != player1Value)
+                            return false;
+                    }
+                    else if (player1Count != 0 || player1Value != 0)
+                        return false;
+
+                    if (ReplayController.Stats.CurrentTurnStatsReadout[1].DamageOtherStats.Count > 0)
+                    {
+                        var player2Stat = ReplayController.Stats.CurrentTurnStatsReadout[1].DamageOtherStats[0][unitName];
+                        if (player2Stat.Item1 != player2Count || player2Stat.Item2 != player2Value)
+                            return false;
+                    }
+                    else if (player2Count != 0 || player2Value != 0)
+                        return false;
+
+                    return true;
+                }
+
+                case UnitStatType.BuildUnit:
+                {
+                    if (ReplayController.Stats.CurrentTurnStatsReadout[0].BuildStats.Count > 0)
+                    {
+                        var player1Stat = ReplayController.Stats.CurrentTurnStatsReadout[0].BuildStats[unitName];
+                        if (player1Stat.Item1 != player1Count || player1Stat.Item2 != player1Value)
+                            return false;
+                    }
+                    else if (player1Count != 0 || player1Value != 0)
+                        return false;
+
+                    if (ReplayController.Stats.CurrentTurnStatsReadout[1].BuildStats.Count > 0)
+                    {
+                        var player2Stat = ReplayController.Stats.CurrentTurnStatsReadout[1].BuildStats[unitName];
+                        if (player2Stat.Item1 != player2Count || player2Stat.Item2 != player2Value)
+                            return false;
+                    }
+                    else if (player2Count != 0 || player2Value != 0)
+                        return false;
+
+                    return true;
+                }
+
+                case UnitStatType.JoinUnit:
+                {
+                    if (ReplayController.Stats.CurrentTurnStatsReadout[0].JoinStats.Count > 0)
+                    {
+                        var player1Stat = ReplayController.Stats.CurrentTurnStatsReadout[0].JoinStats[unitName];
+                        if (player1Stat.Item1 != player1Count || player1Stat.Item2 != player1Value)
+                            return false;
+                    }
+                    else if (player1Count != 0 || player1Value != 0)
+                        return false;
+
+                    if (ReplayController.Stats.CurrentTurnStatsReadout[1].JoinStats.Count > 0)
+                    {
+                        var player2Stat = ReplayController.Stats.CurrentTurnStatsReadout[1].JoinStats[unitName];
+                        if (player2Stat.Item1 != player2Count || player2Stat.Item2 != player2Value)
+                            return false;
+                    }
+                    else if (player2Count != 0 || player2Value != 0)
+                        return false;
+
+                    return true;
+                }
+            }
+
+            throw new InvalidEnumArgumentException(nameof(type), (int)type, typeof(UnitStatType));
         }
     }
 }

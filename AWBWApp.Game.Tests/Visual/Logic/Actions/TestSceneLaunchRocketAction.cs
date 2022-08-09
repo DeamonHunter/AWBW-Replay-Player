@@ -1,6 +1,7 @@
 ﻿using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.UI.Replay;
 using NUnit.Framework;
 using osu.Framework.Graphics.Primitives;
 
@@ -22,10 +23,15 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Rocket Launched", () => !ReplayController.HasOngoingAction());
             AddAssert("No Missile", () => !ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out _));
             AddAssert("Opponent Unit Value is 17500", () => ReplayController.Players[1].UnitValue.Value == 17500);
+            AddUntilStep("Lost Stats: (0) 0/0, (1) 0/7500", () => DoesStatsMatch(UnitStatType.LostUnit, "Infantry", 0, 0, 0, 7500));
+            AddUntilStep("Damage Stats: (0) 0/7500, (1) 0/0", () => DoesStatsMatch(UnitStatType.DamageUnit, "Infantry", 0, 7500, 0, 0));
+
             AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Unit reverted correctly", () => DoesUnitMatchData(launchingUnit.ID, launchingUnit));
             AddAssert("Missile Exists", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out _));
             AddAssert("Opponent Unit Value is 24000", () => ReplayController.Players[1].UnitValue.Value == 25000);
+            AddUntilStep("Lost Stats: (0) 0/0, (1) 0/0", () => DoesStatsMatch(UnitStatType.LostUnit, "Infantry", 0, 0, 0, 0));
+            AddUntilStep("Damage Stats: (0) 0/0, (1) 0/0", () => DoesStatsMatch(UnitStatType.DamageUnit, "Infantry", 0, 0, 0, 0));
         }
 
         [Test]
@@ -36,10 +42,15 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Rocket Launched", () => !ReplayController.HasOngoingAction());
             AddAssert("No Missile", () => !ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out _));
             AddAssert("Opponent Unit Value is 16800", () => ReplayController.Players[1].UnitValue.Value == 17500);
+            AddUntilStep("Lost Stats: (0) 0/0, (1) 0/7500", () => DoesStatsMatch(UnitStatType.LostUnit, "Infantry", 0, 0, 0, 7500));
+            AddUntilStep("Damage Stats: (0) 0/7500, (1) 0/0", () => DoesStatsMatch(UnitStatType.DamageUnit, "Infantry", 0, 7500, 0, 0));
+
             AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Unit reverted correctly", () => DoesUnitMatchData(launchingUnit.ID, launchingUnit));
             AddAssert("Missile Exists", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out _));
             AddAssert("Opponent Unit Value is 24000", () => ReplayController.Players[1].UnitValue.Value == 25000);
+            AddUntilStep("Lost Stats: (0) 0/0, (1) 0/0", () => DoesStatsMatch(UnitStatType.LostUnit, "Infantry", 0, 0, 0, 0));
+            AddUntilStep("Damage Stats: (0) 0/0, (1) 0/0", () => DoesStatsMatch(UnitStatType.DamageUnit, "Infantry", 0, 0, 0, 0));
         }
 
         [Test]
@@ -50,10 +61,15 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
             AddUntilStep("Rocket Launched", () => !ReplayController.HasOngoingAction());
             AddAssert("No Missile", () => !ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out _));
             AddAssert("Opponent Unit Value is 2500", () => ReplayController.Players[1].UnitValue.Value == 2500);
+            AddUntilStep("Lost Stats: (0) 0/0, (1) 0/7500", () => DoesStatsMatch(UnitStatType.LostUnit, "Infantry", 0, 0, 0, 5000));
+            AddUntilStep("Damage Stats: (0) 0/7500, (1) 0/0", () => DoesStatsMatch(UnitStatType.DamageUnit, "Infantry", 0, 5000, 0, 0));
+
             AddStep("Undo", ReplayController.GoToPreviousAction);
             AddAssert("Unit reverted correctly", () => DoesUnitMatchData(launchingUnit.ID, launchingUnit));
             AddAssert("Missile Exists", () => ReplayController.Map.TryGetDrawableBuilding(buildingPosition, out _));
             AddAssert("Opponent Unit Value is 3900", () => ReplayController.Players[1].UnitValue.Value == 7500);
+            AddUntilStep("Lost Stats: (0) 0/0, (1) 0/0", () => DoesStatsMatch(UnitStatType.LostUnit, "Infantry", 0, 0, 0, 0));
+            AddUntilStep("Damage Stats: (0) 0/0, (1) 0/0", () => DoesStatsMatch(UnitStatType.DamageUnit, "Infantry", 0, 0, 0, 0));
         }
 
         private void launchTest(bool move, bool opponentLowHp)

@@ -107,7 +107,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 }
             }
 
-            context.AdjustStatReadoutsFromUnitList(context.ActivePlayerID, originalUnits.Values);
+            context.AdjustStatsToPlayerAction(context.ActivePlayerID, originalUnits.Values);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -169,7 +169,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             controller.UpdateFogOfWar();
-            ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, false);
+            ReplayActionHelper.AdjustStatsToPlayerAction(controller, controller.ActivePlayer.ID, originalUnits.Values, false);
         }
 
         public bool HasVisibleAction(ReplayController controller)
@@ -192,7 +192,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             Logger.Log("Undoing Launch Action.");
 
-            ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, true);
+            ReplayActionHelper.AdjustStatsToPlayerAction(controller, controller.ActivePlayer.ID, originalUnits.Values, true);
 
             foreach (var replayUnit in originalUnits)
             {

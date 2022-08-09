@@ -4,6 +4,7 @@ using System.Linq;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Logic;
+using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Components.Menu;
@@ -62,20 +63,25 @@ namespace AWBWApp.Game.UI.Replay
         private Bindable<FaceDirection> faceDirection;
         private Bindable<object> countryBindable;
         private Action<long> openPlayerStats;
+        private Func<long, List<DrawableUnit>> getUnits;
 
         private bool usePercentagePowers;
+        private float unitPriceMultiplier;
         private ReplayPlayerList playerList;
+        private List<DrawableUnit> tooltipContent;
 
-        public ReplayPlayerListItem(ReplayPlayerList playerList, PlayerInfo info, Action<long> openPlayerStats, bool usePercentagePowers)
+        public ReplayPlayerListItem(ReplayPlayerList playerList, PlayerInfo info, Action<long> openPlayerStats, bool usePercentagePowers, Func<long, List<DrawableUnit>> getUnits)
         {
             PlayerID = info.ID;
             RoundOrder = info.RoundOrder;
             EliminatedOn = info.EliminatedOn;
             Team = info.Team;
+            unitPriceMultiplier = info.ActiveCO.Value.CO.DayToDayPower.UnitPriceMultiplier;
 
             this.openPlayerStats = openPlayerStats;
             this.usePercentagePowers = usePercentagePowers;
             this.playerList = playerList;
+            this.getUnits = getUnits;
 
             faceDirection = info.UnitFaceDirection.GetBoundCopy();
 
@@ -315,8 +321,8 @@ namespace AWBWApp.Game.UI.Replay
                             Direction = FillDirection.Vertical,
                             Children = new Drawable[]
                             {
-                                unitCount = new ReplayPlayerInfo($"{info.Country.Value.UnitPath}/Infantry-0", info.UnitCount),
-                                unitValue = new ReplayPlayerInfo($"{info.Country.Value.UnitPath}/Infantry-0", info.UnitValue)
+                                unitCount = new ReplayPlayerInfoWithTooltip($"{info.Country.Value.UnitPath}/Infantry-0", info.UnitCount, () => getUnits(PlayerID), false, 1),
+                                unitValue = new ReplayPlayerInfoWithTooltip($"{info.Country.Value.UnitPath}/Infantry-0", info.UnitValue, () => getUnits(PlayerID), true, unitPriceMultiplier)
                                 {
                                     Position = new Vector2(0, 19),
                                 }
@@ -609,6 +615,32 @@ namespace AWBWApp.Game.UI.Replay
             {
                 infoIcon.Texture = textureStore.Get(path);
             }
+        }
+
+        private class ReplayPlayerInfoWithTooltip : ReplayPlayerInfo, IHasCustomTooltip<UnitMouseoverTooltip.UnitMouseOverInfo>
+        {
+            private Func<List<DrawableUnit>> getUnits;
+            private bool value;
+            private float unitPriceMultiplier;
+
+            public ReplayPlayerInfoWithTooltip(string icon, Bindable<int> count, Func<List<DrawableUnit>> getUnits, bool value, float unitPriceMultiplier)
+                : base(icon, count)
+            {
+                this.value = value;
+                this.unitPriceMultiplier = unitPriceMultiplier;
+
+                this.getUnits = getUnits;
+            }
+
+            public ITooltip<UnitMouseoverTooltip.UnitMouseOverInfo> GetCustomTooltip() => new UnitMouseoverTooltip();
+
+            public UnitMouseoverTooltip.UnitMouseOverInfo TooltipContent =>
+                new UnitMouseoverTooltip.UnitMouseOverInfo
+                {
+                    Units = getUnits(),
+                    ShowValue = value,
+                    ValueMultiplier = unitPriceMultiplier
+                };
         }
     }
 }

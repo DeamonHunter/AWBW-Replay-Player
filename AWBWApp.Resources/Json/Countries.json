@@ -79,7 +79,7 @@
     "Brown Desert": {
         "AWBWID": 8,
         "code": "bd",
-        "name": "Grey Sky",
+        "name": "Brown Desert",
         "unitPath": "Units/BrownDesert",
         "faceDirection": "Right",
         "colours": {

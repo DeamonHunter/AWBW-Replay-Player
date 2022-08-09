@@ -97,7 +97,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 }
             }
 
-            context.AdjustStatReadoutsFromUnitList(context.ActivePlayerID, originalUnits.Values, ExplodedUnitId);
+            context.AdjustStatsToPlayerAction(context.ActivePlayerID, originalUnits.Values);
         }
 
         public bool HasVisibleAction(ReplayController controller)
@@ -158,14 +158,14 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             controller.UpdateFogOfWar();
-            ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, false, ExplodedUnitId);
+            ReplayActionHelper.AdjustStatsToPlayerAction(controller, controller.ActivePlayer.ID, originalUnits.Values, false);
         }
 
         public void UndoAction(ReplayController controller)
         {
             Logger.Log("Undoing Explode Action.");
 
-            ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, true, ExplodedUnitId);
+            ReplayActionHelper.AdjustStatsToPlayerAction(controller, controller.ActivePlayer.ID, originalUnits.Values, true);
 
             foreach (var replayUnit in originalUnits)
             {

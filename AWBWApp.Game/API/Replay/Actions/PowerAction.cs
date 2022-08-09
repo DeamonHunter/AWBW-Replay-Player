@@ -465,7 +465,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 }
             }
 
-            context.AdjustStatReadoutsFromUnitList(context.ActivePlayerID, originalUnits.Values);
+            context.AdjustStatsToPlayerAction(context.ActivePlayerID, originalUnits.Values);
 
             if (CreatedUnits != null)
             {
@@ -707,7 +707,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         public void UndoAction(ReplayController controller)
         {
             Logger.Log("Undoing Power Action.");
-            ReplayActionHelper.AdjustStatReadoutsFromUnitList(controller, controller.ActivePlayer.ID, originalUnits.Values, true);
+            ReplayActionHelper.AdjustStatsToPlayerAction(controller, controller.ActivePlayer.ID, originalUnits.Values, true);
             if (IsSuperPower)
                 controller.Stats.CurrentTurnStatsReadout[controller.ActivePlayer.ID].SuperPowersUsed--;
             else

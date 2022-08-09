@@ -148,7 +148,7 @@ namespace AWBWApp.Game.Game.Logic
                             Size = new Vector2(player_list_width, 1)
                         },
                         barWidget = new MoveableReplayBarWidget(this),
-                        Stats = new StatsHandler(CurrentTurnIndex)
+                        Stats = new StatsHandler
                         {
                             RelativeSizeAxes = Axes.Both,
                             Position = new Vector2(-100, 0),
@@ -642,6 +642,9 @@ namespace AWBWApp.Game.Game.Logic
             try
             {
                 currentTurn.Actions[currentActionIndex].UndoAction(this);
+
+                if (currentActionIndex == 0)
+                    Stats.SetStatsToTurn(CurrentTurnIndex.Value);
             }
             catch (Exception e)
             {
@@ -728,6 +731,7 @@ namespace AWBWApp.Game.Game.Logic
             CurrentTurnIndex.Value = turnIdx;
 
             Map.ScheduleUpdateToGameState(currentTurn, UpdateFogOfWar);
+            Stats.SetStatsToTurn(turnIdx);
             ScheduleAfterChildren(() =>
             {
                 buildingDiscoveryController.SetDiscoveries(turnIdx, Map);

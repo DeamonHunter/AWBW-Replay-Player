@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Sprites;
@@ -25,6 +26,24 @@ namespace AWBWApp.Game.UI.Components.Menu
             });
 
             Items = ((T[])Enum.GetValues(typeof(T))).Select(x => new StatefulMenuItem(x.ToString(), genericBindable, x)).ToArray();
+        }
+
+        public EnumMenuItem(LocalisableString text, Bindable<T> bindable, IEnumerable<T> options)
+            : base(text)
+        {
+            var genericBindable = new Bindable<object>(default(T));
+
+            bindable.BindValueChanged(x =>
+            {
+                genericBindable.Value = x.NewValue;
+            }, true);
+
+            genericBindable.BindValueChanged(x =>
+            {
+                bindable.Value = (T)x.NewValue;
+            });
+
+            Items = options.Select(x => new StatefulMenuItem(x.ToString(), genericBindable, x)).ToArray();
         }
     }
 
