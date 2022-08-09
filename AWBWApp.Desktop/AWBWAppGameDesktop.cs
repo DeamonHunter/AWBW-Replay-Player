@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using AWBWApp.Game;
 using AWBWApp.Game.Update;
 using osu.Framework;
+using osu.Framework.Bindables;
+using osu.Framework.Configuration;
+using osu.Framework.Input;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
@@ -14,6 +17,8 @@ namespace AWBWApp.Desktop
 {
     public class AWBWAppGameDesktop : AWBWAppGame
     {
+        private Bindable<WindowMode> windowMode;
+
         public override void SetHost(GameHost host)
         {
             base.SetHost(host);
@@ -22,6 +27,10 @@ namespace AWBWApp.Desktop
 
             var desktopWindow = (SDL2DesktopWindow)host.Window;
             desktopWindow.SetIconFromStream(iconStream);
+            desktopWindow.WindowMode.BindValueChanged(
+                x => desktopWindow.ConfineMouseMode.Value = (x.NewValue == WindowMode.Fullscreen ? ConfineMouseMode.Fullscreen : ConfineMouseMode.Never),
+                true);
+
             desktopWindow.Title = Name;
             desktopWindow.DragDrop += fileDrop;
         }
