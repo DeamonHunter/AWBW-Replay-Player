@@ -180,6 +180,7 @@ namespace AWBWApp.Game.UI.Replay
             replayBarScale.BindValueChanged(x =>
             {
                 this.ScaleTo(x.NewValue, 150, Easing.OutQuint);
+                MaxScale = x.NewValue;
                 moveBarToOffset(Position);
             }, true);
 

@@ -28,6 +28,8 @@ namespace AWBWApp.Game.UI.Replay
 
         protected readonly ReplayController ReplayController;
 
+        protected float MaxScale = 1;
+
         public ReplayBarWidget(ReplayController replayController)
         {
             ReplayController = replayController;
@@ -147,13 +149,13 @@ namespace AWBWApp.Game.UI.Replay
         public void AnimateShow()
         {
             Show();
-            this.ScaleTo(Vector2.One, 75, Easing.InQuint);
+            this.ScaleTo(MaxScale, 75, Easing.InQuint);
         }
 
         public void AnimateHide()
         {
             Show();
-            this.ScaleTo(new Vector2(0.85f, 0f), 75, Easing.OutQuint);
+            this.ScaleTo(new Vector2(0.85f * MaxScale, 0f), 75, Easing.OutQuint);
         }
 
         protected class ReplayIconButton : IconButton, IKeyBindingHandler<AWBWGlobalAction>, IHasTooltip
