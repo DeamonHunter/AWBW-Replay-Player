@@ -402,7 +402,7 @@
     "Grimm": {
         "Name": "Grimm",
         "AWBWID": 20,
-        "ToolTip": "Grimm: Units gain +30% attack, but lose -20% attack",
+        "ToolTip": "Grimm: Units gain +30% attack, but lose -20% defense.",
         "DayToDayPower": {
             "PowerIncreases": [
                 {
