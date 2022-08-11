@@ -86,6 +86,9 @@ namespace AWBWApp.Game.UI.Toolbar
         {
             switch (item)
             {
+                case SliderMenuItem:
+                    return new DrawablwSliderMenuItem(item, onHoverChange);
+
                 case StatefulMenuItem:
                     return new DrawableStatefulMenuItem(item, onHoverChange);
 

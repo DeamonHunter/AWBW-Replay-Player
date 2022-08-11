@@ -149,7 +149,7 @@ namespace AWBWApp.Game.UI.Components
 
             private class ReplayBarDropdownMenuItem : DrawableDropdownMenuItem
             {
-                private DrawableAWBWMenuItem.TextContainer text;
+                private DrawableAWBWMenuItem.InnerMenuContainer innerMenu;
 
                 public ReplayBarDropdownMenuItem(MenuItem item)
                     : base(item)
@@ -180,17 +180,17 @@ namespace AWBWApp.Game.UI.Components
 
                     if (IsHovered && !Item.Action.Disabled)
                     {
-                        text.BoldText.FadeIn(80, Easing.OutQuint);
-                        text.NormalText.FadeOut(80, Easing.OutQuint);
+                        innerMenu.BoldText.FadeIn(80, Easing.OutQuint);
+                        innerMenu.NormalText.FadeOut(80, Easing.OutQuint);
                     }
                     else
                     {
-                        text.BoldText.FadeOut(80, Easing.OutQuint);
-                        text.NormalText.FadeIn(80, Easing.OutQuint);
+                        innerMenu.BoldText.FadeOut(80, Easing.OutQuint);
+                        innerMenu.NormalText.FadeIn(80, Easing.OutQuint);
                     }
                 }
 
-                protected override Drawable CreateContent() => text = new DrawableAWBWMenuItem.TextContainer();
+                protected override Drawable CreateContent() => innerMenu = new DrawableAWBWMenuItem.InnerMenuContainer();
             }
         }
     }

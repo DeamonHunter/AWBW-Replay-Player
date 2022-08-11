@@ -11,7 +11,7 @@ namespace AWBWApp.Game.UI.Toolbar
 {
     public class DrawableAWBWMenuItem : Menu.DrawableMenuItem
     {
-        private TextContainer text;
+        private InnerMenuContainer innerMenu;
 
         private Action<bool, Drawable> onHoverChange;
 
@@ -30,38 +30,38 @@ namespace AWBWApp.Game.UI.Toolbar
         protected override bool OnHover(HoverEvent e)
         {
             onHoverChange.Invoke(true, this);
-            updateState();
+            UpdateHover();
             return base.OnHover(e);
         }
 
         protected override void OnHoverLost(HoverLostEvent e)
         {
             onHoverChange.Invoke(false, this);
-            updateState();
+            UpdateHover();
             base.OnHoverLost(e);
         }
 
-        private void updateState()
+        protected virtual void UpdateHover()
         {
             Alpha = Item.Action.Disabled ? 0.2f : 1f;
 
             if (IsHovered && !Item.Action.Disabled)
             {
-                text.BoldText.FadeIn(80, Easing.OutQuint);
-                text.NormalText.FadeOut(80, Easing.OutQuint);
+                innerMenu.BoldText.FadeIn(80, Easing.OutQuint);
+                innerMenu.NormalText.FadeOut(80, Easing.OutQuint);
             }
             else
             {
-                text.BoldText.FadeOut(80, Easing.OutQuint);
-                text.NormalText.FadeIn(80, Easing.OutQuint);
+                innerMenu.BoldText.FadeOut(80, Easing.OutQuint);
+                innerMenu.NormalText.FadeIn(80, Easing.OutQuint);
             }
         }
 
-        protected override Drawable CreateContent() => text = CreateTextContainer();
+        protected override Drawable CreateContent() => innerMenu = CreateInnerMenuContainer();
 
-        protected virtual TextContainer CreateTextContainer() => new TextContainer();
+        protected virtual InnerMenuContainer CreateInnerMenuContainer() => new InnerMenuContainer();
 
-        public class TextContainer : Container, IHasText
+        public class InnerMenuContainer : Container, IHasText
         {
             public LocalisableString Text
             {
@@ -76,7 +76,7 @@ namespace AWBWApp.Game.UI.Toolbar
             public readonly SpriteText NormalText;
             public readonly SpriteText BoldText;
 
-            public TextContainer()
+            public InnerMenuContainer()
             {
                 Anchor = Anchor.CentreLeft;
                 Origin = Anchor.CentreLeft;

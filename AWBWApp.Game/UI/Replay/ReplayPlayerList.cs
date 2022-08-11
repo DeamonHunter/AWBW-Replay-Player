@@ -132,7 +132,10 @@ namespace AWBWApp.Game.UI.Replay
             {
                 new MenuItem("Scale")
                 {
-                    Items = createPlayerListScaleItems(configManager)
+                    Items = new MenuItem[]
+                    {
+                        new SliderMenuItem(playerListScale, 0.5f, 1.5f, 1, 0.025f)
+                    }
                 },
                 new ToggleMenuItem("Keep Order Static", configManager.GetBindable<bool>(AWBWSetting.PlayerListKeepOrderStatic)),
                 new ToggleMenuItem("Swap Sides", configManager.GetBindable<bool>(AWBWSetting.PlayerListLeftSide)),
@@ -223,36 +226,5 @@ namespace AWBWApp.Game.UI.Replay
         }
 
         public MenuItem[] ContextMenuItems { get; private set; }
-
-        private MenuItem[] createPlayerListScaleItems(AWBWConfigManager configManager)
-        {
-            var playerListScale = configManager.GetBindable<float>(AWBWSetting.PlayerListScale);
-            var genericBindable = new Bindable<object>(1f);
-
-            playerListScale.BindValueChanged(x =>
-            {
-                genericBindable.Value = x.NewValue;
-            }, true);
-
-            genericBindable.BindValueChanged(x =>
-            {
-                playerListScale.Value = (float)x.NewValue;
-            });
-
-            return new MenuItem[]
-            {
-                new StatefulMenuItem("0.75x", genericBindable, 0.75f),
-                new StatefulMenuItem("0.8x", genericBindable, 0.8f),
-                new StatefulMenuItem("0.85x", genericBindable, 0.85f),
-                new StatefulMenuItem("0.9x", genericBindable, 0.9f),
-                new StatefulMenuItem("0.95x", genericBindable, 0.95f),
-                new StatefulMenuItem("1.0x", genericBindable, 1f),
-                new StatefulMenuItem("1.05x", genericBindable, 1.05f),
-                new StatefulMenuItem("1.1x", genericBindable, 1.1f),
-                new StatefulMenuItem("1.15x", genericBindable, 1.15f),
-                new StatefulMenuItem("1.2x", genericBindable, 1.2f),
-                new StatefulMenuItem("1.25x", genericBindable, 1.25f),
-            };
-        }
     }
 }

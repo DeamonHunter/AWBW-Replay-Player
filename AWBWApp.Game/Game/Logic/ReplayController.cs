@@ -117,7 +117,7 @@ namespace AWBWApp.Game.Game.Logic
                 Right = mapPadding.Right + DrawableTile.BASE_SIZE.X * 4,
             };
 
-            AddInternal(new AWBWContextMenuContainer()
+            AddInternal(new AWBWNonRelativeContextMenuContainer()
             {
                 RelativeSizeAxes = Axes.Both,
                 Child = new AWBWTooltipContainer

@@ -1,12 +1,12 @@
 ﻿using System;
-using AWBWApp.Game.UI.Components.Menu;
+using AWBWApp.Game.UI.Toolbar;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osuTK;
 
-namespace AWBWApp.Game.UI.Toolbar
+namespace AWBWApp.Game.UI.Components.Menu
 {
     public class DrawableStatefulMenuItem : DrawableAWBWMenuItem
     {
@@ -17,15 +17,15 @@ namespace AWBWApp.Game.UI.Toolbar
         {
         }
 
-        protected override TextContainer CreateTextContainer() => new ToggleTextContainer(Item);
+        protected override InnerMenuContainer CreateInnerMenuContainer() => new ToggleInnerMenuContainer(Item);
 
-        private class ToggleTextContainer : TextContainer
+        private class ToggleInnerMenuContainer : InnerMenuContainer
         {
             private readonly StatefulMenuItem toggleItem;
             private readonly Bindable<object> state;
             private readonly SpriteIcon stateIcon;
 
-            public ToggleTextContainer(StatefulMenuItem menuItem)
+            public ToggleInnerMenuContainer(StatefulMenuItem menuItem)
             {
                 toggleItem = menuItem;
                 state = menuItem.State.GetBoundCopy();

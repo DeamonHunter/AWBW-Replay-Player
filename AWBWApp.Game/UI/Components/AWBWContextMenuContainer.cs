@@ -1,12 +1,11 @@
 ﻿using AWBWApp.Game.UI.Toolbar;
 using osu.Framework.Graphics.Cursor;
-using osu.Framework.Graphics.UserInterface;
 
-namespace AWBWApp.Game.UI
+namespace AWBWApp.Game.UI.Components
 {
     public class AWBWContextMenuContainer : ContextMenuContainer
     {
-        protected override Menu CreateMenu() =>
+        protected override osu.Framework.Graphics.UserInterface.Menu CreateMenu() =>
             new AWBWSubMenu(null, null)
             {
                 HideSubMenuIfUnHovered = false,
