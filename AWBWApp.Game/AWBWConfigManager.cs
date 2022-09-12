@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using AWBWApp.Game.IO;
 using AWBWApp.Game.UI.Select;
+using osu.Framework.Bindables;
 using osu.Framework.Configuration;
+using osu.Framework.Graphics;
 using osu.Framework.Platform;
 
 namespace AWBWApp.Game
@@ -12,8 +15,28 @@ namespace AWBWApp.Game
         {
         }
 
+        private void setColourBindable(AWBWSetting setting)
+        {
+            if (ConfigStore.TryGetValue(setting, out var bindable))
+            {
+                if (!(bindable is BindableColour))
+                {
+                    var other = (IBindable<Colour4>)bindable;
+                    var newBindable = new BindableColour();
+                    newBindable.Value = other.Value;
+
+                    ConfigStore[setting] = newBindable;
+                }
+            }
+            else
+                ConfigStore.Add(setting, new BindableColour());
+        }
+
         protected override void InitialiseDefaults()
         {
+            setColourBindable(AWBWSetting.MapGridBaseColour);
+            setColourBindable(AWBWSetting.MapGridGridColour);
+
             SetDefault(AWBWSetting.Version, string.Empty);
 
             SetDefault(AWBWSetting.ReplaySkipEndTurn, false);
@@ -35,6 +58,9 @@ namespace AWBWApp.Game
             SetDefault(AWBWSetting.MapSkin, MapSkin.AW2);
             SetDefault(AWBWSetting.ShowTileCursor, true);
             SetDefault(AWBWSetting.ShowAnimationsForHiddenActions, true);
+
+            SetDefault(AWBWSetting.MapGridBaseColour, new Colour4(42, 91, 139, 255).Lighten(0.2f));
+            SetDefault(AWBWSetting.MapGridGridColour, new Colour4(42, 91, 139, 255).Darken(0.8f));
         }
     }
 
@@ -59,7 +85,9 @@ namespace AWBWApp.Game
         ReplayAllowLeftMouseToDragMap,
         MapSkin,
         ShowTileCursor,
-        ShowAnimationsForHiddenActions
+        ShowAnimationsForHiddenActions,
+        MapGridBaseColour,
+        MapGridGridColour
     }
 
     public enum MapSkin

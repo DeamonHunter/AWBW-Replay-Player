@@ -7,11 +7,11 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Components.Menu
 {
-    public class DrawablwSliderMenuItem : DrawableAWBWMenuItem
+    public class DrawableSliderMenuItem : DrawableAWBWMenuItem
     {
         protected new SliderMenuItem Item => (SliderMenuItem)base.Item;
 
-        public DrawablwSliderMenuItem(MenuItem item, Action<bool, Drawable> onHoverChange)
+        public DrawableSliderMenuItem(MenuItem item, Action<bool, Drawable> onHoverChange)
             : base(item, onHoverChange)
         {
         }
@@ -41,7 +41,7 @@ namespace AWBWApp.Game.UI.Components.Menu
                     Margin = new MarginPadding { Right = 4, Left = 40 },
                     AlwaysPresent = true
                 });
-                sliderBar.Current.BindTo(menuItem.State);
+                sliderBar.Current.BindTo(sliderItem.State);
             }
 
             protected override void LoadComplete()

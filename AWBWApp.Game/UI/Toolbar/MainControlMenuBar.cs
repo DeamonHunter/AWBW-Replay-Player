@@ -4,6 +4,7 @@ using AWBWApp.Game.UI.Interrupts;
 using AWBWApp.Game.UI.Notifications;
 using osu.Framework.Allocation;
 using osu.Framework.Configuration;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Platform;
 
@@ -37,6 +38,14 @@ namespace AWBWApp.Game.UI.Toolbar
                         new ToggleMenuItem("Movement Animations", configManager.GetBindable<bool>(AWBWSetting.ReplayMovementAnimations)),
                         new ToggleMenuItem("Show Movement Arrows", configManager.GetBindable<bool>(AWBWSetting.ReplayShowMovementArrows)),
                         new ToggleMenuItem("Show Animations for Hidden Actions", configManager.GetBindable<bool>(AWBWSetting.ShowAnimationsForHiddenActions)),
+                        new MenuItem("Map Background Colour")
+                        {
+                            Items = new[] { new ColourPickerMenuItem(configManager.GetBindable<Colour4>(AWBWSetting.MapGridBaseColour)) }
+                        },
+                        new MenuItem("Map Background Grid Colour")
+                        {
+                            Items = new[] { new ColourPickerMenuItem(configManager.GetBindable<Colour4>(AWBWSetting.MapGridGridColour)) }
+                        },
                     }
                 },
                 new MenuItem("Control Settings")

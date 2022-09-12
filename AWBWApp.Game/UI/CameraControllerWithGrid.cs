@@ -24,17 +24,21 @@ namespace AWBWApp.Game.UI
         protected override Container<Drawable> Content => content;
 
         private Container content;
+
+        private Box background;
         private MovingGrid grid;
 
         private static readonly Vector2 grid_offset = new Vector2(-1, -2);
 
         private IBindable<bool> allowLeftMouseToDragMap;
+        private IBindable<Colour4> baseMapColour;
+        private IBindable<Colour4> baseGridColour;
 
         public CameraControllerWithGrid()
         {
             InternalChildren = new Drawable[]
             {
-                new Box()
+                background = new Box()
                 {
                     RelativeSizeAxes = Axes.Both,
                     Colour = new Color4(42, 91, 139, 255).Lighten(0.2f),
@@ -59,6 +63,12 @@ namespace AWBWApp.Game.UI
         private void load(AWBWConfigManager configManager)
         {
             allowLeftMouseToDragMap = configManager.GetBindable<bool>(AWBWSetting.ReplayAllowLeftMouseToDragMap);
+
+            baseMapColour = configManager.GetBindable<Colour4>(AWBWSetting.MapGridBaseColour);
+            baseMapColour.BindValueChanged(x => background.Colour = x.NewValue, true);
+
+            baseGridColour = configManager.GetBindable<Colour4>(AWBWSetting.MapGridGridColour);
+            baseGridColour.BindValueChanged(x => grid.GridColor = x.NewValue, true);
         }
 
         //Todo: Center it as well

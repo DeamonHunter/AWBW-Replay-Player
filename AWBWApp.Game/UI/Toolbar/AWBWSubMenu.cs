@@ -87,18 +87,37 @@ namespace AWBWApp.Game.UI.Toolbar
             switch (item)
             {
                 case SliderMenuItem:
-                    return new DrawablwSliderMenuItem(item, onHoverChange);
+                    return new DrawableSliderMenuItem(item, onHoverChange);
 
                 case StatefulMenuItem:
                     return new DrawableStatefulMenuItem(item, onHoverChange);
 
                 case ToggleMenuItem:
                     return new DrawableToggleMenuItem(item, onHoverChange);
+
+                case ColourPickerMenuItem:
+                    return new DrawableColourPickerMenuItem(item, onHoverChange);
             }
 
             return new DrawableAWBWMenuItem(item, onHoverChange);
         }
 
         protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) => new BasicScrollContainer(direction);
+
+        protected override void OnFocusLost(FocusLostEvent e)
+        {
+            //This is needed to make sure colour picker text boxes don't cause issues.
+            var drawableToCheck = e.NextFocused;
+
+            while (drawableToCheck?.Parent != null)
+            {
+                if (drawableToCheck.Parent == this)
+                    return;
+
+                drawableToCheck = drawableToCheck.Parent;
+            }
+
+            base.OnFocusLost(e);
+        }
     }
 }
