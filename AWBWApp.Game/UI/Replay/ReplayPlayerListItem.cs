@@ -49,6 +49,8 @@ namespace AWBWApp.Game.UI.Replay
         private Container superPowerBackground;
         private Sprite superPower;
 
+        private ReplayPlayerInfo playerMoney;
+        private ReplayPlayerInfo playerIncome;
         private ReplayPlayerInfo unitCount;
         private ReplayPlayerInfo unitValue;
 
@@ -308,8 +310,8 @@ namespace AWBWApp.Game.UI.Replay
                             Direction = FillDirection.Vertical,
                             Children = new Drawable[]
                             {
-                                new ReplayPlayerInfo("UI/Coin", info.Funds),
-                                new ReplayPlayerInfo("UI/BuildingsCaptured", info.PropertyValue)
+                                playerMoney = new ReplayPlayerInfo("UI/Coin", info.Funds, true),
+                                playerIncome = new ReplayPlayerInfo("UI/BuildingsCaptured", info.PropertyValue, true)
                                 {
                                     Position = new Vector2(0, 19)
                                 }
@@ -321,8 +323,8 @@ namespace AWBWApp.Game.UI.Replay
                             Direction = FillDirection.Vertical,
                             Children = new Drawable[]
                             {
-                                unitCount = new ReplayPlayerInfoWithTooltip($"{info.Country.Value.UnitPath}/Infantry-0", info.UnitCount, () => getUnits(PlayerID), false, 1),
-                                unitValue = new ReplayPlayerInfoWithTooltip($"{info.Country.Value.UnitPath}/Infantry-0", info.UnitValue, () => getUnits(PlayerID), true, unitPriceMultiplier)
+                                unitCount = new ReplayPlayerInfoWithTooltip($"{info.Country.Value.UnitPath}/Infantry-0", info.UnitCount, () => getUnits(PlayerID), false, 1, true),
+                                unitValue = new ReplayPlayerInfoWithTooltip($"{info.Country.Value.UnitPath}/Infantry-0", info.UnitValue, () => getUnits(PlayerID), true, unitPriceMultiplier, true)
                                 {
                                     Position = new Vector2(0, 19),
                                 }
@@ -375,7 +377,7 @@ namespace AWBWApp.Game.UI.Replay
         }
 
         [BackgroundDependencyLoader]
-        private void load()
+        private void load(AWBWConfigManager config)
         {
             if (Team != null)
                 teamSprite.Texture = textureStore.Get($"UI/Team-{Team}");
@@ -387,6 +389,14 @@ namespace AWBWApp.Game.UI.Replay
 
             superPower.Texture = textureStore.Get("UI/SuperPower");
             superPower.Size = superPower.Texture.Size;
+        }
+
+        public void SetShowHiddenInformation(bool show)
+        {
+            playerMoney.SetShowHiddenInformation(show);
+            playerIncome.SetShowHiddenInformation(show);
+            unitCount.SetShowHiddenInformation(show);
+            unitValue.SetShowHiddenInformation(show);
         }
 
         public int CompareTo(ReplayPlayerListItem other)
@@ -549,13 +559,20 @@ namespace AWBWApp.Game.UI.Replay
             private Sprite infoIcon;
             private string infoIconTexture;
             //private ShrinkingSpriteText text;
-            private RollingCounter<int> counter;
+            private RollingCounter<int> counterText;
+
+            private ShrinkingCompositeDrawable informationDrawable;
+            private SpriteText hiddenInformationText;
+
+            private bool hideInFog;
 
             [Resolved]
             private NearestNeighbourTextureStore textureStore { get; set; }
 
-            public ReplayPlayerInfo(string icon, Bindable<int> count)
+            public ReplayPlayerInfo(string icon, Bindable<int> count, bool hideInFog)
             {
+                this.hideInFog = hideInFog;
+
                 infoIconTexture = icon;
                 RelativeSizeAxes = Axes.X;
                 Height = 18;
@@ -586,23 +603,52 @@ namespace AWBWApp.Game.UI.Replay
                                     Position = new Vector2(1),
                                     FillMode = FillMode.Fit
                                 },
-                                new ShrinkingCompositeDrawable(counter = new RollingCounter<int>()
-                                {
-                                    Colour = Color4.Black,
-                                    Anchor = Anchor.CentreRight,
-                                    Origin = Anchor.CentreRight,
-                                    Padding = new MarginPadding { Left = 1, Right = 3 }
-                                })
+                                new Container()
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    ShrinkAxes = Axes.X
+                                    Children = new Drawable[]
+                                    {
+                                        informationDrawable = new ShrinkingCompositeDrawable(counterText = new RollingCounter<int>()
+                                        {
+                                            Colour = Color4.Black,
+                                            Anchor = Anchor.CentreRight,
+                                            Origin = Anchor.CentreRight,
+                                            Padding = new MarginPadding { Left = 1, Right = 3 }
+                                        })
+                                        {
+                                            RelativeSizeAxes = Axes.Both,
+                                            ShrinkAxes = Axes.X
+                                        },
+                                        hiddenInformationText = new SpriteText()
+                                        {
+                                            Colour = Color4.Black,
+                                            Anchor = Anchor.CentreRight,
+                                            Origin = Anchor.CentreRight,
+                                            Padding = new MarginPadding { Left = 1, Right = 3 },
+                                            Text = "???"
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 };
 
-                counter.Current.BindTo(count);
+                counterText.Current.BindTo(count);
+            }
+
+            public void SetShowHiddenInformation(bool visible)
+            {
+                if (visible || !hideInFog)
+                {
+                    informationDrawable.Show();
+                    hiddenInformationText.Hide();
+                }
+                else
+                {
+                    informationDrawable.Hide();
+                    hiddenInformationText.Show();
+                }
             }
 
             [BackgroundDependencyLoader]
@@ -623,8 +669,8 @@ namespace AWBWApp.Game.UI.Replay
             private bool value;
             private float unitPriceMultiplier;
 
-            public ReplayPlayerInfoWithTooltip(string icon, Bindable<int> count, Func<List<DrawableUnit>> getUnits, bool value, float unitPriceMultiplier)
-                : base(icon, count)
+            public ReplayPlayerInfoWithTooltip(string icon, Bindable<int> count, Func<List<DrawableUnit>> getUnits, bool value, float unitPriceMultiplier, bool hideInFog)
+                : base(icon, count, hideInFog)
             {
                 this.value = value;
                 this.unitPriceMultiplier = unitPriceMultiplier;

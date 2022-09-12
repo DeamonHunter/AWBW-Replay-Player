@@ -41,6 +41,7 @@ namespace AWBWApp.Game
 
             SetDefault(AWBWSetting.ReplaySkipEndTurn, false);
             SetDefault(AWBWSetting.ReplayOnlyShownKnownInfo, true);
+            SetDefault(AWBWSetting.ReplayShowPlayerDetailsInFog, true);
             SetDefault(AWBWSetting.ReplayShowGridOverMap, false);
             SetDefault(AWBWSetting.ReplayShortenActionToolTips, false);
             SetDefault(AWBWSetting.ReplayShowMovementArrows, true);
@@ -69,6 +70,7 @@ namespace AWBWApp.Game
         Version,
         ReplaySkipEndTurn,
         ReplayOnlyShownKnownInfo,
+        ReplayShowPlayerDetailsInFog,
         ReplayShowGridOverMap,
         ReplayShortenActionToolTips,
         ReplayShowMovementArrows,

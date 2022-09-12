@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AWBWApp.Game.Game.Logic;
+using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Components.Menu;
 using osu.Framework.Allocation;
@@ -21,6 +22,7 @@ namespace AWBWApp.Game.UI.Replay
     public class ReplayPlayerList : Container, IHasContextMenu
     {
         public ReplayBarWidget ReplayBarWidget;
+        public ReplayController controller;
 
         private FillFlowContainer fillContainer;
 
@@ -31,6 +33,10 @@ namespace AWBWApp.Game.UI.Replay
         private Bindable<bool> playerListDontReorder;
         private IBindable<bool> replayBarInPlayerList;
 
+        private IBindable<bool> showPlayerInformationInFog;
+        private string lastTeam;
+        private long lastPlayerID;
+
         private TeamOrPlayerDropdown fogDropdown;
 
         private long currentActivePlayer;
@@ -38,6 +44,7 @@ namespace AWBWApp.Game.UI.Replay
 
         public ReplayPlayerList(ReplayController controller)
         {
+            this.controller = controller;
             Masking = true;
             EdgeEffect = new EdgeEffectParameters
             {
@@ -128,6 +135,9 @@ namespace AWBWApp.Game.UI.Replay
                     ReplayBarWidget.AnimateHide();
             }, true);
 
+            showPlayerInformationInFog = configManager.GetBindable<bool>(AWBWSetting.ReplayShowPlayerDetailsInFog);
+            showPlayerInformationInFog.BindValueChanged(_ => SetHiddenInformation(lastTeam, lastPlayerID));
+
             ContextMenuItems = new[]
             {
                 new MenuItem("Scale")
@@ -172,6 +182,29 @@ namespace AWBWApp.Game.UI.Replay
                 SortList(drawablePlayers[0].PlayerID, 0);
                 fillContainer.FinishTransforms(true);
             });
+        }
+
+        public void ShowAllHiddenInformation()
+        {
+            foreach (var player in drawablePlayers)
+                player.SetShowHiddenInformation(true);
+        }
+
+        public void SetHiddenInformation(string team, long playerID)
+        {
+            if (showPlayerInformationInFog.Value)
+            {
+                foreach (var player in drawablePlayers)
+                    player.SetShowHiddenInformation(true);
+            }
+            else
+            {
+                foreach (var player in drawablePlayers)
+                    player.SetShowHiddenInformation(player.PlayerID == playerID || (!team.IsNullOrEmpty() && player.Team == team));
+            }
+
+            lastTeam = team;
+            lastPlayerID = playerID;
         }
 
         //Todo: Fix scheduling here.

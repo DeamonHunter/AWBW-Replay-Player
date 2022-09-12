@@ -31,13 +31,6 @@ namespace AWBWApp.Game.UI.Toolbar
                     Items = new MenuItem[]
                     {
                         new EnumMenuItem<WindowMode>("Fullscreen Mode", frameworkConfig.GetBindable<WindowMode>(FrameworkSetting.WindowMode), host.Window.SupportedWindowModes),
-                        new ToggleMenuItem("Show Grid", configManager.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap)),
-                        new ToggleMenuItem("Show Tile Cursor", configManager.GetBindable<bool>(AWBWSetting.ShowTileCursor)),
-                        new ToggleMenuItem("Show Buildings and Units in Fog", configManager.GetBindable<bool>(AWBWSetting.ReplayOnlyShownKnownInfo)),
-                        new ToggleMenuItem("Show Weather Particles", configManager.GetBindable<bool>(AWBWSetting.ReplayShowWeather)),
-                        new ToggleMenuItem("Movement Animations", configManager.GetBindable<bool>(AWBWSetting.ReplayMovementAnimations)),
-                        new ToggleMenuItem("Show Movement Arrows", configManager.GetBindable<bool>(AWBWSetting.ReplayShowMovementArrows)),
-                        new ToggleMenuItem("Show Animations for Hidden Actions", configManager.GetBindable<bool>(AWBWSetting.ShowAnimationsForHiddenActions)),
                         new MenuItem("Map Background Colour")
                         {
                             Items = new[] { new ColourPickerMenuItem(configManager.GetBindable<Colour4>(AWBWSetting.MapGridBaseColour)) }
@@ -46,6 +39,14 @@ namespace AWBWApp.Game.UI.Toolbar
                         {
                             Items = new[] { new ColourPickerMenuItem(configManager.GetBindable<Colour4>(AWBWSetting.MapGridGridColour)) }
                         },
+                        new ToggleMenuItem("Show Grid Overlay", configManager.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap)),
+                        new ToggleMenuItem("Show Tile Cursor", configManager.GetBindable<bool>(AWBWSetting.ShowTileCursor)),
+                        new ToggleMenuItem("Show Hidden Building/Units in Fog", configManager.GetBindable<bool>(AWBWSetting.ReplayOnlyShownKnownInfo)),
+                        new ToggleMenuItem("Show Funds/Unit Count in Fog", configManager.GetBindable<bool>(AWBWSetting.ReplayShowPlayerDetailsInFog)),
+                        new ToggleMenuItem("Show Weather Particles", configManager.GetBindable<bool>(AWBWSetting.ReplayShowWeather)),
+                        new ToggleMenuItem("Movement Animations", configManager.GetBindable<bool>(AWBWSetting.ReplayMovementAnimations)),
+                        new ToggleMenuItem("Show Movement Arrows", configManager.GetBindable<bool>(AWBWSetting.ReplayShowMovementArrows)),
+                        new ToggleMenuItem("Show Animations for Hidden Actions", configManager.GetBindable<bool>(AWBWSetting.ShowAnimationsForHiddenActions)),
                     }
                 },
                 new MenuItem("Control Settings")

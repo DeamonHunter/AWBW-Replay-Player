@@ -798,6 +798,7 @@ namespace AWBWApp.Game.Game.Logic
             {
                 //Todo: We don't need to clear this all the time
                 Map.ClearFog(false, true);
+                playerList.ShowAllHiddenInformation();
                 return;
             }
 
@@ -806,10 +807,16 @@ namespace AWBWApp.Game.Game.Logic
             if (fogView is long fogPlayer)
             {
                 calculateFogForPlayer(fogPlayer, true);
+                playerList.SetHiddenInformation(null, fogPlayer);
                 return;
             }
 
             var team = CurrentFogView.Value as string;
+
+            if (team != "")
+                playerList.SetHiddenInformation(team, -1);
+            else
+                playerList.SetHiddenInformation(ActivePlayer.Team, ActivePlayer.ID);
 
             if (team == "" || ActivePlayer.Team == team)
             {
