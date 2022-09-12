@@ -3,7 +3,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osuTK;
 
-namespace AWBWApp.Game.UI
+namespace AWBWApp.Game.UI.Components
 {
     public class ShrinkingCompositeDrawable : CompositeDrawable
     {
@@ -56,7 +56,7 @@ namespace AWBWApp.Game.UI
                         break;
 
                     case Axes.Y:
-                        scale = drawSize.Y / childSize.X;
+                        scale = drawSize.Y / childSize.Y;
                         break;
 
                     default:

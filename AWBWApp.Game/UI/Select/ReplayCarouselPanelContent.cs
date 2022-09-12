@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Country;
-using AWBWApp.Game.IO;
+using AWBWApp.Game.UI.Components;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
@@ -25,7 +26,7 @@ namespace AWBWApp.Game.UI.Select
         }
 
         [BackgroundDependencyLoader]
-        private void load(CountryStorage countryStorage, MapFileStorage mapStorage)
+        private void load(CountryStorage countryStorage, COStorage coStorage)
         {
             var replayInfo = carouselReplay.ReplayInfo;
 
@@ -35,9 +36,23 @@ namespace AWBWApp.Game.UI.Select
 
             foreach (var player in replayInfo.Players)
             {
+                var userText = player.Value.Username ?? "[Unknown Username:" + player.Value.UserId + "]";
+
+                if (player.Value.COsUsedByPlayer.Count >= 1 && replayInfo.Players.Count <= 8)
+                {
+                    userText += " (";
+
+                    foreach (var coID in player.Value.COsUsedByPlayer)
+                    {
+                        if (coStorage.TryGetCOByAWBWId(coID, out var co))
+                            userText += $"{co.Name}, ";
+                    }
+                    userText = userText[..^2] + ")";
+                }
+
                 playersDrawables.Add(new SpriteText
                 {
-                    Text = player.Value.Username ?? "[Unknown Username:" + player.Value.UserId + "]",
+                    Text = userText,
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
                     Colour = Color4Extensions.FromHex(countryStorage.GetCountryByAWBWID(player.Value.CountryID).Colours["replayList"]).Lighten(0.5f), //Todo: Fix config
@@ -108,7 +123,7 @@ namespace AWBWApp.Game.UI.Select
                     Height = 0.4f,
                     Colour = ColourInfo.SingleColour(new Color4(15, 15, 15, 180))
                 },
-                new ShrinkingCompositeDrawable(
+                new ShrinkingNamesContainer(
                     new FillFlowContainer
                     {
                         Direction = FillDirection.Full,

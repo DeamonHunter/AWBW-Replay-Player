@@ -21,15 +21,10 @@ namespace AWBWApp.Game.Game.COs
                 coByAWBWId.Add(co.Value.AWBWID, co.Value);
         }
 
-        public COData GetCOByAWBWId(int id)
-        {
-            return coByAWBWId[id];
-        }
+        public COData GetCOByAWBWId(int id) => coByAWBWId[id];
+        public bool TryGetCOByAWBWId(int id, out COData co) => coByAWBWId.TryGetValue(id, out co);
 
-        public COData GetCOByName(string name)
-        {
-            return coByName[name];
-        }
+        public COData GetCOByName(string name) => coByName[name];
 
         public List<int> GetAllCOIDs()
         {

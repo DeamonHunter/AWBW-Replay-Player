@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using AWBWApp.Game.Helpers;
-using AWBWApp.Game.UI;
+using AWBWApp.Game.UI.Components;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
