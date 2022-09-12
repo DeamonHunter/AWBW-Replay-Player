@@ -35,6 +35,8 @@ namespace AWBWApp.Game.UI.Interrupts
         private readonly LoadingLayer blockingLayer;
         private readonly TaskCompletionSource<ReplayInfo> sessionIdCallback;
 
+        public override bool CloseWhenParentClicked => blockingLayer.Alpha <= 0;
+
         public GetNewReplayInterrupt(TaskCompletionSource<ReplayInfo> sessionIdCallback)
         {
             this.sessionIdCallback = sessionIdCallback;

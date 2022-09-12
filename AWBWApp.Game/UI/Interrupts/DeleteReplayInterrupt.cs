@@ -22,6 +22,8 @@ namespace AWBWApp.Game.UI.Interrupts
         private readonly TextFlowContainer errorText;
         private readonly LoadingLayer blockingLayer;
 
+        public override bool CloseWhenParentClicked => blockingLayer.Alpha <= 0;
+
         public DeleteReplayInterrupt(ReplayInfo replayToDelete, string mapName)
         {
             this.replayToDelete = replayToDelete;

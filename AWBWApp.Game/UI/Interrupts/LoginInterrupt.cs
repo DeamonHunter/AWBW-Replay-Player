@@ -24,6 +24,7 @@ namespace AWBWApp.Game.UI.Interrupts
         private readonly LoadingLayer blockingLayer;
 
         private readonly TaskCompletionSource<bool> sessionIdCallback;
+        public override bool CloseWhenParentClicked => blockingLayer.Alpha <= 0;
 
         public LoginInterrupt(TaskCompletionSource<bool> sessionIdCallback)
         {

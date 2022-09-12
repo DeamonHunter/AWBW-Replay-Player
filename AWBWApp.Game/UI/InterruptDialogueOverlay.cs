@@ -26,7 +26,13 @@ namespace AWBWApp.Game.UI
                 new ClickableContainer()
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Action = () => CurrentInterrupt?.Close(),
+                    Action = () =>
+                    {
+                        if (CurrentInterrupt == null)
+                            PopAll();
+                        else if (CurrentInterrupt.CloseWhenParentClicked)
+                            CurrentInterrupt?.Close();
+                    },
                     Child = new Box()
                     {
                         RelativeSizeAxes = Axes.Both,

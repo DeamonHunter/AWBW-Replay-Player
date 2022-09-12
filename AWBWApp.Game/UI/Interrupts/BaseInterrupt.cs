@@ -71,6 +71,8 @@ namespace AWBWApp.Game.UI.Interrupts
 
         protected override bool StartHidden => true;
 
+        public virtual bool CloseWhenParentClicked => true;
+
         protected Action CancelAction;
 
         public BaseInterrupt()
