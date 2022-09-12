@@ -11,6 +11,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.IO.Network;
 using osu.Framework.Logging;
+using osu.Framework.Threading;
 using osuTK;
 using osuTK.Graphics;
 
@@ -33,7 +34,9 @@ namespace AWBWApp.Game.UI.Interrupts
         private readonly TextBox replayInput;
         private readonly TextFlowContainer errorText;
         private readonly LoadingLayer blockingLayer;
+
         private readonly TaskCompletionSource<ReplayInfo> sessionIdCallback;
+        private ScheduledDelegate downloadDelegate;
 
         public override bool CloseWhenParentClicked => blockingLayer.Alpha <= 0;
 
@@ -115,7 +118,10 @@ namespace AWBWApp.Game.UI.Interrupts
 
         private void scheduleDownload()
         {
-            Schedule(attemptDownload);
+            if (downloadDelegate != null && !(downloadDelegate.Cancelled || downloadDelegate.Completed))
+                return;
+
+            downloadDelegate = Schedule(attemptDownload);
         }
 
         public static long ParseReplayString([NotNull] string replay)
@@ -165,9 +171,11 @@ namespace AWBWApp.Game.UI.Interrupts
 
                 if (!replayStorage.TryGetReplayInfo(gameID, out var replay))
                 {
+                    Logger.Log($"Replay not Found. Start request for AWBW.", level: LogLevel.Verbose);
+
                     if (!sessionHandler.LoggedIn)
                     {
-                        Logger.Log($"Replay not Found. Requesting from AWBW.", level: LogLevel.Verbose);
+                        Logger.Log("Not Logged in. Getting user to log in.", level: LogLevel.Verbose);
                         var taskCompletionSource = new TaskCompletionSource<bool>();
                         Schedule(() => interrupt.Push(new LoginInterrupt(taskCompletionSource), false));
 
@@ -187,12 +195,19 @@ namespace AWBWApp.Game.UI.Interrupts
                         Logger.Log($"Successfully logged in.", level: LogLevel.Verbose);
                     }
 
-                    var link = "https://awbw.amarriner.com/replay_download.php?games_id=" + gameID;
-
-                    using (var webRequest = new WebRequest(link))
+                    using (var webRequest = new WebRequest($"https://awbw.amarriner.com/replay_download.php?games_id={gameID}"))
                     {
                         webRequest.AddHeader("Cookie", sessionHandler.SessionID);
                         await webRequest.PerformAsync().ConfigureAwait(false);
+
+                        if (sessionIdCallback.Task.IsCanceled)
+                        {
+                            Logger.Log("Download was cancelled before attempting to add it to the database.");
+                            replay = null;
+                            ActionInvoked();
+                            Schedule(Hide);
+                            return;
+                        }
 
                         if (webRequest.ResponseStream.Length <= 100)
                             throw new Exception($"Unable to find the replay of game '{gameID}'. Does the replay still exist on AWBW?");
@@ -224,9 +239,10 @@ namespace AWBWApp.Game.UI.Interrupts
 
         private void failed(string reason)
         {
-            Logger.Log("Failed to login: " + errorText, level: LogLevel.Verbose);
+            Logger.Log("Failed to get replay: " + errorText, level: LogLevel.Verbose);
             Schedule(() =>
             {
+                downloadDelegate = null;
                 errorText.Text = reason;
                 blockingLayer.Hide();
             });
