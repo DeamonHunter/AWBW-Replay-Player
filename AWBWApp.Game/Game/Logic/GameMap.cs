@@ -458,7 +458,7 @@ namespace AWBWApp.Game.Game.Logic
             foreach (var unit in units.Where(x => !gameState.ReplayUnit.ContainsKey(x.Value.UnitID)))
             {
                 units.Remove(unit.Key);
-                unitsDrawable.Remove(unit.Value);
+                unitsDrawable.Remove(unit.Value, true);
             }
 
             for (int x = 0; x < MapSize.X; x++)
@@ -520,7 +520,7 @@ namespace AWBWApp.Game.Game.Logic
             if (explode && !replayController.ShouldPlayerActionBeHidden(unit.MapPosition))
                 playExplosion(unit.UnitData.MovementType, unit.MapPosition);
 
-            unitsDrawable.Remove(unit);
+            unitsDrawable.Remove(unit, true);
             if (unit.OwnerID.HasValue)
                 replayController.Players[unit.OwnerID.Value].UnitCount.Value--;
 

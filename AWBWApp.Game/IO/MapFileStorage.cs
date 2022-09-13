@@ -12,6 +12,7 @@ using AWBWApp.Game.Game.Tile;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
@@ -155,7 +156,7 @@ namespace AWBWApp.Game.IO
             }
         }
 
-        public async Task<(string, Texture)> GetTextureForMap(long mapID, TerrainTileStorage tileStorage, BuildingStorage buildingStorage, CountryStorage countryStorage)
+        public async Task<(string, Texture)> GetTextureForMap(long mapID, IRenderer renderer, TerrainTileStorage tileStorage, BuildingStorage buildingStorage, CountryStorage countryStorage)
         {
             if (mapTextures.TryGetValue(mapID, out var existingTexture))
                 return existingTexture;
@@ -164,7 +165,7 @@ namespace AWBWApp.Game.IO
 
             Texture texture = null;
             if (map != null)
-                texture = map.GenerateTexture(tileStorage, buildingStorage, countryStorage);
+                texture = map.GenerateTexture(renderer, tileStorage, buildingStorage, countryStorage);
 
             var tuple = (map?.TerrainName ?? $"Missing Map: {mapID}", texture);
 

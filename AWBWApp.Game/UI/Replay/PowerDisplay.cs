@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using AWBWApp.Game.Helpers;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.OpenGL.Buffers;
-using osu.Framework.Graphics.OpenGL.Vertices;
+using osu.Framework.Graphics.Rendering;
+using osu.Framework.Graphics.Rendering.Vertices;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
@@ -290,8 +289,6 @@ namespace AWBWApp.Game.UI.Replay
         public PowerStars(float spawnRatio)
         {
             this.spawnRatio = spawnRatio;
-
-            texture = Texture.WhitePixel;
         }
 
         [BackgroundDependencyLoader]
@@ -338,9 +335,9 @@ namespace AWBWApp.Game.UI.Replay
 
         private void addStars(bool randomX)
         {
-            const int max_stars = QuadVertexBuffer<TexturedVertex2D>.MAX_QUADS;
+            const int max_particles = ushort.MaxValue / (IRenderer.VERTICES_PER_QUAD + 2);
 
-            TargetStarCount = (int)Math.Min(max_stars, (DrawWidth * DrawHeight * 0.002f / (starScale * starScale) * SpawnRatio));
+            TargetStarCount = (int)Math.Min(max_particles, (DrawWidth * DrawHeight * 0.002f / (starScale * starScale) * SpawnRatio));
 
             for (int i = 0; i < TargetStarCount - parts.Count;)
                 parts.Add(createStar(randomX));
@@ -403,7 +400,7 @@ namespace AWBWApp.Game.UI.Replay
             private readonly List<StarParticle> parts = new List<StarParticle>();
             private Vector2 size;
 
-            private QuadBatch<TexturedVertex2D> vertexBatch;
+            private IVertexBatch<TexturedVertex2D> vertexBatch;
 
             public StarDrawNode(PowerStars source)
                 : base(source)
@@ -421,14 +418,14 @@ namespace AWBWApp.Game.UI.Replay
                 parts.AddRange(Source.parts);
             }
 
-            public override void Draw(Action<TexturedVertex2D> vertexAction)
+            public override void Draw(IRenderer renderer)
             {
-                base.Draw(vertexAction);
+                base.Draw(renderer);
 
                 if (Source.TargetStarCount > 0 && (vertexBatch == null || vertexBatch.Size != Source.TargetStarCount))
                 {
                     vertexBatch?.Dispose();
-                    vertexBatch = new QuadBatch<TexturedVertex2D>(Source.TargetStarCount, 1);
+                    vertexBatch = renderer.CreateQuadBatch<TexturedVertex2D>(Source.TargetStarCount, 1);
                 }
                 shader.Bind();
 
@@ -448,7 +445,7 @@ namespace AWBWApp.Game.UI.Replay
                     ColourInfo colourInfo = DrawColourInfo.Colour;
                     colourInfo.ApplyChild(particle.Colour);
 
-                    DrawQuad(texture, quad, colourInfo, null, vertexBatch.AddAction, Vector2.Divide(localInflationAmount, new Vector2(2 * offset.X, offset.Y)));
+                    renderer.DrawQuad(texture, quad, colourInfo, null, vertexBatch.AddAction, Vector2.Divide(localInflationAmount, new Vector2(2 * offset.X, offset.Y)));
                 }
 
                 shader.Unbind();

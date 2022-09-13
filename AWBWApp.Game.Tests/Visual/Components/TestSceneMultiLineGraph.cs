@@ -2,7 +2,6 @@
 using AWBWApp.Game.UI.Stats;
 using NUnit.Framework;
 using osu.Framework.Graphics;
-using osuTK;
 using osuTK.Graphics;
 
 namespace AWBWApp.Game.Tests.Visual.Components
@@ -32,7 +31,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
-                Size = new Vector2(400, 200)
+                Width = 400
             };
             Add(lineGraph);
         }

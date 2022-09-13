@@ -76,7 +76,7 @@ namespace AWBWApp.Game
             dependencies.Cache(HostStorage);
             dependencies.Cache(LocalConfig);
 
-            unfilteredTextures = new NearestNeighbourTextureStore(Host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(Resources, "Textures")));
+            unfilteredTextures = new NearestNeighbourTextureStore(Host.Renderer, Host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(Resources, "Textures")));
             dependencies.Cache(unfilteredTextures);
 
             fileStorage = new ResourceStore<byte[]>(Resources);

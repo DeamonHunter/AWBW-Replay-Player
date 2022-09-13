@@ -10,6 +10,7 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
@@ -420,14 +421,14 @@ namespace AWBWApp.Game.UI.Select
             }
 
             [BackgroundDependencyLoader]
-            private async void load(MapFileStorage mapStorage, TerrainTileStorage terrainStorage, BuildingStorage buildingStorage, CountryStorage countryStorage)
+            private async void load(IRenderer renderer, MapFileStorage mapStorage, TerrainTileStorage terrainStorage, BuildingStorage buildingStorage, CountryStorage countryStorage)
             {
                 string name;
                 Texture map;
 
                 try
                 {
-                    (name, map) = await mapStorage.GetTextureForMap(mapID, terrainStorage, buildingStorage, countryStorage);
+                    (name, map) = await mapStorage.GetTextureForMap(mapID, renderer, terrainStorage, buildingStorage, countryStorage);
                 }
                 catch (Exception e)
                 {

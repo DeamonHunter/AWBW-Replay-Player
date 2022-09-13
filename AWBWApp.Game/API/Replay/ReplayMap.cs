@@ -6,8 +6,8 @@ using AWBWApp.Game.Game.Tile;
 using Newtonsoft.Json;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Textures;
-using osuTK.Graphics.ES30;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
@@ -24,7 +24,7 @@ namespace AWBWApp.Game.API.Replay
 
         private const int pixels_per_tile = 5;
 
-        public Texture GenerateTexture(TerrainTileStorage terrainStorage, BuildingStorage buildingStorage, CountryStorage countryStorage)
+        public Texture GenerateTexture(IRenderer renderer, TerrainTileStorage terrainStorage, BuildingStorage buildingStorage, CountryStorage countryStorage)
         {
             var image = new Image<Rgba32>(Configuration.Default, Size.X * pixels_per_tile, Size.Y * pixels_per_tile, new Rgba32(0, 0, 0, 255));
             Dictionary<short, Rgba32> mapColors = new Dictionary<short, Rgba32>();
@@ -75,7 +75,7 @@ namespace AWBWApp.Game.API.Replay
                 }
             }
 
-            var texture = new Texture(Size.X * pixels_per_tile, Size.Y * pixels_per_tile, true, All.Nearest);
+            var texture = renderer.CreateTexture(Size.X * pixels_per_tile, Size.Y * pixels_per_tile, filteringMode: TextureFilteringMode.Nearest);
             texture.SetData(new TextureUpload(image));
             return texture;
         }

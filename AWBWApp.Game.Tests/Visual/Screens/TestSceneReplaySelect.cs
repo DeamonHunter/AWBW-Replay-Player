@@ -40,7 +40,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                 replayManager.ClearAllReplays();
 
                 if (ScreenStack != null)
-                    Remove(ScreenStack);
+                    Remove(ScreenStack, true);
 
                 Add(ScreenStack = new ScreenStack
                 {

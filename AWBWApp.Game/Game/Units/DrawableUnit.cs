@@ -11,8 +11,8 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Animations;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.OpenGL.Vertices;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
@@ -527,11 +527,10 @@ namespace AWBWApp.Game.Game.Units
                     greyScaleAmount = Source.greyscaleAmount;
                 }
 
-                protected override void Blit(Action<TexturedVertex2D> vertexAction)
+                protected override void Blit(IRenderer renderer)
                 {
-                    Shader.GetUniform<float>("greyscaleAmount").UpdateValue(ref greyScaleAmount);
-
-                    base.Blit(vertexAction);
+                    TextureShader.GetUniform<float>("greyscaleAmount").UpdateValue(ref greyScaleAmount);
+                    base.Blit(renderer);
                 }
             }
         }

@@ -58,7 +58,7 @@ namespace AWBWApp.Game.UI.Components
             if (tile == null)
                 return false;
 
-            RemoveInternal(tile);
+            RemoveInternal(tile, false);
             tile.Expire();
             tiles[gridPosition.X, gridPosition.Y] = null;
 

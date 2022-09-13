@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AWBWApp.Game.UI.Components.Menu;
 using AWBWApp.Game.UI.Interrupts;
 using AWBWApp.Game.UI.Notifications;
@@ -30,7 +32,7 @@ namespace AWBWApp.Game.UI.Toolbar
                 {
                     Items = new MenuItem[]
                     {
-                        new EnumMenuItem<WindowMode>("Fullscreen Mode", frameworkConfig.GetBindable<WindowMode>(FrameworkSetting.WindowMode), host.Window.SupportedWindowModes),
+                        new EnumMenuItem<WindowMode>("Fullscreen Mode", frameworkConfig.GetBindable<WindowMode>(FrameworkSetting.WindowMode), host.Window?.SupportedWindowModes.ToList() ?? new List<WindowMode>() { WindowMode.Windowed }),
                         new MenuItem("Map Background Colour")
                         {
                             Items = new[] { new ColourPickerMenuItem(configManager.GetBindable<Colour4>(AWBWSetting.MapGridBaseColour)) }

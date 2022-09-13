@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.Colour;
-using osu.Framework.Graphics.OpenGL.Buffers;
-using osu.Framework.Graphics.OpenGL.Vertices;
+using osu.Framework.Graphics.Rendering;
+using osu.Framework.Graphics.Rendering.Vertices;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Lists;
@@ -47,13 +46,13 @@ namespace AWBWApp.Game.UI.Weather
 
         public RainAnimation()
         {
-            Texture = Texture.WhitePixel;
             RelativeSizeAxes = Axes.Both;
         }
 
         [BackgroundDependencyLoader]
-        private void load(ShaderManager shaders)
+        private void load(IRenderer renderer, ShaderManager shaders)
         {
+            Texture = renderer.WhitePixel;
             shader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);
         }
 
@@ -91,9 +90,9 @@ namespace AWBWApp.Game.UI.Weather
                 return;
             }
 
-            const int max_stars = QuadVertexBuffer<TexturedVertex2D>.MAX_QUADS;
+            const int max_particles = ushort.MaxValue / (IRenderer.VERTICES_PER_QUAD + 2);
 
-            TargetParticleCount = Math.Min(max_stars, (DrawWidth * DrawHeight * ParticlesPerPixelArea * ParticleSpawnMultiplier));
+            TargetParticleCount = Math.Min(max_particles, (DrawWidth * DrawHeight * ParticlesPerPixelArea * ParticleSpawnMultiplier));
 
             var particleDiff = TargetParticleCount - CurrentParticleCount;
             var changePerSecond = Math.Max(50, Math.Max(TargetParticleCount, CurrentParticleCount) * 1.5f);
@@ -157,7 +156,7 @@ namespace AWBWApp.Game.UI.Weather
             private readonly List<RainParticle> parts = new List<RainParticle>();
             private Vector2 size;
 
-            private QuadBatch<TexturedVertex2D> vertexBatch;
+            private IVertexBatch<TexturedVertex2D> vertexBatch;
 
             public RainDrawNode(RainAnimation source)
                 : base(source)
@@ -175,16 +174,16 @@ namespace AWBWApp.Game.UI.Weather
                 parts.AddRange(Source.parts);
             }
 
-            public override void Draw(Action<TexturedVertex2D> vertexAction)
+            public override void Draw(IRenderer renderer)
             {
-                base.Draw(vertexAction);
+                base.Draw(renderer);
 
                 var targetCount = (int)Math.Max(Source.TargetParticleCount, Source.CurrentParticleCount);
 
                 if (targetCount > 0 && (vertexBatch == null || vertexBatch.Size != targetCount))
                 {
                     vertexBatch?.Dispose();
-                    vertexBatch = new QuadBatch<TexturedVertex2D>(targetCount, 1);
+                    vertexBatch = renderer.CreateQuadBatch<TexturedVertex2D>(targetCount, 1);
                 }
                 shader.Bind();
 
@@ -205,7 +204,7 @@ namespace AWBWApp.Game.UI.Weather
                     ColourInfo colourInfo = DrawColourInfo.Colour;
                     colourInfo.ApplyChild(particle.Colour);
 
-                    DrawQuad(texture, quad, colourInfo, null, vertexBatch.AddAction, Vector2.Divide(localInflationAmount, new Vector2(2 * offset.X, offset.Y)));
+                    renderer.DrawQuad(texture, quad, colourInfo, null, vertexBatch.AddAction, Vector2.Divide(localInflationAmount, new Vector2(2 * offset.X, offset.Y)));
                 }
 
                 shader.Unbind();

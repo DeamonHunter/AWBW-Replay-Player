@@ -218,6 +218,8 @@ namespace AWBWApp.Game.UI.Replay
 
             if (usePercentagePowers)
                 info.PowerPercentage.BindValueChanged(onPowerPercentageChange, true);
+
+            SetShowHiddenInformation(true);
         }
 
         private Drawable createNameAndTeamContainer(PlayerInfo info)

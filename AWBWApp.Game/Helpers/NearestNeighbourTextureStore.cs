@@ -1,13 +1,13 @@
-﻿using osu.Framework.Graphics.Textures;
+﻿using osu.Framework.Graphics.Rendering;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.IO.Stores;
-using osuTK.Graphics.ES30;
 
 namespace AWBWApp.Game.Helpers
 {
     public class NearestNeighbourTextureStore : TextureStore
     {
-        public NearestNeighbourTextureStore(IResourceStore<TextureUpload> store = null)
-            : base(store, filteringMode: All.Nearest)
+        public NearestNeighbourTextureStore(IRenderer renderer, IResourceStore<TextureUpload> store = null)
+            : base(renderer, store, filteringMode: TextureFilteringMode.Nearest)
         {
         }
     }
