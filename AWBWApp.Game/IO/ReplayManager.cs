@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading.Tasks;
 using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
@@ -62,7 +63,7 @@ namespace AWBWApp.Game.IO
             checkAllReplays();
         }
 
-        public IEnumerable<ReplayInfo> GetAllKnownReplays() => knownReplays.Values;
+        public IEnumerable<ReplayInfo> GetAllKnownReplays() => knownReplays.Values.ToList(); //Make a copy so that the base collection can be modified without issue
 
         private void checkAllReplays()
         {
