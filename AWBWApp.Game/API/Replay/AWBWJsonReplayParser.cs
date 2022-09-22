@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using AWBWApp.Game.API.Replay.Actions;
+using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Logic;
 using Newtonsoft.Json.Linq;
@@ -43,6 +44,8 @@ namespace AWBWApp.Game.API.Replay
             ReadOnlySpan<char> gameStateFile = null;
             ReadOnlySpan<char> replayFile = null;
 
+            bool corruptedGzip = false;
+
             foreach (var entry in zipArchive.Entries)
             {
                 if (entry.FullName.Contains("__MACOSX") || entry.CompressedLength == 0)
@@ -52,14 +55,22 @@ namespace AWBWApp.Game.API.Replay
 
                 try
                 {
-                    using (var entryStream = new GZipStream(entry.Open(), CompressionMode.Decompress))
+                    using (var zipStream = entry.Open())
                     {
-                        using (var sr = new StreamReader(entryStream))
-                            text = sr.ReadToEnd();
+                        using (var entryStream = new GZipStream(zipStream, CompressionMode.Decompress))
+                        {
+                            using (var sr = new StreamReader(entryStream))
+                                text = sr.ReadToEnd();
+                        }
                     }
                 }
                 catch
                 {
+                    using (var zipStream = entry.Open())
+                    {
+                        if (zipStream.ReadByte() == 0x1f && zipStream.ReadByte() == 0x8b)
+                            corruptedGzip = true;
+                    }
                     continue;
                 }
 
@@ -80,7 +91,12 @@ namespace AWBWApp.Game.API.Replay
             }
 
             if (gameStateFile == null)
+            {
+                if (corruptedGzip)
+                    throw new CorruptedReplayException();
+
                 throw new Exception("Cannot parse replay. The zip did not contain a replay file.");
+            }
 
             var state = readBaseReplayData(gameStateFile);
             if (replayFile != null)

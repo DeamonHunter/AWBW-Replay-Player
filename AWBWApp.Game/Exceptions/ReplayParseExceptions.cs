@@ -31,4 +31,12 @@ namespace AWBWApp.Game.Exceptions
             BuildingPosition = buildingPosition;
         }
     }
+
+    public class CorruptedReplayException : Exception
+    {
+        public CorruptedReplayException()
+            : base($"Cannot parse replay. The replay is likely corrupted and cannot be opened.")
+        {
+        }
+    }
 }
