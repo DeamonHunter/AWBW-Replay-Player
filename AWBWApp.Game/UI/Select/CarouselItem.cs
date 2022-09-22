@@ -34,6 +34,11 @@ namespace AWBWApp.Game.UI.Select
         public abstract void Filter(string[] textParts, CarouselFilter filter);
 
         public int CompareTo(CarouselItem other) => CarouselYPosition.CompareTo(other.CarouselYPosition);
+
+        public virtual void UnbindBindables()
+        {
+            State.UnbindAll();
+        }
     }
 
     public enum CarouselItemState

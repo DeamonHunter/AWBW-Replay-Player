@@ -198,6 +198,7 @@ namespace AWBWApp.Game.UI.Select
             var originalSelection = selectedReplay;
             newRoot.AddChildren(replays.Select(createCarouselReplay));
 
+            rootCarouselItem?.UnbindBindables();
             rootCarouselItem = newRoot;
             Scroll.Clear(false);
 
@@ -594,6 +595,16 @@ namespace AWBWApp.Game.UI.Select
         }
 
         public void ScrollToSelected(bool immediate = false) => pendingScrollOperation = immediate ? PendingScrollOperation.Immediate : PendingScrollOperation.Standard;
+
+        protected override void Dispose(bool isDisposing)
+        {
+            base.Dispose(isDisposing);
+
+            replayManager.ReplayAdded -= replayAdded;
+            replayManager.ReplayChanged -= replayAdded;
+            replayManager.ReplayRemoved -= replayRemoved;
+            rootCarouselItem?.UnbindBindables();
+        }
 
         private enum PendingScrollOperation
         {

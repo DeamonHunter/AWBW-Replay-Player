@@ -75,5 +75,13 @@ namespace AWBWApp.Game.UI.Select
         {
             InternalChildren.Sort(comparison);
         }
+
+        public override void UnbindBindables()
+        {
+            foreach (var child in InternalChildren)
+                child.UnbindBindables();
+
+            base.UnbindBindables();
+        }
     }
 }
