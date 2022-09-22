@@ -89,6 +89,9 @@ namespace AWBWApp.Game.UI.Select
 
         private const float header_height = 70;
 
+        private double scrollCooldown = -double.MaxValue;
+        private const double time_between_scrolls = 15000;
+
         public ReplayCarousel()
         {
             rootCarouselItem = new CarouselRoot(this);
@@ -239,7 +242,16 @@ namespace AWBWApp.Game.UI.Select
                     rootCarouselItem.RemoveChild(existingReplay);
                 rootCarouselItem.AddChild(newItem);
                 Sort(carouselSort.Value);
-                newItem.State.Value = CarouselItemState.Selected;
+
+                if (Time.Current - scrollCooldown > time_between_scrolls)
+                    newItem.State.Value = CarouselItemState.Selected;
+                else
+                {
+                    pendingScrollOperation = PendingScrollOperation.Immediate;
+                    scrollTarget = Scroll.Current;
+                }
+                scrollCooldown = Time.Current;
+
                 itemsCache.Invalidate();
                 ReplaysChanged?.Invoke();
             });
@@ -422,11 +434,8 @@ namespace AWBWApp.Game.UI.Select
                         visibleItems.Add(replay);
                         replay.CarouselYPosition = currentY;
 
-                        if (item.State.Value == CarouselItemState.Selected)
+                        if (item.State.Value == CarouselItemState.Selected && pendingScrollOperation == PendingScrollOperation.None)
                         {
-                            // scroll position at currentY makes the set panel appear at the very top of the carousel's screen space
-                            // move down by half of visible height (height of the carousel's visible extent, including semi-transparent areas)
-                            // then reapply the top semi-transparent area (because carousel's screen space starts below it)
                             scrollTarget = currentY + DrawableCarouselReplay.SELECTEDHEIGHT - visibleHalfHeight;
                             pendingScrollOperation = PendingScrollOperation.Standard;
                         }
@@ -610,7 +619,7 @@ namespace AWBWApp.Game.UI.Select
         {
             None,
             Standard,
-            Immediate,
+            Immediate
         }
 
         /// <summary>
