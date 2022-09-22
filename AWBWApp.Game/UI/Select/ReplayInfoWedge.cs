@@ -298,6 +298,7 @@ namespace AWBWApp.Game.UI.Select
                 Spacing = new Vector2(0, 2)
             };
 
+            addStat(statsFlow, "Game ID", replay.ID.ToString());
             addStat(statsFlow, "Fog", replay.Fog ? "On" : "Off");
             addStat(statsFlow, "Tag COs", replay.Type == MatchType.Tag ? "On" : "Off");
             addStat(statsFlow, "CO Powers", replay.PowersAllowed ? "On" : "Off");

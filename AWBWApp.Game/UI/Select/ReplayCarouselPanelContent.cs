@@ -106,7 +106,7 @@ namespace AWBWApp.Game.UI.Select
                         },
                         new SpriteText
                         {
-                            Text = $"{replayInfo.StartDate.ToShortDateString()} - {replayInfo.EndDate.ToShortDateString()}",
+                            Text = $"(Game ID: {replayInfo.ID})   {replayInfo.StartDate.ToShortDateString()} - {replayInfo.EndDate.ToShortDateString()}",
                             Font = FontUsage.Default.With(weight: "SemiBold", size: 17, italics: true),
                             Anchor = Anchor.TopCentre,
                             Origin = Anchor.TopCentre,
