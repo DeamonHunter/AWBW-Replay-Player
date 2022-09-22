@@ -32,6 +32,8 @@ namespace AWBWApp.Game.IO
         private readonly AWBWJsonReplayParser jsonParser = new AWBWJsonReplayParser();
         private readonly AWBWXmlReplayParser xmlParser = new AWBWXmlReplayParser();
 
+        private object saveLock = new object();
+
         public ReplayManager(Storage storage)
         {
             underlyingStorage = new WrappedStorage(storage, replay_folder);
@@ -214,20 +216,24 @@ namespace AWBWApp.Game.IO
 
         private void saveReplays()
         {
-            var contents = JsonConvert.SerializeObject(knownReplays, Formatting.Indented);
-
-            using (var stream = underlyingStorage.GetStream(replay_storage, FileAccess.Write, FileMode.Create))
+            //If 2 threads try to save at the same time, it will cause an exception
+            lock (saveLock)
             {
-                using (var sw = new StreamWriter(stream))
-                    sw.Write(contents);
-            }
+                var contents = JsonConvert.SerializeObject(knownReplays, Formatting.Indented);
 
-            contents = JsonConvert.SerializeObject(playerNames, Formatting.Indented);
+                using (var stream = underlyingStorage.GetStream(replay_storage, FileAccess.Write, FileMode.Create))
+                {
+                    using (var sw = new StreamWriter(stream))
+                        sw.Write(contents);
+                }
 
-            using (var stream = underlyingStorage.GetStream(username_storage, FileAccess.Write, FileMode.Create))
-            {
-                using (var sw = new StreamWriter(stream))
-                    sw.Write(contents);
+                contents = JsonConvert.SerializeObject(playerNames, Formatting.Indented);
+
+                using (var stream = underlyingStorage.GetStream(username_storage, FileAccess.Write, FileMode.Create))
+                {
+                    using (var sw = new StreamWriter(stream))
+                        sw.Write(contents);
+                }
             }
         }
 
