@@ -33,27 +33,50 @@ namespace AWBWApp.Game.IO
         private readonly AWBWJsonReplayParser jsonParser = new AWBWJsonReplayParser();
         private readonly AWBWXmlReplayParser xmlParser = new AWBWXmlReplayParser();
 
-        private object saveLock = new object();
+        private object replayStorageLock = new object();
+        private object usernameStorageLock = new object();
 
         public ReplayManager(Storage storage)
         {
             underlyingStorage = new WrappedStorage(storage, replay_folder);
 
-            if (underlyingStorage.Exists(replay_storage))
+            lock (replayStorageLock)
             {
-                using (var stream = underlyingStorage.GetStream(replay_storage))
+                if (underlyingStorage.Exists(replay_storage))
                 {
-                    using (var sr = new StreamReader(stream))
-                        knownReplays = JsonConvert.DeserializeObject<Dictionary<long, ReplayInfo>>(sr.ReadToEnd()) ?? knownReplays;
+                    try
+                    {
+                        using (var stream = underlyingStorage.GetStream(replay_storage))
+                        {
+                            using (var sr = new StreamReader(stream))
+                                knownReplays = JsonConvert.DeserializeObject<Dictionary<long, ReplayInfo>>(sr.ReadToEnd()) ?? knownReplays;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, "Failed to open or parse ReplayStorage.json.");
+                        knownReplays = new Dictionary<long, ReplayInfo>();
+                    }
                 }
             }
 
-            if (underlyingStorage.Exists(username_storage))
+            lock (usernameStorageLock)
             {
-                using (var stream = underlyingStorage.GetStream(username_storage))
+                try
                 {
-                    using (var sr = new StreamReader(stream))
-                        playerNames = JsonConvert.DeserializeObject<Dictionary<long, string>>(sr.ReadToEnd()) ?? playerNames;
+                    if (underlyingStorage.Exists(username_storage))
+                    {
+                        using (var stream = underlyingStorage.GetStream(username_storage))
+                        {
+                            using (var sr = new StreamReader(stream))
+                                playerNames = JsonConvert.DeserializeObject<Dictionary<long, string>>(sr.ReadToEnd()) ?? playerNames;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, "Failed to open or parse UsernameStorage.json.");
+                    playerNames = new Dictionary<long, string>();
                 }
             }
         }
@@ -218,19 +241,22 @@ namespace AWBWApp.Game.IO
         private void saveReplays()
         {
             //If 2 threads try to save at the same time, it will cause an exception
-            lock (saveLock)
+            lock (replayStorageLock)
             {
                 var contents = JsonConvert.SerializeObject(knownReplays, Formatting.Indented);
 
-                using (var stream = underlyingStorage.GetStream(replay_storage, FileAccess.Write, FileMode.Create))
+                using (var stream = underlyingStorage.CreateFileSafely(replay_storage))
                 {
                     using (var sw = new StreamWriter(stream))
                         sw.Write(contents);
                 }
+            }
 
-                contents = JsonConvert.SerializeObject(playerNames, Formatting.Indented);
+            lock (usernameStorageLock)
+            {
+                var contents = JsonConvert.SerializeObject(playerNames, Formatting.Indented);
 
-                using (var stream = underlyingStorage.GetStream(username_storage, FileAccess.Write, FileMode.Create))
+                using (var stream = underlyingStorage.CreateFileSafely(username_storage))
                 {
                     using (var sw = new StreamWriter(stream))
                         sw.Write(contents);
