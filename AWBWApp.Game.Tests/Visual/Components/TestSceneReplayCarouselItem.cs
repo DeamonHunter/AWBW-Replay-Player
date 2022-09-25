@@ -1,4 +1,5 @@
-﻿using AWBWApp.Game.UI.Select;
+﻿using AWBWApp.Game.IO;
+using AWBWApp.Game.UI.Select;
 using NUnit.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -10,14 +11,29 @@ namespace AWBWApp.Game.Tests.Visual.Components
     public class TestSceneReplayCarouselItem : AWBWAppTestScene
     {
         [Resolved]
-        private TestReplayDecoder replayManager { get; set; }
+        private TestReplayDecoder replayStorageManager { get; set; }
 
         [Test]
         public void TestItem()
         {
-            var info = replayManager.GetReplayInStorage("Json/Replays/478996");
+            AddStep("Create Normal Replay", () =>
+            {
+                var info = replayStorageManager.GetReplayInStorage("Json/Replays/478996");
 
-            var replayItem = new CarouselReplay(info.ReplayInfo, "Test Map");
+                var replayItem = new CarouselReplay(info.ReplayInfo, "Test Map");
+
+                Schedule(() =>
+                {
+                    Clear();
+                    Add(new DrawableCarouselReplay(replayItem)
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Size = new Vector2(0.5f, DrawableCarouselItem.MAX_HEIGHT)
+                    });
+                });
+            });
+        }
 
             Schedule(() =>
             {
