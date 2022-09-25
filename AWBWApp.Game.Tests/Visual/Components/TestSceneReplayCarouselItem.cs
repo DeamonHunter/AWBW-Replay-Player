@@ -34,17 +34,5 @@ namespace AWBWApp.Game.Tests.Visual.Components
                 });
             });
         }
-
-            Schedule(() =>
-            {
-                Clear();
-                Add(new DrawableCarouselReplay(replayItem)
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Size = new Vector2(0.5f, DrawableCarouselItem.MAX_HEIGHT)
-                });
-            });
-        }
     }
 }
