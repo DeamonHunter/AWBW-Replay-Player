@@ -4,6 +4,9 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Components
 {
+    /// <summary>
+    /// This is a container that will take a bunch of fill flow children and attempt to fit them inside a vertical space. As the difference gets worse, this will take more time to settle.
+    /// </summary>
     public class ShrinkingNamesContainer : Container
     {
         private readonly FillFlowContainer childDrawable;
@@ -32,10 +35,10 @@ namespace AWBWApp.Game.UI.Components
                 return;
 
             var absDiff = Math.Abs(prevChildSize.Y - drawSize.Y);
-            if (prevChildSize.Y < drawSize.Y && absDiff < 10)
+            if (prevChildSize.Y < drawSize.Y && absDiff < drawSize.Y / 2.5f)
                 return;
 
-            var newSize = 0.25f * (absDiff / drawSize.Y);
+            var newSize = 0.6f * (absDiff / drawSize.Y);
 
             if (prevChildSize.Y < drawSize.Y)
             {
