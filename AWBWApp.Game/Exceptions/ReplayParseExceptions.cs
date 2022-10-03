@@ -38,5 +38,10 @@ namespace AWBWApp.Game.Exceptions
             : base($"Cannot parse replay. The replay is likely corrupted and cannot be opened.")
         {
         }
+
+        public CorruptedReplayException(Exception innerException)
+            : base($"Cannot parse replay. The replay ends unexpectantly and is likely corrupted.", innerException)
+        {
+        }
     }
 }

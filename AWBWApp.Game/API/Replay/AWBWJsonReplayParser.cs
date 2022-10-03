@@ -142,12 +142,19 @@ namespace AWBWApp.Game.API.Replay
 
             var textIndex = 0;
 
-            while (true)
+            try
             {
-                readTurn(replayData, text, ref textIndex, textIndex == 0);
+                while (true)
+                {
+                    readTurn(replayData, text, ref textIndex, textIndex == 0);
 
-                if (text[textIndex++] != '\n' || textIndex >= text.Length)
-                    break;
+                    if (text[textIndex++] != '\n' || textIndex >= text.Length)
+                        break;
+                }
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                throw new CorruptedReplayException(e);
             }
 
             return replayData;
@@ -1241,12 +1248,19 @@ namespace AWBWApp.Game.API.Replay
         {
             var textIndex = 0;
 
-            while (true)
+            try
             {
-                readReplayActionTurn(replayData, text, ref textIndex);
+                while (true)
+                {
+                    readReplayActionTurn(replayData, text, ref textIndex);
 
-                if (text[textIndex++] != '\n' || textIndex >= text.Length)
-                    break;
+                    if (text[textIndex++] != '\n' || textIndex >= text.Length)
+                        break;
+                }
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                throw new CorruptedReplayException(e);
             }
         }
 
