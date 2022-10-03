@@ -17,6 +17,11 @@ namespace AWBWApp.Game.API.Replay
         public int ReplayIndex;
         public int RoundOrder;
         public int? EliminatedOn;
+
+        public string GetUIFriendlyUsername()
+        {
+            return Username ?? $"[Unknown Username:{UserId}";
+        }
     }
 
     public class ReplayUserTurn

@@ -219,7 +219,7 @@ namespace AWBWApp.Game.UI.Select
 
                     foreach (var player in players)
                     {
-                        var username = player.Value.Username ?? "[Unknown Username:" + player.Value.UserId + "]";
+                        var username = player.Value.GetUIFriendlyUsername();
 
                         var colour = Color4Extensions.FromHex(countryStorage.GetCountryByAWBWID(player.Value.CountryID).Colours["replayList"]).Lighten(0.5f);
                         textFlow.AddText(username + "  ", text =>
@@ -237,7 +237,7 @@ namespace AWBWApp.Game.UI.Select
             {
                 foreach (var player in replay.Players)
                 {
-                    var username = player.Value.Username ?? "[Unknown Username:" + player.Value.UserId + "]";
+                    var username = player.Value.GetUIFriendlyUsername();
 
                     var colour = Color4Extensions.FromHex(countryStorage.GetCountryByAWBWID(player.Value.CountryID).Colours["replayList"]).Lighten(0.5f);
                     textFlow.AddText(username + "  ", text =>

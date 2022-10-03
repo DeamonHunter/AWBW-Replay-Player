@@ -175,7 +175,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 GameOverAction.EndMessage = $"The game is over! {createSoloWinnerString(context, GameOverAction.Winners)} are the winners!";
             else
             {
-                var username = context.PlayerInfos[GameOverAction.Winners[0]].Username ?? $"[Unknown Username:{GameOverAction.Winners[0]}]";
+                var username = context.PlayerInfos[GameOverAction.Winners[0]].GetUIFriendlyUsername();
                 GameOverAction.EndMessage = $"The game is over! {username} is the winner!";
             }
 
@@ -207,7 +207,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             for (int i = 0; i < winners.Count; i++)
             {
-                var username = context.PlayerInfos[winners[i]].Username ?? $"[Unknown Username:{winners[i]}]";
+                var username = context.PlayerInfos[winners[i]].GetUIFriendlyUsername();
 
                 if (i == winners.Count - 1)
                     sb.Append($"and {username}");

@@ -36,7 +36,7 @@ namespace AWBWApp.Game.UI.Select
 
             foreach (var player in replayInfo.Players)
             {
-                var userText = player.Value.Username ?? "[Unknown Username:" + player.Value.UserId + "]";
+                var userText = player.Value.GetUIFriendlyUsername();
 
                 if (player.Value.COsUsedByPlayer.Count >= 1 && replayInfo.Players.Count <= 8)
                 {
