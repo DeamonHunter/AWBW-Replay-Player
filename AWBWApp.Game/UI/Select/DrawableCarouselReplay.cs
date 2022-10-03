@@ -86,7 +86,17 @@ namespace AWBWApp.Game.UI.Select
                 };
 
                 if (interruptOverlay != null)
-                    items.Add(new MenuItem("Delete...", () => interruptOverlay.Push(new DeleteReplayInterrupt(replayInfo, mapName))));
+                {
+                    var usernameItems = new List<MenuItem>();
+                    foreach (var player in replayInfo.Players)
+                        usernameItems.Add(new MenuItem($"{player.Value.GetUIFriendlyUsername()} (ID: {player.Value.UserId})", () => interruptOverlay.Push(new EditUsernameInterrupt(replayInfo, player.Value.UserId))));
+
+                    items.AddRange(new MenuItem[]
+                    {
+                        new MenuItem("Edit Username") { Items = usernameItems },
+                        new MenuItem("Delete...", () => interruptOverlay.Push(new DeleteReplayInterrupt(replayInfo, mapName)))
+                    });
+                }
 
                 return items.ToArray();
             }

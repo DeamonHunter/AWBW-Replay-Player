@@ -518,6 +518,27 @@ namespace AWBWApp.Game.IO
             ReplayRemoved?.Invoke(replayInfo);
         }
 
+        public void UpdateUsername(long playerID, string newUsername)
+        {
+            playerNames[playerID] = newUsername;
+
+            foreach (var replay in knownReplays)
+            {
+                foreach (var player in replay.Value.Players)
+                {
+                    if (player.Value.UserId != playerID)
+                        continue;
+
+                    player.Value.Username = newUsername;
+                    ReplayChanged?.Invoke(replay.Value);
+                    break;
+                }
+            }
+
+            saveReplays();
+            saveUsernames();
+        }
+
         #region Disposable
 
         private bool isDisposed;
