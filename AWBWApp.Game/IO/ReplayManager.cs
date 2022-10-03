@@ -101,7 +101,11 @@ namespace AWBWApp.Game.IO
                 var fileName = Path.GetFileNameWithoutExtension(file);
                 var extension = Path.GetExtension(file);
 
-                if (extension != ".zip" || !int.TryParse(fileName, out int replayNumber))
+                //Files are either .zip, .awbw or blank extensions
+                if (extension != ".zip" && extension != ".awbw" && extension != string.Empty)
+                    continue;
+
+                if (!int.TryParse(fileName, out int replayNumber))
                     continue;
 
                 if (!knownReplays.TryGetValue(replayNumber, out var replayInfo))
