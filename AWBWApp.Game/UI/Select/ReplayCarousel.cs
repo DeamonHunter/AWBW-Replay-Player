@@ -47,6 +47,7 @@ namespace AWBWApp.Game.UI.Select
         private SortDropdown sortDropdown;
 
         private Bindable<CarouselSort> carouselSort;
+        private bool triggerSort;
 
         private Container searchContainer;
 
@@ -91,6 +92,9 @@ namespace AWBWApp.Game.UI.Select
 
         private double scrollCooldown = -double.MaxValue;
         private const double time_between_scrolls = 15000;
+
+        private Queue<(CarouselReplay Replay, bool Remove)> replayUpdates = new Queue<(CarouselReplay, bool)>();
+        private bool isCurrentlySorting;
 
         public ReplayCarousel()
         {
@@ -184,7 +188,7 @@ namespace AWBWApp.Game.UI.Select
         {
             carouselSort = manager.GetBindable<CarouselSort>(AWBWSetting.ReplayListSort);
             sortDropdown.Current.BindTo(carouselSort);
-            carouselSort.BindValueChanged(x => Sort(x.NewValue));
+            carouselSort.BindValueChanged(x => triggerSort = true);
 
             replayManager.ReplayAdded += replayAdded;
             replayManager.ReplayChanged += replayAdded;
@@ -205,7 +209,7 @@ namespace AWBWApp.Game.UI.Select
             rootCarouselItem = newRoot;
             Scroll.Clear(false);
 
-            Sort(carouselSort.Value);
+            triggerSort = true;
 
             if (originalSelection != null)
             {
@@ -233,41 +237,21 @@ namespace AWBWApp.Game.UI.Select
 
         public void UpdateReplay(ReplayInfo replayInfo)
         {
-            Schedule(() =>
-            {
-                CarouselReplay existingReplay = replays.FirstOrDefault(r => r.ReplayInfo.ID == replayInfo.ID);
-                var newItem = createCarouselReplay(replayInfo);
+            var newItem = createCarouselReplay(replayInfo);
 
-                if (existingReplay != null)
-                    rootCarouselItem.RemoveChild(existingReplay);
-                rootCarouselItem.AddChild(newItem);
-                Sort(carouselSort.Value);
-
-                if (Time.Current - scrollCooldown > time_between_scrolls)
-                    newItem.State.Value = CarouselItemState.Selected;
-                else
-                {
-                    pendingScrollOperation = PendingScrollOperation.Immediate;
-                    scrollTarget = Scroll.Current;
-                }
-                scrollCooldown = Time.Current;
-
-                itemsCache.Invalidate();
-                ReplaysChanged?.Invoke();
-            });
+            lock (replayUpdates)
+                replayUpdates.Enqueue((newItem, false));
         }
 
-        public void RemoveReplay(ReplayInfo replayInfo) =>
-            Schedule(() =>
-            {
-                var existingSet = replays.FirstOrDefault(b => b.ReplayInfo.Equals(replayInfo));
+        public void RemoveReplay(ReplayInfo replayInfo)
+        {
+            var existingSet = replays.FirstOrDefault(b => b.ReplayInfo.Equals(replayInfo));
+            if (existingSet == null)
+                return;
 
-                if (existingSet == null)
-                    return;
-
-                rootCarouselItem.RemoveChild(existingSet);
-                itemsCache.Invalidate();
-            });
+            lock (replayUpdates)
+                replayUpdates.Enqueue((existingSet, true));
+        }
 
         private CarouselReplay createCarouselReplay(ReplayInfo info)
         {
@@ -313,6 +297,19 @@ namespace AWBWApp.Game.UI.Select
         protected override void Update()
         {
             base.Update();
+
+            if (!isCurrentlySorting)
+            {
+                var sortNeeded = addNewItems();
+
+                if (sortNeeded || triggerSort)
+                {
+                    triggerSort = false;
+                    isCurrentlySorting = true;
+                    Schedule(() => sort(carouselSort.Value));
+                }
+            }
+
             Scroll.Size = new Vector2(DrawSize.X, DrawSize.Y - header_height);
 
             bool revalidateItems = !itemsCache.IsValid;
@@ -364,6 +361,51 @@ namespace AWBWApp.Game.UI.Select
             // This is a per-frame update on all drawable panels.
             foreach (DrawableCarouselItem item in Scroll.Children)
                 updateItem(item);
+        }
+
+        private bool addNewItems()
+        {
+            bool sortNeeded = false;
+            bool invalidateCache = false;
+
+            lock (replayUpdates)
+            {
+                while (replayUpdates.Count > 0)
+                {
+                    var newItem = replayUpdates.Dequeue();
+                    CarouselReplay existingReplay = replays.FirstOrDefault(r => r.ReplayInfo.ID == newItem.Replay.ReplayInfo.ID);
+
+                    if (existingReplay != null)
+                    {
+                        rootCarouselItem.RemoveChild(existingReplay);
+                        invalidateCache = true;
+                    }
+
+                    if (newItem.Remove)
+                        continue;
+
+                    if (Time.Current - scrollCooldown > time_between_scrolls)
+                        newItem.Replay.State.Value = CarouselItemState.Selected;
+                    else
+                    {
+                        pendingScrollOperation = PendingScrollOperation.Immediate;
+                        scrollTarget = Scroll.Current;
+                    }
+                    scrollCooldown = Time.Current;
+
+                    rootCarouselItem.AddChild(newItem.Replay);
+                    sortNeeded = true;
+                    invalidateCache = true;
+                }
+            }
+
+            if (invalidateCache)
+            {
+                itemsCache.Invalidate();
+                ReplaysChanged?.Invoke();
+            }
+
+            return sortNeeded;
         }
 
         private void updateItem(DrawableCarouselItem item, DrawableCarouselItem parent = null)
@@ -529,7 +571,7 @@ namespace AWBWApp.Game.UI.Select
             item.State.Value = CarouselItemState.Selected;
         }
 
-        public void Sort(CarouselSort sort)
+        private void sort(CarouselSort sort)
         {
             Comparison<CarouselItem> comparison;
 
@@ -583,7 +625,9 @@ namespace AWBWApp.Game.UI.Select
 
             if (rootCarouselItem.Children.Any())
                 rootCarouselItem.Children.First().State.Value = CarouselItemState.Selected;
+
             ScrollToSelected();
+            isCurrentlySorting = false;
         }
 
         private string lastSearchText;
