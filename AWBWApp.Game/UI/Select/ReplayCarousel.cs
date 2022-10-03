@@ -384,8 +384,13 @@ namespace AWBWApp.Game.UI.Select
                     if (newItem.Remove)
                         continue;
 
+                    rootCarouselItem.AddChild(newItem.Replay);
+
                     if (Time.Current - scrollCooldown > time_between_scrolls)
+                    {
+                        pendingScrollOperation = PendingScrollOperation.None; //Will trigger a scroll later once item cache is validated
                         newItem.Replay.State.Value = CarouselItemState.Selected;
+                    }
                     else
                     {
                         pendingScrollOperation = PendingScrollOperation.Immediate;
@@ -393,7 +398,6 @@ namespace AWBWApp.Game.UI.Select
                     }
                     scrollCooldown = Time.Current;
 
-                    rootCarouselItem.AddChild(newItem.Replay);
                     sortNeeded = true;
                     invalidateCache = true;
                 }
