@@ -151,6 +151,7 @@ namespace AWBWApp.Game.IO
             });
 
             saveReplays();
+            saveUsernames();
         }
 
         private async Task checkForUsernamesAndGetIfMissing(ReplayInfo info, bool triggerChanged)
@@ -223,6 +224,7 @@ namespace AWBWApp.Game.IO
             if (savePlayers)
             {
                 saveReplays();
+                saveUsernames();
 
                 if (triggerChanged)
                     ReplayChanged?.Invoke(info);
@@ -235,6 +237,7 @@ namespace AWBWApp.Game.IO
 
             knownReplays[data.ReplayInfo.ID] = data.ReplayInfo;
             saveReplays();
+            saveUsernames();
 
             if (containedAlready)
                 ReplayChanged?.Invoke(data.ReplayInfo);
@@ -255,7 +258,10 @@ namespace AWBWApp.Game.IO
                         sw.Write(contents);
                 }
             }
+        }
 
+        private void saveUsernames()
+        {
             lock (usernameStorageLock)
             {
                 var contents = JsonConvert.SerializeObject(playerNames, Formatting.Indented);
