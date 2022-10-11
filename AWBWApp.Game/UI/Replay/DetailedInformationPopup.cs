@@ -188,6 +188,9 @@ namespace AWBWApp.Game.UI.Replay
             private DrawableBuilding boundToBuilding;
 
             [Resolved]
+            private BuildingStorage buildingStorage { get; set; }
+
+            [Resolved]
             private NearestNeighbourTextureStore textureStore { get; set; }
 
             [Resolved]
@@ -236,6 +239,15 @@ namespace AWBWApp.Game.UI.Replay
 
                 boundToBuilding = building;
 
+                var drawnBuiilding = building.BuildingTile;
+
+                if (drawnBuiilding.CountryID != -1)
+                {
+                    var country = building.GetCurrentCountry();
+                    if (country != null)
+                        drawnBuiilding = buildingStorage.GetBuildingByTypeAndCountry(drawnBuiilding.BuildingType, country.AWBWID);
+                }
+
                 var unitSprite = new TextureAnimation()
                 {
                     Anchor = Anchor.Centre,
@@ -243,14 +255,14 @@ namespace AWBWApp.Game.UI.Replay
                 };
                 spriteContainer.Child = unitSprite;
 
-                var firstTexture = textureStore.Get($"Map/{currentSkin.Value}/{building.BuildingTile.Textures[WeatherType.Clear]}-0");
+                var firstTexture = textureStore.Get($"Map/{currentSkin.Value}/{drawnBuiilding.Textures[WeatherType.Clear]}-0");
                 unitSprite.Size = firstTexture.Size * 2;
 
-                if (building.BuildingTile.Frames != null)
+                if (drawnBuiilding.Frames != null)
                 {
-                    unitSprite.AddFrame(firstTexture, building.BuildingTile.Frames[0]);
-                    for (int i = 1; i < building.BuildingTile.Frames.Length; i++)
-                        unitSprite.AddFrame(textureStore.Get($"Map/{currentSkin.Value}/{building.BuildingTile.Textures[WeatherType.Clear]}-{i}"), building.BuildingTile.Frames[i]);
+                    unitSprite.AddFrame(firstTexture, drawnBuiilding.Frames[0]);
+                    for (int i = 1; i < drawnBuiilding.Frames.Length; i++)
+                        unitSprite.AddFrame(textureStore.Get($"Map/{currentSkin.Value}/{drawnBuiilding.Textures[WeatherType.Clear]}-{i}"), drawnBuiilding.Frames[i]);
                 }
                 else
                     unitSprite.AddFrame(firstTexture);

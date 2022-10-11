@@ -87,6 +87,8 @@ namespace AWBWApp.Game.Game.Building
             updateAnimation();
         }
 
+        public CountryData GetCurrentCountry() => countryBindindable?.Value;
+
         public void UpdateFogOfWarBuilding(bool unitsShown, string currentTeam)
         {
             var original = shownBuildingTile;
