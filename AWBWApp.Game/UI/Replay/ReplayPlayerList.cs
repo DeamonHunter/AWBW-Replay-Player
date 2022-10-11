@@ -133,6 +133,8 @@ namespace AWBWApp.Game.UI.Replay
                     ReplayBarWidget.AnimateShow();
                 else
                     ReplayBarWidget.AnimateHide();
+
+                updatePlayerListPadding();
             }, true);
 
             showPlayerInformationInFog = configManager.GetBindable<bool>(AWBWSetting.ReplayShowPlayerDetailsInFog);
@@ -158,6 +160,20 @@ namespace AWBWApp.Game.UI.Replay
                 fogDropdown.Show();
             else
                 fogDropdown.Hide();
+            updatePlayerListPadding();
+        }
+
+        private void updatePlayerListPadding()
+        {
+            var margin = new MarginPadding { Vertical = 8 };
+
+            if (fogDropdown.Alpha > 0)
+                margin.Bottom += 35;
+
+            if (replayBarInPlayerList.Value)
+                margin.Bottom += 80;
+
+            fillContainer.Margin = margin;
         }
 
         public void CreateNewListForPlayers(Dictionary<long, PlayerInfo> players, ReplayController controller, bool usePercentagePowers, bool teamGame)
