@@ -534,7 +534,15 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                     var isSturm = CombatOfficerName == "Sturm";
 
-                    var target = controller.Map.PlayEffect(isSturm ? "Effects/Meteor" : "Effects/Target", 1500, coord, i * 250, x =>
+                    var groundPart = controller.Map.PlayEffect("Effects/Select", 1600 + i * 150, coord, i * 100, x =>
+                    {
+                        x.ScaleTo(0.25f).ScaleTo(0.4f, 250, Easing.OutBack)
+                         .RotateTo(45);
+                    });
+
+                    waitForEffects.Add(groundPart);
+
+                    var target = controller.Map.PlayEffect(isSturm ? "Effects/Meteor" : "Effects/Target", 1500, coord, 100 + i * 250, x =>
                     {
                         x.ScaleTo(8 * (isSturm ? 0.5f : 1f)).ScaleTo(1, 1000, Easing.In)
                          .FadeTo(1, 500)
@@ -597,8 +605,11 @@ namespace AWBWApp.Game.API.Replay.Actions
                         if (change.Value.FuelGainPercentage.HasValue)
                             unit.Fuel.Value = Math.Max(0, Math.Min(unit.UnitData.MaxFuel, (int)Math.Ceiling(unit.Fuel.Value * change.Value.FuelGainPercentage.Value)));
 
-                        if (playEffectForUnitChange(controller, unit))
-                            yield return ReplayWait.WaitForMilliseconds(75);
+                        if (MissileCoords.Count <= 0)
+                        {
+                            if (playEffectForUnitChange(controller, unit))
+                                yield return ReplayWait.WaitForMilliseconds(75);
+                        }
                     }
                 }
             }
@@ -636,7 +647,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                         else
                             playEffectForUnitChange(controller, unit);
 
-                        if (!controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+                        if (MissileCoords.Count <= 0 && !controller.ShouldPlayerActionBeHidden(unit.MapPosition))
                             yield return ReplayWait.WaitForMilliseconds(75);
                     }
                     else
