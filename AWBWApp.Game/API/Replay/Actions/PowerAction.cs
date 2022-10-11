@@ -195,7 +195,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                             var playerID = turnData.ReplayUnit.TryGetValue(unitID, out var savedUnit) ? savedUnit.PlayerID.Value : turnData.ActivePlayerID;
 
-                            if (playerID != player.Key)
+                            if (playerID != player.Key && action.UnitChanges.ContainsKey(unitID))
                                 continue;
 
                             var change = new PowerAction.UnitChange();
@@ -236,7 +236,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                                 }
                             }
 
-                            action.UnitChanges.Add(unitID, change);
+                            action.UnitChanges[unitID] = change;
                         }
                     }
                 }
