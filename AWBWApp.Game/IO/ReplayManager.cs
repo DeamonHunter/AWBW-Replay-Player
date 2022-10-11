@@ -539,6 +539,16 @@ namespace AWBWApp.Game.IO
             saveUsernames();
         }
 
+        public void UpdateGameName(ReplayInfo replay, string newName)
+        {
+            if (replay.UserDefinedName == newName)
+                return;
+
+            replay.UserDefinedName = newName;
+            ReplayChanged?.Invoke(replay);
+            saveReplays();
+        }
+
         #region Disposable
 
         private bool isDisposed;

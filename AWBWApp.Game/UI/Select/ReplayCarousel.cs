@@ -590,7 +590,7 @@ namespace AWBWApp.Game.UI.Select
                     comparison = (x, y) =>
                     {
                         if (x is CarouselReplay xReplay && y is CarouselReplay yReplay)
-                            return (sort == CarouselSort.Alphabetical ? 1 : -1) * string.CompareOrdinal(xReplay.ReplayInfo.Name, yReplay.ReplayInfo.Name);
+                            return (sort == CarouselSort.Alphabetical ? 1 : -1) * string.CompareOrdinal(xReplay.ReplayInfo.GetDisplayName(), yReplay.ReplayInfo.GetDisplayName());
 
                         throw new NotImplementedException("Currently not supporting other types of carousel items for sorting.");
                     };

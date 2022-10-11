@@ -14,6 +14,8 @@ namespace AWBWApp.Game.API.Replay
     {
         public long ID;
         public string Name;
+        public string UserDefinedName;
+
         public string Password;
         public long CreatorId;
 
@@ -39,6 +41,11 @@ namespace AWBWApp.Game.API.Replay
         //Unknown if this data is per turn or not
         public DateTime StartDate;
         public DateTime EndDate;
+
+        public string GetDisplayName()
+        {
+            return UserDefinedName ?? Name;
+        }
     }
 
     public enum MatchType

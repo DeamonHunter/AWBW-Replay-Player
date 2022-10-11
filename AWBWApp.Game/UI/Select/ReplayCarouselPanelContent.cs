@@ -88,7 +88,7 @@ namespace AWBWApp.Game.UI.Select
                             {
                                 new SpriteText
                                 {
-                                    Text = replayInfo.Name,
+                                    Text = replayInfo.GetDisplayName(),
                                     Font = FontUsage.Default.With(weight: "Bold", size: 22, italics: true),
                                     Shadow = true,
                                     ShadowColour = new Color4(0, 0, 0, 200)

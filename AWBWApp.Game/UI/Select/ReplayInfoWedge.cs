@@ -192,7 +192,7 @@ namespace AWBWApp.Game.UI.Select
                 Padding = new MarginPadding(10)
             };
 
-            titleFlow.AddText(replay.Name, text => text.Font = new FontUsage("Roboto", weight: "Bold", size: 26f));
+            titleFlow.AddText(replay.GetDisplayName(), text => text.Font = new FontUsage("Roboto", weight: "Bold", size: 26f));
 
             var textFlow = new TextFlowContainer()
             {

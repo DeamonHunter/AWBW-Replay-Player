@@ -33,7 +33,7 @@ namespace AWBWApp.Game.UI.Select
             {
                 case CarouselFilter.All:
                 {
-                    var filtered = !doesStringContainAllParts(ReplayInfo.Name, textParts);
+                    var filtered = !doesStringContainAllParts(ReplayInfo.GetDisplayName(), textParts);
 
                     if (doesStringContainAllParts(MapName, textParts))
                         filtered = false;
@@ -46,7 +46,7 @@ namespace AWBWApp.Game.UI.Select
                 }
 
                 case CarouselFilter.Game:
-                    Filtered.Value = !doesStringContainAllParts(ReplayInfo.Name, textParts);
+                    Filtered.Value = !doesStringContainAllParts(ReplayInfo.GetDisplayName(), textParts);
                     break;
 
                 case CarouselFilter.Map:

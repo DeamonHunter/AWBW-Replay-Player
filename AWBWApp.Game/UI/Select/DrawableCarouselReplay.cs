@@ -93,6 +93,7 @@ namespace AWBWApp.Game.UI.Select
 
                     items.AddRange(new MenuItem[]
                     {
+                        new MenuItem("Edit Game Name", () => interruptOverlay.Push(new EditGameNameInterrupt(replayInfo))),
                         new MenuItem("Edit Username") { Items = usernameItems },
                         new MenuItem("Delete...", () => interruptOverlay.Push(new DeleteReplayInterrupt(replayInfo, mapName)))
                     });
