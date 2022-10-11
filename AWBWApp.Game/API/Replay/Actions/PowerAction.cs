@@ -605,7 +605,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                         if (change.Value.FuelGainPercentage.HasValue)
                             unit.Fuel.Value = Math.Max(0, Math.Min(unit.UnitData.MaxFuel, (int)Math.Ceiling(unit.Fuel.Value * change.Value.FuelGainPercentage.Value)));
 
-                        if (MissileCoords.Count <= 0)
+                        if (MissileCoords == null || MissileCoords.Count <= 0)
                         {
                             if (playEffectForUnitChange(controller, unit))
                                 yield return ReplayWait.WaitForMilliseconds(75);
@@ -647,7 +647,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                         else
                             playEffectForUnitChange(controller, unit);
 
-                        if (MissileCoords.Count <= 0 && !controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+                        if ((MissileCoords == null || MissileCoords.Count <= 0) && !controller.ShouldPlayerActionBeHidden(unit.MapPosition))
                             yield return ReplayWait.WaitForMilliseconds(75);
                     }
                     else
