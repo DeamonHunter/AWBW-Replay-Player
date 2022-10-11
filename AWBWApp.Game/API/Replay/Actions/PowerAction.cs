@@ -31,7 +31,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             "Nell-Y", "Nell-S",
             "Rachel-Y", "Rachel-S",
             "Sami-Y", "Sami-S",
-            "Colin-Y",
+            "Colin-Y", "Colin-S",
             "Grit-Y", "Grit-S",
             "Olaf-Y", "Olaf-S",
             "Sasha-Y", "Sasha-S",
