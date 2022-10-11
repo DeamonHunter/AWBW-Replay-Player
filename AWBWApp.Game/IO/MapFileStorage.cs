@@ -196,7 +196,7 @@ namespace AWBWApp.Game.IO
                 {
                     var value = column[y];
                     if (value == null || value.Type == JTokenType.Null || value.Type == JTokenType.String)
-                        terrainFile.Ids[y] = 0;
+                        terrainFile.Ids[y * terrainFile.Size.X + x] = 0;
                     else
                         terrainFile.Ids[y * terrainFile.Size.X + x] = (short)value;
                 }
