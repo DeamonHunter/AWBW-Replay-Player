@@ -71,8 +71,10 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (shortName)
                 return "Move";
 
-            var moveUnit = controller.Map.GetDrawableUnit(Unit.ID);
-            return $"{moveUnit.UnitData.Name} Moves";
+            if (controller.Map.TryGetDrawableUnit(Unit.ID, out var moveUnit))
+                return $"{moveUnit.UnitData.Name} Moves";
+
+            return $"{Unit.UnitName} Moves";
         }
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
