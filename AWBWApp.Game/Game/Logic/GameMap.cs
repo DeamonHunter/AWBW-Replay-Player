@@ -718,8 +718,22 @@ namespace AWBWApp.Game.Game.Logic
                     if (!TryGetDrawableBuilding(discovered.Key, out var discBuilding))
                         continue;
 
-                    discBuilding.TeamToTile[id.Key] = buildingStorage.GetBuildingByAWBWId(discovered.Value.TerrainID!.Value);
-                    discBuilding.UpdateFogOfWarBuilding(revealUnknownInformation.Value, team);
+                    if (buildingStorage.TryGetBuildingByAWBWId(discovered.Value.TerrainID!.Value, out var building))
+                    {
+                        discBuilding.TeamToTile[id.Key] = building;
+                        discBuilding.UpdateFogOfWarBuilding(revealUnknownInformation.Value, team);
+                    }
+                    else
+                    {
+                        if (discovered.Value.TerrainID!.Value != 115 && discovered.Value.TerrainID!.Value != 116)
+                            throw new Exception("A building was turned into a terrain tile, and it was not a pipe?");
+
+                        //If a building is changed from a Pipe to a Pipe Seam, this will trigger.
+                        //These actions are seen by everyone, even through fog.
+                        //Todo: Does this cause other issues?
+
+                        UpdateBuilding(discovered.Value, false);
+                    }
                 }
             }
         }
