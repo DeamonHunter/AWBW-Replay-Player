@@ -44,6 +44,8 @@ namespace AWBWApp.Game.Game.Logic
         [Resolved]
         protected CountryStorage CountryStorage { get; private set; }
 
+        protected CustomShoalGenerator ShoalGenerator { get; set; }
+
         public Bindable<WeatherType> CurrentWeather = new Bindable<WeatherType>();
 
         protected readonly TileGridContainer<DrawableTile> TileGrid;
@@ -55,8 +57,6 @@ namespace AWBWApp.Game.Game.Logic
 
         private readonly UnitRangeIndicator rangeIndicator;
         private readonly TileCursor tileCursor;
-
-        private CustomShoalGenerator shoalGenerator { get; set; }
 
         private FogOfWarGenerator fogOfWarGenerator;
 
@@ -139,6 +139,7 @@ namespace AWBWApp.Game.Game.Logic
             showGridlines = settings.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap);
             showGridlines.BindValueChanged(x => grid.FadeTo(x.NewValue ? 1 : 0, 400, Easing.OutQuint), true);
             showTileCursor = settings.GetBindable<bool>(AWBWSetting.ShowTileCursor);
+            ShoalGenerator = new CustomShoalGenerator(TerrainTileStorage, BuildingStorage);
         }
 
         private void setToLoading()
@@ -164,9 +165,7 @@ namespace AWBWApp.Game.Game.Logic
                 }
             };
 
-            if (shoalGenerator == null)
-                shoalGenerator = new CustomShoalGenerator(TerrainTileStorage, BuildingStorage);
-            loadingMap = shoalGenerator.CreateCustomShoalVersion(loadingMap);
+            loadingMap = ShoalGenerator.CreateCustomShoalVersion(loadingMap);
 
             MapSize = loadingMap.Size;
 
@@ -216,10 +215,7 @@ namespace AWBWApp.Game.Game.Logic
             Assert.IsTrue(ThreadSafety.IsUpdateThread, "SetToInitialGameState was called off update thread.");
             HasLoadedMap = false;
 
-            if (shoalGenerator == null)
-                shoalGenerator = new CustomShoalGenerator(TerrainTileStorage, BuildingStorage);
-
-            map = shoalGenerator.CreateCustomShoalVersion(map);
+            map = ShoalGenerator.CreateCustomShoalVersion(map);
 
             MapSize = map.Size;
 
@@ -718,7 +714,7 @@ namespace AWBWApp.Game.Game.Logic
                     if (!TryGetDrawableBuilding(discovered.Key, out var discBuilding))
                         continue;
 
-                    if (buildingStorage.TryGetBuildingByAWBWId(discovered.Value.TerrainID!.Value, out var building))
+                    if (BuildingStorage.TryGetBuildingByAWBWId(discovered.Value.TerrainID!.Value, out var building))
                     {
                         discBuilding.TeamToTile[id.Key] = building;
                         discBuilding.UpdateFogOfWarBuilding(revealUnknownInformation.Value, team);

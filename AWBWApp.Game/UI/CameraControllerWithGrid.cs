@@ -20,6 +20,7 @@ namespace AWBWApp.Game.UI
         public int MaxScale { get; set; } = 1;
         public MarginPadding MapSpace { get; set; }
         public MarginPadding MovementRegion { get; set; }
+        public bool AllowLeftMouseToDrag = true;
 
         protected override Container<Drawable> Content => content;
 
@@ -30,7 +31,7 @@ namespace AWBWApp.Game.UI
 
         private static readonly Vector2 grid_offset = new Vector2(-1, -2);
 
-        private IBindable<bool> allowLeftMouseToDragMap;
+        private IBindable<bool> allowLeftMouseToDragUserOption;
         private IBindable<Colour4> baseMapColour;
         private IBindable<Colour4> baseGridColour;
 
@@ -62,7 +63,7 @@ namespace AWBWApp.Game.UI
         [BackgroundDependencyLoader]
         private void load(AWBWConfigManager configManager)
         {
-            allowLeftMouseToDragMap = configManager.GetBindable<bool>(AWBWSetting.ReplayAllowLeftMouseToDragMap);
+            allowLeftMouseToDragUserOption = configManager.GetBindable<bool>(AWBWSetting.ReplayAllowLeftMouseToDragMap);
 
             baseMapColour = configManager.GetBindable<Colour4>(AWBWSetting.MapGridBaseColour);
             baseMapColour.BindValueChanged(x => background.Colour = x.NewValue, true);
@@ -120,7 +121,7 @@ namespace AWBWApp.Game.UI
         {
             if (e.Button == MouseButton.Left)
             {
-                if (!allowLeftMouseToDragMap.Value)
+                if (!AllowLeftMouseToDrag || !allowLeftMouseToDragUserOption.Value)
                     return base.OnDragStart(e);
             }
             else if (e.Button != MouseButton.Middle && e.Button != MouseButton.Right)
@@ -145,7 +146,7 @@ namespace AWBWApp.Game.UI
         {
             if (e.Button == MouseButton.Left)
             {
-                if (!allowLeftMouseToDragMap.Value)
+                if (!AllowLeftMouseToDrag || !allowLeftMouseToDragUserOption.Value)
                 {
                     base.OnDrag(e);
                     return;

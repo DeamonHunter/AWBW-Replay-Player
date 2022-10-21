@@ -41,6 +41,7 @@ namespace AWBWApp.Game.UI.Editor
                 {
                     cameraControllerWithGrid = new CameraControllerWithGrid()
                     {
+                        AllowLeftMouseToDrag = false,
                         MaxScale = 8,
                         MapSpace = mapPadding,
                         MovementRegion = safeMovement,
