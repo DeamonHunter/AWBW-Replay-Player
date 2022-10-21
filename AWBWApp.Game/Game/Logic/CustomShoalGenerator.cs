@@ -146,7 +146,7 @@ namespace AWBWApp.Game.Game.Logic
                         break;
                     }
 
-                    return id != 1 ? id : originalId;
+                    return id != -1 ? id : originalId;
                 }
 
                 case 29:
