@@ -30,30 +30,31 @@ namespace AWBWApp.Game.Game.Logic
 {
     public class GameMap : Container, IKeyBindingHandler<AWBWGlobalAction>
     {
-        public Vector2I MapSize { get; private set; }
+        public Vector2I MapSize { get; protected set; }
+
+        [Resolved]
+        protected TerrainTileStorage TerrainTileStorage { get; private set; }
+
+        [Resolved]
+        protected BuildingStorage BuildingStorage { get; private set; }
+
+        [Resolved]
+        protected UnitStorage UnitStorage { get; private set; }
+
+        [Resolved]
+        protected CountryStorage CountryStorage { get; private set; }
 
         public Bindable<WeatherType> CurrentWeather = new Bindable<WeatherType>();
 
-        private readonly TileGridContainer<DrawableTile> tileGrid;
-        private readonly TileGridContainer<DrawableBuilding> buildingGrid;
+        protected readonly TileGridContainer<DrawableTile> TileGrid;
+        protected readonly TileGridContainer<DrawableBuilding> BuildingGrid;
+        protected bool HasLoadedMap;
 
-        private readonly Container<DrawableUnit> unitsDrawable;
-        private Dictionary<long, DrawableUnit> units;
+        protected readonly Container<DrawableUnit> UnitsDrawable;
+        protected Dictionary<long, DrawableUnit> Units;
 
         private readonly UnitRangeIndicator rangeIndicator;
         private readonly TileCursor tileCursor;
-
-        [Resolved]
-        private TerrainTileStorage terrainTileStorage { get; set; }
-
-        [Resolved]
-        private BuildingStorage buildingStorage { get; set; }
-
-        [Resolved]
-        private UnitStorage unitStorage { get; set; }
-
-        [Resolved]
-        private CountryStorage countryStorage { get; set; }
 
         private CustomShoalGenerator shoalGenerator { get; set; }
 
@@ -78,7 +79,6 @@ namespace AWBWApp.Game.Game.Logic
 
         private const int unit_deselect_delay = 500;
         private ScheduledDelegate unitDeselectDelegate;
-        private bool hasLoadedMap = false;
         private bool hasShownMapOutdatedWarning;
 
         [Resolved]
@@ -90,11 +90,11 @@ namespace AWBWApp.Game.Game.Logic
 
             AddRange(new Drawable[]
             {
-                tileGrid = new TileGridContainer<DrawableTile>(DrawableTile.BASE_SIZE)
+                TileGrid = new TileGridContainer<DrawableTile>(DrawableTile.BASE_SIZE)
                 {
                     Position = new Vector2(0, DrawableTile.BASE_SIZE.Y)
                 },
-                buildingGrid = new TileGridContainer<DrawableBuilding>(DrawableTile.BASE_SIZE)
+                BuildingGrid = new TileGridContainer<DrawableBuilding>(DrawableTile.BASE_SIZE)
                 {
                     Position = new Vector2(0, DrawableTile.BASE_SIZE.Y)
                 },
@@ -106,7 +106,7 @@ namespace AWBWApp.Game.Game.Logic
                     LineSize = new Vector2(2),
                     GridColor = new Color4(15, 15, 15, 255),
                 },
-                unitsDrawable = new Container<DrawableUnit>(),
+                UnitsDrawable = new Container<DrawableUnit>(),
                 tileCursor = new TileCursor()
                 {
                     Alpha = 0f
@@ -165,16 +165,16 @@ namespace AWBWApp.Game.Game.Logic
             };
 
             if (shoalGenerator == null)
-                shoalGenerator = new CustomShoalGenerator(terrainTileStorage, buildingStorage);
+                shoalGenerator = new CustomShoalGenerator(TerrainTileStorage, BuildingStorage);
             loadingMap = shoalGenerator.CreateCustomShoalVersion(loadingMap);
 
             MapSize = loadingMap.Size;
 
-            tileGrid.ClearToSize(MapSize);
-            buildingGrid.ClearToSize(MapSize);
-            unitsDrawable.Clear();
+            TileGrid.ClearToSize(MapSize);
+            BuildingGrid.ClearToSize(MapSize);
+            UnitsDrawable.Clear();
 
-            units = new Dictionary<long, DrawableUnit>();
+            Units = new Dictionary<long, DrawableUnit>();
 
             var mapIdx = 0;
 
@@ -184,25 +184,25 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     var terrainId = loadingMap.Ids[mapIdx++];
 
-                    var terrainTile = terrainTileStorage.GetTileByAWBWId(terrainId);
+                    var terrainTile = TerrainTileStorage.GetTileByAWBWId(terrainId);
                     var tile = new DrawableTile(terrainTile);
-                    tileGrid.AddTile(tile, new Vector2I(x, y));
+                    TileGrid.AddTile(tile, new Vector2I(x, y));
                 }
             }
 
             AutoSizeAxes = Axes.Both;
-            setSize(new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, (MapSize.Y + 1) * DrawableTile.BASE_SIZE.Y));
+            SetDrawableSize(new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, (MapSize.Y + 1) * DrawableTile.BASE_SIZE.Y));
 
-            tileGrid.FadeOut().FadeIn(250);
+            TileGrid.FadeOut().FadeIn(250);
             animateStart(4);
         }
 
-        private void setSize(Vector2 size)
+        protected void SetDrawableSize(Vector2 size)
         {
             grid.Size = size;
-            tileGrid.Size = size;
-            buildingGrid.Size = size;
-            unitsDrawable.Size = size;
+            TileGrid.Size = size;
+            BuildingGrid.Size = size;
+            UnitsDrawable.Size = size;
             effectAnimationController.Size = size;
         }
 
@@ -214,10 +214,10 @@ namespace AWBWApp.Game.Game.Logic
         public void SetToInitialGameState(ReplayData gameState, ReplayMap map)
         {
             Assert.IsTrue(ThreadSafety.IsUpdateThread, "SetToInitialGameState was called off update thread.");
-            hasLoadedMap = false;
+            HasLoadedMap = false;
 
             if (shoalGenerator == null)
-                shoalGenerator = new CustomShoalGenerator(terrainTileStorage, buildingStorage);
+                shoalGenerator = new CustomShoalGenerator(TerrainTileStorage, BuildingStorage);
 
             map = shoalGenerator.CreateCustomShoalVersion(map);
 
@@ -228,11 +228,11 @@ namespace AWBWApp.Game.Game.Logic
             if (AutoSizeAxes == Axes.None)
                 Size = Vec2IHelper.ScalarMultiply(MapSize + new Vector2I(0, 1), DrawableTile.BASE_SIZE);
 
-            tileGrid.ClearToSize(MapSize);
-            buildingGrid.ClearToSize(MapSize);
-            unitsDrawable.Clear();
+            TileGrid.ClearToSize(MapSize);
+            BuildingGrid.ClearToSize(MapSize);
+            UnitsDrawable.Clear();
 
-            units = new Dictionary<long, DrawableUnit>();
+            Units = new Dictionary<long, DrawableUnit>();
 
             var replayBuildings = gameState.TurnData[0].Buildings;
 
@@ -244,9 +244,9 @@ namespace AWBWApp.Game.Game.Logic
 
                     TerrainTile terrainTile;
 
-                    if (buildingStorage.ContainsBuildingWithAWBWId(terrainId))
+                    if (BuildingStorage.ContainsBuildingWithAWBWId(terrainId))
                     {
-                        terrainTile = terrainTileStorage.GetTileByCode("Plain");
+                        terrainTile = TerrainTileStorage.GetTileByCode("Plain");
 
                         if (!replayBuildings.TryGetValue(new Vector2I(x, y), out _))
                         {
@@ -258,9 +258,9 @@ namespace AWBWApp.Game.Game.Logic
                         }
                     }
                     else
-                        terrainTile = terrainTileStorage.GetTileByAWBWId(terrainId);
+                        terrainTile = TerrainTileStorage.GetTileByAWBWId(terrainId);
                     var tile = new DrawableTile(terrainTile);
-                    tileGrid.AddTile(tile, new Vector2I(x, y));
+                    TileGrid.AddTile(tile, new Vector2I(x, y));
                 }
             }
 
@@ -269,10 +269,10 @@ namespace AWBWApp.Game.Game.Logic
                 if (!awbwBuilding.Value.TerrainID.HasValue)
                     throw new Exception("Invalid building encountered: Missing terrain id.");
 
-                if (!buildingStorage.TryGetBuildingByAWBWId(awbwBuilding.Value.TerrainID.Value, out var building))
+                if (!BuildingStorage.TryGetBuildingByAWBWId(awbwBuilding.Value.TerrainID.Value, out var building))
                 {
                     //This is probably a terrain tile that get building properties. This can happen with pipes.
-                    if (terrainTileStorage.TryGetTileByAWBWId(awbwBuilding.Value.TerrainID.Value, out _))
+                    if (TerrainTileStorage.TryGetTileByAWBWId(awbwBuilding.Value.TerrainID.Value, out _))
                         continue;
 
                     throw new Exception("Unknown Building ID: " + awbwBuilding.Value.TerrainID.Value);
@@ -295,7 +295,7 @@ namespace AWBWApp.Game.Game.Logic
                 if (awbwBuilding.Value.Capture.HasValue && awbwBuilding.Value.Capture != 0)
                     drawableBuilding.CaptureHealth.Value = awbwBuilding.Value.Capture.Value;
 
-                buildingGrid.AddTile(drawableBuilding, position);
+                BuildingGrid.AddTile(drawableBuilding, position);
             }
 
             var replayUnits = gameState.TurnData[0].ReplayUnit;
@@ -316,11 +316,11 @@ namespace AWBWApp.Game.Game.Logic
             fogOfWarGenerator.FogOfWar.BindValueChanged(x => updateFog(x.NewValue));
 
             AutoSizeAxes = Axes.Both;
-            setSize(new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, (MapSize.Y + 1) * DrawableTile.BASE_SIZE.Y));
+            SetDrawableSize(new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, (MapSize.Y + 1) * DrawableTile.BASE_SIZE.Y));
 
             CurrentWeather.Value = gameState.TurnData[0].StartWeather.Type;
-            tileGrid.FadeIn();
-            hasLoadedMap = true;
+            TileGrid.FadeIn();
+            HasLoadedMap = true;
             animateStart(1.5f);
         }
 
@@ -336,14 +336,14 @@ namespace AWBWApp.Game.Game.Logic
             {
                 for (int y = 0; y < MapSize.Y; y++)
                 {
-                    var tile = tileGrid[x, y];
+                    var tile = TileGrid[x, y];
                     var tilePos = tile.Position;
 
                     tile.FadeOut().Delay((x + y) * 40 * inverseSpeed).FadeIn().MoveToOffset(offsetPosition).MoveTo(tilePos, 275 * inverseSpeed, Easing.OutCubic);
 
                     var coord = new Vector2I(x, y);
 
-                    if (buildingGrid.TryGet(coord, out var building))
+                    if (BuildingGrid.TryGet(coord, out var building))
                     {
                         building.FadeOut().Delay(((x + y) * 40 + 25) * inverseSpeed).FadeIn().MoveToOffset(offsetPosition)
                                 .MoveTo(building.Position, 275 * inverseSpeed, Easing.OutCubic);
@@ -363,12 +363,12 @@ namespace AWBWApp.Game.Game.Logic
         {
             base.Update();
 
-            if (!hasLoadedMap)
+            if (!HasLoadedMap)
                 return;
 
             var cursor = inputManager.CurrentState.Mouse.Position;
 
-            if (getUnitAndTileFromMousePosition(ToLocalSpace(cursor), out var tilePosition, out var tile, out var building, out var unit) && IsHovered)
+            if (GetUnitAndTileFromMousePosition(ToLocalSpace(cursor), out var tilePosition, out var tile, out var building, out var unit) && IsHovered)
             {
                 infoPopup.ShowDetails(tile, building, unit);
 
@@ -403,10 +403,10 @@ namespace AWBWApp.Game.Game.Logic
                 for (int y = 0; y < MapSize.Y; y++)
                 {
                     var foggy = !fogOfWar[x, y];
-                    tileGrid[x, y].FogOfWarActive.Value = foggy;
+                    TileGrid[x, y].FogOfWarActive.Value = foggy;
 
                     var coord = new Vector2I(x, y);
-                    if (buildingGrid.TryGet(coord, out var building))
+                    if (BuildingGrid.TryGet(coord, out var building))
                         building.FogOfWarActive.Value = foggy;
 
                     if (TryGetDrawableUnit(coord, out var unit))
@@ -439,26 +439,26 @@ namespace AWBWApp.Game.Game.Logic
 
             foreach (var unit in gameState.ReplayUnit)
             {
-                if (units.TryGetValue(unit.Value.ID, out DrawableUnit existingUnit))
+                if (Units.TryGetValue(unit.Value.ID, out DrawableUnit existingUnit))
                 {
                     existingUnit.UpdateUnit(unit.Value);
                 }
                 else
                 {
-                    var unitData = unitStorage.GetUnitByCode(unit.Value.UnitName);
+                    var unitData = UnitStorage.GetUnitByCode(unit.Value.UnitName);
 
                     var player = replayController.Players[unit.Value.PlayerID!.Value];
                     var drawableUnit = new DrawableUnit(unitData, unit.Value, player.Country, player.UnitFaceDirection);
                     drawableUnit.FogOfWarActive.Value = IsTileFoggy(drawableUnit.MapPosition);
-                    units.Add(unit.Value.ID, drawableUnit);
-                    unitsDrawable.Add(drawableUnit);
+                    Units.Add(unit.Value.ID, drawableUnit);
+                    UnitsDrawable.Add(drawableUnit);
                 }
             }
 
-            foreach (var unit in units.Where(x => !gameState.ReplayUnit.ContainsKey(x.Value.UnitID)))
+            foreach (var unit in Units.Where(x => !gameState.ReplayUnit.ContainsKey(x.Value.UnitID)))
             {
-                units.Remove(unit.Key);
-                unitsDrawable.Remove(unit.Value, true);
+                Units.Remove(unit.Key);
+                UnitsDrawable.Remove(unit.Value, true);
             }
 
             for (int x = 0; x < MapSize.X; x++)
@@ -472,7 +472,7 @@ namespace AWBWApp.Game.Game.Logic
                         UpdateBuilding(building, true);
                     }
                     else
-                        buildingGrid.RemoveTile(new Vector2I(x, y));
+                        BuildingGrid.RemoveTile(new Vector2I(x, y));
                 }
             }
 
@@ -492,35 +492,35 @@ namespace AWBWApp.Game.Game.Logic
 
         public DrawableUnit AddUnit(ReplayUnit unit, bool schedule = true)
         {
-            var unitData = unitStorage.GetUnitByCode(unit.UnitName);
+            var unitData = UnitStorage.GetUnitByCode(unit.UnitName);
             var player = replayController.Players[unit.PlayerID!.Value];
             var drawableUnit = new DrawableUnit(unitData, unit, player.Country, player.UnitFaceDirection);
-            units.Add(unit.ID, drawableUnit);
+            Units.Add(unit.ID, drawableUnit);
 
             if (schedule)
-                Schedule(() => unitsDrawable.Add(drawableUnit));
+                Schedule(() => UnitsDrawable.Add(drawableUnit));
             else
-                unitsDrawable.Add(drawableUnit);
+                UnitsDrawable.Add(drawableUnit);
 
             replayController.Players[unit.PlayerID!.Value].UnitCount.Value++;
             return drawableUnit;
         }
 
-        public bool TryGetDrawableUnit(long unitId, out DrawableUnit drawableUnit) => units.TryGetValue(unitId, out drawableUnit);
+        public bool TryGetDrawableUnit(long unitId, out DrawableUnit drawableUnit) => Units.TryGetValue(unitId, out drawableUnit);
 
-        public DrawableUnit GetDrawableUnit(long unitId) => units[unitId];
+        public DrawableUnit GetDrawableUnit(long unitId) => Units[unitId];
 
-        public bool TryGetDrawableBuilding(Vector2I position, out DrawableBuilding drawableBuilding) => buildingGrid.TryGet(position, out drawableBuilding);
+        public bool TryGetDrawableBuilding(Vector2I position, out DrawableBuilding drawableBuilding) => BuildingGrid.TryGet(position, out drawableBuilding);
 
         public DrawableUnit DeleteUnit(long unitId, bool explode)
         {
-            if (!units.Remove(unitId, out DrawableUnit unit))
+            if (!Units.Remove(unitId, out DrawableUnit unit))
                 return null;
 
             if (explode && !replayController.ShouldPlayerActionBeHidden(unit.MapPosition))
                 playExplosion(unit.UnitData.MovementType, unit.MapPosition);
 
-            unitsDrawable.Remove(unit, true);
+            UnitsDrawable.Remove(unit, true);
             if (unit.OwnerID.HasValue)
                 replayController.Players[unit.OwnerID.Value].UnitCount.Value--;
 
@@ -561,7 +561,7 @@ namespace AWBWApp.Game.Game.Logic
         {
             var unitsWithRange = new List<DrawableUnit>();
 
-            foreach (var unit in units)
+            foreach (var unit in Units)
             {
                 if ((unit.Value.MapPosition - position).ManhattonDistance() > distance)
                     continue;
@@ -597,7 +597,7 @@ namespace AWBWApp.Game.Game.Logic
         public DrawableUnit GetDrawableUnit(Vector2I unitPosition)
         {
             //Todo: query by position rather than iterate over everything
-            foreach (var unit in units)
+            foreach (var unit in Units)
             {
                 if (unit.Value.MapPosition == unitPosition && !unit.Value.BeingCarried.Value)
                     return unit.Value;
@@ -609,7 +609,7 @@ namespace AWBWApp.Game.Game.Logic
         public bool TryGetDrawableUnit(Vector2I unitPosition, out DrawableUnit unit)
         {
             //Todo: query by position rather than iterate over everything
-            foreach (var checkUnit in units)
+            foreach (var checkUnit in Units)
             {
                 if (checkUnit.Value.MapPosition == unitPosition && !checkUnit.Value.BeingCarried.Value)
                 {
@@ -624,40 +624,40 @@ namespace AWBWApp.Game.Game.Logic
 
         public IEnumerable<DrawableUnit> GetDrawableUnitsFromPlayer(long playerId)
         {
-            return units.Values.Where(x => x.OwnerID.HasValue && x.OwnerID == playerId);
+            return Units.Values.Where(x => x.OwnerID.HasValue && x.OwnerID == playerId);
         }
 
         public IEnumerable<DrawableBuilding> GetDrawableBuildingsForPlayer(long playerId)
         {
-            foreach (var building in buildingGrid)
+            foreach (var building in BuildingGrid)
             {
                 if (building.OwnerID.HasValue && building.OwnerID == playerId)
                     yield return building;
             }
         }
 
-        public DrawableTile GetDrawableTile(Vector2I position) => tileGrid[position.X, position.Y];
+        public DrawableTile GetDrawableTile(Vector2I position) => TileGrid[position.X, position.Y];
 
         public void UpdateBuilding(ReplayBuilding awbwBuilding, bool setBuildingToReady)
         {
             var tilePosition = awbwBuilding.Position;
 
-            if (!buildingGrid.TryGet(tilePosition, out DrawableBuilding building))
+            if (!BuildingGrid.TryGet(tilePosition, out DrawableBuilding building))
             {
                 if (!awbwBuilding.TerrainID.HasValue)
                     throw new Exception("Tried to update a missing building. But it didn't have a terrain id.");
 
-                if (buildingStorage.TryGetBuildingByAWBWId(awbwBuilding.TerrainID.Value, out var buildingTile))
+                if (BuildingStorage.TryGetBuildingByAWBWId(awbwBuilding.TerrainID.Value, out var buildingTile))
                 {
                     var playerID = getPlayerIDFromCountryID(buildingTile.CountryID);
                     var country = playerID.HasValue ? replayController.Players[playerID.Value].Country : null;
                     var drawableBuilding = new DrawableBuilding(buildingTile, tilePosition, playerID, country);
                     drawableBuilding.FogOfWarActive.Value = IsTileFoggy(awbwBuilding.Position);
-                    buildingGrid.AddTile(drawableBuilding, tilePosition);
+                    BuildingGrid.AddTile(drawableBuilding, tilePosition);
                     return;
                 }
 
-                if (terrainTileStorage.TryGetTileByAWBWId(awbwBuilding.TerrainID.Value, out _))
+                if (TerrainTileStorage.TryGetTileByAWBWId(awbwBuilding.TerrainID.Value, out _))
                     return;
 
                 throw new Exception("Unknown Building ID: " + awbwBuilding.TerrainID.Value);
@@ -667,31 +667,31 @@ namespace AWBWApp.Game.Game.Logic
 
             if (comparisonTerrainId != 0 && building.BuildingTile.AWBWID != comparisonTerrainId)
             {
-                buildingGrid.RemoveTile(tilePosition);
+                BuildingGrid.RemoveTile(tilePosition);
 
                 if (awbwBuilding.TerrainID.HasValue && awbwBuilding.TerrainID != 0)
                 {
-                    if (buildingStorage.TryGetBuildingByAWBWId(awbwBuilding.TerrainID.Value, out var buildingTile))
+                    if (BuildingStorage.TryGetBuildingByAWBWId(awbwBuilding.TerrainID.Value, out var buildingTile))
                     {
                         var playerID = getPlayerIDFromCountryID(buildingTile.CountryID);
                         var country = playerID.HasValue ? replayController.Players[playerID.Value].Country : null;
                         var newBuilding = new DrawableBuilding(buildingTile, tilePosition, playerID, country);
                         transferDiscovery(building, newBuilding);
                         newBuilding.FogOfWarActive.Value = IsTileFoggy(awbwBuilding.Position);
-                        buildingGrid.AddTile(newBuilding, tilePosition);
+                        BuildingGrid.AddTile(newBuilding, tilePosition);
                         building = newBuilding;
                     }
-                    else if (terrainTileStorage.TryGetTileByAWBWId(awbwBuilding.TerrainID.Value, out var terrainTile))
+                    else if (TerrainTileStorage.TryGetTileByAWBWId(awbwBuilding.TerrainID.Value, out var terrainTile))
                     {
                         //Likely a blown up pipe. May need to change the tile underneath
 
-                        var tile = tileGrid[tilePosition.X, tilePosition.Y];
+                        var tile = TileGrid[tilePosition.X, tilePosition.Y];
 
                         if (tile.TerrainTile != terrainTile)
                         {
                             var newTile = new DrawableTile(terrainTile);
 
-                            tileGrid.AddTile(newTile, tilePosition);
+                            TileGrid.AddTile(newTile, tilePosition);
                             newTile.FogOfWarActive.Value = IsTileFoggy(tilePosition);
                         }
                     }
@@ -741,7 +741,7 @@ namespace AWBWApp.Game.Game.Logic
         public void UpdateDiscoveredBuildings()
         {
             var team = getCurrentTeamVisibility();
-            foreach (var building in buildingGrid)
+            foreach (var building in BuildingGrid)
                 building.UpdateFogOfWarBuilding(revealUnknownInformation.Value, team);
         }
 
@@ -879,7 +879,7 @@ namespace AWBWApp.Game.Game.Logic
                     var dayToDayPower = replayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
                     var action = replayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
                     var sightRangeModifier = dayToDayPower.SightIncrease + (action?.SightRangeIncrease ?? 0);
-                    sightRangeModifier += unit.UnitData.MovementType != MovementType.Air ? tileGrid[unit.MapPosition.X, unit.MapPosition.Y].TerrainTile.SightDistanceIncrease : 0;
+                    sightRangeModifier += unit.UnitData.MovementType != MovementType.Air ? TileGrid[unit.MapPosition.X, unit.MapPosition.Y].TerrainTile.SightDistanceIncrease : 0;
 
                     if (CurrentWeather.Value == WeatherType.Rain)
                         sightRangeModifier -= 1;
@@ -893,7 +893,7 @@ namespace AWBWApp.Game.Game.Logic
                             if (tile.X < 0 || tile.Y < 0 || tile.X >= MapSize.X || tile.Y >= MapSize.Y)
                                 continue;
 
-                            var distance = tileGrid[tile.X, tile.Y].TerrainTile.LimitFogOfWarSightDistance;
+                            var distance = TileGrid[tile.X, tile.Y].TerrainTile.LimitFogOfWarSightDistance;
                             if (distance > 0 && distance < i)
                                 continue;
 
@@ -942,16 +942,16 @@ namespace AWBWApp.Game.Game.Logic
 
         protected override bool OnClick(ClickEvent e)
         {
-            if (!hasLoadedMap)
+            if (!HasLoadedMap)
                 return base.OnClick(e);
 
-            if (getUnitAndTileFromMousePosition(e.MousePosition, out _, out _, out _, out var unit) && unit != null)
+            if (GetUnitAndTileFromMousePosition(e.MousePosition, out _, out _, out _, out var unit) && unit != null)
                 return SetUnitAsSelected(unit);
 
             return base.OnClick(e);
         }
 
-        private bool getUnitAndTileFromMousePosition(Vector2 cursor, out Vector2I tilePosition, out DrawableTile tile, out DrawableBuilding building, out DrawableUnit unit)
+        protected bool GetUnitAndTileFromMousePosition(Vector2 cursor, out Vector2I tilePosition, out DrawableTile tile, out DrawableBuilding building, out DrawableUnit unit)
         {
             tile = null;
             building = null;
@@ -971,8 +971,8 @@ namespace AWBWApp.Game.Game.Logic
                 return false;
 
             TryGetDrawableUnit(tilePosition, out unit);
-            buildingGrid.TryGet(tilePosition, out building);
-            tile = tileGrid[tilePosition.X, tilePosition.Y];
+            BuildingGrid.TryGet(tilePosition, out building);
+            tile = TileGrid[tilePosition.X, tilePosition.Y];
             Debug.Assert(tile != null);
 
             return true;
@@ -1005,7 +1005,7 @@ namespace AWBWApp.Game.Game.Logic
                 }
                 else
                 {
-                    var tile = tileGrid[position.X, position.Y].TerrainTile;
+                    var tile = TileGrid[position.X, position.Y].TerrainTile;
                     moveCosts = tile.MovementCostsPerType;
                     terrainType = tile.TerrainType;
                 }
@@ -1087,6 +1087,6 @@ namespace AWBWApp.Game.Game.Logic
 
         private long? getPlayerIDFromCountryID(int countryID) => replayController.Players.FirstOrDefault(x => x.Value.OriginalCountryID == countryID).Value?.ID;
 
-        public UnitData GetUnitDataForUnitName(string unitName) => unitStorage.GetUnitByCode(unitName);
+        public UnitData GetUnitDataForUnitName(string unitName) => UnitStorage.GetUnitByCode(unitName);
     }
 }

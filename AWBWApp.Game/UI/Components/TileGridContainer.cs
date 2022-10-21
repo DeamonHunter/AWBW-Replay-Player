@@ -33,6 +33,22 @@ namespace AWBWApp.Game.UI.Components
             tiles = new T[gridSize.X, gridSize.Y];
         }
 
+        public void SetToSize(Vector2I gridSize)
+        {
+            var oldTiles = tiles;
+
+            tiles = new T[gridSize.X, gridSize.Y];
+
+            if (oldTiles == null)
+                return;
+
+            for (int x = 0; x < oldTiles.GetLength(0); X++)
+            {
+                for (int y = 0; y < oldTiles.GetLength(1); X++)
+                    AddTile(oldTiles[x, y], new Vector2I(x, y));
+            }
+        }
+
         public void AddTile(T drawable, Vector2I gridPosition)
         {
             if (gridPosition.X < 0 || gridPosition.Y < 0 || gridPosition.X >= GridSize.X || gridPosition.Y >= GridSize.Y)
