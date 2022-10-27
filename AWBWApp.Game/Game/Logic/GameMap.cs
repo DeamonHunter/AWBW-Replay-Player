@@ -409,7 +409,8 @@ namespace AWBWApp.Game.Game.Logic
                     if (buildingGrid.TryGet(coord, out var building))
                         building.FogOfWarActive.Value = foggy;
 
-                    if (TryGetDrawableUnit(coord, out var unit))
+                    //Replays without pipe attack actions can occasionally lead to having 2 units on the same tile.
+                    foreach (var unit in GetAllDrawableUnitsOnTile(coord))
                         unit.FogOfWarActive.Value = foggy;
                 }
             }
@@ -620,6 +621,15 @@ namespace AWBWApp.Game.Game.Logic
 
             unit = null;
             return false;
+        }
+
+        public IEnumerable<DrawableUnit> GetAllDrawableUnitsOnTile(Vector2I unitPosition)
+        {
+            foreach (var checkUnit in units)
+            {
+                if (checkUnit.Value.MapPosition == unitPosition && !checkUnit.Value.BeingCarried.Value)
+                    yield return checkUnit.Value;
+            }
         }
 
         public IEnumerable<DrawableUnit> GetDrawableUnitsFromPlayer(long playerId)
