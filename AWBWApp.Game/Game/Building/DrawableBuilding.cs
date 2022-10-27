@@ -49,6 +49,7 @@ namespace AWBWApp.Game.Game.Building
         private IBindable<MapSkin> currentSkin { get; set; }
 
         private readonly IBindable<CountryData> countryBindindable;
+        private IBindable<bool> revealBuildingInFog;
 
         public DrawableBuilding(BuildingTile buildingTile, Vector2I tilePosition, long? ownerID, IBindable<CountryData> country)
         {
@@ -83,6 +84,9 @@ namespace AWBWApp.Game.Game.Building
             countryBindindable?.BindValueChanged(_ => updateAnimation());
             currentSkin?.BindValueChanged(_ => updateAnimation());
             currentWeather.BindValueChanged(x => changeWeather(x.NewValue));
+
+            revealBuildingInFog = configManager.GetBindable<bool>(AWBWSetting.ReplayOnlyShownKnownInfo);
+            revealBuildingInFog.BindValueChanged(x => updateBuildingColour(x.NewValue), true);
 
             updateAnimation();
         }
@@ -183,7 +187,7 @@ namespace AWBWApp.Game.Game.Building
             else
                 colour = Color4.White;
 
-            if (HasDoneAction.Value)
+            if (HasDoneAction.Value && (!FogOfWarActive.Value || (revealBuildingInFog?.Value ?? true)))
                 colour = colour.Darken(0.2f);
 
             textureAnimation.FadeColour(colour, 250, fadeOut ? Easing.OutQuint : Easing.InQuint);
