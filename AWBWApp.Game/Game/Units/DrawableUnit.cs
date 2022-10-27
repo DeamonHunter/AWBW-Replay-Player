@@ -217,7 +217,7 @@ namespace AWBWApp.Game.Game.Units
 
             var transformSequence = this.MoveTo(getRealPositionFromMapTiles(new Vector2I(path[0].X, path[0].Y)));
 
-            bool fogActive(UnitPosition position) => controller.ShouldPlayerActionBeHidden(new Vector2I(position.X, position.Y));
+            bool fogActive(UnitPosition position) => controller.ShouldPlayerActionBeHidden(new Vector2I(position.X, position.Y), UnitData.MovementType == MovementType.Air);
 
             if (path.Count == 2)
             {

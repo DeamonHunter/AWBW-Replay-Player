@@ -179,7 +179,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             foreach (var unit in originalUnits)
             {
-                if (controller.ShouldPlayerActionBeHidden(unit.Value.Position!.Value))
+                if (controller.ShouldPlayerActionBeHidden(unit.Value))
                     continue;
 
                 return true;

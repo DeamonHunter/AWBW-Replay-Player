@@ -650,7 +650,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                         else
                             playEffectForUnitChange(controller, unit);
 
-                        if ((MissileCoords == null || MissileCoords.Count <= 0) && !controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+                        if ((MissileCoords == null || MissileCoords.Count <= 0) && !controller.ShouldPlayerActionBeHidden(unit.MapPosition, unit.UnitData.MovementType == MovementType.Air))
                             yield return ReplayWait.WaitForMilliseconds(75);
                     }
                     else
@@ -710,7 +710,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         private bool playEffectForUnitChange(ReplayController controller, DrawableUnit unit)
         {
-            if (controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+            if (controller.ShouldPlayerActionBeHidden(unit.MapPosition, unit.UnitData.MovementType == MovementType.Air))
                 return false;
 
             controller.Map.PlayEffect("Effects/PowerSelect/SelectCircle", 225, unit.MapPosition, 0, x => x.ScaleTo(0).ScaleTo(1, 200, Easing.Out));

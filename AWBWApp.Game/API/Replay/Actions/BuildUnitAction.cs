@@ -73,7 +73,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 context.RegisterDiscoveryAndSetUndo(Discovered);
         }
 
-        public bool HasVisibleAction(ReplayController controller) => !controller.ShouldPlayerActionBeHidden(NewUnit.Position!.Value);
+        public bool HasVisibleAction(ReplayController controller) => !controller.ShouldPlayerActionBeHidden(NewUnit);
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
         {
@@ -98,7 +98,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (Discovered != null)
                 controller.Map.RegisterDiscovery(Discovered);
 
-            if (controller.ShowAnimationsWhenUnitsHidden.Value || !controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+            if (controller.ShowAnimationsWhenUnitsHidden.Value || !controller.ShouldPlayerActionBeHidden(unit.MapPosition, unit.UnitData.MovementType == MovementType.Air))
                 controller.Map.PlaySelectionAnimation(unit);
 
             controller.Stats.CurrentTurnStatsReadout[unit.OwnerID!.Value].RegisterUnitStats(UnitStatType.BuildUnit | UnitStatType.UnitCountChanged, NewUnit.UnitName, NewUnit.PlayerID!.Value, unitValue);

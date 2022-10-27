@@ -9,16 +9,16 @@ namespace AWBWApp.Game.Game.Logic
 {
     public class FogOfWarGenerator
     {
-        public Bindable<bool[,]> FogOfWar;
+        public Bindable<FogOfWarState[,]> FogOfWar;
 
         private GameMap gameMap;
 
         public FogOfWarGenerator(GameMap map)
         {
             gameMap = map;
-            FogOfWar = new Bindable<bool[,]>
+            FogOfWar = new Bindable<FogOfWarState[,]>
             {
-                Value = new bool[gameMap.MapSize.X, gameMap.MapSize.Y]
+                Value = new FogOfWarState[gameMap.MapSize.X, gameMap.MapSize.Y]
             };
         }
 
@@ -26,16 +26,13 @@ namespace AWBWApp.Game.Game.Logic
         {
             var fogArray = FogOfWar.Value;
 
-            if (!makeFoggy)
+            var fogValue = makeFoggy ? FogOfWarState.Hidden : FogOfWarState.AllVisible;
+
+            for (int x = 0; x < gameMap.MapSize.X; x++)
             {
-                for (int x = 0; x < gameMap.MapSize.X; x++)
-                {
-                    for (int y = 0; y < gameMap.MapSize.Y; y++)
-                        fogArray[x, y] = true;
-                }
+                for (int y = 0; y < gameMap.MapSize.Y; y++)
+                    fogArray[x, y] = fogValue;
             }
-            else
-                Array.Clear(fogArray, 0, fogArray.Length);
 
             if (triggerChange)
                 FogOfWar.TriggerChange();
@@ -52,7 +49,7 @@ namespace AWBWApp.Game.Game.Logic
 
             //All the buildings the player owns shows its own tile.
             foreach (var drawableBuilding in buildings)
-                fogArray[drawableBuilding.MapPosition.X, drawableBuilding.MapPosition.Y] = true;
+                fogArray[drawableBuilding.MapPosition.X, drawableBuilding.MapPosition.Y] = FogOfWarState.AllVisible;
 
             foreach (var drawableUnit in units)
             {
@@ -90,17 +87,26 @@ namespace AWBWApp.Game.Game.Logic
                             if (gameMap.TryGetDrawableBuilding(tilePosition, out DrawableBuilding building))
                             {
                                 if (building.BuildingTile.LimitFogOfWarSightDistance > 0 && distance > building.BuildingTile.LimitFogOfWarSightDistance)
+                                {
+                                    if (fogArray[tilePosition.X, tilePosition.Y] == FogOfWarState.Hidden)
+                                        fogArray[tilePosition.X, tilePosition.Y] = FogOfWarState.AirUnitsVisible;
                                     continue;
+                                }
                             }
                             else
                             {
                                 var tile = gameMap.GetDrawableTile(tilePosition);
+
                                 if (tile.TerrainTile.LimitFogOfWarSightDistance > 0 && distance > tile.TerrainTile.LimitFogOfWarSightDistance)
+                                {
+                                    if (fogArray[tilePosition.X, tilePosition.Y] == FogOfWarState.Hidden)
+                                        fogArray[tilePosition.X, tilePosition.Y] = FogOfWarState.AirUnitsVisible;
                                     continue;
+                                }
                             }
                         }
 
-                        fogArray[tilePosition.X, tilePosition.Y] = true;
+                        fogArray[tilePosition.X, tilePosition.Y] = FogOfWarState.AllVisible;
                     }
                 }
             }

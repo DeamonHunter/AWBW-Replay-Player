@@ -106,7 +106,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (MoveUnit != null && MoveUnit.HasVisibleAction(controller))
                 return true;
 
-            return !controller.ShouldPlayerActionBeHidden(originalRepairingUnit.Position!.Value) || !controller.ShouldPlayerActionBeHidden(originalRepairedUnit.Position!.Value);
+            return !controller.ShouldPlayerActionBeHidden(originalRepairingUnit) || !controller.ShouldPlayerActionBeHidden(originalRepairedUnit);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -128,7 +128,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             controller.ActivePlayer.UnitValue.Value += repairValue;
             controller.Stats.CurrentTurnStatsReadout[controller.ActivePlayer.ID].MoneySpentOnRepairingUnits += repairCost;
 
-            if (controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+            if (controller.ShouldPlayerActionBeHidden(unit.MapPosition, unit.UnitData.MovementType == MovementType.Air))
                 yield break;
 
             controller.Map.PlayEffect("Effects/Supplied", 600, unit.MapPosition, 0,
