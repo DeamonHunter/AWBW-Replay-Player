@@ -92,6 +92,7 @@ namespace AWBWApp.Game.UI.Select
 
         private double scrollCooldown = -double.MaxValue;
         private const double time_between_scrolls = 15000;
+        private CarouselReplay replayToSelectAfterSort = null;
 
         private Queue<(CarouselReplay Replay, bool Remove)> replayUpdates = new Queue<(CarouselReplay, bool)>();
         private bool isCurrentlySorting;
@@ -264,7 +265,6 @@ namespace AWBWApp.Game.UI.Select
                     selectedReplay = item;
                     SelectionChanged?.Invoke(item.ReplayInfo);
                     itemsCache.Invalidate();
-                    ScrollToSelected();
                 }
             };
 
@@ -390,6 +390,7 @@ namespace AWBWApp.Game.UI.Select
                     {
                         pendingScrollOperation = PendingScrollOperation.None; //Will trigger a scroll later once item cache is validated
                         newItem.Replay.State.Value = CarouselItemState.Selected;
+                        replayToSelectAfterSort = newItem.Replay;
                     }
                     else
                     {
@@ -550,6 +551,8 @@ namespace AWBWApp.Game.UI.Select
                 return;
             }
 
+            scrollCooldown = Time.Current - time_between_scrolls;
+
             selectedReplay = (CarouselReplay)rootCarouselItem.Children.FirstOrDefault(x =>
             {
                 var replay = (CarouselReplay)x;
@@ -627,10 +630,17 @@ namespace AWBWApp.Game.UI.Select
             rootCarouselItem.Sort(comparison);
             itemsCache.Invalidate();
 
-            if (rootCarouselItem.Children.Any())
-                rootCarouselItem.Children.First().State.Value = CarouselItemState.Selected;
-
-            ScrollToSelected();
+            if (replayToSelectAfterSort != null && !replayToSelectAfterSort.Filtered.Value)
+            {
+                replayToSelectAfterSort.State.Value = CarouselItemState.Selected;
+                replayToSelectAfterSort = null;
+            }
+            else
+            {
+                var firstItem = rootCarouselItem.Children.FirstOrDefault(x => !x.Filtered.Value);
+                if (firstItem != null)
+                    firstItem.State.Value = CarouselItemState.Selected;
+            }
             isCurrentlySorting = false;
         }
 
