@@ -122,7 +122,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (MoveUnit != null && MoveUnit.HasVisibleAction(controller))
                 return true;
 
-            return !controller.ShouldPlayerActionBeHidden(Building.Position);
+            return !controller.ShouldPlayerActionBeHidden(Building.Position, false);
         }
 
         public bool EndsGame() => EliminatedAction?.EndsGame() ?? false;
@@ -174,7 +174,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                     yield return transformable;
             }
 
-            var actionHidden = controller.ShouldPlayerActionBeHidden(Building.Position);
+            var actionHidden = controller.ShouldPlayerActionBeHidden(Building.Position, false);
             controller.Map.TryGetDrawableBuilding(Building.Position, out var capturingBuilding);
 
             if (controller.Map.TryGetDrawableUnit(Building.Position, out var capturingUnit))

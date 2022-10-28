@@ -854,7 +854,18 @@ namespace AWBWApp.Game.Game.Logic
 
         public bool SkipEndTurnPopup() => skipEndTurnBindable.Value;
 
-        public bool ShouldPlayerActionBeHidden(Vector2I position)
+        public bool ShouldPlayerActionBeHidden(ReplayUnit unit)
+        {
+            if (Map.TryGetDrawableUnit(unit.ID, out var drawableUnit))
+                return ShouldPlayerActionBeHidden(unit.Position.HasValue ? unit.Position.Value : drawableUnit.MapPosition, drawableUnit.UnitData.MovementType == MovementType.Air);
+
+            if (!unit.Position.HasValue)
+                throw new Exception("Unit does not have a position and cannot be used to check for hidden actions");
+
+            return ShouldPlayerActionBeHidden(unit.Position.Value, unit.UnitName != null && Map.GetUnitDataForUnitName(unit.UnitName).MovementType == MovementType.Air);
+        }
+
+        public bool ShouldPlayerActionBeHidden(Vector2I position, bool isAirUnit)
         {
             if (Map.RevealUnknownInformation.Value)
                 return false;
@@ -862,10 +873,10 @@ namespace AWBWApp.Game.Game.Logic
             if (IsFogOnActivePlayer())
                 return false;
 
-            return Map.IsTileFoggy(position);
+            return Map.IsTileFoggy(position, isAirUnit);
         }
 
-        public bool ShouldPlayerActionBeHidden(Vector2I position, PlayerInfo player)
+        public bool ShouldPlayerActionBeHidden(Vector2I position, PlayerInfo player, bool isAirUnit)
         {
             if (Map.RevealUnknownInformation.Value)
                 return false;
@@ -884,7 +895,7 @@ namespace AWBWApp.Game.Game.Logic
             else if (player.ID == (long)activeFog)
                 return true;
 
-            return Map.IsTileFoggy(position);
+            return Map.IsTileFoggy(position, isAirUnit);
         }
 
         public bool IsFogOnActivePlayer()

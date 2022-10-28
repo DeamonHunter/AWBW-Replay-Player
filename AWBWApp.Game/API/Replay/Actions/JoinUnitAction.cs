@@ -101,7 +101,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (MoveUnit != null && MoveUnit.HasVisibleAction(controller))
                 return true;
 
-            return !controller.ShouldPlayerActionBeHidden(JoinedUnit.Position!.Value);
+            return !controller.ShouldPlayerActionBeHidden(JoinedUnit);
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)

@@ -98,9 +98,15 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public bool HasVisibleAction(ReplayController controller)
         {
+            bool isAirUnit;
+            if (controller.Map.TryGetDrawableUnit(Unit.ID, out var drawableUnit))
+                isAirUnit = drawableUnit.UnitData.MovementType == MovementType.Air;
+            else
+                isAirUnit = controller.Map.GetUnitDataForUnitName(Unit.UnitName).MovementType == MovementType.Air;
+
             foreach (var position in Path)
             {
-                if (controller.ShouldPlayerActionBeHidden(new Vector2I(position.X, position.Y)))
+                if (controller.ShouldPlayerActionBeHidden(new Vector2I(position.X, position.Y), isAirUnit))
                     continue;
 
                 return true;
@@ -117,6 +123,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 throw new Exception("Improperly made Move Unit Action. Final outcome missing position.");
 
             var unit = controller.Map.GetDrawableUnit(Unit.ID);
+            var isAirUnit = unit.UnitData.MovementType == MovementType.Air;
 
             if (belowBuildingHP != null)
             {
@@ -126,13 +133,13 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             EffectAnimation effect = null;
-            if (controller.ShowAnimationsWhenUnitsHidden.Value || !controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+            if (controller.ShowAnimationsWhenUnitsHidden.Value || !controller.ShouldPlayerActionBeHidden(unit.MapPosition, isAirUnit))
                 effect = controller.Map.PlaySelectionAnimation(unit);
 
             if (controller.ShowMovementArrows)
             {
                 if (Path.Length > 1)
-                    renderPath(Path, controller);
+                    renderPath(Path, controller, isAirUnit);
             }
 
             if (effect != null)
@@ -156,7 +163,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 controller.Map.PlayEffect("Effects/TrapMarker", 650, Unit.Position.Value, 0, x => x.ScaleTo(new Vector2(1, 0)).ScaleTo(new Vector2(1, 1), 250, Easing.OutBounce));
         }
 
-        private void renderPath(UnitPosition[] path, ReplayController controller)
+        private void renderPath(UnitPosition[] path, ReplayController controller, bool isAirUnit)
         {
             if (path.Length <= 1)
                 throw new Exception("Did we travel a path of only 1 tile?");
@@ -166,7 +173,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 var current = path[i];
 
-                if (controller.ShouldPlayerActionBeHidden(new Vector2I(current.X, current.Y)))
+                if (controller.ShouldPlayerActionBeHidden(new Vector2I(current.X, current.Y), isAirUnit))
                     continue;
 
                 var prev = path[i - 1];
@@ -200,7 +207,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             var beforeHead = path[^2];
             var head = path[^1];
 
-            if (controller.ShouldPlayerActionBeHidden(new Vector2I(head.X, head.Y)))
+            if (controller.ShouldPlayerActionBeHidden(new Vector2I(head.X, head.Y), isAirUnit))
                 return;
 
             var headDiffX = head.X - beforeHead.X;

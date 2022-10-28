@@ -40,7 +40,7 @@ namespace AWBWApp.Game.UI
             generator.FogOfWar.BindValueChanged(updateFog);
         }
 
-        private void updateFog(ValueChangedEvent<bool[,]> fogValues)
+        private void updateFog(ValueChangedEvent<FogOfWarState[,]> fogValues)
         {
             var xLength = fogValues.NewValue.GetLength(0);
             var yLength = fogValues.NewValue.GetLength(1);
@@ -49,7 +49,7 @@ namespace AWBWApp.Game.UI
             {
                 for (int y = 0; y < yLength; y++)
                 {
-                    if (fogValues.NewValue[x, y])
+                    if (fogValues.NewValue[x, y] == FogOfWarState.AllVisible)
                         tiles[x, y].SetClear();
                     else
                         tiles[x, y].SetFoggy();

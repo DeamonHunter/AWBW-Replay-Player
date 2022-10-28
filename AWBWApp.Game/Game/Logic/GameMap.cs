@@ -392,21 +392,22 @@ namespace AWBWApp.Game.Game.Logic
             }
         }
 
-        private void updateFog(bool[,] fogOfWar)
+        private void updateFog(FogOfWarState[,] fogOfWar)
         {
             for (int x = 0; x < MapSize.X; x++)
             {
                 for (int y = 0; y < MapSize.Y; y++)
                 {
-                    var foggy = !fogOfWar[x, y];
-                    TileGrid[x, y].FogOfWarActive.Value = foggy;
+                    var fogState = fogOfWar[x, y];
+                    TileGrid[x, y].FogOfWarActive.Value = fogState != FogOfWarState.AllVisible;
 
                     var coord = new Vector2I(x, y);
                     if (BuildingGrid.TryGet(coord, out var building))
-                        building.FogOfWarActive.Value = foggy;
+                        building.FogOfWarActive.Value = fogState != FogOfWarState.AllVisible;
 
-                    if (TryGetDrawableUnit(coord, out var unit))
-                        unit.FogOfWarActive.Value = foggy;
+                    //Replays without pipe attack actions can occasionally lead to having 2 units on the same tile.
+                    foreach (var unit in GetAllDrawableUnitsOnTile(coord))
+                        unit.FogOfWarActive.Value = unit.UnitData.MovementType == MovementType.Air ? fogState == FogOfWarState.Hidden : fogState != FogOfWarState.AllVisible;
                 }
             }
         }
@@ -445,7 +446,7 @@ namespace AWBWApp.Game.Game.Logic
 
                     var player = replayController.Players[unit.Value.PlayerID!.Value];
                     var drawableUnit = new DrawableUnit(unitData, unit.Value, player.Country, player.UnitFaceDirection);
-                    drawableUnit.FogOfWarActive.Value = IsTileFoggy(drawableUnit.MapPosition);
+                    drawableUnit.FogOfWarActive.Value = IsTileFoggy(drawableUnit.MapPosition, drawableUnit.UnitData.MovementType == MovementType.Air);
                     Units.Add(unit.Value.ID, drawableUnit);
                     UnitsDrawable.Add(drawableUnit);
                 }
@@ -478,12 +479,14 @@ namespace AWBWApp.Game.Game.Logic
         public void ClearFog(bool makeFoggy, bool triggerChange) => fogOfWarGenerator?.ClearFog(makeFoggy, triggerChange);
         public void UpdateFogOfWar(long playerId, int rangeIncrease, bool canSeeIntoHiddenTiles, bool resetFog = true) => fogOfWarGenerator.GenerateFogForPlayer(playerId, rangeIncrease, canSeeIntoHiddenTiles, resetFog);
 
-        public bool IsTileFoggy(Vector2I position)
+        public bool IsTileFoggy(Vector2I position, bool forAirUnit)
         {
             if (fogOfWarGenerator.FogOfWar.Value == null)
                 return false;
 
-            return !fogOfWarGenerator.FogOfWar.Value[position.X, position.Y];
+            var fogState = fogOfWarGenerator.FogOfWar.Value[position.X, position.Y];
+
+            return forAirUnit ? (fogState == FogOfWarState.Hidden) : (fogState != FogOfWarState.AllVisible);
         }
 
         public DrawableUnit AddUnit(ReplayUnit unit, bool schedule = true)
@@ -513,7 +516,7 @@ namespace AWBWApp.Game.Game.Logic
             if (!Units.Remove(unitId, out DrawableUnit unit))
                 return null;
 
-            if (explode && !replayController.ShouldPlayerActionBeHidden(unit.MapPosition))
+            if (explode && !replayController.ShouldPlayerActionBeHidden(unit.MapPosition, unit.UnitData.MovementType == MovementType.Air))
                 playExplosion(unit.UnitData.MovementType, unit.MapPosition);
 
             UnitsDrawable.Remove(unit, true);
@@ -618,6 +621,15 @@ namespace AWBWApp.Game.Game.Logic
             return false;
         }
 
+        public IEnumerable<DrawableUnit> GetAllDrawableUnitsOnTile(Vector2I unitPosition)
+        {
+            foreach (var checkUnit in Units)
+            {
+                if (checkUnit.Value.MapPosition == unitPosition && !checkUnit.Value.BeingCarried.Value)
+                    yield return checkUnit.Value;
+            }
+        }
+
         public IEnumerable<DrawableUnit> GetDrawableUnitsFromPlayer(long playerId)
         {
             return Units.Values.Where(x => x.OwnerID.HasValue && x.OwnerID == playerId);
@@ -648,7 +660,7 @@ namespace AWBWApp.Game.Game.Logic
                     var playerID = getPlayerIDFromCountryID(buildingTile.CountryID);
                     var country = playerID.HasValue ? replayController.Players[playerID.Value].Country : null;
                     var drawableBuilding = new DrawableBuilding(buildingTile, tilePosition, playerID, country);
-                    drawableBuilding.FogOfWarActive.Value = IsTileFoggy(awbwBuilding.Position);
+                    drawableBuilding.FogOfWarActive.Value = IsTileFoggy(awbwBuilding.Position, false);
                     BuildingGrid.AddTile(drawableBuilding, tilePosition);
                     return;
                 }
@@ -673,7 +685,7 @@ namespace AWBWApp.Game.Game.Logic
                         var country = playerID.HasValue ? replayController.Players[playerID.Value].Country : null;
                         var newBuilding = new DrawableBuilding(buildingTile, tilePosition, playerID, country);
                         transferDiscovery(building, newBuilding);
-                        newBuilding.FogOfWarActive.Value = IsTileFoggy(awbwBuilding.Position);
+                        newBuilding.FogOfWarActive.Value = IsTileFoggy(awbwBuilding.Position, false);
                         BuildingGrid.AddTile(newBuilding, tilePosition);
                         building = newBuilding;
                     }
@@ -688,7 +700,7 @@ namespace AWBWApp.Game.Game.Logic
                             var newTile = new DrawableTile(terrainTile);
 
                             TileGrid.AddTile(newTile, tilePosition);
-                            newTile.FogOfWarActive.Value = IsTileFoggy(tilePosition);
+                            newTile.FogOfWarActive.Value = IsTileFoggy(tilePosition, false);
                         }
                     }
                 }

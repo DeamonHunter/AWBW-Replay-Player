@@ -187,7 +187,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (MoveUnit != null && MoveUnit.HasVisibleAction(controller))
                 return true;
 
-            return !controller.ShouldPlayerActionBeHidden(originalAttacker.Position!.Value) || !controller.ShouldPlayerActionBeHidden(originalDefender.Position!.Value);
+            return !controller.ShouldPlayerActionBeHidden(originalAttacker) || !controller.ShouldPlayerActionBeHidden(originalDefender);
         }
 
         public bool EndsGame() => EliminatedAction?.EndsGame() ?? false;
@@ -307,7 +307,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             EffectAnimation reticule;
 
-            if (swapAttackOrder || !controller.ShouldPlayerActionBeHidden(attackerUnit.MapPosition))
+            if (swapAttackOrder || !controller.ShouldPlayerActionBeHidden(attackerUnit.MapPosition, attackerUnit.UnitData.MovementType == MovementType.Air))
                 reticule = PlayAttackAnimation(controller, attackerUnit.MapPosition, defenderUnit.MapPosition, attackerUnit, false);
             else //If we can't see the attacker just play the animation on them.
                 reticule = PlayAttackAnimation(controller, defenderUnit.MapPosition, defenderUnit.MapPosition, defenderUnit, false);

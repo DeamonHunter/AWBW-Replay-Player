@@ -637,17 +637,20 @@ namespace AWBWApp.Game.API.Replay.Actions
                         if (change.Value.UnitsMoved.HasValue)
                             unit.CanMove.Value = change.Value.UnitsMoved.Value == 0;
 
-                        if (change.Value.MovementPoints.HasValue)
-                            Logger.Log("Unit Movement Change not implemented yet.");
-                        if (change.Value.Range.HasValue)
-                            Logger.Log("Unit Range Change not implemented yet.");
+                        if (change.Value.MovementPoints.HasValue && MovementRangeIncrease == 0)
+                            unit.MovementRange.Value = change.Value.MovementPoints.Value;
 
+                        if (change.Value.Range.HasValue)
+                        {
+                            if (COPower.PowerIncreases == null || !COPower.PowerIncreases.Exists(x => x.AffectedUnits.Contains("all") || x.AffectedUnits.Contains(unit.UnitData.Name)))
+                                unit.AttackRange.Value = new Vector2I(unit.AttackRange.Value.X, change.Value.Range.Value);
+                        }
                         if (unit.HealthPoints.Value <= 0)
                             controller.Map.DeleteUnit(unit.UnitID, true);
                         else
                             playEffectForUnitChange(controller, unit);
 
-                        if ((MissileCoords == null || MissileCoords.Count <= 0) && !controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+                        if ((MissileCoords == null || MissileCoords.Count <= 0) && !controller.ShouldPlayerActionBeHidden(unit.MapPosition, unit.UnitData.MovementType == MovementType.Air))
                             yield return ReplayWait.WaitForMilliseconds(75);
                     }
                     else
@@ -707,7 +710,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         private bool playEffectForUnitChange(ReplayController controller, DrawableUnit unit)
         {
-            if (controller.ShouldPlayerActionBeHidden(unit.MapPosition))
+            if (controller.ShouldPlayerActionBeHidden(unit.MapPosition, unit.UnitData.MovementType == MovementType.Air))
                 return false;
 
             controller.Map.PlayEffect("Effects/PowerSelect/SelectCircle", 225, unit.MapPosition, 0, x => x.ScaleTo(0).ScaleTo(1, 200, Easing.Out));

@@ -95,7 +95,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             foreach (var unit in originalUnits)
             {
-                if (controller.ShouldPlayerActionBeHidden(unit.Position!.Value))
+                if (controller.ShouldPlayerActionBeHidden(unit))
                     continue;
 
                 return true;
@@ -120,7 +120,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 suppliedUnit.Ammo.Value = suppliedUnit.UnitData.MaxAmmo;
                 suppliedUnit.Fuel.Value = suppliedUnit.UnitData.MaxFuel;
 
-                if (controller.ShouldPlayerActionBeHidden(suppliedUnit.MapPosition))
+                if (controller.ShouldPlayerActionBeHidden(suppliedUnit.MapPosition, suppliedUnit.UnitData.MovementType == MovementType.Air))
                     continue;
 
                 controller.Map.PlayEffect("Effects/Supplied", 600, suppliedUnit.MapPosition, 0,
