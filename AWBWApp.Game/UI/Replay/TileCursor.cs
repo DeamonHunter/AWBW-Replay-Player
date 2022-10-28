@@ -26,14 +26,14 @@ namespace AWBWApp.Game.UI.Replay
             }
         }
 
-        private readonly Sprite cursor;
+        protected Sprite Cursor;
 
         public TileCursor()
         {
             Anchor = Anchor.TopLeft;
             Origin = Anchor.TopLeft;
 
-            InternalChild = cursor = new Sprite()
+            InternalChild = Cursor = new Sprite()
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre
@@ -43,8 +43,8 @@ namespace AWBWApp.Game.UI.Replay
         [BackgroundDependencyLoader]
         private void load(NearestNeighbourTextureStore textureStore)
         {
-            cursor.Texture = textureStore.Get("Effects/TileCursor");
-            cursor.Size = cursor.Texture.Size;
+            Cursor.Texture = textureStore.Get("Effects/TileCursor");
+            Cursor.Size = Cursor.Texture.Size;
         }
 
         protected override void LoadComplete()

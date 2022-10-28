@@ -15,6 +15,7 @@ namespace AWBWApp.Game.UI.Editor
     {
         private short[,] tiles;
 
+        private EditorTileCursor editorCursor;
         public EditorGameMap()
             : base(null)
         {
@@ -36,6 +37,8 @@ namespace AWBWApp.Game.UI.Editor
             AutoSizeAxes = Axes.Both;
             SetDrawableSize(new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, (MapSize.Y + 1) * DrawableTile.BASE_SIZE.Y));
             HasLoadedMap = true;
+
+            editorCursor.SetTile(TerrainTileStorage.GetTileByAWBWId(29));
         }
 
         public void SetMapSize(Vector2I newMapSize)
@@ -46,6 +49,7 @@ namespace AWBWApp.Game.UI.Editor
             MapSize = newMapSize;
         }
 
+        public override TileCursor CreateTileCursor() => editorCursor = new EditorTileCursor() { Alpha = 0 };
         public short GetTileIDAtPosition(Vector2I tilePosition) => tiles[tilePosition.X, tilePosition.Y];
 
         public void ChangeTile(Vector2I position, short newTileID, short shoalTile = -1)

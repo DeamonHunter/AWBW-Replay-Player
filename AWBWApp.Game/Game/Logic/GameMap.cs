@@ -56,7 +56,7 @@ namespace AWBWApp.Game.Game.Logic
         protected Dictionary<long, DrawableUnit> Units;
 
         private readonly UnitRangeIndicator rangeIndicator;
-        private readonly TileCursor tileCursor;
+        private TileCursor tileCursor;
 
         private FogOfWarGenerator fogOfWarGenerator;
 
@@ -107,10 +107,7 @@ namespace AWBWApp.Game.Game.Logic
                     GridColor = new Color4(15, 15, 15, 255),
                 },
                 UnitsDrawable = new Container<DrawableUnit>(),
-                tileCursor = new TileCursor()
-                {
-                    Alpha = 0f
-                },
+                tileCursor = CreateTileCursor(),
                 rangeIndicator = new UnitRangeIndicator(),
                 effectAnimationController = new EffectAnimationController
                 {
@@ -363,8 +360,12 @@ namespace AWBWApp.Game.Game.Logic
                 return;
 
             var cursor = inputManager.CurrentState.Mouse.Position;
+            UpdateTileCursor(cursor);
+        }
 
-            if (GetUnitAndTileFromMousePosition(ToLocalSpace(cursor), out var tilePosition, out var tile, out var building, out var unit) && IsHovered)
+        protected virtual void UpdateTileCursor(Vector2 mousePosition)
+        {
+            if (GetUnitAndTileFromMousePosition(ToLocalSpace(mousePosition), out var tilePosition, out var tile, out var building, out var unit) && IsHovered)
             {
                 infoPopup.ShowDetails(tile, building, unit);
 
@@ -1110,5 +1111,7 @@ namespace AWBWApp.Game.Game.Logic
         private long? getPlayerIDFromCountryID(int countryID) => replayController.Players.FirstOrDefault(x => x.Value.OriginalCountryID == countryID).Value?.ID;
 
         public UnitData GetUnitDataForUnitName(string unitName) => UnitStorage.GetUnitByCode(unitName);
+
+        public virtual TileCursor CreateTileCursor() => new TileCursor() { Alpha = 0f };
     }
 }
