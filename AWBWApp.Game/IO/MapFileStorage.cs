@@ -10,7 +10,6 @@ using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Textures;
@@ -109,13 +108,11 @@ namespace AWBWApp.Game.IO
             {
                 try
                 {
-                    var mapAPILink = "https://awbw.amarriner.com/matsuzen/api/map/map_info.php?maps_id=" + mapID;
-
-                    using (var jsonRequest = new GenericJsonWebRequest(mapAPILink))
+                    using (var mapRequest = new MapDownloadWebRequest(mapID))
                     {
-                        await jsonRequest.PerformAsync().ConfigureAwait(false);
+                        await mapRequest.PerformAsync().ConfigureAwait(false);
 
-                        if (jsonRequest.ResponseObject == null)
+                        if (mapRequest.ParsedMap == null)
                         {
                             errorCount++;
 
@@ -131,11 +128,11 @@ namespace AWBWApp.Game.IO
                             continue;
                         }
 
-                        map = ParseAndStoreResponseJson(mapID, jsonRequest.ResponseObject);
-                        completionSource.SetResult(map);
-
+                        storeReplayMap(mapID, mapRequest.ParsedMap);
+                        completionSource.SetResult(mapRequest.ParsedMap);
                         downloadingMap = false;
                         lastDownloaded = DateTime.UtcNow;
+
                         return;
                     }
                 }
@@ -177,31 +174,8 @@ namespace AWBWApp.Game.IO
 
         public Stream GetStream(string name) => underlyingStorage.GetStream($"{name}.json");
 
-        public ReplayMap ParseAndStoreResponseJson(long gameId, JObject json)
+        private void storeReplayMap(long gameId, ReplayMap terrainFile)
         {
-            var terrainFile = new ReplayMap
-            {
-                TerrainName = (string)json["Name"],
-                Size = new Vector2I((int)json["Size X"], (int)json["Size Y"])
-            };
-            terrainFile.Ids = new short[terrainFile.Size.X * terrainFile.Size.Y];
-
-            var mapArray = (JArray)json["Terrain Map"];
-
-            for (int x = 0; x < terrainFile.Size.X; x++)
-            {
-                var column = mapArray[x];
-
-                for (int y = 0; y < terrainFile.Size.Y; y++)
-                {
-                    var value = column[y];
-                    if (value == null || value.Type == JTokenType.Null || value.Type == JTokenType.String)
-                        terrainFile.Ids[y * terrainFile.Size.X + x] = 0;
-                    else
-                        terrainFile.Ids[y * terrainFile.Size.X + x] = (short)value;
-                }
-            }
-
             var terrainFileSerialised = JsonConvert.SerializeObject(terrainFile);
 
             using (var stream = underlyingStorage.GetStream($"{gameId}.json", FileAccess.Write, FileMode.Create))
@@ -209,8 +183,6 @@ namespace AWBWApp.Game.IO
                 using (var sw = new StreamWriter(stream))
                     sw.Write(terrainFileSerialised);
             }
-
-            return terrainFile;
         }
 
         public ReplayMap ParseAndStoreResponseHTML(long gameId, string html)
@@ -278,14 +250,7 @@ namespace AWBWApp.Game.IO
                     terrainFile.Ids[terrainIdx++] = tile;
             }
 
-            var terrainFileSerialised = JsonConvert.SerializeObject(terrainFile);
-
-            using (var stream = underlyingStorage.GetStream($"{gameId}.json", FileAccess.Write, FileMode.Create))
-            {
-                using (var sw = new StreamWriter(stream))
-                    sw.Write(terrainFileSerialised);
-            }
-
+            storeReplayMap(gameId, terrainFile);
             return terrainFile;
         }
 
