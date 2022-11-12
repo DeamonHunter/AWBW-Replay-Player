@@ -67,7 +67,6 @@ namespace AWBWApp.Game.API.Replay.Actions
             return $"{originalJoiningUnit.UnitName} Moves + Joins {originalJoinedUnit.UnitName}";
         }
 
-        //Todo: Track funds
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
             MoveUnit?.SetupAndUpdate(controller, context);

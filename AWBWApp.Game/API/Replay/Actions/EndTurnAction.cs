@@ -96,6 +96,7 @@ namespace AWBWApp.Game.API.Replay.Actions
     {
         public long NextPlayerID;
         public int NextDay;
+        public bool TagSwitchOccurred;
 
         public int FundsAfterTurnStart;
         public WeatherType NextWeatherType;
@@ -141,7 +142,11 @@ namespace AWBWApp.Game.API.Replay.Actions
                 foreach (var repairedPair in RepairedUnits)
                 {
                     if (!context.Units.TryGetValue(repairedPair.Key, out var repaired))
-                        throw new ReplayMissingUnitException(repairedPair.Key);
+                    {
+                        //This can trigger is some rare circumstances. Maybe just let it go.
+                        Logger.Log($"Failed to find a unit to repair: {repairedPair.Key}. Skipping unit.");
+                        continue;
+                    }
 
                     if (!originalUnits.ContainsKey(repairedPair.Key))
                         originalUnits.Add(repairedPair.Key, repaired.Clone());
@@ -224,7 +229,13 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 foreach (var repairedUnit in RepairedUnits)
                 {
-                    var unit = controller.Map.GetDrawableUnit(repairedUnit.Key);
+                    if (!controller.Map.TryGetDrawableUnit(repairedUnit.Key, out var unit))
+                    {
+                        //This can trigger is some rare circumstances. Maybe just let it go.
+                        Logger.Log($"Failed to find a unit to repair: {repairedUnit.Key}. Skipping unit.");
+                        continue;
+                    }
+
                     unit.HealthPoints.Value = repairedUnit.Value;
                     unit.Ammo.Value = unit.UnitData.MaxAmmo;
                     unit.Fuel.Value = unit.UnitData.MaxFuel;
