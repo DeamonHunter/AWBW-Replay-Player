@@ -22,7 +22,7 @@ namespace AWBWApp.Game.API.Replay
             for (int i = 0; i < replay.TurnData.Count; i++)
             {
                 var turn = replay.TurnData[i];
-                if (turn == null || turn.Actions.Count <= 0)
+                if (turn?.Actions == null || turn.Actions.Count <= 0)
                     continue;
 
                 var endTurnAction = turn.Actions[0] as EndTurnAction;
