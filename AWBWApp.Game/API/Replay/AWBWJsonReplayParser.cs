@@ -214,9 +214,6 @@ namespace AWBWApp.Game.API.Replay
                     case "name":
                     {
                         var name = readString(text, ref textIndex);
-                        if (!firstTurn && replayData.ReplayInfo.Name != name)
-                            throw new Exception("Data 'Name' changed per turn when not expected.");
-
                         replayData.ReplayInfo.Name = name;
                         break;
                     }
