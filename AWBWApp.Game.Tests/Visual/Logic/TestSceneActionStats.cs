@@ -9,7 +9,7 @@ using osu.Framework.Graphics.Primitives;
 namespace AWBWApp.Game.Tests.Visual.Logic
 {
     [TestFixture]
-    public class TestSceneActionStats : BaseActionsTestScene
+    public partial class TestSceneActionStats : BaseActionsTestScene
     {
         [Test]
         public void TestAttack()

@@ -9,7 +9,7 @@ using osu.Framework.Allocation;
 namespace AWBWApp.Game.Tests.Visual.Components
 {
     [TestFixture]
-    public class TestSceneEliminationPopupDrawable : AWBWAppTestScene
+    public partial class TestSceneEliminationPopupDrawable : AWBWAppTestScene
     {
         [Resolved]
         private CountryStorage countryStorage { get; set; }

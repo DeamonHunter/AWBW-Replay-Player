@@ -9,7 +9,7 @@ using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Tests.Visual.Logic
 {
-    public abstract class BaseActionsTestScene : BaseGameMapTestScene
+    public abstract partial class BaseActionsTestScene : BaseGameMapTestScene
     {
         protected ReplayData CreateBasicReplayData(int playerCount)
         {

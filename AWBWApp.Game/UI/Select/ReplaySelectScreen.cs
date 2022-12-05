@@ -18,7 +18,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Select
 {
-    public class ReplaySelectScreen : EscapeableScreen
+    public partial class ReplaySelectScreen : EscapeableScreen
     {
         protected ReplayCarousel Carousel { get; private set; }
         protected ReplayInfoWedge ReplayInfo { get; private set; }
@@ -186,7 +186,7 @@ namespace AWBWApp.Game.UI.Select
                 return;
         }
 
-        private class ResetScrollContainer : Container
+        private partial class ResetScrollContainer : Container
         {
             private readonly Action onHoverAction;
 

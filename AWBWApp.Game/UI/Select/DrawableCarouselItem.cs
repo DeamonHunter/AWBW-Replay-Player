@@ -7,7 +7,7 @@ using osu.Framework.Input.Events;
 
 namespace AWBWApp.Game.UI.Select
 {
-    public abstract class DrawableCarouselItem : PoolableDrawable
+    public abstract partial class DrawableCarouselItem : PoolableDrawable
     {
         public const float MAX_HEIGHT = 100;
 

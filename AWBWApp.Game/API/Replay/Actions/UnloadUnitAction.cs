@@ -108,6 +108,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             var transportUnit = controller.Map.GetDrawableUnit(TransportID);
             var unloadingUnit = controller.Map.GetDrawableUnit(UnloadedUnit.ID);
 
+            unloadingUnit.MoveToPosition(transportUnit.MapPosition);
             unloadingUnit.BeingCarried.Value = false;
             transportUnit.Cargo.Remove(unloadingUnit.UnitID);
 
@@ -121,7 +122,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             yield return ReplayWait.WaitForTransformable(unloadingUnit);
 
-            unloadingUnit.MoveToPosition(UnloadedUnit.Position.Value);
+            unloadingUnit.UpdateUnit(UnloadedUnit);
             unloadingUnit.CanMove.Value = false;
 
             controller.UpdateFogOfWar();

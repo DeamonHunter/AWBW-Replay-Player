@@ -6,7 +6,7 @@ using osu.Framework.Testing;
 
 namespace AWBWApp.Game.Tests
 {
-    public class AWBWAppTestBrowser : AWBWAppTestBase
+    public partial class AWBWAppTestBrowser : AWBWAppTestBase
     {
         protected override void LoadComplete()
         {

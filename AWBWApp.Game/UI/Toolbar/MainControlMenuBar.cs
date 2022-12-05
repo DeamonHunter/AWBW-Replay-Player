@@ -12,7 +12,7 @@ using osu.Framework.Platform;
 
 namespace AWBWApp.Game.UI.Toolbar
 {
-    public class MainControlMenuBar : AWBWMenuBar
+    public partial class MainControlMenuBar : AWBWMenuBar
     {
         private readonly Action exitScreenAction;
 
@@ -49,6 +49,7 @@ namespace AWBWApp.Game.UI.Toolbar
                         new ToggleMenuItem("Movement Animations", configManager.GetBindable<bool>(AWBWSetting.ReplayMovementAnimations)),
                         new ToggleMenuItem("Show Movement Arrows", configManager.GetBindable<bool>(AWBWSetting.ReplayShowMovementArrows)),
                         new ToggleMenuItem("Show Animations for Hidden Actions", configManager.GetBindable<bool>(AWBWSetting.ShowAnimationsForHiddenActions)),
+                        new ToggleMenuItem("Skip End Turn Animations", configManager.GetBindable<bool>(AWBWSetting.ReplaySkipEndTurn)),
                     }
                 },
                 new MenuItem("Control Settings")
@@ -57,7 +58,6 @@ namespace AWBWApp.Game.UI.Toolbar
                     {
                         new MenuItem("Rebind Keys", () => interrupts.Push(new KeyRebindingInterrupt())),
                         new ToggleMenuItem("Allow Left Mouse to Drag Map", configManager.GetBindable<bool>(AWBWSetting.ReplayAllowLeftMouseToDragMap)),
-                        new ToggleMenuItem("Skip End Turn", configManager.GetBindable<bool>(AWBWSetting.ReplaySkipEndTurn)),
                         new ToggleMenuItem("Shorten Action Tooltips", configManager.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips)),
                         new ToggleMenuItem("Move Controls Bar to Player List", configManager.GetBindable<bool>(AWBWSetting.ReplayCombineReplayListAndControlBar)),
                     }

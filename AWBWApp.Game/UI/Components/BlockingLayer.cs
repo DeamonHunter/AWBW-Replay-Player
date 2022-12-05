@@ -9,7 +9,7 @@ namespace AWBWApp.Game.UI.Components
     /// <summary>
     /// This is a container to use to block input of <see cref="Drawable"/>s behind it, similar to <see cref="LoadingLayer"/>.
     /// </summary>
-    public class BlockingLayer : VisibilityContainer
+    public partial class BlockingLayer : VisibilityContainer
     {
         public bool BlockKeyEvents = true;
 

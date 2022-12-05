@@ -7,7 +7,7 @@ using osu.Framework.Graphics.Textures;
 
 namespace AWBWApp.Game
 {
-    public class SpinningBox : CompositeDrawable
+    public partial class SpinningBox : CompositeDrawable
     {
         private Container box;
 

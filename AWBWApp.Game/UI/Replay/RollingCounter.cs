@@ -10,7 +10,7 @@ using osu.Framework.Localisation;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class RollingCounter<T> : Container, IHasCurrentValue<T>
+    public partial class RollingCounter<T> : Container, IHasCurrentValue<T>
         where T : struct, IEquatable<T>
     {
         public Drawable DrawableCount { get; private set; }

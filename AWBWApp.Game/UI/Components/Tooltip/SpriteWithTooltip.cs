@@ -4,7 +4,7 @@ using osu.Framework.Localisation;
 
 namespace AWBWApp.Game.UI.Components.Tooltip
 {
-    public class SpriteWithTooltip : Sprite, IHasTooltip
+    public partial class SpriteWithTooltip : Sprite, IHasTooltip
     {
         public string Tooltip { get; set; }
 

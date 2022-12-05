@@ -15,7 +15,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Weather
 {
-    public class RainAnimation : Drawable
+    public partial class RainAnimation : Drawable
     {
         protected virtual Vector2 ParticleBaseSize => new Vector2(3, 40);
         protected virtual float ParticleBaseVelocity => 750;
@@ -53,7 +53,7 @@ namespace AWBWApp.Game.UI.Weather
         private void load(IRenderer renderer, ShaderManager shaders)
         {
             Texture = renderer.WhitePixel;
-            shader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);
+            shader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
         }
 
         protected override void Update()

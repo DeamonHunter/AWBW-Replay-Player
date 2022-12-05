@@ -7,7 +7,7 @@ using osu.Framework.Platform;
 
 namespace AWBWApp.Game.Input
 {
-    public class GlobalActionContainer : FileBasedKeyBindingContainer<AWBWGlobalAction>
+    public partial class GlobalActionContainer : FileBasedKeyBindingContainer<AWBWGlobalAction>
     {
         private readonly Drawable handler;
         private InputManager parentInputManager;

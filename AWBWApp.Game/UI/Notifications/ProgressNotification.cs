@@ -9,7 +9,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Notifications
 {
-    public class ProgressNotification : SimpleNotification, ICanBeCompleted
+    public partial class ProgressNotification : SimpleNotification, ICanBeCompleted
     {
         public Func<bool> CompletionClickAction;
 
@@ -153,7 +153,7 @@ namespace AWBWApp.Game.UI.Notifications
             base.Close();
         }
 
-        private class ProgressBar : Container
+        private partial class ProgressBar : Container
         {
             private readonly Box box;
 

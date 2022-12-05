@@ -296,7 +296,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             var swapAttackOrder = (defenderPower?.COPower.AttackFirst ?? false) && !(attackerPower?.COPower.AttackFirst ?? false);
 
-            if (swapAttackOrder && defenderCounters)
+            var swappedUnits = swapAttackOrder && defenderCounters;
+
+            if (swappedUnits)
             {
                 (attackerUnit, defenderUnit) = (defenderUnit, attackerUnit);
                 (attackerStats, defenderStats) = (defenderStats, attackerStats);
@@ -314,7 +316,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             yield return ReplayWait.WaitForTransformable(reticule);
 
-            attackerUnit.CanMove.Value = false;
+            if (!swappedUnits)
+                attackerUnit.CanMove.Value = false;
             defenderUnit.UpdateUnit(defenderStats);
             controller.Players[defenderUnit.OwnerID!.Value].UnitValue.Value -= defenderValue;
 
@@ -338,6 +341,9 @@ namespace AWBWApp.Game.API.Replay.Actions
             //Perform Attack vs Attacker
             reticule = PlayAttackAnimation(controller, defenderUnit.MapPosition, attackerUnit.MapPosition, defenderUnit, true);
             yield return ReplayWait.WaitForTransformable(reticule);
+
+            if (swappedUnits)
+                defenderUnit.CanMove.Value = false;
 
             attackerUnit.UpdateUnit(attackerStats);
 

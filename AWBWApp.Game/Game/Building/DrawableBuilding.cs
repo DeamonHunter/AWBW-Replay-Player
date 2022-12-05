@@ -15,7 +15,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.Game.Building
 {
-    public class DrawableBuilding : CompositeDrawable, IHasMapPosition
+    public partial class DrawableBuilding : CompositeDrawable, IHasMapPosition
     {
         public static readonly Vector2I BASE_SIZE = new Vector2I(16);
         public static readonly Colour4 FOG_COLOUR = new Colour4(150, 150, 150, 255);

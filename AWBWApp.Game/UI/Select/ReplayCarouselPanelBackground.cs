@@ -8,7 +8,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Select
 {
-    public class ReplayCarouselPanelBackground : BufferedContainer
+    public partial class ReplayCarouselPanelBackground : BufferedContainer
     {
         public ReplayCarouselPanelBackground()
         {

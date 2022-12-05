@@ -98,14 +98,16 @@ namespace AWBWApp.Game.API.Replay
                 throw new Exception("Cannot parse replay. The zip did not contain a replay file.");
             }
 
-            var state = readBaseReplayData(gameStateFile);
+            var replayData = readBaseReplayData(gameStateFile);
             if (replayFile != null)
-                readReplayActions(state, replayFile);
-            state.ReplayInfo.ReplayVersion = 2;
+                readReplayActions(replayData, replayFile);
+            replayData.ReplayInfo.ReplayVersion = 2;
+
+            ReplayPostProcessor.ProcessReplay(replayData);
 
             stopWatch.Stop();
             Logger.Log("Replay parsing took: " + stopWatch.Elapsed);
-            return state;
+            return replayData;
         }
 
         public ReplayData ParseReplayFile(Stream fileStream)
@@ -214,9 +216,6 @@ namespace AWBWApp.Game.API.Replay
                     case "name":
                     {
                         var name = readString(text, ref textIndex);
-                        if (!firstTurn && replayData.ReplayInfo.Name != name)
-                            throw new Exception("Data 'Name' changed per turn when not expected.");
-
                         replayData.ReplayInfo.Name = name;
                         break;
                     }

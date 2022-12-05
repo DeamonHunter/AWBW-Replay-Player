@@ -14,7 +14,7 @@ namespace AWBWApp.Game.UI.Components
     /// <summary>
     /// Adds a Scroll Container around a <see cref="FillFlowContainer{T}"/> and allow setting a maximum size.
     /// </summary>
-    public abstract class MaxSizeScrollContainer<T> : CompositeDrawable where T : Drawable
+    public abstract partial class MaxSizeScrollContainer<T> : CompositeDrawable where T : Drawable
     {
         private float maxWidth = float.MaxValue;
 
@@ -158,7 +158,7 @@ namespace AWBWApp.Game.UI.Components
             itemsFlow.SetLayoutPosition(child, depth);
         }
 
-        public class SizeCacheFillFlowContainer<U> : FillFlowContainer<U> where U : Drawable
+        public partial class SizeCacheFillFlowContainer<U> : FillFlowContainer<U> where U : Drawable
         {
             public readonly LayoutValue SizeCache = new LayoutValue(Invalidation.RequiredParentSizeToFit, InvalidationSource.Self);
 

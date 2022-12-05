@@ -14,7 +14,7 @@ using osu.Framework.Screens;
 
 namespace AWBWApp.Game.Tests.Visual.Logic
 {
-    public abstract class BaseGameMapTestScene : AWBWAppTestScene
+    public abstract partial class BaseGameMapTestScene : AWBWAppTestScene
     {
         [Cached]
         private TerrainTileStorage terrainTileStorage = new TerrainTileStorage();

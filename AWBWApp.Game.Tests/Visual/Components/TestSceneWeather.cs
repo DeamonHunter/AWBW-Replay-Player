@@ -6,7 +6,7 @@ using osu.Framework.Testing;
 namespace AWBWApp.Game.Tests.Visual.Components
 {
     [TestFixture]
-    public class TestSceneWeather : AWBWAppTestScene
+    public partial class TestSceneWeather : AWBWAppTestScene
     {
         private WeatherAnimationController weatherController;
 

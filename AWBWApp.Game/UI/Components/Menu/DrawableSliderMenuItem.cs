@@ -7,7 +7,7 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Components.Menu
 {
-    public class DrawableSliderMenuItem : DrawableAWBWMenuItem
+    public partial class DrawableSliderMenuItem : DrawableAWBWMenuItem
     {
         protected new SliderMenuItem Item => (SliderMenuItem)base.Item;
 
@@ -18,7 +18,7 @@ namespace AWBWApp.Game.UI.Components.Menu
 
         protected override InnerMenuContainer CreateInnerMenuContainer() => new SliderInnerMenuContainer(Item);
 
-        private class SliderInnerMenuContainer : InnerMenuContainer
+        private partial class SliderInnerMenuContainer : InnerMenuContainer
         {
             private readonly SliderMenuItem sliderItem;
             private readonly KnobSliderBar<float> sliderBar;

@@ -11,7 +11,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Select
 {
-    public class DrawableCarouselPanel : Container
+    public partial class DrawableCarouselPanel : Container
     {
         public Container BorderContainer;
 
@@ -80,7 +80,7 @@ namespace AWBWApp.Game.UI.Select
             }
         }
 
-        public class HoverLayer : CompositeDrawable
+        public partial class HoverLayer : CompositeDrawable
         {
             private Box box;
 

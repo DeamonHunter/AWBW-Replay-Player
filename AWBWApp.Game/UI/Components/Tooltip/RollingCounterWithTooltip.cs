@@ -5,7 +5,7 @@ using osu.Framework.Localisation;
 
 namespace AWBWApp.Game.UI.Components.Tooltip
 {
-    public class RollingCounterWithTooltip<T> : RollingCounter<T>, IHasTooltip where T : struct, IEquatable<T>
+    public partial class RollingCounterWithTooltip<T> : RollingCounter<T>, IHasTooltip where T : struct, IEquatable<T>
     {
         public string Tooltip { get; set; }
 

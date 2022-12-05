@@ -11,7 +11,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Notifications
 {
-    public class NotificationOverlay : OverlayContainer
+    public partial class NotificationOverlay : OverlayContainer
     {
         private readonly FillFlowContainer<Notification> notificationContainer;
 

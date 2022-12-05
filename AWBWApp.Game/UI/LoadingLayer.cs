@@ -16,7 +16,7 @@ namespace AWBWApp.Game.UI
     /// Also optionally dims target elements.
     /// Useful for disabling all elements in a form and showing we are waiting on a response, for instance.
     /// </summary>
-    public class LoadingLayer : LoadingSpinner
+    public partial class LoadingLayer : LoadingSpinner
     {
         [CanBeNull]
         protected Box BackgroundDimLayer { get; }

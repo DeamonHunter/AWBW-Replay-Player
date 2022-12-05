@@ -10,7 +10,7 @@ using osu.Framework.Testing;
 namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 {
     [TestFixture]
-    public class TestSceneBuildUnitAction : BaseActionsTestScene
+    public partial class TestSceneBuildUnitAction : BaseActionsTestScene
     {
         private static Vector2I unitPosition = new Vector2I(2, 2);
         private ReplayUnit createdUnit;

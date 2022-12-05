@@ -22,7 +22,7 @@ using Container = osu.Framework.Graphics.Containers.Container;
 
 namespace AWBWApp.Game.UI.Select
 {
-    public class ReplayCarousel : CompositeDrawable
+    public partial class ReplayCarousel : CompositeDrawable
     {
         public bool AllowSelection = true;
         public Action ReplaysChanged;
@@ -704,7 +704,7 @@ namespace AWBWApp.Game.UI.Select
             }
         }
 
-        protected class CarouselScrollContainer : UserTrackingScrollContainer<DrawableCarouselItem>
+        protected partial class CarouselScrollContainer : UserTrackingScrollContainer<DrawableCarouselItem>
         {
             private bool rightMouseScrollBlocked;
 
@@ -743,7 +743,7 @@ namespace AWBWApp.Game.UI.Select
             }
         }
 
-        public class UserTrackingScrollContainer<T> : BasicScrollContainer<T>
+        public partial class UserTrackingScrollContainer<T> : BasicScrollContainer<T>
             where T : Drawable
         {
             public bool UserScrolling { get; private set; }
@@ -794,7 +794,7 @@ namespace AWBWApp.Game.UI.Select
                 base.ScrollToEnd(animated, allowDuringDrag);
             }
 
-            protected class SizeSettableScrollbar : BasicScrollbar
+            protected partial class SizeSettableScrollbar : BasicScrollbar
             {
                 private float scrollbarSize;
 

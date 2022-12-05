@@ -7,7 +7,7 @@ using osu.Framework.Text;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class TextureSpriteText : SpriteText
+    public partial class TextureSpriteText : SpriteText
     {
         private TextureGlyphLookupStore glyphStore;
         private string glyphPath;

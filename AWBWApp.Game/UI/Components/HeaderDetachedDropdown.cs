@@ -5,7 +5,7 @@ using osu.Framework.Localisation;
 
 namespace AWBWApp.Game.UI.Components
 {
-    public abstract class HeaderDetachedDropdown<T> : Dropdown<T>
+    public abstract partial class HeaderDetachedDropdown<T> : Dropdown<T>
     {
         private DropdownHeader originalHeader;
 
@@ -52,7 +52,7 @@ namespace AWBWApp.Game.UI.Components
             throw new Exception("Unable to find setup steps");
         }
 
-        private class EmptyHeaderDropdownHeader : DropdownHeader
+        private partial class EmptyHeaderDropdownHeader : DropdownHeader
         {
             protected override LocalisableString Label { get; set; }
         }

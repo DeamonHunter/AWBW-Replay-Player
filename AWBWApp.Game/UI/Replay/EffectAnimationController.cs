@@ -17,7 +17,7 @@ namespace AWBWApp.Game.UI.Replay
     /// <summary>
     /// An over engineered setup so that we can play generic animations that may require a bunch of different animations all at once.
     /// </summary>
-    public class EffectAnimationController : Container
+    public partial class EffectAnimationController : Container
     {
         private Dictionary<string, DrawablePool<EffectAnimation>> pools = new Dictionary<string, DrawablePool<EffectAnimation>>();
 
@@ -44,7 +44,7 @@ namespace AWBWApp.Game.UI.Replay
         }
     }
 
-    public class AdjustableRateTextureAnimation : CompositeDrawable
+    public partial class AdjustableRateTextureAnimation : CompositeDrawable
     {
         public TextureAnimation Animation { get; private set; }
 
@@ -114,7 +114,7 @@ namespace AWBWApp.Game.UI.Replay
         }
     }
 
-    public class EffectAnimation : PoolableDrawable
+    public partial class EffectAnimation : PoolableDrawable
     {
         private AdjustableRateTextureAnimation clockController;
         private string animationPath;

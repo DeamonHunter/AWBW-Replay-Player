@@ -10,7 +10,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Notifications
 {
-    public abstract class Notification : Container
+    public abstract partial class Notification : Container
     {
         public event Action Closed;
 
@@ -120,7 +120,7 @@ namespace AWBWApp.Game.UI.Notifications
             Expire();
         }
 
-        private class NotificationCloseButton : ClickableContainer
+        private partial class NotificationCloseButton : ClickableContainer
         {
             public NotificationCloseButton()
             {
@@ -152,7 +152,7 @@ namespace AWBWApp.Game.UI.Notifications
             }
         }
 
-        public class NotificationLight : Container
+        public partial class NotificationLight : Container
         {
             public NotificationLight()
             {

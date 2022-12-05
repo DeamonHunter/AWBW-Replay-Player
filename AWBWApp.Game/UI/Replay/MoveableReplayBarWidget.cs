@@ -23,7 +23,7 @@ using osuTK.Input;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class MoveableReplayBarWidget : ReplayBarWidget, IHasContextMenu
+    public partial class MoveableReplayBarWidget : ReplayBarWidget, IHasContextMenu
     {
         private Bindable<float> replayBarScale;
         private Bindable<float> replayBarOffsetX;

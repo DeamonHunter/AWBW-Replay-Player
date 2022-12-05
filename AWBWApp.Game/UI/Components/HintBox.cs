@@ -9,7 +9,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Components
 {
-    public class HintBox : Container
+    public partial class HintBox : Container
     {
         public List<string> Tips = new List<string>()
         {

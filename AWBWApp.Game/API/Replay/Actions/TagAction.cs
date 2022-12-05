@@ -19,7 +19,11 @@ namespace AWBWApp.Game.API.Replay.Actions
             var eventName = (string)updatedInfo["event"];
 
             if (eventName == "NextTurn")
-                return Database.GetActionBuilder("End").ParseJObjectIntoReplayAction(jObject, replayData, turnData);
+            {
+                var action = (EndTurnAction)Database.GetActionBuilder("End").ParseJObjectIntoReplayAction(jObject, replayData, turnData);
+                action.TagSwitchOccurred = true;
+                return action;
+            }
 
             throw new NotImplementedException("Tag actions, that aren't end turn actions are not implemented.");
         }

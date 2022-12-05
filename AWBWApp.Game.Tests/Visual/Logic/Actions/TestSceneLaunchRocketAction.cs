@@ -8,7 +8,7 @@ using osu.Framework.Graphics.Primitives;
 namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 {
     [TestFixture]
-    public class TestSceneLaunchRocketAction : BaseActionsTestScene
+    public partial class TestSceneLaunchRocketAction : BaseActionsTestScene
     {
         private static Vector2I explodeCenter = new Vector2I(4, 4);
         private static Vector2I buildingPosition = new Vector2I(0, 4);

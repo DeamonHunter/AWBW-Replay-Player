@@ -9,7 +9,7 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Toolbar
 {
-    public class AWBWSubMenu : Menu
+    public partial class AWBWSubMenu : Menu
     {
         private readonly Menu parentMenu;
 

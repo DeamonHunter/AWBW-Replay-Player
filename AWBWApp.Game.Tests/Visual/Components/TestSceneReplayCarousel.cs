@@ -14,7 +14,7 @@ using osuTK;
 namespace AWBWApp.Game.Tests.Visual.Components
 {
     [TestFixture]
-    public class TestSceneReplayCarousel : AWBWAppTestScene
+    public partial class TestSceneReplayCarousel : AWBWAppTestScene
     {
         private ReplayCarousel carousel;
 

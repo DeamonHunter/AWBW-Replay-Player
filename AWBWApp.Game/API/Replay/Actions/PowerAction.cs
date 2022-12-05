@@ -460,8 +460,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                     if (change.Value.UnitsMoved.HasValue)
                         unit.TimesMoved = change.Value.UnitsMoved.Value;
 
-                    if (unit.HitPoints.Value <= 0)
-                        context.RemoveUnitFromSetupContext(change.Key, originalUnits, out _);
+                    if (unit.HitPoints < 0.1f)
+                        unit.HitPoints = 0.1f;
                 }
             }
 
@@ -645,10 +645,10 @@ namespace AWBWApp.Game.API.Replay.Actions
                             if (COPower.PowerIncreases == null || !COPower.PowerIncreases.Exists(x => x.AffectedUnits.Contains("all") || x.AffectedUnits.Contains(unit.UnitData.Name)))
                                 unit.AttackRange.Value = new Vector2I(unit.AttackRange.Value.X, change.Value.Range.Value);
                         }
-                        if (unit.HealthPoints.Value <= 0)
-                            controller.Map.DeleteUnit(unit.UnitID, true);
-                        else
-                            playEffectForUnitChange(controller, unit);
+                        if (unit.HealthPoints.Value <= 0.1f)
+                            unit.HealthPoints.Value = 1;
+
+                        playEffectForUnitChange(controller, unit);
 
                         if ((MissileCoords == null || MissileCoords.Count <= 0) && !controller.ShouldPlayerActionBeHidden(unit.MapPosition, unit.UnitData.MovementType == MovementType.Air))
                             yield return ReplayWait.WaitForMilliseconds(75);

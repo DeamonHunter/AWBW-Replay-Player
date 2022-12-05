@@ -8,7 +8,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 {
     //Todo: Add elimination testing
     [TestFixture]
-    public class TestSceneCaptureBuildingAction : BaseActionsTestScene
+    public partial class TestSceneCaptureBuildingAction : BaseActionsTestScene
     {
         private static Vector2I buildingPosition = new Vector2I(2, 2);
 

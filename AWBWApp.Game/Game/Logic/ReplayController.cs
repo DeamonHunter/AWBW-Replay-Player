@@ -29,7 +29,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.Game.Logic
 {
-    public class ReplayController : EscapeableScreen
+    public partial class ReplayController : EscapeableScreen
     {
         public GameMap Map;
         public long GameID { get; private set; }

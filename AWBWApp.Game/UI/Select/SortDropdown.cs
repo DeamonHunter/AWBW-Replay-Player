@@ -6,7 +6,7 @@ using osu.Framework.Graphics.UserInterface;
 
 namespace AWBWApp.Game.UI.Select
 {
-    public class SortDropdown : BasicDropdown<CarouselSort>
+    public partial class SortDropdown : BasicDropdown<CarouselSort>
     {
         public SortDropdown()
         {

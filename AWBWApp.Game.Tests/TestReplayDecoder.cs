@@ -8,7 +8,7 @@ using osu.Framework.IO.Stores;
 
 namespace AWBWApp.Game.Tests
 {
-    public class TestReplayDecoder : Drawable
+    public partial class TestReplayDecoder : Drawable
     {
         [Resolved]
         private ResourceStore<byte[]> storage { get; set; }

@@ -12,7 +12,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Components
 {
-    public class EndGamePlayerListItem : Button
+    public partial class EndGamePlayerListItem : Button
     {
         private readonly PlayerInfo playerInfo;
         private readonly Sprite coSprite;

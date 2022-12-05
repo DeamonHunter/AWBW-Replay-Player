@@ -18,7 +18,7 @@ using osuTK.Graphics;
 namespace AWBWApp.Game.Tests.Visual.Components
 {
     [TestFixture]
-    public class TestSceneDetailedInfoPopup : AWBWAppTestScene
+    public partial class TestSceneDetailedInfoPopup : AWBWAppTestScene
     {
         [Resolved]
         private CountryStorage countryStorage { get; set; }

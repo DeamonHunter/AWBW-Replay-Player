@@ -6,7 +6,7 @@ using osu.Framework.Graphics.Primitives;
 namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 {
     [TestFixture]
-    public class TestSceneDeleteUnitAction : BaseActionsTestScene
+    public partial class TestSceneDeleteUnitAction : BaseActionsTestScene
     {
         private static Vector2I unitPosition = new Vector2I(2, 2);
 

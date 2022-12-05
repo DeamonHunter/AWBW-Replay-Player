@@ -8,7 +8,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Toolbar
 {
-    public class AWBWMenu : Menu
+    public partial class AWBWMenu : Menu
     {
         private HashSet<Drawable> hoveredDrawables = new HashSet<Drawable>();
 

@@ -13,7 +13,7 @@ namespace AWBWApp.Game.UI
     /// <summary>
     /// A loading spinner.
     /// </summary>
-    public class LoadingSpinner : VisibilityContainer
+    public partial class LoadingSpinner : VisibilityContainer
     {
         private readonly SpriteIcon spinner;
 

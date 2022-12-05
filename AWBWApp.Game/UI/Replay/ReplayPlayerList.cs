@@ -19,7 +19,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class ReplayPlayerList : Container, IHasContextMenu
+    public partial class ReplayPlayerList : Container, IHasContextMenu
     {
         public ReplayBarWidget ReplayBarWidget;
         public ReplayController controller;

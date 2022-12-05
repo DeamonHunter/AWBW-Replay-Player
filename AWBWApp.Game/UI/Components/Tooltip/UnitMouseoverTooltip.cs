@@ -18,7 +18,7 @@ namespace AWBWApp.Game.UI.Components.Tooltip
     /// <summary>
     /// Recreation of <see cref="TooltipContainer.Tooltip"/> which sets the tooltip to our colours
     /// </summary>
-    public class UnitMouseoverTooltip : VisibilityContainer, ITooltip<UnitMouseoverTooltip.UnitMouseOverInfo>
+    public partial class UnitMouseoverTooltip : VisibilityContainer, ITooltip<UnitMouseoverTooltip.UnitMouseOverInfo>
     {
         private FillFlowContainer<UnitCollection> units;
         private Dictionary<UnitData, (int, long)> prevUnitCounts = new Dictionary<UnitData, (int, long)>();
@@ -49,7 +49,7 @@ namespace AWBWApp.Game.UI.Components.Tooltip
             };
         }
 
-        private bool UpdateContent(UnitMouseOverInfo content, out Dictionary<UnitData, (int, long)> unitCounts)
+        private bool updateContent(UnitMouseOverInfo content, out Dictionary<UnitData, (int, long)> unitCounts)
         {
             unitCounts = new Dictionary<UnitData, (int, long)>();
 
@@ -88,7 +88,7 @@ namespace AWBWApp.Game.UI.Components.Tooltip
 
         public virtual void SetContent(UnitMouseOverInfo content)
         {
-            if (!UpdateContent(content, out var unitCounts))
+            if (!updateContent(content, out var unitCounts))
                 return;
 
             prevUnitCounts = unitCounts;
@@ -141,7 +141,7 @@ namespace AWBWApp.Game.UI.Components.Tooltip
             public bool ShowValue;
         }
 
-        private class UnitCollection : FillFlowContainer
+        private partial class UnitCollection : FillFlowContainer
         {
             private TextureAnimation animation;
             private UnitData unitData;

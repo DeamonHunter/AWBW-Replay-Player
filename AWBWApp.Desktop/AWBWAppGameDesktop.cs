@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using AWBWApp.Game;
 using AWBWApp.Game.Update;
 using osu.Framework;
-using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Input;
 using osu.Framework.Logging;
@@ -15,10 +14,8 @@ using osu.Framework.Threading;
 
 namespace AWBWApp.Desktop
 {
-    public class AWBWAppGameDesktop : AWBWAppGame
+    public partial class AWBWAppGameDesktop : AWBWAppGame
     {
-        private Bindable<WindowMode> windowMode;
-
         public override void SetHost(GameHost host)
         {
             base.SetHost(host);

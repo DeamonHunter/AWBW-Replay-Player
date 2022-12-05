@@ -14,7 +14,7 @@ using osu.Framework.Threading;
 
 namespace AWBWApp.Game
 {
-    public class AWBWAppGame : AWBWAppGameBase
+    public partial class AWBWAppGame : AWBWAppGameBase
     {
         private ScreenStack screenStack;
 

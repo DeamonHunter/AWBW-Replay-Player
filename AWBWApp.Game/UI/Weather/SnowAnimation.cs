@@ -4,7 +4,7 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Weather
 {
-    public class SnowAnimation : RainAnimation
+    public partial class SnowAnimation : RainAnimation
     {
         protected override Vector2 ParticleBaseSize => new Vector2(25, 25);
         protected override float ParticleBaseVelocity => 250;

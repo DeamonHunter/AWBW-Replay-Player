@@ -3,7 +3,7 @@ using osu.Framework.Graphics.Cursor;
 
 namespace AWBWApp.Game.UI.Components
 {
-    public class AWBWContextMenuContainer : ContextMenuContainer
+    public partial class AWBWContextMenuContainer : ContextMenuContainer
     {
         protected override osu.Framework.Graphics.UserInterface.Menu CreateMenu() =>
             new AWBWSubMenu(null, null)
