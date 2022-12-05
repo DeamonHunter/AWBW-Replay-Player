@@ -9,7 +9,7 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class TileCursor : CompositeDrawable
+    public partial class TileCursor : CompositeDrawable
     {
         private Vector2I tilePosition;
 

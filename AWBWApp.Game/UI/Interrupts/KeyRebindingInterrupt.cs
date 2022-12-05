@@ -18,7 +18,7 @@ using osuTK.Input;
 
 namespace AWBWApp.Game.UI.Interrupts
 {
-    public class KeyRebindingInterrupt : BaseInterrupt
+    public partial class KeyRebindingInterrupt : BaseInterrupt
     {
         private KeybindingOverlay keybindingOverlay;
 
@@ -103,7 +103,7 @@ namespace AWBWApp.Game.UI.Interrupts
                 row.UpdateCombinations();
         }
 
-        private class InterruptButton : BasicButton
+        private partial class InterruptButton : BasicButton
         {
             public InterruptButton()
             {
@@ -119,7 +119,7 @@ namespace AWBWApp.Game.UI.Interrupts
             }
         }
 
-        private class KeybindingOverlay : BlockingLayer
+        private partial class KeybindingOverlay : BlockingLayer
         {
             private SpriteText rebindText;
             private SpriteText combinationText;

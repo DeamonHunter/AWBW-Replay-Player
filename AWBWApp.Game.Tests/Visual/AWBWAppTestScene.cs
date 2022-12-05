@@ -8,7 +8,7 @@ using osu.Framework.Testing;
 
 namespace AWBWApp.Game.Tests.Visual
 {
-    public class AWBWAppTestScene : TestScene
+    public partial class AWBWAppTestScene : TestScene
     {
         protected Storage LocalStorage => localStorage.Value;
 
@@ -16,7 +16,7 @@ namespace AWBWApp.Game.Tests.Visual
 
         protected override ITestSceneTestRunner CreateRunner() => new AWBWAppTestSceneTestRunner();
 
-        private class AWBWAppTestSceneTestRunner : AWBWAppTestBase, ITestSceneTestRunner
+        private partial class AWBWAppTestSceneTestRunner : AWBWAppTestBase, ITestSceneTestRunner
         {
             private TestSceneTestRunner.TestRunner runner;
 

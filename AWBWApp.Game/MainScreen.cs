@@ -21,7 +21,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game
 {
-    public class MainScreen : EscapeableScreen
+    public partial class MainScreen : EscapeableScreen
     {
         private Screen replayScreen;
 
@@ -183,7 +183,7 @@ namespace AWBWApp.Game
 
         public void GoToReplaySelect() => ScheduleAfterChildren(() => this.Push(consumeReplaySelect()));
 
-        private class MainMenuButton : BasicButton
+        private partial class MainMenuButton : BasicButton
         {
             public MainMenuButton(bool exit)
             {
@@ -206,7 +206,7 @@ namespace AWBWApp.Game
             }
         }
 
-        private class AWBWLogo : Container
+        private partial class AWBWLogo : Container
         {
             private Wrench wrench;
             private FillFlowContainer<Container> logoText;
@@ -311,7 +311,7 @@ namespace AWBWApp.Game
                 }
             }
 
-            private class Wrench : Container
+            private partial class Wrench : Container
             {
                 public Wrench(ColourInfo baseColor, ColourInfo outLineColour, ColourInfo highlightColour)
                 {
@@ -408,7 +408,7 @@ namespace AWBWApp.Game
                 }
             }
 
-            private class SemiCirclePiece : Container
+            private partial class SemiCirclePiece : Container
             {
                 public ColourInfo CircleColour
                 {

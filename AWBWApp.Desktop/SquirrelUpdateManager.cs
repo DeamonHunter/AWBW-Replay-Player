@@ -11,7 +11,7 @@ using Squirrel.SimpleSplat;
 namespace AWBWApp.Desktop
 {
     [SupportedOSPlatform("windows")]
-    public class SquirrelUpdateManager : Game.Update.UpdateManager
+    public partial class SquirrelUpdateManager : Game.Update.UpdateManager
     {
         private UpdateManager updateManager;
 
@@ -142,7 +142,7 @@ namespace AWBWApp.Desktop
             }
         }
 
-        private class UpdateCompleteNotification : SimpleNotification
+        private partial class UpdateCompleteNotification : SimpleNotification
         {
             [Resolved]
             private AWBWAppGame game { get; set; }
@@ -160,7 +160,7 @@ namespace AWBWApp.Desktop
             }
         }
 
-        private class UpdateProgressNotification : ProgressNotification
+        private partial class UpdateProgressNotification : ProgressNotification
         {
             private readonly SquirrelUpdateManager updateManager;
 

@@ -20,7 +20,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Select
 {
-    public class ReplayInfoWedge : VisibilityContainer
+    public partial class ReplayInfoWedge : VisibilityContainer
     {
         public ReplayInfo Replay
         {
@@ -90,7 +90,7 @@ namespace AWBWApp.Game.UI.Select
         }
     }
 
-    public class WedgeInfo : Container
+    public partial class WedgeInfo : Container
     {
         private readonly ReplayInfo replay;
         private readonly bool hasReplays;
@@ -367,7 +367,7 @@ namespace AWBWApp.Game.UI.Select
             return textFlow;
         }
 
-        private class SmallMapTexture : Container
+        private partial class SmallMapTexture : Container
         {
             private Sprite mapSprite;
             private SpriteText mapName;

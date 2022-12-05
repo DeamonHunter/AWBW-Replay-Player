@@ -14,7 +14,7 @@ using osuTK.Input;
 
 namespace AWBWApp.Game.UI
 {
-    public class CameraControllerWithGrid : Container
+    public partial class CameraControllerWithGrid : Container
     {
         public int MinScale { get; set; } = 1;
         public int MaxScale { get; set; } = 1;

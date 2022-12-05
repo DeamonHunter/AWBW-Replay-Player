@@ -13,7 +13,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class ReplayPlayerListControlWidget : ReplayBarWidget
+    public partial class ReplayPlayerListControlWidget : ReplayBarWidget
     {
         public ReplayPlayerListControlWidget(ReplayController replayController)
             : base(replayController)
@@ -169,7 +169,7 @@ namespace AWBWApp.Game.UI.Replay
             };
         }
 
-        private class ConstantWidthReplayBarWidgetDropdown : ReplayBarWidgetDropdown
+        private partial class ConstantWidthReplayBarWidgetDropdown : ReplayBarWidgetDropdown
         {
             public ConstantWidthReplayBarWidgetDropdown()
             {
@@ -185,7 +185,7 @@ namespace AWBWApp.Game.UI.Replay
                 return menu;
             }
 
-            private class ConstantWidthReplayBarDownHeader : ReplayBarDownHeader
+            private partial class ConstantWidthReplayBarDownHeader : ReplayBarDownHeader
             {
                 public ConstantWidthReplayBarDownHeader()
                 {

@@ -9,7 +9,7 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Components.Menu
 {
-    public class DrawableColourPickerMenuItem : DrawableAWBWMenuItem
+    public partial class DrawableColourPickerMenuItem : DrawableAWBWMenuItem
     {
         protected new ColourPickerMenuItem Item => (ColourPickerMenuItem)base.Item;
 
@@ -21,7 +21,7 @@ namespace AWBWApp.Game.UI.Components.Menu
 
         protected override InnerMenuContainer CreateInnerMenuContainer() => new SliderInnerMenuContainer(Item);
 
-        private class SliderInnerMenuContainer : InnerMenuContainer
+        private partial class SliderInnerMenuContainer : InnerMenuContainer
         {
             private readonly ColourPickerMenuItem colourPickerItem;
             private readonly ColourPicker colourPicker;
@@ -76,12 +76,12 @@ namespace AWBWApp.Game.UI.Components.Menu
             }
         }
 
-        private class AWBWColourPicker : BasicColourPicker
+        private partial class AWBWColourPicker : BasicColourPicker
         {
             protected override HSVColourPicker CreateHSVColourPicker() => new AWBWHSVColourPicker();
             protected override HexColourPicker CreateHexColourPicker() => new AWBWHexColourPicker();
 
-            private class AWBWHSVColourPicker : BasicHSVColourPicker
+            private partial class AWBWHSVColourPicker : BasicHSVColourPicker
             {
                 public override bool AcceptsFocus => true;
 
@@ -101,7 +101,7 @@ namespace AWBWApp.Game.UI.Components.Menu
                     return true;
                 }
 
-                private class AWBWHueSelector : BasicHSVColourPicker.BasicHueSelector
+                private partial class AWBWHueSelector : BasicHSVColourPicker.BasicHueSelector
                 {
                     public override bool AcceptsFocus => true;
 
@@ -111,7 +111,7 @@ namespace AWBWApp.Game.UI.Components.Menu
                     }
                 }
 
-                private class AWBWSaturationValueSelector : BasicHSVColourPicker.BasicSaturationValueSelector
+                private partial class AWBWSaturationValueSelector : BasicHSVColourPicker.BasicSaturationValueSelector
                 {
                     public override bool AcceptsFocus => true;
 
@@ -122,7 +122,7 @@ namespace AWBWApp.Game.UI.Components.Menu
                 }
             }
 
-            private class AWBWHexColourPicker : BasicHexColourPicker
+            private partial class AWBWHexColourPicker : BasicHexColourPicker
             {
                 public override bool AcceptsFocus => true;
 

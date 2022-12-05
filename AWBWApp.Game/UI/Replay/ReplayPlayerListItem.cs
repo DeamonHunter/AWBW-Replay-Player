@@ -24,7 +24,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class ReplayPlayerListItem : Container, IComparable<ReplayPlayerListItem>, IHasContextMenu
+    public partial class ReplayPlayerListItem : Container, IComparable<ReplayPlayerListItem>, IHasContextMenu
     {
         public long PlayerID;
         public int RoundOrder;
@@ -556,7 +556,7 @@ namespace AWBWApp.Game.UI.Replay
             return items.ToArray();
         }
 
-        private class ReplayPlayerInfo : Container
+        private partial class ReplayPlayerInfo : Container
         {
             private Sprite infoIcon;
             private string infoIconTexture;
@@ -665,7 +665,7 @@ namespace AWBWApp.Game.UI.Replay
             }
         }
 
-        private class ReplayPlayerInfoWithTooltip : ReplayPlayerInfo, IHasCustomTooltip<UnitMouseoverTooltip.UnitMouseOverInfo>
+        private partial class ReplayPlayerInfoWithTooltip : ReplayPlayerInfo, IHasCustomTooltip<UnitMouseoverTooltip.UnitMouseOverInfo>
         {
             private Func<List<DrawableUnit>> getUnits;
             private bool value;

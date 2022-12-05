@@ -14,7 +14,7 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Components.Input
 {
-    public class KeyRebindRow : Container
+    public partial class KeyRebindRow : Container
     {
         private FillFlowContainer<KeybindButton> keyButtonContainer;
 
@@ -66,7 +66,7 @@ namespace AWBWApp.Game.UI.Components.Input
                 keyButton.UpdateCombination();
         }
 
-        private class KeybindButton : BasicButton
+        private partial class KeybindButton : BasicButton
         {
             [Resolved]
             private GlobalActionContainer globalActionContainer { get; set; }

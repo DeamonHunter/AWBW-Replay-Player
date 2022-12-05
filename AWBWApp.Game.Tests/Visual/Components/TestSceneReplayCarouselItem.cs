@@ -7,7 +7,7 @@ using osuTK;
 namespace AWBWApp.Game.Tests.Visual.Components
 {
     [TestFixture]
-    public class TestSceneReplayCarouselItem : AWBWAppTestScene
+    public partial class TestSceneReplayCarouselItem : AWBWAppTestScene
     {
         [Resolved]
         private TestReplayDecoder replayStorageManager { get; set; }

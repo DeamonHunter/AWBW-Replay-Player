@@ -16,7 +16,7 @@ using osu.Framework.Platform;
 
 namespace AWBWApp.Game.Tests.Visual.Logic
 {
-    public class TestSceneGameMap : BaseGameMapTestScene
+    public partial class TestSceneGameMap : BaseGameMapTestScene
     {
         //private const int default_game_id = 545975;
         private const int default_game_id = 496916; //14 player tag team
@@ -104,7 +104,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             {
                 replay = await replayStorage.GetReplayData(gameID);
             }
-            catch (Exception e)
+            catch
             {
                 replay = null;
             }

@@ -15,7 +15,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class EndGamePopupDrawable : CompositeDrawable
+    public partial class EndGamePopupDrawable : CompositeDrawable
     {
         private FillFlowContainer winnersContainer;
         private FillFlowContainer losersContainer;

@@ -6,7 +6,7 @@ using osu.Framework.Graphics.Primitives;
 namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 {
     [TestFixture]
-    public class TestSceneRepairUnitAction : BaseActionsTestScene
+    public partial class TestSceneRepairUnitAction : BaseActionsTestScene
     {
         [Test]
         public void TestRepairUnit()

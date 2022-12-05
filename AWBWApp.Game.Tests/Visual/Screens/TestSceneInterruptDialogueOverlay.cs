@@ -7,7 +7,7 @@ using osu.Framework.Testing;
 namespace AWBWApp.Game.Tests.Visual.Screens
 {
     [TestFixture]
-    public class TestSceneInterruptDialogueOverlay : AWBWAppTestScene
+    public partial class TestSceneInterruptDialogueOverlay : AWBWAppTestScene
     {
         private InterruptDialogueOverlay overlay;
 
@@ -45,7 +45,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
             AddAssert("Dialogue #1 displayed", () => overlay.CurrentInterrupt == firstDialogue);
         }
 
-        private class TestPopupDialog : BaseInterrupt
+        private partial class TestPopupDialog : BaseInterrupt
         {
         }
     }

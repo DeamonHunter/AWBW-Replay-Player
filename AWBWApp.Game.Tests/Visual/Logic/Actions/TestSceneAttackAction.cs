@@ -9,7 +9,7 @@ using osu.Framework.Graphics.Primitives;
 namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 {
     [TestFixture]
-    public class TestSceneAttackAction : BaseActionsTestScene
+    public partial class TestSceneAttackAction : BaseActionsTestScene
     {
         [Test]
         public void TestDestroyUnits()

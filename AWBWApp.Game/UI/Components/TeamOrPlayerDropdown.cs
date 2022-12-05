@@ -11,7 +11,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Components
 {
-    public class TeamOrPlayerDropdown : BasicDropdown<object>
+    public partial class TeamOrPlayerDropdown : BasicDropdown<object>
     {
         public string Prefix
         {
@@ -61,7 +61,7 @@ namespace AWBWApp.Game.UI.Components
                 MaxHeight = 312,
             };
 
-        private class TeamOrPlayerHeader : DropdownHeader
+        private partial class TeamOrPlayerHeader : DropdownHeader
         {
             public string Prefix { get; set; }
 
@@ -117,7 +117,7 @@ namespace AWBWApp.Game.UI.Components
             }
         }
 
-        private class TeamOrPlayerDropdownMenu : DropdownMenu
+        private partial class TeamOrPlayerDropdownMenu : DropdownMenu
         {
             protected override osu.Framework.Graphics.UserInterface.Menu CreateSubMenu() => new AWBWSubMenu(this, null);
 
@@ -147,7 +147,7 @@ namespace AWBWApp.Game.UI.Components
                 this.FadeOut(300, Easing.OutQuint);
             }
 
-            private class ReplayBarDropdownMenuItem : DrawableDropdownMenuItem
+            private partial class ReplayBarDropdownMenuItem : DrawableDropdownMenuItem
             {
                 private DrawableAWBWMenuItem.InnerMenuContainer innerMenu;
 

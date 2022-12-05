@@ -6,7 +6,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Notifications
 {
-    public class SimpleErrorNotification : SimpleNotification
+    public partial class SimpleErrorNotification : SimpleNotification
     {
         public bool ShowClickMessage = true;
 

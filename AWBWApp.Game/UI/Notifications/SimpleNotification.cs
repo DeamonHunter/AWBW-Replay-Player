@@ -5,7 +5,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Notifications
 {
-    public class SimpleNotification : Notification
+    public partial class SimpleNotification : Notification
     {
         public override LocalisableString Text
         {

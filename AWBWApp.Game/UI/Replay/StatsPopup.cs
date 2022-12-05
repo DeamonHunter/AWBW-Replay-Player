@@ -24,7 +24,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class StatsPopup : TooltipContainer, IHasContextMenu
+    public partial class StatsPopup : TooltipContainer, IHasContextMenu
     {
         public long PlayerID;
 
@@ -637,7 +637,7 @@ namespace AWBWApp.Game.UI.Replay
 
         protected override ITooltip CreateTooltip() => new TextToolTip();
 
-        private class StatScrollContainer : MaxSizeScrollContainer<Drawable>
+        private partial class StatScrollContainer : MaxSizeScrollContainer<Drawable>
         {
             public StatScrollContainer(Direction direction, SizeCacheFillFlowContainer<Drawable> itemsFlow)
                 : base(direction, itemsFlow)
@@ -651,7 +651,7 @@ namespace AWBWApp.Game.UI.Replay
                 };
         }
 
-        private class StatLine : CompositeDrawable, IHasTooltip
+        private partial class StatLine : CompositeDrawable, IHasTooltip
         {
             public string Tooltip;
             public Action OnClickAction;
@@ -725,7 +725,7 @@ namespace AWBWApp.Game.UI.Replay
             }
         }
 
-        private class UnitFlowContainer : Container
+        private partial class UnitFlowContainer : Container
         {
             private GridContainer statsContainer;
             public Action OnClickAction;
@@ -906,7 +906,7 @@ namespace AWBWApp.Game.UI.Replay
             }
         }
 
-        private class UnitStats : FillFlowContainer, IHasTooltip
+        private partial class UnitStats : FillFlowContainer, IHasTooltip
         {
             private TextureAnimation spriteAnimation;
 

@@ -6,7 +6,7 @@ using osu.Framework.Platform;
 
 namespace AWBWApp.Game.Input
 {
-    public abstract class FileBasedKeyBindingContainer<T> : KeyBindingContainer<T> where T : struct, Enum
+    public abstract partial class FileBasedKeyBindingContainer<T> : KeyBindingContainer<T> where T : struct, Enum
     {
         private readonly KeyBindingConfigManager<T> config;
 

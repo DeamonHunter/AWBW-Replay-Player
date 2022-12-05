@@ -9,7 +9,7 @@ using osuTK.Graphics;
 namespace AWBWApp.Game.Tests.Visual.Components
 {
     [TestFixture]
-    public class TestSceneRangeIndicator : AWBWAppTestScene
+    public partial class TestSceneRangeIndicator : AWBWAppTestScene
     {
         private UnitRangeIndicator rangeIndicator;
         private Color4 colour = new Color4(200, 50, 50, 100);

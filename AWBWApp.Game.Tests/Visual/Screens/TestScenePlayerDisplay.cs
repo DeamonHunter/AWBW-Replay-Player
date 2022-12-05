@@ -18,7 +18,7 @@ using osuTK.Graphics;
 namespace AWBWApp.Game.Tests.Visual.Screens
 {
     [TestFixture]
-    public class TestScenePlayerDisplay : AWBWAppTestScene
+    public partial class TestScenePlayerDisplay : AWBWAppTestScene
     {
         private PlayerInfo playerInfo;
 
@@ -102,7 +102,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                 Origin = Anchor.Centre,
                 Children = new Drawable[]
                 {
-                    new Box()
+                    new Box
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,

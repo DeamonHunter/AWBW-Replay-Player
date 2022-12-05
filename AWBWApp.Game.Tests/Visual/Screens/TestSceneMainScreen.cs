@@ -8,7 +8,7 @@ using osu.Framework.Screens;
 namespace AWBWApp.Game.Tests.Visual.Screens
 {
     [TestFixture]
-    public class TestSceneMainScreen : AWBWAppTestScene
+    public partial class TestSceneMainScreen : AWBWAppTestScene
     {
         protected MainScreen MainScreen;
 

@@ -6,7 +6,7 @@ using osu.Framework.Graphics.Primitives;
 namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 {
     [TestFixture]
-    public class TestSceneJoinUnitAction : BaseActionsTestScene
+    public partial class TestSceneJoinUnitAction : BaseActionsTestScene
     {
         private ReplayUnit unitA;
         private ReplayUnit unitB;

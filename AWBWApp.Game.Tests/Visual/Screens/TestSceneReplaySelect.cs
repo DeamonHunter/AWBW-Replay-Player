@@ -13,7 +13,7 @@ using osu.Framework.Testing;
 namespace AWBWApp.Game.Tests.Visual.Screens
 {
     [TestFixture]
-    public class TestSceneReplaySelect : AWBWAppTestScene
+    public partial class TestSceneReplaySelect : AWBWAppTestScene
     {
         protected ReplaySelectScreen Screen;
 

@@ -4,7 +4,7 @@ using osu.Framework.Graphics.UserInterface;
 
 namespace AWBWApp.Game.UI.Select
 {
-    public class FilterDropdown : BasicDropdown<CarouselFilter>
+    public partial class FilterDropdown : BasicDropdown<CarouselFilter>
     {
         public FilterDropdown()
         {

@@ -10,7 +10,7 @@ using osu.Framework.Graphics.UserInterface;
 namespace AWBWApp.Game.Tests.Visual.Screens
 {
     [TestFixture]
-    public class TestSceneNotificationOverlay : AWBWAppTestScene
+    public partial class TestSceneNotificationOverlay : AWBWAppTestScene
     {
         private NotificationOverlay notificationOverlay { get; set; }
 

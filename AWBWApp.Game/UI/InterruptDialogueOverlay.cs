@@ -7,7 +7,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI
 {
-    public class InterruptDialogueOverlay : OverlayContainer
+    public partial class InterruptDialogueOverlay : OverlayContainer
     {
         public BaseInterrupt CurrentInterrupt { get; private set; }
 

@@ -13,7 +13,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class UnitRangeIndicator : Container
+    public partial class UnitRangeIndicator : Container
     {
         private readonly Container<Box> boxContainer;
         private readonly Container<Path> outlineContainer;

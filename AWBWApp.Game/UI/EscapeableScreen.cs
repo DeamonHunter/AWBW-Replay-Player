@@ -5,7 +5,7 @@ using osuTK.Input;
 
 namespace AWBWApp.Game.UI
 {
-    public class EscapeableScreen : Screen
+    public partial class EscapeableScreen : Screen
     {
         protected override bool OnKeyDown(KeyDownEvent e)
         {

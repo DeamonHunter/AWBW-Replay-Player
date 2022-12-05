@@ -7,7 +7,7 @@ using osuTK.Graphics;
 namespace AWBWApp.Game.Tests.Visual.Components
 {
     [TestFixture]
-    public class TestSceneMultiLineGraph : AWBWAppTestScene
+    public partial class TestSceneMultiLineGraph : AWBWAppTestScene
     {
         private float[] player1Stats = new float[]
         {

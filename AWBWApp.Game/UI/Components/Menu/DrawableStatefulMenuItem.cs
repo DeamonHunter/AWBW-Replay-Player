@@ -8,7 +8,7 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Components.Menu
 {
-    public class DrawableStatefulMenuItem : DrawableAWBWMenuItem
+    public partial class DrawableStatefulMenuItem : DrawableAWBWMenuItem
     {
         protected new StatefulMenuItem Item => (StatefulMenuItem)base.Item;
 
@@ -19,7 +19,7 @@ namespace AWBWApp.Game.UI.Components.Menu
 
         protected override InnerMenuContainer CreateInnerMenuContainer() => new ToggleInnerMenuContainer(Item);
 
-        private class ToggleInnerMenuContainer : InnerMenuContainer
+        private partial class ToggleInnerMenuContainer : InnerMenuContainer
         {
             private readonly StatefulMenuItem toggleItem;
             private readonly Bindable<object> state;

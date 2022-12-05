@@ -14,7 +14,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Toolbar
 {
-    public class AWBWMenuBar : OverlayContainer
+    public partial class AWBWMenuBar : OverlayContainer
     {
         protected override bool BlockPositionalInput => false;
 
@@ -163,7 +163,7 @@ namespace AWBWApp.Game.UI.Toolbar
                 hoverShowDelegate = Scheduler.AddDelayed(Show, HoverShowDelay);
         }
 
-        private class HoverDrawable : Drawable
+        private partial class HoverDrawable : Drawable
         {
             private readonly Action onHover;
             private readonly Action onHoverLost;
@@ -195,7 +195,7 @@ namespace AWBWApp.Game.UI.Toolbar
             }
         }
 
-        private class NotificationButton : Button
+        private partial class NotificationButton : Button
         {
             public int UnreadNotifications
             {

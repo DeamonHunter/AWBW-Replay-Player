@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace AWBWApp.Game.Tests.Visual.Components
 {
     [TestFixture]
-    public class TestSceneDisplayPower : AWBWAppTestScene
+    public partial class TestSceneDisplayPower : AWBWAppTestScene
     {
         [Test]
         public void TestPowers()

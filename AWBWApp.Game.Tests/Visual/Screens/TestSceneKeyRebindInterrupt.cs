@@ -6,7 +6,7 @@ using osu.Framework.Testing;
 namespace AWBWApp.Game.Tests.Visual.Screens
 {
     [TestFixture]
-    public class TestSceneKeyRebindInterrupt : AWBWAppTestScene
+    public partial class TestSceneKeyRebindInterrupt : AWBWAppTestScene
     {
         private InterruptDialogueOverlay overlay;
 

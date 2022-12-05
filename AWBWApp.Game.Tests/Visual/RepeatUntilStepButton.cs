@@ -8,7 +8,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.Tests.Visual
 {
-    public class RepeatUntilStepButton : StepButton
+    public partial class RepeatUntilStepButton : StepButton
     {
         private readonly int maximumInvocations;
         private int invocations;

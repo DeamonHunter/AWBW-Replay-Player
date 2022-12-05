@@ -5,7 +5,7 @@ namespace AWBWApp.Game.UI.Replay
     /// <summary>
     /// Custom loading layer that will block clicks and scrolls
     /// </summary>
-    public class ReplayLoadingLayer : LoadingLayer
+    public partial class ReplayLoadingLayer : LoadingLayer
     {
         public ReplayLoadingLayer()
             : base(true)

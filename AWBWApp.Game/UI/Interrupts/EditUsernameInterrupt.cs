@@ -13,7 +13,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Interrupts
 {
-    public class EditUsernameInterrupt : BaseInterrupt
+    public partial class EditUsernameInterrupt : BaseInterrupt
     {
         [Resolved]
         private ReplayManager replayStorage { get; set; }
@@ -118,7 +118,7 @@ namespace AWBWApp.Game.UI.Interrupts
             });
         }
 
-        private class InterruptButton : BasicButton
+        private partial class InterruptButton : BasicButton
         {
             public InterruptButton()
             {

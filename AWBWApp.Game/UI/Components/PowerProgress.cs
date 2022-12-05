@@ -14,7 +14,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Components
 {
-    public class PowerProgress : Container, IHasCurrentValue<int>, IHasTooltip
+    public partial class PowerProgress : Container, IHasCurrentValue<int>, IHasTooltip
     {
         private readonly BindableWithCurrent<int> current = new BindableWithCurrent<int>();
 
@@ -116,7 +116,7 @@ namespace AWBWApp.Game.UI.Components
             this.TransformTo(nameof(DisplayedValue), newValue, 400, Easing.OutCubic);
         }
 
-        private class PowerSegment : Container
+        private partial class PowerSegment : Container
         {
             private float progress;
 

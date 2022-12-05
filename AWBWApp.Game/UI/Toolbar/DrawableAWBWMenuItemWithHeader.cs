@@ -8,7 +8,7 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Toolbar
 {
-    public class DrawableAWBWMenuItemWithHeader : DrawableAWBWMenuItem
+    public partial class DrawableAWBWMenuItemWithHeader : DrawableAWBWMenuItem
     {
         private ExpandingBox backgroundBox;
 
@@ -57,7 +57,7 @@ namespace AWBWApp.Game.UI.Toolbar
             return container;
         }
 
-        private class ExpandingBox : CompositeDrawable
+        private partial class ExpandingBox : CompositeDrawable
         {
             private readonly Container innerBackground;
 

@@ -15,7 +15,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class DetailedInformationPopup : Container
+    public partial class DetailedInformationPopup : Container
     {
         private TerrainPopup terrainPopup;
         private BuildingPopup buildingPopup;
@@ -104,7 +104,7 @@ namespace AWBWApp.Game.UI.Replay
                 unitPopup.Reset();
         }
 
-        private class TerrainPopup : Container
+        private partial class TerrainPopup : Container
         {
             private Sprite terrainSprite;
             private StatContainer terrainStarCounter;
@@ -179,7 +179,7 @@ namespace AWBWApp.Game.UI.Replay
             }
         }
 
-        private class BuildingPopup : Container
+        private partial class BuildingPopup : Container
         {
             private Container spriteContainer;
             private StatContainer terrainStarCounter;
@@ -281,7 +281,7 @@ namespace AWBWApp.Game.UI.Replay
             }
         }
 
-        private class UnitPopup : Container
+        private partial class UnitPopup : Container
         {
             private Container spriteContainer;
             private StatContainer unitHPCounter;
@@ -363,7 +363,7 @@ namespace AWBWApp.Game.UI.Replay
             }
         }
 
-        private class StatContainer : Container
+        private partial class StatContainer : Container
         {
             private Sprite sprite;
             private string texturePath;

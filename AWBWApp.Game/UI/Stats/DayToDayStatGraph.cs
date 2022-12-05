@@ -13,7 +13,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Stats
 {
-    public class DayToDayStatGraph : Container
+    public partial class DayToDayStatGraph : Container
     {
         private readonly Box background;
         private Container<SpriteText> rowTicksContainer;
@@ -298,7 +298,7 @@ namespace AWBWApp.Game.UI.Stats
             });
         }
 
-        private class LegendButton : BasicButton
+        private partial class LegendButton : BasicButton
         {
             private Box activeBox;
 

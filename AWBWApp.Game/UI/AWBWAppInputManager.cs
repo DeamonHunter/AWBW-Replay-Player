@@ -6,7 +6,7 @@ using osuTK.Input;
 
 namespace AWBWApp.Game.UI
 {
-    public class AWBWAppUserInputManager : UserInputManager
+    public partial class AWBWAppUserInputManager : UserInputManager
     {
         internal AWBWAppUserInputManager()
         {

@@ -11,7 +11,7 @@ namespace AWBWApp.Game.UI.Components.Tooltip
     /// <summary>
     /// Recreation of <see cref="TooltipContainer.Tooltip"/> which sets the tooltip to our colours
     /// </summary>
-    public class TextToolTip : VisibilityContainer, ITooltip<LocalisableString>
+    public partial class TextToolTip : VisibilityContainer, ITooltip<LocalisableString>
     {
         private TextFlowContainer text;
         private LocalisableString prev;

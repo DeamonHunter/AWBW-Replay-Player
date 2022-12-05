@@ -9,7 +9,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI
 {
-    public class AnimatedButton : ClickableContainer
+    public partial class AnimatedButton : ClickableContainer
     {
         protected Color4 FlashColour = Color4.White.Opacity(0.3f);
 

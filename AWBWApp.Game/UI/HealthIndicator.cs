@@ -2,7 +2,7 @@
 
 namespace AWBWApp.Game.UI
 {
-    public class HealthIndicator : Sprite
+    public partial class HealthIndicator : Sprite
     {
     }
 }

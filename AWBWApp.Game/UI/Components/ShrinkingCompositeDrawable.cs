@@ -5,7 +5,7 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Components
 {
-    public class ShrinkingCompositeDrawable : CompositeDrawable
+    public partial class ShrinkingCompositeDrawable : CompositeDrawable
     {
         public Axes ShrinkAxes
         {

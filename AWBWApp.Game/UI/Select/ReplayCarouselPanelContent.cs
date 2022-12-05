@@ -14,7 +14,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Select
 {
-    public class ReplayCarouselPanelContent : CompositeDrawable
+    public partial class ReplayCarouselPanelContent : CompositeDrawable
     {
         private readonly CarouselReplay carouselReplay;
 

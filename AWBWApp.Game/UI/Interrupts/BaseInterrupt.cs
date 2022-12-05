@@ -13,7 +13,7 @@ using osuTK.Input;
 namespace AWBWApp.Game.UI.Interrupts
 {
     //Todo: Make distinct from Osu
-    public abstract class BaseInterrupt : VisibilityContainer
+    public abstract partial class BaseInterrupt : VisibilityContainer
     {
         public const float ENTER_DURATION = 500;
         public const float EXIT_DURATION = 200;

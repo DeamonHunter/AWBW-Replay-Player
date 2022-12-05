@@ -12,7 +12,7 @@ using osu.Framework.Platform;
 
 namespace AWBWApp.Game.UI.Toolbar
 {
-    public class MainControlMenuBar : AWBWMenuBar
+    public partial class MainControlMenuBar : AWBWMenuBar
     {
         private readonly Action exitScreenAction;
 

@@ -9,7 +9,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Toolbar
 {
-    public class DrawableAWBWMenuItem : Menu.DrawableMenuItem
+    public partial class DrawableAWBWMenuItem : Menu.DrawableMenuItem
     {
         private InnerMenuContainer innerMenu;
 
@@ -61,7 +61,7 @@ namespace AWBWApp.Game.UI.Toolbar
 
         protected virtual InnerMenuContainer CreateInnerMenuContainer() => new InnerMenuContainer();
 
-        public class InnerMenuContainer : Container, IHasText
+        public partial class InnerMenuContainer : Container, IHasText
         {
             public LocalisableString Text
             {

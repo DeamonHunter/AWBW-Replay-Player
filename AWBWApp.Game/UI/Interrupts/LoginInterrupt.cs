@@ -13,7 +13,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Interrupts
 {
-    public class LoginInterrupt : BaseInterrupt
+    public partial class LoginInterrupt : BaseInterrupt
     {
         [Resolved]
         private AWBWSessionHandler sessionHandler { get; set; }
@@ -163,7 +163,7 @@ namespace AWBWApp.Game.UI.Interrupts
             base.Cancel();
         }
 
-        private class InterruptButton : BasicButton
+        private partial class InterruptButton : BasicButton
         {
             public InterruptButton()
             {

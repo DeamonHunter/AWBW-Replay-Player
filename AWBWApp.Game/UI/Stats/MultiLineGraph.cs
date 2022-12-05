@@ -10,7 +10,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Stats
 {
-    public class MultiLineGraph : Container
+    public partial class MultiLineGraph : Container
     {
         public float ActualMaxValue { get; private set; } = 0;
         public float ActualMinValue { get; private set; } = 0;

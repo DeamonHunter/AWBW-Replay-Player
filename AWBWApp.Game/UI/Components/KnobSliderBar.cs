@@ -11,7 +11,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Components
 {
-    public class KnobSliderBar<T> : SliderBar<T>, IHasTooltip where T : struct, IComparable<T>, IConvertible, IEquatable<T>
+    public partial class KnobSliderBar<T> : SliderBar<T>, IHasTooltip where T : struct, IComparable<T>, IConvertible, IEquatable<T>
     {
         private Color4 accentColour;
 

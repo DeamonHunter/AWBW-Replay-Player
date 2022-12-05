@@ -7,7 +7,7 @@ namespace AWBWApp.Game.UI.Components
     /// <summary>
     /// This is a container that will take a bunch of fill flow children and attempt to fit them inside a vertical space. As the difference gets worse, this will take more time to settle.
     /// </summary>
-    public class ShrinkingNamesContainer : Container
+    public partial class ShrinkingNamesContainer : Container
     {
         private readonly FillFlowContainer childDrawable;
 

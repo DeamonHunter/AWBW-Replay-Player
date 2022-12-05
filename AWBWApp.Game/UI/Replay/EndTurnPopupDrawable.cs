@@ -11,7 +11,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class EndTurnPopupDrawable : CompositeDrawable
+    public partial class EndTurnPopupDrawable : CompositeDrawable
     {
         private PlayerInfo playerInfo;
         private Sprite characterSprite;

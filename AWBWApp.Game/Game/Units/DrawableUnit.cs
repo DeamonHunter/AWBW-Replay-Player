@@ -22,7 +22,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.Game.Units
 {
-    public class DrawableUnit : CompositeDrawable, IHasMapPosition
+    public partial class DrawableUnit : CompositeDrawable, IHasMapPosition
     {
         public static readonly Vector2I BASE_SIZE = new Vector2I(16);
         public static readonly Colour4 FOG_COLOUR = new Colour4(150, 150, 150, 255);
@@ -340,7 +340,7 @@ namespace AWBWApp.Game.Game.Units
 
         private bool unitHidden() => BeingCarried.Value || (FogOfWarActive.Value && !(revealUnitInFog?.Value ?? true));
 
-        private class DrawableUnitSpriteContainer : Container
+        private partial class DrawableUnitSpriteContainer : Container
         {
             private readonly UnitTextureAnimation idleAnim;
             private readonly UnitTextureAnimation moveUpAnim;
@@ -444,7 +444,7 @@ namespace AWBWApp.Game.Game.Units
             MoveRight
         }
 
-        private class UnitTextureAnimation : Animation<Texture>
+        private partial class UnitTextureAnimation : Animation<Texture>
         {
             private float greyscaleAmount;
 
@@ -487,7 +487,7 @@ namespace AWBWApp.Game.Game.Units
             protected override Vector2 GetCurrentDisplaySize() => new Vector2(textureHolder.Texture?.DisplayWidth ?? 0, textureHolder.Texture?.DisplayHeight ?? 0);
         }
 
-        private class GreyscaleSprite : Sprite
+        private partial class GreyscaleSprite : Sprite
         {
             public float GreyscaleAmount
             {

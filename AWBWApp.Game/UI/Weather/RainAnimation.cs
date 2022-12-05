@@ -15,7 +15,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Weather
 {
-    public class RainAnimation : Drawable
+    public partial class RainAnimation : Drawable
     {
         protected virtual Vector2 ParticleBaseSize => new Vector2(3, 40);
         protected virtual float ParticleBaseVelocity => 750;

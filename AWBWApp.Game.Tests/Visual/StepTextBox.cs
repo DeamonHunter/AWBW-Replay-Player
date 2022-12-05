@@ -12,7 +12,7 @@ using osuTK.Input;
 
 namespace AWBWApp.Game.Tests.Visual
 {
-    public class StepTextBox : BasicTextBox
+    public partial class StepTextBox : BasicTextBox
     {
         public Action<string> ValueChanged;
 

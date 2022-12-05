@@ -15,7 +15,7 @@ using osu.Framework.IO.Stores;
 namespace AWBWApp.Game.Tests.Visual.Logic
 {
     [TestFixture]
-    public class TestSceneTerrain : BaseGameMapTestScene
+    public partial class TestSceneTerrain : BaseGameMapTestScene
     {
         private const int max_awbw_id = 194;
         private const int grass_terrain_id = 1;

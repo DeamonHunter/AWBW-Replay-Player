@@ -15,7 +15,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public abstract class ReplayBarWidget : Container
+    public abstract partial class ReplayBarWidget : Container
     {
         protected ReplayIconButton PrevTurnButton;
         protected ReplayIconButton PrevButton;
@@ -158,7 +158,7 @@ namespace AWBWApp.Game.UI.Replay
             this.ScaleTo(new Vector2(0.85f * MaxScale, 0f), 75, Easing.OutQuint);
         }
 
-        protected class ReplayIconButton : IconButton, IKeyBindingHandler<AWBWGlobalAction>, IHasTooltip
+        protected partial class ReplayIconButton : IconButton, IKeyBindingHandler<AWBWGlobalAction>, IHasTooltip
         {
             public Action<AWBWGlobalAction> ToggleAutoAdvanceAction;
 

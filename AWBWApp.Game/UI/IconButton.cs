@@ -6,7 +6,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI
 {
-    public class IconButton : AnimatedButton
+    public partial class IconButton : AnimatedButton
     {
         public const float DEFAULT_BUTTON_SIZE = 30;
 

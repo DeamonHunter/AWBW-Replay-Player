@@ -6,7 +6,7 @@ using osu.Framework.Graphics.Containers;
 
 namespace AWBWApp.Game.UI.Weather
 {
-    public class WeatherAnimationController : Container
+    public partial class WeatherAnimationController : Container
     {
         public Bindable<WeatherType> CurrentWeather = new Bindable<WeatherType>();
 

@@ -11,7 +11,7 @@ namespace AWBWApp.Game.UI.Components
     /// <summary>
     /// A container which sets each tile to a specific depth so that ordering is always the same.
     /// </summary>
-    public class TileGridContainer<T> : CompositeDrawable where T : Drawable
+    public partial class TileGridContainer<T> : CompositeDrawable where T : Drawable
     {
         private T[,] tiles;
 

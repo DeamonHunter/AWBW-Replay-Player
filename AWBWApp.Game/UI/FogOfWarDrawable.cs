@@ -10,7 +10,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI
 {
-    public class FogOfWarDrawable : Container<Box>
+    public partial class FogOfWarDrawable : Container<Box>
     {
         private FogOfWarTile[,] tiles;
 
@@ -57,7 +57,7 @@ namespace AWBWApp.Game.UI
             }
         }
 
-        private class FogOfWarTile : Box
+        private partial class FogOfWarTile : Box
         {
             private const float fog_transparency = 0.4f;
             private bool foggy;

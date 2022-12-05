@@ -2,7 +2,7 @@
 
 namespace AWBWApp.Game.UI.Components.Tooltip
 {
-    public class AWBWTooltipContainer : TooltipContainer
+    public partial class AWBWTooltipContainer : TooltipContainer
     {
         protected override ITooltip CreateTooltip() => new TextToolTip();
     }

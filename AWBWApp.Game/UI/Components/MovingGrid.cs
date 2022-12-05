@@ -8,7 +8,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Components
 {
-    public class MovingGrid : CompositeDrawable
+    public partial class MovingGrid : CompositeDrawable
     {
         private LayoutValue gridCache = new LayoutValue(Invalidation.RequiredParentSizeToFit);
 

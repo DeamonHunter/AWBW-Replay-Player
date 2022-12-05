@@ -9,7 +9,7 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class StatsHandler : Container
+    public partial class StatsHandler : Container
     {
         /// <summary>
         /// The stats readout that would be shown if the stats window was opened. This can be edited without mutating other turns.

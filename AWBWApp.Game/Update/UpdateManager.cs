@@ -6,7 +6,7 @@ using osu.Framework.Logging;
 
 namespace AWBWApp.Game.Update
 {
-    public class UpdateManager : CompositeDrawable
+    public partial class UpdateManager : CompositeDrawable
     {
         public bool CanCheckForUpdate => game.IsDeployedBuild && GetType() != typeof(UpdateManager);
 

@@ -15,7 +15,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Select
 {
-    public class DrawableCarouselReplay : DrawableCarouselItem, IHasContextMenu
+    public partial class DrawableCarouselReplay : DrawableCarouselItem, IHasContextMenu
     {
         public const float CAROUSEL_BEATMAP_SPACING = 5;
 

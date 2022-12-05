@@ -18,7 +18,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class PowerDisplay : Container
+    public partial class PowerDisplay : Container
     {
         private const float appear_duration = 500;
         private const float disappear_duration = 500;
@@ -205,7 +205,7 @@ namespace AWBWApp.Game.UI.Replay
         }
     }
 
-    public class PowerStars : Drawable
+    public partial class PowerStars : Drawable
     {
         private const float star_size = 100;
         private const float base_velocity = 50;

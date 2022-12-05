@@ -11,7 +11,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Replay
 {
-    public class EliminationPopupDrawable : CompositeDrawable
+    public partial class EliminationPopupDrawable : CompositeDrawable
     {
         private PlayerInfo playerInfo;
         private Sprite characterSprite;

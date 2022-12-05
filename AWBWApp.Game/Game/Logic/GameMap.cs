@@ -28,7 +28,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.Game.Logic
 {
-    public class GameMap : Container, IKeyBindingHandler<AWBWGlobalAction>
+    public partial class GameMap : Container, IKeyBindingHandler<AWBWGlobalAction>
     {
         public Vector2I MapSize { get; private set; }
 

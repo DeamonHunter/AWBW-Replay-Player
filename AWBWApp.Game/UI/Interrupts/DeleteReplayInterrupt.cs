@@ -13,7 +13,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Interrupts
 {
-    public class DeleteReplayInterrupt : BaseInterrupt
+    public partial class DeleteReplayInterrupt : BaseInterrupt
     {
         [Resolved]
         private ReplayManager replayManager { get; set; }
@@ -119,7 +119,7 @@ namespace AWBWApp.Game.UI.Interrupts
             });
         }
 
-        private class InterruptButton : BasicButton
+        private partial class InterruptButton : BasicButton
         {
             public InterruptButton()
             {

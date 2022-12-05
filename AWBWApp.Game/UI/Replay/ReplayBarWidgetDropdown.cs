@@ -23,7 +23,7 @@ namespace AWBWApp.Game.UI.Replay
     /// <summary>
     /// A recreation of <see cref="Dropdown{T}"/> but this allows the header to not be a part of this drawable.
     /// </summary>
-    public class ReplayBarWidgetDropdown : HeaderDetachedDropdown<Turn>
+    public partial class ReplayBarWidgetDropdown : HeaderDetachedDropdown<Turn>
     {
         public float OffsetHeight { set => ((ReplayBarDropdownMenu)Menu).OffsetHeight = value; }
 
@@ -58,7 +58,7 @@ namespace AWBWApp.Game.UI.Replay
             ((ReplayBarDownHeader)Header).SetSizeToLargestPlayerName(players);
         }
 
-        public class ReplayBarDownHeader : DropdownHeader
+        public partial class ReplayBarDownHeader : DropdownHeader
         {
             private string text;
 
@@ -167,7 +167,7 @@ namespace AWBWApp.Game.UI.Replay
             }
         }
 
-        private class ReplayBarDropdownMenu : DropdownMenu
+        private partial class ReplayBarDropdownMenu : DropdownMenu
         {
             public float OffsetHeight { get; set; }
 
@@ -255,7 +255,7 @@ namespace AWBWApp.Game.UI.Replay
                 this.FadeOut(300, Easing.OutQuint);
             }
 
-            private class ReplayBarDropdownMenuItem : DrawableDropdownMenuItem
+            private partial class ReplayBarDropdownMenuItem : DrawableDropdownMenuItem
             {
                 private DrawableAWBWMenuItem.InnerMenuContainer innerMenu;
 

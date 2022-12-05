@@ -8,7 +8,7 @@ using osu.Framework.Graphics.Primitives;
 namespace AWBWApp.Game.Tests.Visual.Logic.Actions
 {
     [TestFixture]
-    public class TestSceneMoveAction : BaseActionsTestScene
+    public partial class TestSceneMoveAction : BaseActionsTestScene
     {
         private AWBWConfigManager config;
 

@@ -13,7 +13,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.Game.Tile
 {
-    public class DrawableTile : CompositeDrawable
+    public partial class DrawableTile : CompositeDrawable
     {
         public static readonly Vector2I BASE_SIZE = new Vector2I(16);
         public static readonly Vector2I HALF_BASE_SIZE = new Vector2I(8);
@@ -23,7 +23,7 @@ namespace AWBWApp.Game.Game.Tile
 
         public readonly TerrainTile TerrainTile;
 
-        private Sprite texture;
+        private readonly Sprite texture;
 
         private Dictionary<WeatherType, Texture> texturesByWeather;
 
