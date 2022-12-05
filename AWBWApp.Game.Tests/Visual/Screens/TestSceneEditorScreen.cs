@@ -17,7 +17,7 @@ using osu.Framework.Screens;
 namespace AWBWApp.Game.Tests.Visual.Screens
 {
     [TestFixture]
-    public class TestSceneEditorScreen : AWBWAppTestScene
+    public partial class TestSceneEditorScreen : AWBWAppTestScene
     {
         [Resolved]
         private AWBWSessionHandler sessionHandler { get; set; }
