@@ -505,7 +505,6 @@ namespace AWBWApp.Game.Game.Units
             private void load(ShaderManager shaders)
             {
                 TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, "GreyscaleSprite");
-                RoundedTextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, "GreyscaleSpriteRounded");
             }
 
             protected override DrawNode CreateDrawNode() => new GreyscaleDrawNode(this);

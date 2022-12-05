@@ -1,4 +1,5 @@
-﻿using osu.Framework.Bindables;
+﻿using System;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 
 namespace AWBWApp.Game.IO
@@ -13,7 +14,7 @@ namespace AWBWApp.Game.IO
                 base.Parse(input);
         }
 
-        public override string ToString() => Value.ToHex();
+        public override string ToString(string format, IFormatProvider formatProvider) => Value.ToHex();
 
         protected override Bindable<Colour4> CreateInstance() => new BindableColour();
     }

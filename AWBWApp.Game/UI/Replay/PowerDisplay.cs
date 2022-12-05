@@ -294,7 +294,7 @@ namespace AWBWApp.Game.UI.Replay
         [BackgroundDependencyLoader]
         private void load(ShaderManager shaders, TextureStore textureStore)
         {
-            shader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);
+            shader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
             texture = textureStore.Get("UI/Star-White");
         }
 
