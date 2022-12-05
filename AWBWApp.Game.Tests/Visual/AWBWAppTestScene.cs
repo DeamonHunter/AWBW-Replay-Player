@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
-using AWBWApp.Game.Tests.AWBWApp.Game.Tests;
 using osu.Framework.Allocation;
 using osu.Framework.Platform;
 using osu.Framework.Testing;

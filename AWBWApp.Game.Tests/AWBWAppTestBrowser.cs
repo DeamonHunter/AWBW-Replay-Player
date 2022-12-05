@@ -1,4 +1,3 @@
-using AWBWApp.Game.Tests.AWBWApp.Game.Tests;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Platform;
