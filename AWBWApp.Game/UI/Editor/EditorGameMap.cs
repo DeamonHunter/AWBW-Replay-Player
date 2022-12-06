@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Editor;
+using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.UI.Replay;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Input.Events;
@@ -13,13 +17,17 @@ using osuTK.Input;
 
 namespace AWBWApp.Game.UI.Editor
 {
-    public class EditorGameMap : GameMap
+    public partial class EditorGameMap : GameMap
     {
         private short[,] tiles;
+
+        [Resolved]
+        private Bindable<TerrainTile> selectedTile { get; set; }
 
         private EditorTileCursor editorCursor;
         private EditorTileCursor symmetryEditorCursor;
         private SymmetryLineContainer symmetryContainer;
+        private Vector2 lastCursorPosition;
 
         public EditorGameMap()
             : base(null)
@@ -28,29 +36,27 @@ namespace AWBWApp.Game.UI.Editor
             Add(symmetryEditorCursor = new EditorTileCursor() { Alpha = 0 });
         }
 
-        [BackgroundDependencyLoader]
-        private void load()
+        public void SetMap(ReplayMap map)
         {
-            SetMapSize(new Vector2I(16, 16));
+            SetMapSize(map.Size);
+
+            var shoalMap = ShoalGenerator.CreateCustomShoalVersion(map);
 
             for (int x = 0; x < MapSize.X; x++)
             {
                 for (int y = 0; y < MapSize.Y; y++)
-                    ChangeTile(new Vector2I(x, y), 1, 1);
+                    ChangeTile(new Vector2I(x, y), map.Ids[y * MapSize.X + x], shoalMap.Ids[y * MapSize.X + x]);
             }
-
-            Units = new Dictionary<long, DrawableUnit>();
 
             AutoSizeAxes = Axes.Both;
             SetDrawableSize(new Vector2(MapSize.X * DrawableTile.BASE_SIZE.X, (MapSize.Y + 1) * DrawableTile.BASE_SIZE.Y));
             HasLoadedMap = true;
 
-            editorCursor.SetTile(TerrainTileStorage.GetTileByAWBWId(29));
-            symmetryEditorCursor.SetTile(TerrainTileStorage.GetTileByAWBWId(29));
+            Units = new Dictionary<long, DrawableUnit>();
+
+            selectedTile.Value = TerrainTileStorage.GetTileByAWBWId(1);
 
             symmetryContainer.SymmetryCenter = new Vector2I(MapSize.X - 1, MapSize.Y - 1);
-            symmetryContainer.SymmetryDirection = SymmetryDirection.DownwardsDiagonal;
-            symmetryContainer.SymmetryMode = SymmetryMode.MirrorInverted;
         }
 
         public void SetMapSize(Vector2I newMapSize)
@@ -58,6 +64,7 @@ namespace AWBWApp.Game.UI.Editor
             //Todo: Probably should have a similar interface to the one I created for the hex editor
             tiles = new short[newMapSize.X, newMapSize.Y];
             TileGrid.ClearToSize(newMapSize);
+            BuildingGrid.ClearToSize(newMapSize);
             MapSize = newMapSize;
         }
 
@@ -68,12 +75,12 @@ namespace AWBWApp.Game.UI.Editor
             base.UpdateTileCursor(mousePosition);
 
             //Todo: Symmetry conditions
-            if (editorCursor.Alpha > 0)
+            if (editorCursor.Alpha > 0 && symmetryContainer.SymmetryMode != SymmetryMode.None)
             {
-                var symmetryPosition = new Vector2I(2 * editorCursor.TilePosition.X, 2 * editorCursor.TilePosition.Y);
-                var newTile = SymmetryHelper.GetSymmetricalTile(symmetryPosition, symmetryContainer.SymmetryCenter, symmetryContainer.SymmetryDirection, symmetryContainer.SymmetryMode);
+                var newTile = SymmetryHelper.GetSymmetricalTile(new Vector2I(editorCursor.TilePosition.X * 2, editorCursor.TilePosition.Y * 2), symmetryContainer.SymmetryCenter, symmetryContainer.SymmetryDirection, symmetryContainer.SymmetryMode);
+                newTile = new Vector2I(newTile.X / 2, newTile.Y / 2);
 
-                symmetryEditorCursor.TilePosition = new Vector2I(newTile.X / 2, newTile.Y / 2);
+                symmetryEditorCursor.TilePosition = newTile;
                 symmetryEditorCursor.Alpha = 0.66f;
             }
             else
@@ -90,22 +97,112 @@ namespace AWBWApp.Game.UI.Editor
             tiles[position.X, position.Y] = newTileID;
 
             TileGrid.RemoveTile(position);
+            BuildingGrid.RemoveTile(position);
 
-            var terrainTile = TerrainTileStorage.GetTileByAWBWId(shoalTile != -1 ? shoalTile : newTileID);
-            var newTile = new DrawableTile(terrainTile);
+            if (BuildingStorage.TryGetBuildingByAWBWId(newTileID, out var building))
+            {
+                var newBuilding = new DrawableBuilding(building, position, null, null);
+                ScheduleAfterChildren(() => newBuilding.ScaleTo(1.125f).MoveToOffset(new Vector2(-1, -1)).ScaleTo(1, 250, Easing.Out).MoveToOffset(new Vector2(1, 1), 250, Easing.Out));
+                BuildingGrid.AddTile(newBuilding, position);
 
-            ScheduleAfterChildren(() => newTile.ScaleTo(1.125f).MoveToOffset(new Vector2(-1, -1)).ScaleTo(1, 250, Easing.Out).MoveToOffset(new Vector2(1, 1), 250, Easing.Out));
-
-            TileGrid.AddTile(newTile, position);
+                var newTile = new DrawableTile(TerrainTileStorage.GetTileByCode("Plain"));
+                ScheduleAfterChildren(() => newTile.ScaleTo(1.125f).MoveToOffset(new Vector2(-1, -1)).ScaleTo(1, 250, Easing.Out).MoveToOffset(new Vector2(1, 1), 250, Easing.Out));
+                TileGrid.AddTile(newTile, position);
+            }
+            else
+            {
+                var terrainTile = TerrainTileStorage.GetTileByAWBWId(shoalTile != -1 ? shoalTile : newTileID);
+                var newTile = new DrawableTile(terrainTile);
+                ScheduleAfterChildren(() => newTile.ScaleTo(1.125f).MoveToOffset(new Vector2(-1, -1)).ScaleTo(1, 250, Easing.Out).MoveToOffset(new Vector2(1, 1), 250, Easing.Out));
+                TileGrid.AddTile(newTile, position);
+            }
 
             if (shoalTile == -1)
                 ShoalGenerator.UpdateEditorMapAtPosition(this, position);
         }
 
-        protected void PlaceTileAtCursorPosition()
+        protected void PlaceTilesBetweenPositions(Vector2 lastMousePosition, Vector2 currentMousePosition)
         {
-            ChangeTile(editorCursor.TilePosition, 29);
-            ChangeTile(symmetryEditorCursor.TilePosition, 29);
+            foreach (var tilePosition in getValidTilesBetweenCursorPoints(lastMousePosition, currentMousePosition))
+            {
+                ChangeTile(tilePosition, (short)selectedTile.Value.AWBWID);
+
+                if (symmetryContainer.SymmetryMode != SymmetryMode.None)
+                {
+                    var newTile = SymmetryHelper.GetSymmetricalTile(new Vector2I(tilePosition.X * 2, tilePosition.Y * 2), symmetryContainer.SymmetryCenter, symmetryContainer.SymmetryDirection, symmetryContainer.SymmetryMode);
+                    newTile = new Vector2I(newTile.X / 2, newTile.Y / 2);
+                    if (isTilePositionInBounds(newTile))
+                        ChangeTile(newTile, (short)selectedTile.Value.AWBWID);
+                }
+            }
+        }
+
+        private IEnumerable<Vector2I> getValidTilesBetweenCursorPoints(Vector2 from, Vector2 to)
+        {
+            var origin = new Vector2(from.X / DrawableTile.BASE_SIZE.X, (from.Y - DrawableTile.BASE_SIZE.Y) / DrawableTile.BASE_SIZE.Y);
+            var end = new Vector2(to.X / DrawableTile.BASE_SIZE.X, (to.Y - DrawableTile.BASE_SIZE.Y) / DrawableTile.BASE_SIZE.Y);
+
+            var direction = (end - origin);
+
+            if (direction == Vector2.Zero)
+            {
+                var returnValue = new Vector2I((int)Math.Floor(origin.X), (int)Math.Floor(origin.Y));
+                if (isTilePositionInBounds(returnValue))
+                    yield return returnValue;
+                yield break;
+            }
+
+            var radius = direction.Length;
+            direction.Normalize();
+
+            var xy = new Vector2I((int)Math.Floor(origin.X), (int)Math.Floor(origin.Y));
+            var step = new Vector2I(Math.Sign(direction.X), Math.Sign(direction.Y));
+
+            var tMax = new Vector2(wrapIntToBounds(origin.X, direction.X), wrapIntToBounds(origin.Y, direction.Y));
+            var tDelta = new Vector2(direction.X == 0 ? float.MaxValue : step.X / direction.X, direction.Y == 0 ? float.MaxValue : step.Y / direction.Y);
+
+            if (isTilePositionInBounds(xy))
+                yield return xy;
+
+            while (true)
+            {
+                if (tMax.X < tMax.Y)
+                {
+                    if (tMax.X > radius)
+                        break;
+                    xy.X += step.X;
+                    tMax.X += tDelta.X;
+                }
+                else
+                {
+                    if (tMax.Y > radius)
+                        break;
+                    xy.Y += step.Y;
+                    tMax.Y += tDelta.Y;
+                }
+                if (isTilePositionInBounds(xy))
+                    yield return xy;
+            }
+        }
+
+        bool isTilePositionInBounds(Vector2I position) => position.X >= 0 && position.X < MapSize.X && position.Y >= 0 && position.Y < MapSize.Y;
+
+        float wrapIntToBounds(float s, float ds)
+        {
+            if (ds == 0)
+                return float.MaxValue;
+
+            if (ds > 0)
+            {
+                s = (s % 1 + 1) % 1;
+                return (1 - s) / ds;
+            }
+
+            s = (-s % 1 + 1) % 1;
+            //When we are exactly on the edge. We want it to be 1 not 0 when negative
+            if (s <= 0)
+                s = 1f;
+            return (s - 1) / ds;
         }
 
         protected override bool OnMouseDown(MouseDownEvent e)
@@ -113,9 +210,9 @@ namespace AWBWApp.Game.UI.Editor
             if (e.Button != MouseButton.Left)
                 return base.OnMouseDown(e);
 
-            if (GetUnitAndTileFromMousePosition(e.MousePosition, out _, out _, out _, out _))
-                PlaceTileAtCursorPosition();
+            PlaceTilesBetweenPositions(e.MousePosition, e.MousePosition);
 
+            lastCursorPosition = e.MousePosition;
             return true;
         }
 
@@ -124,9 +221,8 @@ namespace AWBWApp.Game.UI.Editor
             if (e.Button != MouseButton.Left)
                 return base.OnDragStart(e);
 
-            if (GetUnitAndTileFromMousePosition(e.MousePosition, out _, out _, out _, out _))
-                PlaceTileAtCursorPosition();
-
+            PlaceTilesBetweenPositions(lastCursorPosition, e.MousePosition);
+            lastCursorPosition = e.MousePosition;
             return true;
         }
 
@@ -138,8 +234,8 @@ namespace AWBWApp.Game.UI.Editor
                 return;
             }
 
-            if (GetUnitAndTileFromMousePosition(e.MousePosition, out _, out _, out _, out _))
-                PlaceTileAtCursorPosition();
+            PlaceTilesBetweenPositions(lastCursorPosition, e.MousePosition);
+            lastCursorPosition = e.MousePosition;
         }
     }
 }

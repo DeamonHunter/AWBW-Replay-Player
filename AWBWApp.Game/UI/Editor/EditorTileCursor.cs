@@ -10,13 +10,16 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Editor
 {
-    public class EditorTileCursor : TileCursor
+    public partial class EditorTileCursor : TileCursor
     {
         [Resolved]
         private NearestNeighbourTextureStore textureStore { get; set; }
 
         [Resolved]
         private IBindable<MapSkin> currentSkin { get; set; }
+
+        [Resolved]
+        private Bindable<TerrainTile> currentTile { get; set; }
 
         private Sprite tileCursorSprite;
 
@@ -39,11 +42,24 @@ namespace AWBWApp.Game.UI.Editor
             };
         }
 
-        public void SetTile(TerrainTile tile)
+        protected override void LoadComplete()
         {
-            //Todo: Do we need to store the tile for later reference?
+            base.LoadComplete();
+            currentSkin.BindValueChanged(_ => updateVisual());
+            currentTile.BindValueChanged(_ => updateVisual());
+            updateVisual();
+        }
 
-            tileCursorSprite.Texture = textureStore.Get($"Map/{currentSkin.Value}/{tile.Textures[WeatherType.Clear]}");
+        private void updateVisual()
+        {
+            if (currentTile.Value == null)
+            {
+                tileCursorSprite.Hide();
+                return;
+            }
+
+            tileCursorSprite.Show();
+            tileCursorSprite.Texture = textureStore.Get($"Map/{currentSkin.Value}/{currentTile.Value.Textures[WeatherType.Clear]}");
             tileCursorSprite.Size = tileCursorSprite.Texture.Size;
         }
     }

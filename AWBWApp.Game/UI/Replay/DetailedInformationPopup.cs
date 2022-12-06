@@ -17,6 +17,18 @@ namespace AWBWApp.Game.UI.Replay
 {
     public partial class DetailedInformationPopup : Container
     {
+        private bool forceRightSide;
+
+        public bool ForceRightSide
+        {
+            get => forceRightSide;
+            set
+            {
+                forceRightSide = value;
+                popupPositionChanged();
+            }
+        }
+
         private TerrainPopup terrainPopup;
         private BuildingPopup buildingPopup;
         private UnitPopup unitPopup;
@@ -72,12 +84,15 @@ namespace AWBWApp.Game.UI.Replay
         private void load(AWBWConfigManager configManager)
         {
             playerListLeftSide = configManager.GetBindable<bool>(AWBWSetting.PlayerListLeftSide);
-            playerListLeftSide.BindValueChanged(x =>
-            {
-                Anchor = x.NewValue ? Anchor.BottomRight : Anchor.BottomLeft;
-                Origin = x.NewValue ? Anchor.BottomRight : Anchor.BottomLeft;
-                Position = x.NewValue ? new Vector2(-10, -10) : new Vector2(10, -10);
-            }, true);
+            playerListLeftSide.BindValueChanged(_ => popupPositionChanged(), true);
+        }
+
+        private void popupPositionChanged()
+        {
+            var rightSide = forceRightSide || !playerListLeftSide.Value;
+            Anchor = rightSide ? Anchor.BottomRight : Anchor.BottomLeft;
+            Origin = rightSide ? Anchor.BottomRight : Anchor.BottomLeft;
+            Position = rightSide ? new Vector2(-10, -10) : new Vector2(10, -10);
         }
 
         public void ShowDetails(DrawableTile tile, DrawableBuilding building, DrawableUnit unit)

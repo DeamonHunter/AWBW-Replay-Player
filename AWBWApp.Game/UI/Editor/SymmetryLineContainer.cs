@@ -1,6 +1,7 @@
 ﻿using AWBWApp.Game.Editor;
 using AWBWApp.Game.Game.Tile;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
@@ -10,37 +11,17 @@ using osuTK;
 
 namespace AWBWApp.Game.UI.Editor
 {
-    public class SymmetryLineContainer : Container
+    public partial class SymmetryLineContainer : Container
     {
-        private SymmetryMode symmetryMode;
+        [Resolved]
+        private Bindable<SymmetryMode> symmetryMode { get; set; }
 
-        public SymmetryMode SymmetryMode
-        {
-            get => symmetryMode;
-            set
-            {
-                if (symmetryMode == value)
-                    return;
+        public SymmetryMode SymmetryMode => symmetryMode.Value;
 
-                symmetryMode = value;
-                updateSymmetry();
-            }
-        }
+        [Resolved]
+        private Bindable<SymmetryDirection> symmetryDirection { get; set; }
 
-        private SymmetryDirection symmetryDirection;
-
-        public SymmetryDirection SymmetryDirection
-        {
-            get => symmetryDirection;
-            set
-            {
-                if (symmetryDirection == value)
-                    return;
-
-                symmetryDirection = value;
-                updateSymmetry();
-            }
-        }
+        public SymmetryDirection SymmetryDirection => symmetryDirection.Value;
 
         private Vector2I symmetryCenter;
 
@@ -116,15 +97,18 @@ namespace AWBWApp.Game.UI.Editor
             };
         }
 
-        [BackgroundDependencyLoader]
-        private void load()
+        protected override void LoadComplete()
         {
+            base.LoadComplete();
+            symmetryDirection.BindValueChanged(_ => updateSymmetry());
+            symmetryMode.BindValueChanged(_ => updateSymmetry());
+
             updateSymmetry();
         }
 
         private void updateSymmetry()
         {
-            if (symmetryMode == SymmetryMode.None)
+            if (symmetryMode.Value == SymmetryMode.None)
             {
                 lineContainer.Hide();
                 return;
@@ -137,7 +121,7 @@ namespace AWBWApp.Game.UI.Editor
 
             lineContainer.Position = adjustedCenter;
 
-            switch (SymmetryMode)
+            switch (symmetryMode.Value)
             {
                 case SymmetryMode.MirrorInverted:
                     arrowA.Rotation = arrowB.Rotation = 90;
@@ -148,7 +132,7 @@ namespace AWBWApp.Game.UI.Editor
                     break;
             }
 
-            switch (SymmetryDirection)
+            switch (symmetryDirection.Value)
             {
                 case SymmetryDirection.Vertical:
                     lineContainer.Rotation = 0;

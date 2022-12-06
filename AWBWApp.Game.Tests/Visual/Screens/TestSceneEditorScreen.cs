@@ -4,7 +4,6 @@ using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Editor;
-using AWBWApp.Game.UI.Interrupts;
 using AWBWApp.Game.UI.Notifications;
 using AWBWApp.Game.UI.Toolbar;
 using NUnit.Framework;
@@ -50,11 +49,18 @@ namespace AWBWApp.Game.Tests.Visual.Screens
         }
 
         [Test]
+        public void EmptyTest()
+        {
+            AddStep("Nothing", () => { });
+        }
+        /*
+        [Test]
         public void SendMapTest()
         {
             AddStep("Login", () => interruptOverlay.Push(new LoginInterrupt(new TaskCompletionSource<bool>())));
             AddStep("Send map to upload", () => uploadMap());
         }
+        */
 
         private void uploadMap()
         {

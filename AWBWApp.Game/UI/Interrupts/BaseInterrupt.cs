@@ -22,6 +22,7 @@ namespace AWBWApp.Game.UI.Interrupts
 
         private readonly Container content;
         private readonly FillFlowContainer interactablesContainer;
+        private readonly FillFlowContainer headingContainer;
         private readonly TextFlowContainer header;
         private readonly TextFlowContainer body;
 
@@ -106,7 +107,7 @@ namespace AWBWApp.Game.UI.Interrupts
                                 },
                             },
                         },
-                        new FillFlowContainer
+                        headingContainer = new FillFlowContainer
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.BottomCentre,
@@ -157,6 +158,12 @@ namespace AWBWApp.Game.UI.Interrupts
         protected void SetInteractables(IEnumerable<Drawable> range)
         {
             interactablesContainer.ChildrenEnumerable = range;
+        }
+
+        protected void SetInnerPositionOffsets(Vector2 offset)
+        {
+            headingContainer.Position = offset;
+            interactablesContainer.Position = offset;
         }
 
         protected override void PopIn()

@@ -1,20 +1,28 @@
 ﻿using System;
+using System.ComponentModel;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Editor
 {
     public enum SymmetryDirection
     {
+        [Description("Vertical")]
         Vertical,
+        [Description("Upwards Diagonal")]
         UpwardsDiagonal,
+        [Description("Horizontal")]
         Horizontal,
+        [Description("Downwards Diagonal")]
         DownwardsDiagonal
     }
 
     public enum SymmetryMode
     {
+        [Description("Symmetry Off")]
         None,
+        [Description("Symmetry On")]
         Mirror,
+        [Description("Symmetry Inverted")]
         MirrorInverted
     }
 

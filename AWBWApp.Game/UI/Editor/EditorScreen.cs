@@ -1,4 +1,7 @@
-﻿using AWBWApp.Game.Game.Tile;
+﻿using System.Threading.Tasks;
+using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.Editor;
+using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Replay;
 using osu.Framework.Allocation;
@@ -7,14 +10,27 @@ using osu.Framework.Graphics;
 
 namespace AWBWApp.Game.UI.Editor
 {
-    public class EditorScreen : EscapeableScreen
+    public partial class EditorScreen : EscapeableScreen
     {
         [Cached(type: typeof(IBindable<MapSkin>))]
         private Bindable<MapSkin> MapSkin = new Bindable<MapSkin>(AWBWApp.Game.MapSkin.AW2);
 
+        [Resolved]
+        private InterruptDialogueOverlay interruptOverlay { get; set; }
+
+        [Cached]
+        private Bindable<SymmetryMode> symmetryMode = new Bindable<SymmetryMode>();
+
+        [Cached]
+        private Bindable<SymmetryDirection> symmetryDirection = new Bindable<SymmetryDirection>();
+
+        [Cached]
+        private Bindable<TerrainTile> selectedTile = new Bindable<TerrainTile>();
+
         private readonly CameraControllerWithGrid cameraControllerWithGrid;
         private readonly DetailedInformationPopup infoPopup;
         private readonly EditorGameMap map;
+        private readonly EditorMenu menu;
 
         public EditorScreen()
         {
@@ -48,11 +64,54 @@ namespace AWBWApp.Game.UI.Editor
                         RelativeSizeAxes = Axes.Both,
                         Child = map = new EditorGameMap(),
                     },
+                    menu = new EditorMenu(),
                     infoPopup = new DetailedInformationPopup(),
                 }
             });
 
             map.SetInfoPopup(infoPopup);
+            map.OnLoadComplete += _ => cameraControllerWithGrid.FitMapToSpace();
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            var taskCompletion = new TaskCompletionSource<ReplayMap>();
+            interruptOverlay.Push(new DownloadOrCreateMapInterrupt(taskCompletion));
+            Task.Run(async () =>
+            {
+                ReplayMap info;
+
+                try
+                {
+                    info = await taskCompletion.Task.ConfigureAwait(false);
+                }
+                catch (TaskCanceledException)
+                {
+                    return;
+                }
+
+                Schedule(() =>
+                {
+                    map.SetMap(info);
+                    ScheduleAfterChildren(() => cameraControllerWithGrid.FitMapToSpace());
+                });
+            });
+            /*
+            ScheduleAfterChildren(() =>
+            {
+                var emptyMap = new ReplayMap()
+                {
+                    TerrainName = "Editor Test",
+                    Size = new Vector2I(16, 16),
+                    Ids = new short[16 * 16]
+                };
+                Array.Fill(emptyMap.Ids, (short)1);
+                map.SetMap(emptyMap);
+                ScheduleAfterChildren(() => cameraControllerWithGrid.FitMapToSpace());
+            });
+            */
         }
     }
 }
