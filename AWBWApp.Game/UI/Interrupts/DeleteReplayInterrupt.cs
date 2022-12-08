@@ -13,7 +13,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Interrupts
 {
-    public partial class DeleteReplayInterrupt : BaseInterrupt
+    public partial class DeleteReplayInterrupt : SideInterupt
     {
         [Resolved]
         private ReplayManager replayManager { get; set; }

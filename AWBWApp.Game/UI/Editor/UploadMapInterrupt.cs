@@ -17,7 +17,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Editor
 {
-    public partial class UploadMapInterrupt : BaseInterrupt
+    public partial class UploadMapInterrupt : SideInterupt
     {
         [Resolved]
         private ReplayManager replayStorage { get; set; }

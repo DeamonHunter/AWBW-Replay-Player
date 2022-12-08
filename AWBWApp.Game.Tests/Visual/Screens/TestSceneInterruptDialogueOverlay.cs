@@ -45,7 +45,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
             AddAssert("Dialogue #1 displayed", () => overlay.CurrentInterrupt == firstDialogue);
         }
 
-        private partial class TestPopupDialog : BaseInterrupt
+        private partial class TestPopupDialog : SideInterupt
         {
         }
     }

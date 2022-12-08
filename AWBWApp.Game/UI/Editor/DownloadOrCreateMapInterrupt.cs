@@ -19,7 +19,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Editor
 {
-    public partial class DownloadOrCreateMapInterrupt : BaseInterrupt
+    public partial class DownloadOrCreateMapInterrupt : SideInterupt
     {
         [Resolved]
         private InterruptDialogueOverlay interrupt { get; set; }

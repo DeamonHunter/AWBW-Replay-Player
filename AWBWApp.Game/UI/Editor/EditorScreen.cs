@@ -3,9 +3,12 @@ using System.Threading.Tasks;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Editor;
 using AWBWApp.Game.Game.Tile;
+using AWBWApp.Game.Helpers;
+using AWBWApp.Game.IO;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Replay;
 using AWBWApp.Game.UI.Toolbar;
+using Newtonsoft.Json;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -38,6 +41,8 @@ namespace AWBWApp.Game.UI.Editor
         private readonly DetailedInformationPopup infoPopup;
         private readonly EditorGameMap map;
         private readonly EditorMenu menu;
+
+        private string lastSaveLocation;
 
         public EditorScreen()
         {
@@ -84,15 +89,14 @@ namespace AWBWApp.Game.UI.Editor
         {
             base.OnEntering(e);
             menuBar.SetShowEditorMenu(true);
-            menuBar.OnSaveEditorTriggered += saveMap;
+            menuBar.OnSaveEditorTriggered += () => saveMap(lastSaveLocation);
+            menuBar.OnSaveAsEditorTriggered += () => saveMap(null);
             menuBar.OnUploadEditorTriggered += uploadMap;
         }
 
         public override bool OnExiting(ScreenExitEvent e)
         {
             menuBar.SetShowEditorMenu(false);
-            menuBar.OnSaveEditorTriggered -= saveMap;
-            menuBar.OnUploadEditorTriggered -= uploadMap;
             return base.OnExiting(e);
         }
 
@@ -142,8 +146,20 @@ namespace AWBWApp.Game.UI.Editor
             });
         }
 
-        private void saveMap()
+        private void saveMap(string saveLocation)
         {
+            if (saveLocation.IsNullOrEmpty())
+            {
+                if (interruptOverlay.CurrentInterrupt != null)
+                    return;
+
+                interruptOverlay.Push(new FileSaveInterrupt(lastSaveLocation, saveMap));
+                return;
+            }
+
+            var serializedMap = JsonConvert.SerializeObject(map.GenerateMap());
+            SafeWriteHelper.WriteTextToFile(saveLocation, serializedMap);
+            lastSaveLocation = saveLocation;
         }
 
         private void uploadMap()

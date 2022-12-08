@@ -19,6 +19,7 @@ namespace AWBWApp.Game.UI.Toolbar
         private List<MenuItem> menuItems;
 
         public Action OnSaveEditorTriggered;
+        public Action OnSaveAsEditorTriggered;
         public Action OnUploadEditorTriggered;
 
         public MainControlMenuBar(Action exitScreenAction, NotificationOverlay overlay)
@@ -88,6 +89,7 @@ namespace AWBWApp.Game.UI.Toolbar
                     Items = new[]
                     {
                         new MenuItem("Save", () => OnSaveEditorTriggered?.Invoke()),
+                        new MenuItem("Save As", () => OnSaveAsEditorTriggered?.Invoke()),
                         new MenuItem("Upload", () => OnUploadEditorTriggered?.Invoke()),
                         new MenuItem("Exit Screen", exitScreenAction)
                     }

@@ -18,7 +18,7 @@ using osuTK.Input;
 
 namespace AWBWApp.Game.UI.Interrupts
 {
-    public partial class KeyRebindingInterrupt : BaseInterrupt
+    public partial class KeyRebindingInterrupt : SideInterupt
     {
         private KeybindingOverlay keybindingOverlay;
 

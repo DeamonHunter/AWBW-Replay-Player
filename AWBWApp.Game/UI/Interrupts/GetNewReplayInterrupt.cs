@@ -17,7 +17,7 @@ using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Interrupts
 {
-    public partial class GetNewReplayInterrupt : BaseInterrupt
+    public partial class GetNewReplayInterrupt : SideInterupt
     {
         [Resolved]
         private ReplayManager replayStorage { get; set; }
