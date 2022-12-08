@@ -1,12 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Editor;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Replay;
+using AWBWApp.Game.UI.Toolbar;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Primitives;
+using osu.Framework.Screens;
 
 namespace AWBWApp.Game.UI.Editor
 {
@@ -26,6 +30,9 @@ namespace AWBWApp.Game.UI.Editor
 
         [Cached]
         private Bindable<TerrainTile> selectedTile = new Bindable<TerrainTile>();
+
+        [Resolved]
+        private MainControlMenuBar menuBar { get; set; }
 
         private readonly CameraControllerWithGrid cameraControllerWithGrid;
         private readonly DetailedInformationPopup infoPopup;
@@ -73,9 +80,28 @@ namespace AWBWApp.Game.UI.Editor
             map.OnLoadComplete += _ => cameraControllerWithGrid.FitMapToSpace();
         }
 
+        public override void OnEntering(ScreenTransitionEvent e)
+        {
+            base.OnEntering(e);
+            menuBar.SetShowEditorMenu(true);
+            menuBar.OnSaveEditorTriggered += saveMap;
+            menuBar.OnUploadEditorTriggered += uploadMap;
+        }
+
+        public override bool OnExiting(ScreenExitEvent e)
+        {
+            menuBar.SetShowEditorMenu(false);
+            menuBar.OnSaveEditorTriggered -= saveMap;
+            menuBar.OnUploadEditorTriggered -= uploadMap;
+            return base.OnExiting(e);
+        }
+
         protected override void LoadComplete()
         {
             base.LoadComplete();
+
+            loadDefaultMap();
+            return;
 
             var taskCompletion = new TaskCompletionSource<ReplayMap>();
             interruptOverlay.Push(new DownloadOrCreateMapInterrupt(taskCompletion));
@@ -98,7 +124,10 @@ namespace AWBWApp.Game.UI.Editor
                     ScheduleAfterChildren(() => cameraControllerWithGrid.FitMapToSpace());
                 });
             });
-            /*
+        }
+
+        private void loadDefaultMap()
+        {
             ScheduleAfterChildren(() =>
             {
                 var emptyMap = new ReplayMap()
@@ -111,7 +140,18 @@ namespace AWBWApp.Game.UI.Editor
                 map.SetMap(emptyMap);
                 ScheduleAfterChildren(() => cameraControllerWithGrid.FitMapToSpace());
             });
-            */
+        }
+
+        private void saveMap()
+        {
+        }
+
+        private void uploadMap()
+        {
+            if (interruptOverlay.CurrentInterrupt != null)
+                return;
+
+            interruptOverlay.Push(new UploadMapInterrupt(map.GenerateMap()));
         }
     }
 }

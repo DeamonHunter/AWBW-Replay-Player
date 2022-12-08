@@ -88,7 +88,7 @@ namespace AWBWApp.Game.UI.Editor
                         symmetryModeDropdown,
                         symmetryDirectionDropdown,
                     }
-                },
+                }
             };
 
             symmetryDirectionHeader.Hide();

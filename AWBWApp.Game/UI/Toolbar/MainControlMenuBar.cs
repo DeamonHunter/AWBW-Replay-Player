@@ -14,7 +14,12 @@ namespace AWBWApp.Game.UI.Toolbar
 {
     public partial class MainControlMenuBar : AWBWMenuBar
     {
+        private bool isEditorOpen;
         private readonly Action exitScreenAction;
+        private List<MenuItem> menuItems;
+
+        public Action OnSaveEditorTriggered;
+        public Action OnUploadEditorTriggered;
 
         public MainControlMenuBar(Action exitScreenAction, NotificationOverlay overlay)
             : base(null, overlay)
@@ -25,7 +30,7 @@ namespace AWBWApp.Game.UI.Toolbar
         [BackgroundDependencyLoader]
         private void load(AWBWConfigManager configManager, InterruptDialogueOverlay interrupts, FrameworkConfigManager frameworkConfig, GameHost host)
         {
-            Menu.Items = new MenuItem[]
+            menuItems = new List<MenuItem>()
             {
                 new MenuItem("Exit Screen", exitScreenAction),
                 new MenuItem("Visual Settings")
@@ -63,6 +68,35 @@ namespace AWBWApp.Game.UI.Toolbar
                     }
                 },
             };
+
+            Menu.Items = menuItems;
+        }
+
+        //This is kinda just a hack but this saves having to override this bar in the editor
+        public void SetShowEditorMenu(bool editorOpen)
+        {
+            if (isEditorOpen == editorOpen)
+                return;
+
+            isEditorOpen = editorOpen;
+            SetForceOpen(isEditorOpen);
+
+            if (isEditorOpen)
+            {
+                menuItems[0] = new MenuItem("Editor Options")
+                {
+                    Items = new[]
+                    {
+                        new MenuItem("Save", () => OnSaveEditorTriggered?.Invoke()),
+                        new MenuItem("Upload", () => OnUploadEditorTriggered?.Invoke()),
+                        new MenuItem("Exit Screen", exitScreenAction)
+                    }
+                };
+            }
+            else
+                menuItems[0] = new MenuItem("Exit Screen", exitScreenAction);
+
+            Menu.Items = menuItems;
         }
     }
 }

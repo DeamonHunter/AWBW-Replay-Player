@@ -283,7 +283,7 @@ namespace AWBWApp.Game.UI.Editor
 
         private void failed(string reason)
         {
-            Logger.Log("Failed to get replay: " + errorText, level: LogLevel.Verbose);
+            Logger.Log("Failed to get map: " + errorText, level: LogLevel.Verbose);
             Schedule(() =>
             {
                 downloadDelegate = null;

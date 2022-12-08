@@ -44,7 +44,7 @@ namespace AWBWApp.Game
                 dependencies.CacheAs(clipboard);
 
             loadComponentAfterOtherComponents(menuBar = new MainControlMenuBar(screenStack.Exit, notificationOverlay = new NotificationOverlay()), Add);
-
+            dependencies.Cache(menuBar);
             dependencies.Cache(notificationOverlay);
             loadComponentAfterOtherComponents(updateManager = CreateUpdateManager(), Add, true);
 

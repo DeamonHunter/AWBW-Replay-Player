@@ -34,6 +34,7 @@ namespace AWBWApp.Game.UI.Toolbar
         private NotificationButton notificationButton;
 
         private HoverDrawable hoverDrawable;
+        private bool isForcedOpen;
 
         public AWBWMenuBar(IReadOnlyList<MenuItem> menuItems, NotificationOverlay overlay)
         {
@@ -93,6 +94,9 @@ namespace AWBWApp.Game.UI.Toolbar
         protected override void Update()
         {
             base.Update();
+
+            if (isForcedOpen)
+                return;
 
             if (State.Value != Visibility.Visible)
             {
@@ -161,6 +165,16 @@ namespace AWBWApp.Game.UI.Toolbar
 
             if (State.Value != Visibility.Visible)
                 hoverShowDelegate = Scheduler.AddDelayed(Show, HoverShowDelay);
+        }
+
+        protected void SetForceOpen(bool forcedOpen)
+        {
+            if (isForcedOpen == forcedOpen)
+                return;
+
+            isForcedOpen = forcedOpen;
+            if (isForcedOpen)
+                PopIn();
         }
 
         private partial class HoverDrawable : Drawable

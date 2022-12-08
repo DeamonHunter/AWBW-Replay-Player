@@ -237,5 +237,21 @@ namespace AWBWApp.Game.UI.Editor
             PlaceTilesBetweenPositions(lastCursorPosition, e.MousePosition);
             lastCursorPosition = e.MousePosition;
         }
+
+        public ReplayMap GenerateMap()
+        {
+            var replayMap = new ReplayMap();
+            replayMap.Size = MapSize;
+            replayMap.TerrainName = "Test Generated Map";
+            replayMap.Ids = new short[MapSize.X * MapSize.Y];
+
+            for (int y = 0; y < MapSize.Y; y++)
+            {
+                for (int x = 0; x < MapSize.X; x++)
+                    replayMap.Ids[y * MapSize.Y + x] = tiles[x, y];
+            }
+
+            return replayMap;
+        }
     }
 }
