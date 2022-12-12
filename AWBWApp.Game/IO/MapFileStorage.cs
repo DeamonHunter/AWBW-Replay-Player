@@ -109,7 +109,7 @@ namespace AWBWApp.Game.IO
             {
                 try
                 {
-                    var mapAPILink = "https://awbw.amarriner.com/matsuzen/api/map/map_info.php?maps_id=" + mapID;
+                    var mapAPILink = "https://awbw.amarriner.com/api/map/map_info.php?maps_id=" + mapID;
 
                     using (var jsonRequest = new GenericJsonWebRequest(mapAPILink))
                     {
