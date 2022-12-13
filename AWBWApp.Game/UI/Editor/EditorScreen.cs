@@ -104,8 +104,8 @@ namespace AWBWApp.Game.UI.Editor
         {
             base.LoadComplete();
 
-            loadDefaultMap();
-            return;
+            //loadDefaultMap();
+            //return;
 
             var taskCompletion = new TaskCompletionSource<ReplayMap>();
             interruptOverlay.Push(new DownloadOrCreateMapInterrupt(taskCompletion));

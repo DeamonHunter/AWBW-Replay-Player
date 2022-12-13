@@ -24,9 +24,6 @@ namespace AWBWApp.Game.UI.Editor
         [Resolved]
         private InterruptDialogueOverlay interrupt { get; set; }
 
-        [Resolved]
-        private AWBWSessionHandler sessionHandler { get; set; }
-
         private readonly NumberOnlyTextBox mapSizeXTextBox;
         private readonly NumberOnlyTextBox mapSizeYTextBox;
         private readonly TextBox mapLinkInput;
@@ -35,8 +32,9 @@ namespace AWBWApp.Game.UI.Editor
 
         private readonly TaskCompletionSource<ReplayMap> sessionIdCallback;
         private ScheduledDelegate downloadDelegate;
+        private ScheduledDelegate openDelegate;
 
-        public override bool CloseWhenParentClicked => blockingLayer.Alpha <= 0;
+        public override bool CloseWhenParentClicked => false;
 
         private const short base_tile_id = 1;
 
@@ -118,7 +116,7 @@ namespace AWBWApp.Game.UI.Editor
                                 Text = "Open Existing Map",
                                 BackgroundColour = Color4Extensions.FromHex(@"1d681e"),
                                 HoverColour = Color4Extensions.FromHex(@"1d681e").Lighten(0.2f),
-                                Action = scheduleDownload,
+                                Action = scheduleOpenMapSelect,
                                 RelativePositionAxes = Axes.X,
                                 Position = new Vector2(-0.25f, 0f)
                             },
@@ -167,6 +165,45 @@ namespace AWBWApp.Game.UI.Editor
             {
                 RelativeSizeAxes = Axes.Both
             });
+        }
+
+        private void scheduleOpenMapSelect()
+        {
+            if (openDelegate != null && !(openDelegate.Cancelled || openDelegate.Completed))
+                return;
+
+            openDelegate = Schedule(attemptOpenMapSelect);
+        }
+
+        private async void attemptOpenMapSelect()
+        {
+            try
+            {
+                blockingLayer.Show();
+
+                var completionSource = new TaskCompletionSource<ReplayMap>();
+                interrupt.Push(new FileLoadInterrupt(completionSource), false);
+
+                try
+                {
+                    await completionSource.Task.ConfigureAwait(false);
+                }
+                catch (TaskCanceledException)
+                {
+                    failed(null);
+                    return;
+                }
+
+                sessionIdCallback.TrySetResult(completionSource.Task.Result);
+                ActionInvoked();
+                Schedule(Hide);
+            }
+            catch (Exception e)
+            {
+                failed("Unknown error has occured while attempting to download the file.");
+                Logger.Error(e, e.Message);
+                return;
+            }
         }
 
         private void scheduleDownload()
@@ -283,10 +320,12 @@ namespace AWBWApp.Game.UI.Editor
 
         private void failed(string reason)
         {
-            Logger.Log("Failed to get map: " + errorText, level: LogLevel.Verbose);
+            if (reason != null)
+                Logger.Log("Failed to get map: " + errorText, level: LogLevel.Verbose);
             Schedule(() =>
             {
                 downloadDelegate = null;
+                openDelegate = null;
                 errorText.Text = reason;
                 blockingLayer.Hide();
             });
