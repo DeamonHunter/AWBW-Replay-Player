@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.IO;
 using AWBWApp.Game.UI.Select;
 using osu.Framework.Bindables;
@@ -59,6 +60,7 @@ namespace AWBWApp.Game
             SetDefault(AWBWSetting.MapSkin, MapSkin.AW2);
             SetDefault(AWBWSetting.ShowTileCursor, true);
             SetDefault(AWBWSetting.ShowAnimationsForHiddenActions, true);
+            SetDefault(AWBWSetting.SonjaHPVisiblity, SonjaHPVisibility.AlwaysVisible);
 
             SetDefault(AWBWSetting.MapGridBaseColour, new Colour4(42, 91, 139, 255).Lighten(0.2f));
             SetDefault(AWBWSetting.MapGridGridColour, new Colour4(42, 91, 139, 255).Darken(0.8f));
@@ -89,7 +91,8 @@ namespace AWBWApp.Game
         ShowTileCursor,
         ShowAnimationsForHiddenActions,
         MapGridBaseColour,
-        MapGridGridColour
+        MapGridGridColour,
+        SonjaHPVisiblity
     }
 
     public enum MapSkin

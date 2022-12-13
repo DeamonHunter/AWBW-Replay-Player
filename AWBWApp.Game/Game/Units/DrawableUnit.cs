@@ -43,6 +43,21 @@ namespace AWBWApp.Game.Game.Units
             }
         }
 
+        private bool hideHP;
+
+        public bool HideHP
+        {
+            get => hideHP;
+            set
+            {
+                if (hideHP == value)
+                    return;
+
+                hideHP = value;
+                updateHp();
+            }
+        }
+
         private bool unitAnimatingIn;
 
         public BindableInt HealthPoints = new BindableInt();
@@ -109,7 +124,7 @@ namespace AWBWApp.Game.Game.Units
             MovementRange.Value = unitData.MovementRange;
             AttackRange.Value = unitData.AttackRange;
 
-            HealthPoints.BindValueChanged(updateHp, true);
+            HealthPoints.BindValueChanged(x => updateHp(), true);
             BeingCarried.BindValueChanged(x => updateUnitColour(x.NewValue));
             unitFaceDirection?.BindValueChanged(x => spriteContainer.UpdateFaceDirection(x.NewValue, this.country.Value), true);
             movementState = new Bindable<MovementState>();
@@ -263,9 +278,15 @@ namespace AWBWApp.Game.Game.Units
             return MovementState.Idle;
         }
 
-        private void updateHp(ValueChangedEvent<int> healthPoints)
+        private void updateHp()
         {
-            healthSpriteText.Text = healthPoints.NewValue >= 10 ? "" : healthPoints.NewValue.ToString();
+            if (HideHP)
+            {
+                healthSpriteText.Text = "?";
+                return;
+            }
+
+            healthSpriteText.Text = HealthPoints.Value >= 10 ? "" : HealthPoints.ToString();
         }
 
         private void updateStatIndicators(bool unitRevealed)

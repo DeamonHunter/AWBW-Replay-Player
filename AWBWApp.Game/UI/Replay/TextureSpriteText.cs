@@ -79,6 +79,10 @@ namespace AWBWApp.Game.UI.Replay
                         texture = textureStore.Get($"{path}/Space");
                         break;
 
+                    case '?':
+                        texture = textureStore.Get($"{path}/Question");
+                        break;
+
                     default:
                         texture = textureStore.Get($"{path}/{character}");
                         break;
