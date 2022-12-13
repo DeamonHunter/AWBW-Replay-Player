@@ -26,7 +26,7 @@ namespace AWBWApp.Game.UI.Editor
         private Action<string> onFileSelected;
         private readonly TextFlowContainer errorText;
 
-        private FileSelector fileSelector;
+        private ReplayMapFileSelector fileSelector;
         private BasicTextBox fileNameTextBox;
 
         public FileSaveInterrupt(string lastFile, Action<string> onFileSelected)
@@ -143,6 +143,7 @@ namespace AWBWApp.Game.UI.Editor
             };
 
             fileSelector.CurrentFile.BindValueChanged(x => onDirectoryFileClicked(x.NewValue));
+            fileNameTextBox.Current.BindValueChanged(x => onTextFieldChange(x.NewValue), true);
             Show();
         }
 
@@ -152,6 +153,11 @@ namespace AWBWApp.Game.UI.Editor
                 return;
 
             fileNameTextBox.Text = info.Name;
+        }
+
+        private void onTextFieldChange(string newValue)
+        {
+            fileSelector.SetSelectionToFile(newValue);
         }
 
         private void checkFileThenSend()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -12,9 +13,38 @@ namespace AWBWApp.Game.UI.Editor.Components
 {
     public partial class ReplayMapFileSelector : FileSelector
     {
+        private ICollection<DirectorySelectorItem> currentItems;
+        private StatefulDirectoryListingFile lastSelectedItem;
+        private string lastFileName;
+
         public ReplayMapFileSelector(string initialFile)
             : base(initialFile ?? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), new[] { ".json" })
         {
+        }
+
+        public void SetSelectionToFile(string fileName)
+        {
+            lastFileName = fileName;
+            if (currentItems == null)
+                return;
+
+            bool found = false;
+
+            foreach (var item in currentItems)
+            {
+                if (item is StatefulDirectoryListingFile listing)
+                {
+                    if (listing.HasFilename(fileName))
+                    {
+                        UpdateSelection(listing);
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!found)
+                UpdateSelection(null);
         }
 
         protected override DirectorySelectorBreadcrumbDisplay CreateBreadcrumb() => new BasicDirectorySelectorBreadcrumbDisplay();
@@ -33,14 +63,38 @@ namespace AWBWApp.Game.UI.Editor.Components
 
         protected override ScrollContainer<Drawable> CreateScrollContainer() => new BasicScrollContainer();
 
-        protected override DirectoryListingFile CreateFileItem(FileInfo file) => new StateFulDirectoryListingFile(file);
+        protected override DirectoryListingFile CreateFileItem(FileInfo file) => new StatefulDirectoryListingFile(file);
 
         protected override void NotifySelectionError()
         {
             this.FlashColour(Colour4.Red, 300);
         }
 
-        private partial class StateFulDirectoryListingFile : DirectoryListingFile
+        protected override bool TryGetEntriesForPath(DirectoryInfo path, out ICollection<DirectorySelectorItem> items)
+        {
+            var outcome = base.TryGetEntriesForPath(path, out items);
+            if (!outcome)
+                return false;
+
+            Schedule(() => SetSelectionToFile(lastFileName));
+            currentItems = items;
+            return true;
+        }
+
+        protected void UpdateSelection(DirectorySelectorItem newlySelectedItem)
+        {
+            lastSelectedItem?.SetSelected(false);
+
+            if (newlySelectedItem is StatefulDirectoryListingFile stateful)
+            {
+                stateful.SetSelected(true);
+                lastSelectedItem = stateful;
+            }
+            else
+                lastSelectedItem = null;
+        }
+
+        private partial class StatefulDirectoryListingFile : DirectoryListingFile
         {
             private Colour4 selectedColour = new Colour4(100, 100, 100, 255);
             private Colour4 hoverColor = new Colour4(150, 150, 150, 255);
@@ -48,10 +102,12 @@ namespace AWBWApp.Game.UI.Editor.Components
             private Box hover;
             private bool selected;
 
-            public StateFulDirectoryListingFile(FileInfo file)
+            public StatefulDirectoryListingFile(FileInfo file)
                 : base(file)
             {
             }
+
+            public bool HasFilename(string fileName) => File.Name == fileName;
 
             protected override void LoadComplete()
             {
@@ -62,8 +118,10 @@ namespace AWBWApp.Game.UI.Editor.Components
                 AddInternal(hover = new Box()
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Colour = selectedColour
+                    Colour = selectedColour,
+                    Alpha = 0
                 });
+                SetSelected(selected);
             }
 
             protected override IconUsage? Icon => FontAwesome.Regular.File;
@@ -73,6 +131,14 @@ namespace AWBWApp.Game.UI.Editor.Components
                 {
                     Font = FrameworkFont.Regular.With(size: FONT_SIZE)
                 };
+
+            public void SetSelected(bool select)
+            {
+                selected = select;
+
+                if (!IsHovered && hover != null)
+                    hover.FadeTo(selected ? 0.4f : 0f, 150);
+            }
 
             protected override bool OnHover(HoverEvent e)
             {
