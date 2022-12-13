@@ -75,6 +75,8 @@ namespace AWBWApp.Game.Game.Logic
         private IBindable<bool> skipEndTurnBindable;
         private IBindable<bool> shortenActionTooltipsBindable;
         private IBindable<bool> replayBarInPlayerList;
+        private IBindable<SonjaHPVisibility> sonjaHPVisibility;
+
         public IBindable<bool> ShowAnimationsWhenUnitsHidden;
 
         [Cached(typeof(IBindable<MapSkin>))]
@@ -202,6 +204,9 @@ namespace AWBWApp.Game.Game.Logic
             shortenActionTooltipsBindable = configManager.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips);
             showMovementArrowsBindable = configManager.GetBindable<bool>(AWBWSetting.ReplayShowMovementArrows);
             selectedMapSkin.BindTo(configManager.GetBindable<MapSkin>(AWBWSetting.MapSkin));
+
+            sonjaHPVisibility = configManager.GetBindable<SonjaHPVisibility>(AWBWSetting.SonjaHPVisiblity);
+            sonjaHPVisibility.BindValueChanged(x => UpdateFogOfWar());
 
             ShowAnimationsWhenUnitsHidden = configManager.GetBindable<bool>(AWBWSetting.ShowAnimationsForHiddenActions);
 
@@ -793,6 +798,41 @@ namespace AWBWApp.Game.Game.Logic
         {
             if (replayData == null)
                 return;
+
+            //Sonja HP Check
+            foreach (var player in Players)
+            {
+                if (!player.Value.ActiveCO.Value.CO.DayToDayPower.HiddenHP)
+                    continue;
+
+                bool hideHP;
+
+                switch (sonjaHPVisibility.Value)
+                {
+                    case SonjaHPVisibility.AlwaysVisible:
+                        hideHP = false;
+                        break;
+
+                    case SonjaHPVisibility.AlwaysHidden:
+                        hideHP = true;
+                        break;
+
+                    case SonjaHPVisibility.VisibleWithVision:
+                    {
+                        if (CurrentFogView.Value is string fogTeam)
+                            hideHP = fogTeam.IsNullOrEmpty() ? !player.Value.OnSameTeam(ActivePlayer) : player.Value.Team != fogTeam;
+                        else
+                            hideHP = player.Key != (long)CurrentFogView.Value;
+                        break;
+                    }
+
+                    default:
+                        throw new Exception("Sonja HP visibility was set to an invalid value");
+                }
+
+                foreach (var unit in Map.GetDrawableUnitsFromPlayer(player.Key))
+                    unit.HideHP = hideHP;
+            }
 
             if (!replayData.ReplayInfo.Fog)
             {

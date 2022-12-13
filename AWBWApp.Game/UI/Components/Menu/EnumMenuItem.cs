@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Localisation;
@@ -25,7 +26,7 @@ namespace AWBWApp.Game.UI.Components.Menu
                 bindable.Value = (T)x.NewValue;
             });
 
-            Items = ((T[])Enum.GetValues(typeof(T))).Select(x => new StatefulMenuItem(x.ToString(), genericBindable, x)).ToArray();
+            Items = ((T[])Enum.GetValues(typeof(T))).Select(x => new StatefulMenuItem(x.GetLocalisableDescription(), genericBindable, x)).ToArray();
         }
 
         public EnumMenuItem(LocalisableString text, Bindable<T> bindable, IEnumerable<T> options)
@@ -43,7 +44,7 @@ namespace AWBWApp.Game.UI.Components.Menu
                 bindable.Value = (T)x.NewValue;
             });
 
-            Items = options.Select(x => new StatefulMenuItem(x.ToString(), genericBindable, x)).ToArray();
+            Items = options.Select(x => new StatefulMenuItem(x.GetLocalisableDescription(), genericBindable, x)).ToArray();
         }
     }
 

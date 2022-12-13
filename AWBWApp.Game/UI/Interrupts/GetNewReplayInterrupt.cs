@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AWBWApp.Game.API;
 using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.Helpers;
 using AWBWApp.Game.IO;
 using JetBrains.Annotations;
 using osu.Framework.Allocation;
@@ -210,7 +213,7 @@ namespace AWBWApp.Game.UI.Interrupts
                         }
 
                         if (webRequest.ResponseStream.Length <= 100)
-                            throw new Exception($"Unable to find the replay of game '{gameID}'. Does the replay still exist on AWBW?");
+                            await specifyDownloadFailure(gameID);
 
                         var replayData = await replayStorage.ParseThenStoreReplayStream(gameID, webRequest.ResponseStream);
 
@@ -229,11 +232,43 @@ namespace AWBWApp.Game.UI.Interrupts
                 ActionInvoked();
                 Schedule(Hide);
             }
+            catch (ReplayNotAvailableException e)
+            {
+                failed("An error occured when finding the replay. This replay may not be possible to download.");
+                Logger.Error(e, e.Message);
+                return;
+            }
             catch (Exception e)
             {
                 failed("Unknown error has occured while attempting to download the file.");
                 Logger.Error(e, e.Message);
                 return;
+            }
+        }
+
+        private async Task specifyDownloadFailure(long gameID)
+        {
+            using (var webRequest = new WebRequest($"https://awbw.amarriner.com/2030.php?games_id={gameID}"))
+            {
+                await webRequest.PerformAsync().ConfigureAwait(false);
+
+                var response = webRequest.GetResponseString(); //This should be a html file
+                if (response.IsNullOrEmpty())
+                    throw new ReplayNotAvailableException("Did not get a response from AWBW. Internet may be down, or AWBW is down.");
+
+                if (response!.Contains("No game found with provided ID"))
+                    throw new ReplayNotAvailableException($"Could not find the game '{gameID}'. It does not exist.");
+
+                var matches = Regex.Matches(response, @"let gameEndDate = ""([\w-]*)""");
+                if (matches.Count <= 0)
+                    throw new ReplayNotAvailableException($"Found game '{gameID}' but could not download the replay due to an unknown error.");
+
+                var lastMatch = matches.Last();
+                var group = lastMatch.Groups[1];
+                if (group.Value.IsNullOrEmpty())
+                    throw new ReplayNotAvailableException($"The game '{gameID}' has not been finished and cant be downloaded.");
+
+                throw new ReplayNotAvailableException($"The game '{gameID}' is possibly too old and can no longer be downloaded.");
             }
         }
 
@@ -267,6 +302,14 @@ namespace AWBWApp.Game.UI.Interrupts
                 Margin = new MarginPadding { Top = 5 };
                 BackgroundColour = Color4Extensions.FromHex(@"150e14");
                 SpriteText.Font.With(size: 18);
+            }
+        }
+
+        private class ReplayNotAvailableException : Exception
+        {
+            public ReplayNotAvailableException(string reason)
+                : base(reason)
+            {
             }
         }
     }
