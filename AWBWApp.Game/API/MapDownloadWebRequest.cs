@@ -10,7 +10,7 @@ namespace AWBWApp.Game.API
         public ReplayMap ParsedMap;
 
         public MapDownloadWebRequest(long mapID)
-            : base($"https://awbw.amarriner.com/matsuzen/api/map/map_info.php?maps_id={mapID}")
+            : base($"https://awbw.amarriner.com/api/map/map_info.php?maps_id={mapID}")
         {
         }
 
