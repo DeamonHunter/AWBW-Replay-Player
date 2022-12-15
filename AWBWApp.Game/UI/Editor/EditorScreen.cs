@@ -17,7 +17,7 @@ using osu.Framework.Screens;
 
 namespace AWBWApp.Game.UI.Editor
 {
-    public partial class EditorScreen : EscapeableScreen
+    public partial class EditorScreen : EscapeableScreen, IKeyBindingHandler<AWBWGlobalAction>
     {
         [Cached(type: typeof(IBindable<MapSkin>))]
         private Bindable<MapSkin> MapSkin = new Bindable<MapSkin>(AWBWApp.Game.MapSkin.AW2);
@@ -34,6 +34,9 @@ namespace AWBWApp.Game.UI.Editor
         [Cached]
         private Bindable<TerrainTile> selectedTile = new Bindable<TerrainTile>();
 
+        [Cached]
+        private HistoryManager historyManager = new HistoryManager();
+
         [Resolved]
         private MainControlMenuBar menuBar { get; set; }
 
@@ -43,6 +46,8 @@ namespace AWBWApp.Game.UI.Editor
         private readonly EditorMenu menu;
 
         private string lastSaveLocation;
+
+        private const int max_message_count = 5;
 
         public EditorScreen()
         {
@@ -78,6 +83,16 @@ namespace AWBWApp.Game.UI.Editor
                     },
                     menu = new EditorMenu(),
                     infoPopup = new DetailedInformationPopup(),
+                    messageContainer = new FillFlowContainer()
+                    {
+                        Anchor = Anchor.BottomCentre,
+                        Origin = Anchor.BottomCentre,
+                        Position = new Vector2(0, -75),
+                        Direction = FillDirection.Vertical,
+                        AutoSizeAxes = Axes.Both,
+                        LayoutEasing = Easing.OutCubic,
+                        LayoutDuration = 100
+                    }
                 }
             });
 
@@ -168,6 +183,41 @@ namespace AWBWApp.Game.UI.Editor
                 return;
 
             interruptOverlay.Push(new UploadMapInterrupt(map.GenerateMap()));
+        }
+
+        public void ShowMessage(LocalisableString messageToShow)
+        {
+            if (messageContainer.Children.Count >= max_message_count)
+                messageContainer.Remove(messageContainer.Children[0], true);
+
+            messageContainer.Add(new TemporaryPopupMessage(messageToShow)
+            {
+                Anchor = Anchor.BottomCentre,
+                Origin = Anchor.BottomCentre
+            });
+        }
+
+        public bool OnPressed(KeyBindingPressEvent<AWBWGlobalAction> e)
+        {
+            if (e.Repeat)
+                return false;
+
+            switch (e.Action)
+            {
+                case AWBWGlobalAction.Undo:
+                    historyManager.Undo(this, map);
+                    return true;
+
+                case AWBWGlobalAction.Redo:
+                    historyManager.Redo(this, map);
+                    return true;
+            }
+
+            return false;
+        }
+
+        public void OnReleased(KeyBindingReleaseEvent<AWBWGlobalAction> e)
+        {
         }
     }
 }

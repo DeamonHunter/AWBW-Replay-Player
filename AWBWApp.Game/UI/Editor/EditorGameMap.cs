@@ -24,10 +24,15 @@ namespace AWBWApp.Game.UI.Editor
         [Resolved]
         private Bindable<TerrainTile> selectedTile { get; set; }
 
+        [Resolved]
+        private HistoryManager historyManager { get; set; }
+
         private EditorTileCursor editorCursor;
         private EditorTileCursor symmetryEditorCursor;
         private SymmetryLineContainer symmetryContainer;
         private Vector2 lastCursorPosition;
+
+        private TileChangeHistory tileChanges;
 
         public EditorGameMap()
             : base(null)
@@ -89,10 +94,22 @@ namespace AWBWApp.Game.UI.Editor
 
         public short GetTileIDAtPosition(Vector2I tilePosition) => tiles[tilePosition.X, tilePosition.Y];
 
-        public void ChangeTile(Vector2I position, short newTileID, short shoalTile = -1)
+        public void ChangeTile(Vector2I position, short newTileID, short shoalTile = -1, bool recordChange = true)
         {
             if (tiles[position.X, position.Y] == newTileID && (shoalTile == -1 || shoalTile == TileGrid[position.X, position.Y].TerrainTile.AWBWID))
                 return;
+            if (tileChanges != null && recordChange)
+            {
+                var tileChange = new TileChange
+                {
+                    TileBefore = tiles[position.X, position.Y],
+                    TileAfter = newTileID,
+                    AltBefore = (short)TileGrid[position.X, position.Y].TerrainTile.AWBWID,
+                    AltAfter = shoalTile
+                };
+
+                tileChanges.AddChange(position, tileChange);
+            }
 
             tiles[position.X, position.Y] = newTileID;
 
@@ -210,10 +227,21 @@ namespace AWBWApp.Game.UI.Editor
             if (e.Button != MouseButton.Left)
                 return base.OnMouseDown(e);
 
+            tileChanges = new TileChangeHistory();
             PlaceTilesBetweenPositions(e.MousePosition, e.MousePosition);
 
             lastCursorPosition = e.MousePosition;
             return true;
+        }
+
+        protected override void OnMouseUp(MouseUpEvent e)
+        {
+            if (e.Button != MouseButton.Left)
+                base.OnMouseUp(e);
+
+            if (tileChanges != null && tileChanges.HasChanges)
+                historyManager.RegisterHistory(tileChanges);
+            tileChanges = null;
         }
 
         protected override bool OnDragStart(DragStartEvent e)
