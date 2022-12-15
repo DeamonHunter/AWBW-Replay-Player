@@ -9,6 +9,9 @@
 
         ShowUnitsAndBuildingsInFog,
         ShowGridLines,
-        ShowTileCursor
+        ShowTileCursor,
+
+        Undo,
+        Redo
     }
 }

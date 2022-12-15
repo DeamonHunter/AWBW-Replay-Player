@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Editor;
+using AWBWApp.Game.Editor.History;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
@@ -23,6 +24,9 @@ namespace AWBWApp.Game.UI.Editor
 
         [Resolved]
         private Bindable<TerrainTile> selectedTile { get; set; }
+
+        [Resolved]
+        private Bindable<BuildingTile> selectedBuilding { get; set; }
 
         [Resolved]
         private HistoryManager historyManager { get; set; }
@@ -77,7 +81,17 @@ namespace AWBWApp.Game.UI.Editor
 
         protected override void UpdateTileCursor(Vector2 mousePosition)
         {
-            base.UpdateTileCursor(mousePosition);
+            //Todo: May need to hande unit deselection
+
+            if (GetUnitAndTileFromMousePosition(ToLocalSpace(mousePosition), out var tilePosition, out var tile, out var building, out var unit) && IsHovered)
+            {
+                TileCursor.TilePosition = tilePosition;
+                TileCursor.Show();
+            }
+            else
+                TileCursor.Hide();
+
+            InfoPopup.ShowDetails(selectedTile.Value, selectedBuilding.Value);
 
             //Todo: Symmetry conditions
             if (editorCursor.Alpha > 0 && symmetryContainer.SymmetryMode != SymmetryMode.None)
@@ -96,8 +110,15 @@ namespace AWBWApp.Game.UI.Editor
 
         public void ChangeTile(Vector2I position, short newTileID, short shoalTile = -1, bool recordChange = true)
         {
-            if (tiles[position.X, position.Y] == newTileID && (shoalTile == -1 || shoalTile == TileGrid[position.X, position.Y].TerrainTile.AWBWID))
-                return;
+            if (tiles[position.X, position.Y] == newTileID)
+            {
+                if (BuildingGrid.TryGet(position, out _))
+                    return; //Buildings do not have alts
+
+                if (shoalTile == -1 || shoalTile == TileGrid[position.X, position.Y].TerrainTile.AWBWID)
+                    return;
+            }
+
             if (tileChanges != null && recordChange)
             {
                 var tileChange = new TileChange
@@ -142,14 +163,16 @@ namespace AWBWApp.Game.UI.Editor
         {
             foreach (var tilePosition in getValidTilesBetweenCursorPoints(lastMousePosition, currentMousePosition))
             {
-                ChangeTile(tilePosition, (short)selectedTile.Value.AWBWID);
+                var id = selectedBuilding.Value?.AWBWID ?? selectedTile.Value.AWBWID;
+
+                ChangeTile(tilePosition, (short)id);
 
                 if (symmetryContainer.SymmetryMode != SymmetryMode.None)
                 {
                     var newTile = SymmetryHelper.GetSymmetricalTile(new Vector2I(tilePosition.X * 2, tilePosition.Y * 2), symmetryContainer.SymmetryCenter, symmetryContainer.SymmetryDirection, symmetryContainer.SymmetryMode);
                     newTile = new Vector2I(newTile.X / 2, newTile.Y / 2);
                     if (isTilePositionInBounds(newTile))
-                        ChangeTile(newTile, (short)selectedTile.Value.AWBWID);
+                        ChangeTile(newTile, (short)id);
                 }
             }
         }
@@ -228,6 +251,7 @@ namespace AWBWApp.Game.UI.Editor
                 return base.OnMouseDown(e);
 
             tileChanges = new TileChangeHistory();
+
             PlaceTilesBetweenPositions(e.MousePosition, e.MousePosition);
 
             lastCursorPosition = e.MousePosition;

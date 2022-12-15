@@ -18,6 +18,9 @@ namespace AWBWApp.Game.UI.Editor
         private EditorDetachedDropdown<SymmetryDirection> symmetryDirectionDropdown;
         private DropdownHeader symmetryDirectionHeader;
 
+        [Cached]
+        private EditorHotbar hotbar;
+
         public EditorMenu()
         {
             RelativeSizeAxes = Axes.Both; //Todo: Do we need to set size?
@@ -39,11 +42,17 @@ namespace AWBWApp.Game.UI.Editor
 
             Children = new Drawable[]
             {
-                new EditorHotbar()
+                hotbar = new EditorHotbar()
                 {
                     Anchor = Anchor.BottomCentre,
                     Origin = Anchor.BottomCentre,
                     Position = new Vector2(0, -10),
+                },
+                new EditorSidebar()
+                {
+                    Anchor = Anchor.CentreLeft,
+                    Origin = Anchor.CentreLeft,
+                    Position = new Vector2(10, 0),
                 },
                 new Container()
                 {

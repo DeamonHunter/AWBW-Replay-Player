@@ -1,4 +1,5 @@
-﻿using AWBWApp.Game.Game.Logic;
+﻿using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Replay;
@@ -19,7 +20,10 @@ namespace AWBWApp.Game.UI.Editor
         private IBindable<MapSkin> currentSkin { get; set; }
 
         [Resolved]
-        private Bindable<TerrainTile> currentTile { get; set; }
+        private Bindable<TerrainTile> selectedTile { get; set; }
+
+        [Resolved]
+        private Bindable<BuildingTile> selectedBuilding { get; set; }
 
         private Sprite tileCursorSprite;
 
@@ -46,21 +50,27 @@ namespace AWBWApp.Game.UI.Editor
         {
             base.LoadComplete();
             currentSkin.BindValueChanged(_ => updateVisual());
-            currentTile.BindValueChanged(_ => updateVisual());
+            selectedTile.BindValueChanged(_ => updateVisual());
+            selectedBuilding.BindValueChanged(_ => updateVisual());
             updateVisual();
         }
 
         private void updateVisual()
         {
-            if (currentTile.Value == null)
+            if (selectedBuilding.Value != null)
             {
-                tileCursorSprite.Hide();
-                return;
+                tileCursorSprite.Show();
+                tileCursorSprite.Texture = textureStore.Get($"Map/{currentSkin.Value}/{selectedBuilding.Value.Textures[WeatherType.Clear]}-0");
+                tileCursorSprite.Size = tileCursorSprite.Texture.Size;
             }
-
-            tileCursorSprite.Show();
-            tileCursorSprite.Texture = textureStore.Get($"Map/{currentSkin.Value}/{currentTile.Value.Textures[WeatherType.Clear]}");
-            tileCursorSprite.Size = tileCursorSprite.Texture.Size;
+            else if (selectedTile.Value != null)
+            {
+                tileCursorSprite.Show();
+                tileCursorSprite.Texture = textureStore.Get($"Map/{currentSkin.Value}/{selectedTile.Value.Textures[WeatherType.Clear]}");
+                tileCursorSprite.Size = tileCursorSprite.Texture.Size;
+            }
+            else
+                tileCursorSprite.Hide();
         }
     }
 }

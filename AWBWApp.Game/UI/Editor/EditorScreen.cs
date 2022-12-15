@@ -2,18 +2,27 @@
 using System.Threading.Tasks;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Editor;
+using AWBWApp.Game.Editor.History;
+using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.Input;
 using AWBWApp.Game.IO;
 using AWBWApp.Game.UI.Components;
+using AWBWApp.Game.UI.Editor.Components;
 using AWBWApp.Game.UI.Replay;
 using AWBWApp.Game.UI.Toolbar;
 using Newtonsoft.Json;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Input.Bindings;
+using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
 using osu.Framework.Screens;
+using osuTK;
 
 namespace AWBWApp.Game.UI.Editor
 {
@@ -35,6 +44,9 @@ namespace AWBWApp.Game.UI.Editor
         private Bindable<TerrainTile> selectedTile = new Bindable<TerrainTile>();
 
         [Cached]
+        private Bindable<BuildingTile> selectedBuilding = new Bindable<BuildingTile>();
+
+        [Cached]
         private HistoryManager historyManager = new HistoryManager();
 
         [Resolved]
@@ -44,6 +56,7 @@ namespace AWBWApp.Game.UI.Editor
         private readonly DetailedInformationPopup infoPopup;
         private readonly EditorGameMap map;
         private readonly EditorMenu menu;
+        private readonly FillFlowContainer messageContainer;
 
         private string lastSaveLocation;
 

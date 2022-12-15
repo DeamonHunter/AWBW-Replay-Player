@@ -56,7 +56,7 @@ namespace AWBWApp.Game.Game.Logic
         protected Dictionary<long, DrawableUnit> Units;
 
         private readonly UnitRangeIndicator rangeIndicator;
-        private TileCursor tileCursor;
+        protected TileCursor TileCursor;
 
         private FogOfWarGenerator fogOfWarGenerator;
 
@@ -75,7 +75,7 @@ namespace AWBWApp.Game.Game.Logic
         private Bindable<bool> showGridlines;
         private Bindable<bool> showTileCursor;
 
-        private DetailedInformationPopup infoPopup;
+        protected DetailedInformationPopup InfoPopup;
 
         private const int unit_deselect_delay = 500;
         private ScheduledDelegate unitDeselectDelegate;
@@ -107,7 +107,7 @@ namespace AWBWApp.Game.Game.Logic
                     GridColor = new Color4(15, 15, 15, 255),
                 },
                 UnitsDrawable = new Container<DrawableUnit>(),
-                tileCursor = CreateTileCursor(),
+                TileCursor = CreateTileCursor(),
                 rangeIndicator = new UnitRangeIndicator(),
                 effectAnimationController = new EffectAnimationController
                 {
@@ -204,7 +204,7 @@ namespace AWBWApp.Game.Game.Logic
 
         public void SetInfoPopup(DetailedInformationPopup popup)
         {
-            infoPopup = popup;
+            InfoPopup = popup;
         }
 
         public void SetToInitialGameState(ReplayData gameState, ReplayMap map)
@@ -367,18 +367,18 @@ namespace AWBWApp.Game.Game.Logic
         {
             if (GetUnitAndTileFromMousePosition(ToLocalSpace(mousePosition), out var tilePosition, out var tile, out var building, out var unit) && IsHovered)
             {
-                infoPopup.ShowDetails(tile, building, unit);
+                InfoPopup.ShowDetails(tile, building, unit);
 
-                tileCursor.TilePosition = tilePosition;
+                TileCursor.TilePosition = tilePosition;
                 if (showTileCursor.Value)
-                    tileCursor.Show();
+                    TileCursor.Show();
                 else
-                    tileCursor.Hide();
+                    TileCursor.Hide();
             }
             else
             {
-                infoPopup.ShowDetails(null, null, null);
-                tileCursor.Hide();
+                InfoPopup.ShowDetails(null, null, null);
+                TileCursor.Hide();
             }
 
             if (unit != selectedUnit)

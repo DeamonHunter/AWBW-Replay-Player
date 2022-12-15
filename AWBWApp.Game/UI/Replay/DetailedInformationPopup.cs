@@ -104,7 +104,7 @@ namespace AWBWApp.Game.UI.Replay
             }
             else if (tile != null)
             {
-                terrainPopup.BindTo(tile);
+                terrainPopup.BindTo(tile.TerrainTile);
                 buildingPopup.Reset();
             }
             else
@@ -119,12 +119,33 @@ namespace AWBWApp.Game.UI.Replay
                 unitPopup.Reset();
         }
 
+        public void ShowDetails(TerrainTile tile, BuildingTile building)
+        {
+            if (building != null)
+            {
+                buildingPopup.BindTo(building);
+                terrainPopup.Reset();
+            }
+            else if (tile != null)
+            {
+                terrainPopup.BindTo(tile);
+                buildingPopup.Reset();
+            }
+            else
+            {
+                terrainPopup.Reset();
+                buildingPopup.Reset();
+            }
+
+            unitPopup.Reset();
+        }
+
         private partial class TerrainPopup : Container
         {
             private Sprite terrainSprite;
             private StatContainer terrainStarCounter;
 
-            private DrawableTile boundToTile;
+            private TerrainTile boundToData;
 
             [Resolved]
             private NearestNeighbourTextureStore textureStore { get; set; }
@@ -173,24 +194,24 @@ namespace AWBWApp.Game.UI.Replay
                 };
             }
 
-            public void BindTo(DrawableTile tile)
+            public void BindTo(TerrainTile tile)
             {
-                if (tile == boundToTile)
+                if (tile == boundToData)
                     return;
 
-                boundToTile = tile;
+                boundToData = tile;
 
-                terrainSprite.Texture = textureStore.Get($"Map/{currentSkin.Value}/{tile.TerrainTile.Textures[WeatherType.Clear]}");
+                terrainSprite.Texture = textureStore.Get($"Map/{currentSkin.Value}/{boundToData.Textures[WeatherType.Clear]}");
                 terrainSprite.Size = terrainSprite.Texture.Size * 2;
                 Show();
-                terrainStarCounter.SetTo(tile.TerrainTile.BaseDefence);
+                terrainStarCounter.SetTo(boundToData.BaseDefence);
             }
 
             public void Reset()
             {
                 Hide();
                 terrainStarCounter.SetTo(0);
-                boundToTile = null;
+                boundToData = null;
             }
         }
 
@@ -201,6 +222,7 @@ namespace AWBWApp.Game.UI.Replay
             private StatContainer buildingHPCounter;
 
             private DrawableBuilding boundToBuilding;
+            private BuildingTile boundToData;
 
             [Resolved]
             private BuildingStorage buildingStorage { get; set; }
@@ -253,14 +275,27 @@ namespace AWBWApp.Game.UI.Replay
                     return;
 
                 boundToBuilding = building;
+                boundToData = building.BuildingTile;
+                setup();
+            }
 
-                var drawnBuiilding = building.BuildingTile;
+            public void BindTo(BuildingTile buildingData)
+            {
+                if (buildingData == boundToData)
+                    return;
 
-                if (drawnBuiilding.CountryID != -1)
+                boundToBuilding = null;
+                boundToData = buildingData;
+                setup();
+            }
+
+            private void setup()
+            {
+                if (boundToData.CountryID != -1)
                 {
-                    var country = building.GetCurrentCountry();
+                    var country = boundToBuilding?.GetCurrentCountry();
                     if (country != null)
-                        drawnBuiilding = buildingStorage.GetBuildingByTypeAndCountry(drawnBuiilding.BuildingType, country.AWBWID);
+                        boundToData = buildingStorage.GetBuildingByTypeAndCountry(boundToData.BuildingType, country.AWBWID);
                 }
 
                 var unitSprite = new TextureAnimation()
@@ -270,21 +305,25 @@ namespace AWBWApp.Game.UI.Replay
                 };
                 spriteContainer.Child = unitSprite;
 
-                var firstTexture = textureStore.Get($"Map/{currentSkin.Value}/{drawnBuiilding.Textures[WeatherType.Clear]}-0");
+                var firstTexture = textureStore.Get($"Map/{currentSkin.Value}/{boundToData.Textures[WeatherType.Clear]}-0");
                 unitSprite.Size = firstTexture.Size * 2;
 
-                if (drawnBuiilding.Frames != null)
+                if (boundToData.Frames != null)
                 {
-                    unitSprite.AddFrame(firstTexture, drawnBuiilding.Frames[0]);
-                    for (int i = 1; i < drawnBuiilding.Frames.Length; i++)
-                        unitSprite.AddFrame(textureStore.Get($"Map/{currentSkin.Value}/{drawnBuiilding.Textures[WeatherType.Clear]}-{i}"), drawnBuiilding.Frames[i]);
+                    unitSprite.AddFrame(firstTexture, boundToData.Frames[0]);
+                    for (int i = 1; i < boundToData.Frames.Length; i++)
+                        unitSprite.AddFrame(textureStore.Get($"Map/{currentSkin.Value}/{boundToData.Textures[WeatherType.Clear]}-{i}"), boundToData.Frames[i]);
                 }
                 else
                     unitSprite.AddFrame(firstTexture);
 
                 Show();
-                terrainStarCounter.SetTo(building.BuildingTile.BaseDefence);
-                buildingHPCounter.BindTo(building.CaptureHealth);
+                terrainStarCounter.SetTo(boundToData.BaseDefence);
+
+                if (boundToBuilding != null)
+                    buildingHPCounter.BindTo(boundToBuilding?.CaptureHealth);
+                else
+                    buildingHPCounter.SetTo(20);
             }
 
             public void Reset()
