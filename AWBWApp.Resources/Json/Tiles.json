@@ -83,7 +83,8 @@
             "Clear": "River/H",
             "Rain": "River/H_Rain",
             "Snow": "River/H_Snow"
-        }
+        },
+        "SymmetryMirror": [4, 5, 4, 5]
     },
     "VRiver": {
         "AWBWID": 5,
@@ -99,7 +100,8 @@
             "Clear": "River/V",
             "Rain": "River/V_Rain",
             "Snow": "River/V_Snow"
-        }
+        },
+        "SymmetryMirror": [5, 4, 5, 4]
     },
     "CRiver": {
         "AWBWID": 6,
@@ -131,7 +133,9 @@
             "Clear": "River/ES",
             "Rain": "River/ES_Rain",
             "Snow": "River/ES_Snow"
-        }
+        },
+        "SymmetryMirror": [8, 9, 10, 7],
+        "SymmetryRotated": [9, 9, 9, 9]
     },
     "SWRiver": {
         "AWBWID": 8,
@@ -147,7 +151,9 @@
             "Clear": "River/SW",
             "Rain": "River/SW_Rain",
             "Snow": "River/SW_Snow"
-        }
+        },
+        "SymmetryMirror": [7, 8, 9, 10],
+        "SymmetryRotated": [10, 10, 10, 10]
     },
     "WNRiver": {
         "AWBWID": 9,
@@ -163,7 +169,9 @@
             "Clear": "River/WN",
             "Rain": "River/WN_Rain",
             "Snow": "River/WN_Snow"
-        }
+        },
+        "SymmetryMirror": [10, 7, 8, 9],
+        "SymmetryRotated": [7, 7, 7, 7]
     },
     "NERiver": {
         "AWBWID": 10,
@@ -179,7 +187,9 @@
             "Clear": "River/NE",
             "Rain": "River/NE_Rain",
             "Snow": "River/NE_Snow"
-        }
+        },
+        "SymmetryMirror": [9, 10, 7, 8],
+        "SymmetryRotated": [8, 8, 8, 8]
     },
     "ESWRiver": {
         "AWBWID": 11,
@@ -195,7 +205,9 @@
             "Clear": "River/ESW",
             "Rain": "River/ESW_Rain",
             "Snow": "River/ESW_Snow"
-        }
+        },
+        "SymmetryMirror": [11, 12, 13, 14],
+        "SymmetryRotated": [13, 13, 13, 13]
     },
     "SWNRiver": {
         "AWBWID": 12,
@@ -211,7 +223,9 @@
             "Clear": "River/SWN",
             "Rain": "River/SWN_Rain",
             "Snow": "River/SWN_Snow"
-        }
+        },
+        "SymmetryMirror": [14, 11, 12, 13],
+        "SymmetryRotated": [14, 14, 14, 14]
     },
     "WNERiver": {
         "AWBWID": 13,
@@ -227,7 +241,9 @@
             "Clear": "River/WNE",
             "Rain": "River/WNE_Rain",
             "Snow": "River/WNE_Snow"
-        }
+        },
+        "SymmetryMirror": [13, 14, 11, 12],
+        "SymmetryRotated": [11, 11, 11, 11]
     },
     "NESRiver": {
         "AWBWID": 14,
@@ -243,7 +259,9 @@
             "Clear": "River/NES",
             "Rain": "River/NES_Rain",
             "Snow": "River/NES_Snow"
-        }
+        },
+        "SymmetryMirror": [12, 13, 14, 11],
+        "SymmetryRotated": [12, 12, 12, 12]
     },
     "HRoad": {
         "AWBWID": 15,
@@ -261,7 +279,8 @@
             "Clear": "Road/H",
             "Rain": "Road/H_Rain",
             "Snow": "Road/H_Snow"
-        }
+        },
+        "SymmetryMirror": [15, 16, 15, 16]
     },
     "VRoad": {
         "AWBWID": 16,
@@ -279,7 +298,8 @@
             "Clear": "Road/V",
             "Rain": "Road/V_Rain",
             "Snow": "Road/V_Snow"
-        }
+        },
+        "SymmetryMirror": [16, 15, 16, 15]
     },
     "CRoad": {
         "AWBWID": 17,
@@ -315,7 +335,9 @@
             "Clear": "Road/ES",
             "Rain": "Road/ES_Rain",
             "Snow": "Road/ES_Snow"
-        }
+        },
+        "SymmetryMirror": [19, 20, 21, 18],
+        "SymmetryRotated": [20, 20, 20, 20]
     },
     "SWRoad": {
         "AWBWID": 19,
@@ -333,7 +355,9 @@
             "Clear": "Road/SW",
             "Rain": "Road/SW_Rain",
             "Snow": "Road/SW_Snow"
-        }
+        },
+        "SymmetryMirror": [18, 19, 20, 21],
+        "SymmetryRotated": [21, 21, 21, 21]
     },
     "WNRoad": {
         "AWBWID": 20,
@@ -351,7 +375,9 @@
             "Clear": "Road/WN",
             "Rain": "Road/WN_Rain",
             "Snow": "Road/WN_Snow"
-        }
+        },
+        "SymmetryMirror": [21, 18, 19, 20],
+        "SymmetryRotated": [18, 18, 18, 18]
     },
     "NERoad": {
         "AWBWID": 21,
@@ -369,7 +395,9 @@
             "Clear": "Road/NE",
             "Rain": "Road/NE_Rain",
             "Snow": "Road/NE_Snow"
-        }
+        },
+        "SymmetryMirror": [20, 21, 18, 19],
+        "SymmetryRotated": [19, 19, 19, 19]
     },
     "ESWRoad": {
         "AWBWID": 22,
@@ -387,7 +415,9 @@
             "Clear": "Road/ESW",
             "Rain": "Road/ESW_Rain",
             "Snow": "Road/ESW_Snow"
-        }
+        },
+        "SymmetryMirror": [22, 23, 24, 25],
+        "SymmetryRotated": [24, 24, 24, 24]
     },
     "SWNRoad": {
         "AWBWID": 23,
@@ -405,7 +435,9 @@
             "Clear": "Road/SWN",
             "Rain": "Road/SWN_Rain",
             "Snow": "Road/SWN_Snow"
-        }
+        },
+        "SymmetryMirror": [25, 22, 23, 24],
+        "SymmetryRotated": [25, 25, 25, 25]
     },
     "WNERoad": {
         "AWBWID": 24,
@@ -423,7 +455,9 @@
             "Clear": "Road/WNE",
             "Rain": "Road/WNE_Rain",
             "Snow": "Road/WNE_Snow"
-        }
+        },
+        "SymmetryMirror": [24, 25, 22, 23],
+        "SymmetryRotated": [22, 22, 22, 22]
     },
     "NESRoad": {
         "AWBWID": 25,
@@ -441,7 +475,9 @@
             "Clear": "Road/NES",
             "Rain": "Road/NES_Rain",
             "Snow": "Road/NES_Snow"
-        }
+        },
+        "SymmetryMirror": [23, 24, 25, 22],
+        "SymmetryRotated": [23, 23, 23, 23]
     },
     "HBridge": {
         "AWBWID": 26,
@@ -459,7 +495,8 @@
             "Clear": "Road/HBridge",
             "Rain": "Road/HBridge_Rain",
             "Snow": "Road/HBridge_Snow"
-        }
+        },
+        "SymmetryMirror": [26, 27, 26, 27]
     },
     "VBridge": {
         "AWBWID": 27,
@@ -477,7 +514,8 @@
             "Clear": "Road/VBridge",
             "Rain": "Road/VBridge_Rain",
             "Snow": "Road/VBridge_Snow"
-        }
+        },
+        "SymmetryMirror": [27, 26, 27, 26]
     },
     "Sea": {
         "AWBWID": 28,
@@ -588,7 +626,8 @@
             "Clear": "Pipe/V",
             "Rain": "Pipe/V_Rain",
             "Snow": "Pipe/V_Snow"
-        }
+        },
+        "SymmetryMirror": [101, 102, 101, 102]
     },
     "HPipe": {
         "AWBWID": 102,
@@ -602,7 +641,8 @@
             "Clear": "Pipe/H",
             "Rain": "Pipe/H_Rain",
             "Snow": "Pipe/H_Snow"
-        }
+        },
+        "SymmetryMirror": [102, 101, 102, 101]
     },
     "NEPipe": {
         "AWBWID": 103,
@@ -616,7 +656,9 @@
             "Clear": "Pipe/NE",
             "Rain": "Pipe/NE_Rain",
             "Snow": "Pipe/NE_Snow"
-        }
+        },
+        "SymmetryMirror": [106, 103, 104, 105],
+        "SymmetryRotated": [105, 105, 105, 105]
     },
     "ESPipe": {
         "AWBWID": 104,
@@ -630,7 +672,9 @@
             "Clear": "Pipe/ES",
             "Rain": "Pipe/ES_Rain",
             "Snow": "Pipe/ES_Snow"
-        }
+        },
+        "SymmetryMirror": [105, 106, 103, 104],
+        "SymmetryRotated": [106, 106, 106, 106]
     },
     "SWPipe": {
         "AWBWID": 105,
@@ -644,7 +688,9 @@
             "Clear": "Pipe/SW",
             "Rain": "Pipe/SW_Rain",
             "Snow": "Pipe/SW_Snow"
-        }
+        },
+        "SymmetryMirror": [104, 105, 106, 103],
+        "SymmetryRotated": [103, 103, 103, 103]
     },
     "WNPipe": {
         "AWBWID": 106,
@@ -658,7 +704,9 @@
             "Clear": "Pipe/WN",
             "Rain": "Pipe/WN_Rain",
             "Snow": "Pipe/WN_Snow"
-        }
+        },
+        "SymmetryMirror": [103, 104, 105, 106],
+        "SymmetryRotated": [104, 104, 104, 104]
     },
     "NPipe End": {
         "AWBWID": 107,
@@ -672,7 +720,9 @@
             "Clear": "Pipe/NEnd",
             "Rain": "Pipe/NEnd_Rain",
             "Snow": "Pipe/NEnd_Snow"
-        }
+        },
+        "SymmetryMirror": [107, 108, 109, 110],
+        "SymmetryRotated": [109, 109, 109, 109]
     },
     "EPipe End": {
         "AWBWID": 108,
@@ -686,7 +736,9 @@
             "Clear": "Pipe/EEnd",
             "Rain": "Pipe/EEnd_Rain",
             "Snow": "Pipe/EEnd_Snow"
-        }
+        },
+        "SymmetryMirror": [110, 107, 108, 109],
+        "SymmetryRotated": [110, 110, 110, 110]
     },
     "SPipe End": {
         "AWBWID": 109,
@@ -700,7 +752,9 @@
             "Clear": "Pipe/SEnd",
             "Rain": "Pipe/SEnd_Rain",
             "Snow": "Pipe/SEnd_Snow"
-        }
+        },
+        "SymmetryMirror": [109, 110, 107, 108],
+        "SymmetryRotated": [107, 107, 107, 107]
     },
     "WPipe End": {
         "AWBWID": 110,
@@ -714,7 +768,9 @@
             "Clear": "Pipe/WEnd",
             "Rain": "Pipe/WEnd_Rain",
             "Snow": "Pipe/WEnd_Snow"
-        }
+        },
+        "SymmetryMirror": [108, 109, 110, 107],
+        "SymmetryRotated": [108, 108, 108, 108]
     },
     "Missile Silo Empty": {
         "AWBWID": 112,
@@ -750,7 +806,8 @@
             "Clear": "Neutral/HRubble-0",
             "Rain": "Neutral/HRubble_Rain-0",
             "Snow": "Neutral/HRubble_Snow-0"
-        }
+        },
+        "SymmetryMirror": [115, 116, 115, 116]
     },
     "VPipe Rubble": {
         "AWBWID": 116,
@@ -768,7 +825,8 @@
             "Clear": "Neutral/VRubble-0",
             "Rain": "Neutral/VRubble_Rain-0",
             "Snow": "Neutral/VRubble_Snow-0"
-        }
+        },
+        "SymmetryMirror": [116, 115, 116, 115]
     },
 
     //Custom Sea Tiles

@@ -21,6 +21,10 @@ namespace AWBWApp.Game.Game.Tile
         public string Colour { get; set; }
 
         public TerrainType TerrainType { get; set; }
+
+        public int[] SymmetryMirror { get; set; }
+
+        public int[] SymmetryRotated { get; set; }
     }
 
     [Flags]

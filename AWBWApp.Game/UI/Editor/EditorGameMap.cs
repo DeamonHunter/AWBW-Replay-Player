@@ -42,7 +42,7 @@ namespace AWBWApp.Game.UI.Editor
             : base(null)
         {
             Add(symmetryContainer = new SymmetryLineContainer());
-            Add(symmetryEditorCursor = new EditorTileCursor() { Alpha = 0 });
+            Add(symmetryEditorCursor = new EditorTileCursor(true) { Alpha = 0 });
         }
 
         public void SetMap(ReplayMap map)
@@ -77,7 +77,7 @@ namespace AWBWApp.Game.UI.Editor
             MapSize = newMapSize;
         }
 
-        public override TileCursor CreateTileCursor() => editorCursor = new EditorTileCursor() { Alpha = 0 };
+        public override TileCursor CreateTileCursor() => editorCursor = new EditorTileCursor(false) { Alpha = 0 };
 
         protected override void UpdateTileCursor(Vector2 mousePosition)
         {
@@ -179,15 +179,23 @@ namespace AWBWApp.Game.UI.Editor
             {
                 var id = selectedBuilding.Value?.AWBWID ?? selectedTile.Value.AWBWID;
 
-                ChangeTile(tilePosition, (short)id);
-
+                //Symmetry first to make sure the current cursor has priority over the symmetry cursor
                 if (symmetryContainer.SymmetryMode != SymmetryMode.None)
                 {
                     var newTile = SymmetryHelper.GetSymmetricalTile(new Vector2I(tilePosition.X * 2, tilePosition.Y * 2), symmetryContainer.SymmetryCenter, symmetryContainer.SymmetryDirection, symmetryContainer.SymmetryMode);
                     newTile = new Vector2I(newTile.X / 2, newTile.Y / 2);
+
+                    int newTileID;
+                    if (selectedBuilding.Value != null)
+                        newTileID = SymmetryHelper.GetBuildingTileForSymmetry(selectedBuilding.Value, symmetryContainer.SymmetryMode, symmetryContainer.SymmetryDirection);
+                    else
+                        newTileID = SymmetryHelper.GetTerrainTileForSymmetry(selectedTile.Value, symmetryContainer.SymmetryMode, symmetryContainer.SymmetryDirection);
+
                     if (isTilePositionInBounds(newTile))
-                        ChangeTile(newTile, (short)id);
+                        ChangeTile(newTile, (short)newTileID);
                 }
+
+                ChangeTile(tilePosition, (short)id);
             }
         }
 

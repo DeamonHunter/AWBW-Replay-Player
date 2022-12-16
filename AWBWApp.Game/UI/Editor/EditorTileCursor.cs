@@ -1,4 +1,5 @@
-﻿using AWBWApp.Game.Game.Building;
+﻿using AWBWApp.Game.Editor;
+using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
@@ -25,10 +26,25 @@ namespace AWBWApp.Game.UI.Editor
         [Resolved]
         private Bindable<BuildingTile> selectedBuilding { get; set; }
 
-        private Sprite tileCursorSprite;
+        [Resolved]
+        private Bindable<SymmetryMode> symmetryMode { get; set; }
 
-        public EditorTileCursor()
+        [Resolved]
+        private Bindable<SymmetryDirection> symmetryDirection { get; set; }
+
+        [Resolved]
+        private TerrainTileStorage tileStorage { get; set; }
+
+        [Resolved]
+        private BuildingStorage buildingStorage { get; set; }
+
+        private readonly Sprite tileCursorSprite;
+        private readonly bool showSymmetry;
+
+        public EditorTileCursor(bool showSymmetry)
         {
+            this.showSymmetry = showSymmetry;
+
             InternalChildren = new Drawable[]
             {
                 tileCursorSprite = new Sprite()
@@ -52,6 +68,8 @@ namespace AWBWApp.Game.UI.Editor
             currentSkin.BindValueChanged(_ => updateVisual());
             selectedTile.BindValueChanged(_ => updateVisual());
             selectedBuilding.BindValueChanged(_ => updateVisual());
+            symmetryMode.BindValueChanged(_ => updateVisual());
+            symmetryDirection.BindValueChanged(_ => updateVisual());
             updateVisual();
         }
 
@@ -59,14 +77,33 @@ namespace AWBWApp.Game.UI.Editor
         {
             if (selectedBuilding.Value != null)
             {
+                var building = selectedBuilding.Value;
+
+                if (showSymmetry)
+                {
+                    var symmetricalTile = SymmetryHelper.GetBuildingTileForSymmetry(building, symmetryMode.Value, symmetryDirection.Value);
+                    if (building.AWBWID != symmetricalTile)
+                        building = buildingStorage.GetBuildingByAWBWId(symmetricalTile);
+                }
+
                 tileCursorSprite.Show();
-                tileCursorSprite.Texture = textureStore.Get($"Map/{currentSkin.Value}/{selectedBuilding.Value.Textures[WeatherType.Clear]}-0");
+                tileCursorSprite.Texture = textureStore.Get($"Map/{currentSkin.Value}/{building.Textures[WeatherType.Clear]}-0");
                 tileCursorSprite.Size = tileCursorSprite.Texture.Size;
             }
             else if (selectedTile.Value != null)
             {
                 tileCursorSprite.Show();
-                tileCursorSprite.Texture = textureStore.Get($"Map/{currentSkin.Value}/{selectedTile.Value.Textures[WeatherType.Clear]}");
+
+                var tile = selectedTile.Value;
+
+                if (showSymmetry)
+                {
+                    var symmetricalTile = SymmetryHelper.GetTerrainTileForSymmetry(tile, symmetryMode.Value, symmetryDirection.Value);
+                    if (tile.AWBWID != symmetricalTile)
+                        tile = tileStorage.GetTileByAWBWId(symmetricalTile);
+                }
+
+                tileCursorSprite.Texture = textureStore.Get($"Map/{currentSkin.Value}/{tile.Textures[WeatherType.Clear]}");
                 tileCursorSprite.Size = tileCursorSprite.Texture.Size;
             }
             else

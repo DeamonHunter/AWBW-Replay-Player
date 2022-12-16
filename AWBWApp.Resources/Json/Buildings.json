@@ -142,7 +142,8 @@
             "Clear": "Neutral/HSeam",
             "Rain": "Neutral/HSeam_Rain",
             "Snow": "Neutral/HSeam_Snow"
-        }
+        },
+        "SymmetryMirror": [113, 114, 113, 114]
     },
     "Vertical Pipe Seam": {
         "AWBWID": 114,
@@ -156,7 +157,8 @@
             "Clear": "Neutral/VSeam",
             "Rain": "Neutral/VSeam_Rain",
             "Snow": "Neutral/VSeam_Snow"
-        }
+        },
+        "SymmetryMirror": [114, 113, 114, 113]
     },
     /*
     Orange Star

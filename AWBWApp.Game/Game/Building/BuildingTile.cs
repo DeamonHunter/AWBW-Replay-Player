@@ -30,5 +30,9 @@ namespace AWBWApp.Game.Game.Building
         public string Name { get; set; }
 
         public string BuildingType { get; set; }
+
+        public int[] SymmetryMirror { get; set; }
+
+        public int[] SymmetryRotated { get; set; }
     }
 }

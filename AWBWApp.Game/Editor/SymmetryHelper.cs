@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.Tile;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Editor
@@ -95,6 +97,36 @@ namespace AWBWApp.Game.Editor
             }
 
             throw new ArgumentException($"Unknown direction {direction}", nameof(direction));
+        }
+
+        public static int GetTerrainTileForSymmetry(TerrainTile tile, SymmetryMode mode, SymmetryDirection direction)
+        {
+            switch (mode)
+            {
+                case SymmetryMode.Mirror:
+                    return tile.SymmetryMirror != null ? tile.SymmetryMirror[(int)direction] : tile.AWBWID;
+
+                case SymmetryMode.Rotated:
+                    return tile.SymmetryRotated != null ? tile.SymmetryRotated[(int)direction] : tile.AWBWID;
+
+                default:
+                    return tile.AWBWID;
+            }
+        }
+
+        public static int GetBuildingTileForSymmetry(BuildingTile building, SymmetryMode mode, SymmetryDirection direction)
+        {
+            switch (mode)
+            {
+                case SymmetryMode.Mirror:
+                    return building.SymmetryMirror != null ? building.SymmetryMirror[(int)direction] : building.AWBWID;
+
+                case SymmetryMode.Rotated:
+                    return building.SymmetryRotated != null ? building.SymmetryRotated[(int)direction] : building.AWBWID;
+
+                default:
+                    return building.AWBWID;
+            }
         }
     }
 }
