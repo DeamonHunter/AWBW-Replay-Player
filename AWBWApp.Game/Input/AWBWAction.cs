@@ -11,7 +11,11 @@
         ShowGridLines,
         ShowTileCursor,
 
+        Save,
+        SaveAs,
         Undo,
-        Redo
+        Redo,
+        ChangeSymmetry,
+        PickTile
     }
 }

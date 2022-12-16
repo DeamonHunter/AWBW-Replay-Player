@@ -224,6 +224,37 @@ namespace AWBWApp.Game.UI.Editor
                 case AWBWGlobalAction.Redo:
                     historyManager.Redo(this, map);
                     return true;
+
+                case AWBWGlobalAction.Save:
+                    saveMap(lastSaveLocation);
+                    return true;
+
+                case AWBWGlobalAction.SaveAs:
+                    saveMap(null);
+                    return true;
+
+                case AWBWGlobalAction.ChangeSymmetry:
+                    symmetryMode.Value = (symmetryMode.Value + 1) > SymmetryMode.Rotated ? 0 : (symmetryMode.Value + 1);
+                    return true;
+
+                case AWBWGlobalAction.PickTile:
+                {
+                    if (map.TryGetTileAtMousePosition(e.ScreenSpaceMousePosition, out var tile, out var building))
+                    {
+                        if (building != null)
+                        {
+                            selectedBuilding.Value = building;
+                            selectedTile.Value = null;
+                        }
+                        else
+                        {
+                            selectedBuilding.Value = null;
+                            selectedTile.Value = tile;
+                        }
+                    }
+
+                    return true;
+                }
             }
 
             return false;

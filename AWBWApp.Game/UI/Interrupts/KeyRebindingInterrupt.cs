@@ -14,6 +14,7 @@ using osu.Framework.Input;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osuTK;
+using osuTK.Graphics;
 using osuTK.Input;
 
 namespace AWBWApp.Game.UI.Interrupts
@@ -48,6 +49,34 @@ namespace AWBWApp.Game.UI.Interrupts
                 new Container()
                 {
                     RelativeSizeAxes = Axes.X,
+                    Height = 5,
+                    Margin = new MarginPadding { Vertical = 5 },
+                    Masking = true,
+                    CornerRadius = 6,
+                    Child = new Box()
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = new Color4(20, 20, 20, 255)
+                    }
+                },
+                new TextFlowContainer(t => t.Font = t.Font.With(size: 25))
+                {
+                    Origin = Anchor.TopCentre,
+                    Anchor = Anchor.TopCentre,
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    TextAnchor = Anchor.TopCentre,
+                    Text = "Editor Keybinds"
+                },
+                createKeyRebindRow(AWBWGlobalAction.ChangeSymmetry),
+                createKeyRebindRow(AWBWGlobalAction.PickTile),
+                createKeyRebindRow(AWBWGlobalAction.Undo),
+                createKeyRebindRow(AWBWGlobalAction.Redo),
+                createKeyRebindRow(AWBWGlobalAction.Save),
+                createKeyRebindRow(AWBWGlobalAction.SaveAs),
+                new Container()
+                {
+                    RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
                     Children = new Drawable[]
                     {
@@ -78,6 +107,8 @@ namespace AWBWApp.Game.UI.Interrupts
                     }
                 }
             });
+
+            SetInnerPositionOffsets(new Vector2(0, -0.38f));
         }
 
         private KeyRebindRow createKeyRebindRow(AWBWGlobalAction action)

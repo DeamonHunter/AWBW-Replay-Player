@@ -83,7 +83,7 @@ namespace AWBWApp.Game.UI.Editor
         {
             //Todo: May need to hande unit deselection
 
-            if (GetUnitAndTileFromMousePosition(ToLocalSpace(mousePosition), out var tilePosition, out var tile, out var building, out var unit) && IsHovered)
+            if (GetUnitAndTileFromMousePosition(ToLocalSpace(mousePosition), out var tilePosition, out _, out _, out _) && IsHovered)
             {
                 TileCursor.TilePosition = tilePosition;
                 TileCursor.Show();
@@ -107,6 +107,20 @@ namespace AWBWApp.Game.UI.Editor
         }
 
         public short GetTileIDAtPosition(Vector2I tilePosition) => tiles[tilePosition.X, tilePosition.Y];
+
+        public bool TryGetTileAtMousePosition(Vector2 screenMousePosition, out TerrainTile tile, out BuildingTile building)
+        {
+            tile = null;
+            building = null;
+
+            if (!GetUnitAndTileFromMousePosition(ToLocalSpace(screenMousePosition), out _, out var drawableTile, out var drawableBuilding, out _))
+                return false;
+
+            tile = drawableTile?.TerrainTile;
+            building = drawableBuilding?.BuildingTile;
+
+            return true;
+        }
 
         public void ChangeTile(Vector2I position, short newTileID, short shoalTile = -1, bool recordChange = true)
         {
@@ -225,9 +239,9 @@ namespace AWBWApp.Game.UI.Editor
             }
         }
 
-        bool isTilePositionInBounds(Vector2I position) => position.X >= 0 && position.X < MapSize.X && position.Y >= 0 && position.Y < MapSize.Y;
+        private bool isTilePositionInBounds(Vector2I position) => position.X >= 0 && position.X < MapSize.X && position.Y >= 0 && position.Y < MapSize.Y;
 
-        float wrapIntToBounds(float s, float ds)
+        private float wrapIntToBounds(float s, float ds)
         {
             if (ds == 0)
                 return float.MaxValue;
