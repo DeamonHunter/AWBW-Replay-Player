@@ -33,17 +33,30 @@ namespace AWBWApp.Game.UI.Editor
         public EditorSidebar()
         {
             RelativeSizeAxes = Axes.Both;
-            Masking = true;
-            CornerRadius = 6;
             Children = new Drawable[]
             {
-                selectionBar = new FillFlowContainer<EditorSpriteButton>()
+                new MouseDownBlockingContainer()
                 {
+                    Masking = true,
+                    CornerRadius = 6,
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreLeft,
                     AutoSizeAxes = Axes.Both,
-                    Direction = FillDirection.Vertical,
-                    Padding = new MarginPadding { Horizontal = 4 }
+                    Children = new Drawable[]
+                    {
+                        new Box()
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = new Color4(25, 25, 25, 180)
+                        },
+                        selectionBar = new FillFlowContainer<EditorSpriteButton>()
+                        {
+                            Margin = new MarginPadding { Vertical = 5 },
+                            AutoSizeAxes = Axes.Both,
+                            Direction = FillDirection.Vertical,
+                            Padding = new MarginPadding { Horizontal = 4 }
+                        },
+                    }
                 },
                 basicTileContainer = new BasicTileContainer()
                 {
@@ -100,6 +113,15 @@ namespace AWBWApp.Game.UI.Editor
             selectedBuilding.Value = building;
         }
 
+        private partial class MouseDownBlockingContainer : Container
+        {
+            protected override bool OnMouseDown(MouseDownEvent e)
+            {
+                base.OnMouseDown(e);
+                return true;
+            }
+        }
+
         private partial class BasicTileContainer : VisibilityContainer
         {
             public Action<TerrainTile, BuildingTile> SelectTileAction;
@@ -138,7 +160,8 @@ namespace AWBWApp.Game.UI.Editor
                     1, 2, 3, 28, 33, 29, 30, 31, 32,
                     4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
                     15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
-                    111, 112, 113, 115, 114, 116,
+                    101, 102, 103, 104, 105, 106, 107, 108, 109, 110,
+                    113, 114, 115, 116, 111, 112,
                 };
 
                 foreach (var tileID in tileIDs)
@@ -174,6 +197,12 @@ namespace AWBWApp.Game.UI.Editor
             {
                 this.ScaleTo(new Vector2(0, 0.8f), 150, Easing.OutQuint)
                     .FadeOut(150, Easing.OutQuint);
+            }
+
+            protected override bool OnMouseDown(MouseDownEvent e)
+            {
+                base.OnMouseDown(e);
+                return true;
             }
 
             protected override bool OnKeyDown(KeyDownEvent e)
@@ -288,6 +317,12 @@ namespace AWBWApp.Game.UI.Editor
             {
                 this.ScaleTo(new Vector2(0, 0.8f), 150, Easing.OutQuint)
                     .FadeOut(150, Easing.OutQuint);
+            }
+
+            protected override bool OnMouseDown(MouseDownEvent e)
+            {
+                base.OnMouseDown(e);
+                return true;
             }
 
             protected override bool OnKeyDown(KeyDownEvent e)

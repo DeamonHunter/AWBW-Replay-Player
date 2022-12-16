@@ -7,6 +7,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Input.Events;
 using osuTK.Graphics;
 using osuTK.Input;
 
@@ -93,6 +94,12 @@ namespace AWBWApp.Game.UI.Editor
         {
             selectedTile.Value = tile;
             selectedBuilding.Value = building;
+        }
+
+        protected override bool OnMouseDown(MouseDownEvent e)
+        {
+            base.OnMouseDown(e);
+            return true;
         }
 
         private void onSelectedTileChanged()

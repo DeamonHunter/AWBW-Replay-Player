@@ -84,6 +84,12 @@ namespace AWBWApp.Game.UI.Editor.Components
                     }
                 };
             }
+
+            protected override bool OnMouseDown(MouseDownEvent e)
+            {
+                base.OnMouseDown(e);
+                return true;
+            }
         }
 
         private partial class EditorDropdownMenu : DropdownMenu
