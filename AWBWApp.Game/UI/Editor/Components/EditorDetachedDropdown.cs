@@ -1,7 +1,6 @@
 ﻿using System;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Toolbar;
-using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
@@ -65,7 +64,7 @@ namespace AWBWApp.Game.UI.Editor.Components
                 AutoSizeEasing = Easing.OutQuint;
                 AutoSizeDuration = 300;
 
-                BackgroundColour = Color4.Black.Opacity(0.4f);
+                BackgroundColour = new Color4(20, 20, 20, 150);
 
                 Foreground.RelativeSizeAxes = Axes.None;
                 Foreground.AutoSizeAxes = Axes.Both;

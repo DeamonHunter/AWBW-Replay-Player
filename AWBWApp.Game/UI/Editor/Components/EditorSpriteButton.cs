@@ -116,7 +116,9 @@ namespace AWBWApp.Game.UI.Editor.Components
                 texturePath = $"Map/{currentSkin.Value}/{tile?.Textures[WeatherType.Clear]}";
 
             tileSprite.Texture = textureStore.Get(texturePath);
-            tileSprite.Size = tileSprite.Texture.Size * 2;
+
+            var max = Math.Max(tileSprite.Texture.Size.X, tileSprite.Texture.Size.Y);
+            tileSprite.Size = tileSprite.Texture.Size * 2 * Math.Min(1, 20 / max);
         }
 
         public void SetSelected(bool selected)

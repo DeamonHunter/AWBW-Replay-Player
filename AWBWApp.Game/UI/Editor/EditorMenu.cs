@@ -2,7 +2,6 @@
 using AWBWApp.Game.UI.Editor.Components;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -76,7 +75,7 @@ namespace AWBWApp.Game.UI.Editor
                                 new Box()
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Colour = Color4.Black.Opacity(0.4f)
+                                    Colour = new Color4(25, 25, 25, 180)
                                 },
                                 new FillFlowContainer()
                                 {
