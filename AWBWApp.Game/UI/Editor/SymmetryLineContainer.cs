@@ -123,7 +123,7 @@ namespace AWBWApp.Game.UI.Editor
 
             switch (symmetryMode.Value)
             {
-                case SymmetryMode.MirrorInverted:
+                case SymmetryMode.Rotated:
                     arrowA.Rotation = arrowB.Rotation = 90;
                     break;
 

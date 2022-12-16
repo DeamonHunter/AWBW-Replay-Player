@@ -112,7 +112,7 @@ namespace AWBWApp.Game.UI.Editor
             {
                 SymmetryMode.None,
                 SymmetryMode.Mirror,
-                SymmetryMode.MirrorInverted
+                SymmetryMode.Rotated
             };
 
             symmetryDirectionDropdown.Current.BindTo(symmetryDirection);

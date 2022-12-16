@@ -18,12 +18,12 @@ namespace AWBWApp.Game.Editor
 
     public enum SymmetryMode
     {
-        [Description("Symmetry Off")]
+        [Description("No Symmetry")]
         None,
-        [Description("Symmetry On")]
+        [Description("Mirrored")]
         Mirror,
-        [Description("Symmetry Inverted")]
-        MirrorInverted
+        [Description("Rotated")]
+        Rotated
     }
 
     public static class SymmetryHelper
@@ -44,7 +44,7 @@ namespace AWBWApp.Game.Editor
                         case SymmetryMode.Mirror:
                             return new Vector2I(symmetryCenter.X - diff.X, position.Y);
 
-                        case SymmetryMode.MirrorInverted:
+                        case SymmetryMode.Rotated:
                             return new Vector2I(symmetryCenter.X - diff.X, symmetryCenter.Y - diff.Y);
                     }
 
@@ -58,7 +58,7 @@ namespace AWBWApp.Game.Editor
                         case SymmetryMode.Mirror:
                             return new Vector2I(symmetryCenter.X - diff.Y, symmetryCenter.Y - diff.X);
 
-                        case SymmetryMode.MirrorInverted:
+                        case SymmetryMode.Rotated:
                             return new Vector2I(symmetryCenter.X - diff.X, symmetryCenter.Y - diff.Y);
                     }
 
@@ -72,7 +72,7 @@ namespace AWBWApp.Game.Editor
                         case SymmetryMode.Mirror:
                             return new Vector2I(position.X, symmetryCenter.Y - diff.Y);
 
-                        case SymmetryMode.MirrorInverted:
+                        case SymmetryMode.Rotated:
                             return new Vector2I(symmetryCenter.X - diff.X, symmetryCenter.Y - diff.Y);
                     }
 
@@ -86,7 +86,7 @@ namespace AWBWApp.Game.Editor
                         case SymmetryMode.Mirror:
                             return new Vector2I(symmetryCenter.Y + diff.Y, symmetryCenter.X + diff.X);
 
-                        case SymmetryMode.MirrorInverted:
+                        case SymmetryMode.Rotated:
                             return new Vector2I(symmetryCenter.Y - diff.X, symmetryCenter.X - diff.Y);
                     }
 
