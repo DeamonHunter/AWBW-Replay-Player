@@ -252,7 +252,7 @@ namespace AWBWApp.Game.UI.Editor
 
             int mapSizeY;
 
-            if (mapSizeYTextBox.Text.IsNullOrEmpty() || !int.TryParse(mapSizeXTextBox.Text, out mapSizeY) || mapSizeY < 5 || mapSizeY > 36)
+            if (mapSizeYTextBox.Text.IsNullOrEmpty() || !int.TryParse(mapSizeYTextBox.Text, out mapSizeY) || mapSizeY < 5 || mapSizeY > 36)
             {
                 failed("Failed to create map: Please input a valid height. Must be between 5 and 36");
                 return;
