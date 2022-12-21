@@ -34,6 +34,7 @@ namespace AWBWApp.Game.UI.Editor
         private EditorTileCursor editorCursor;
         private EditorTileCursor symmetryEditorCursor;
         private SymmetryLineContainer symmetryContainer;
+        private CaptureOverlayContainer captureContainer;
         private Vector2 lastCursorPosition;
 
         private TileChangeHistory tileChanges;
@@ -42,6 +43,7 @@ namespace AWBWApp.Game.UI.Editor
             : base(null)
         {
             Add(symmetryContainer = new SymmetryLineContainer());
+            Add(captureContainer = new CaptureOverlayContainer());
             Add(symmetryEditorCursor = new EditorTileCursor(true) { Alpha = 0 });
         }
 

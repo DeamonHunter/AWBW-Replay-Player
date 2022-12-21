@@ -44,6 +44,9 @@ namespace AWBWApp.Game.UI.Editor
         private Bindable<TerrainTile> selectedTile = new Bindable<TerrainTile>();
 
         [Cached]
+        private Bindable<bool> showCaptureOverlay = new Bindable<bool>();
+
+        [Cached]
         private Bindable<BuildingTile> selectedBuilding = new Bindable<BuildingTile>();
 
         [Cached]
