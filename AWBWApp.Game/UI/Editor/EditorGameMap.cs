@@ -43,7 +43,7 @@ namespace AWBWApp.Game.UI.Editor
             : base(null)
         {
             Add(symmetryContainer = new SymmetryLineContainer());
-            Add(captureContainer = new CaptureOverlayContainer());
+            Add(captureContainer = new CaptureOverlayContainer(this));
             Add(symmetryEditorCursor = new EditorTileCursor(true) { Alpha = 0 });
         }
 

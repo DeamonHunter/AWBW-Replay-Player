@@ -1001,7 +1001,7 @@ namespace AWBWApp.Game.Game.Logic
             return true;
         }
 
-        private void getMovementTiles(DrawableUnit unit, List<Vector2I> positions)
+        public void getMovementTiles(DrawableUnit unit, List<Vector2I> positions)
         {
             var visited = new HashSet<Vector2I>();
             var queue = new PriorityQueue<Vector2I, int>();
