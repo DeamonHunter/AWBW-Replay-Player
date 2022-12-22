@@ -54,7 +54,7 @@ namespace AWBWApp.Game.UI.Editor
             for (int x = 0; x < MapSize.X; x++)
             {
                 for (int y = 0; y < MapSize.Y; y++)
-                    ChangeTile(new Vector2I(x, y), map.Ids[y * MapSize.X + x], shoalMap.Ids[y * MapSize.X + x]);
+                    ChangeTile(new Vector2I(x, y), map.Ids[y * MapSize.X + x], shoalMap.Ids[y * MapSize.X + x], false);
             }
 
             AutoSizeAxes = Axes.Both;
