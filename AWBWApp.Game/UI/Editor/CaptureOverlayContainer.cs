@@ -43,8 +43,7 @@ namespace AWBWApp.Game.UI.Editor
                     Anchor = Anchor.TopLeft,
                     Origin = Anchor.Centre,
                     Children = new Drawable[] {}
-                },
-            };
+                };
         }
 
         protected override void LoadComplete()
@@ -62,12 +61,9 @@ namespace AWBWApp.Game.UI.Editor
                 lineContainer.Hide();
                 return;
             }
+
             lineContainer.Clear();
 
-            // var adjustedCenter = new Vector2((symmetryCenter.X + 1) / 2.0f, (symmetryCenter.Y + 1) / 2.0f) * DrawableTile.BASE_SIZE;
-            // adjustedCenter.Y += DrawableTile.BASE_SIZE.Y;
-            // lineContainer.Position = adjustedCenter;
-            // arrowA.Rotation = (arrowA.Rotation + 90) % 180;
             var capPhase = CaptureCalcHelper.CalculateCapPhase(buildingStorage, unitStorage, map);
             foreach (var prop in capPhase.contestedProps)
             {

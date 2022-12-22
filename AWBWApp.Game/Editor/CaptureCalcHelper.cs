@@ -21,14 +21,14 @@ namespace AWBWApp.Game.Editor
         /// <summary>
         /// The number of turns that we looked ahead to find another stop.
         /// </summary>
-        public int extraTurns = 0; 
+        public int ExtraTurns = 0;
         public Vector2I coord;
 
         public CapStop(Vector2I coord)
         {
             this.coord = coord;
         }
-        public override String ToString() => $"{coord}+{extraTurns}"
+        public override String ToString() => $"{coord}+{ExtraTurns}";
     }
 
     public class CapPhaseAnalysis
@@ -85,11 +85,11 @@ namespace AWBWApp.Game.Editor
             var factoryOwnership = new Dictionary<Vector2I, int>();
             var startingFactories = new Dictionary<int, List<Vector2I>>();
             var countries = new HashSet<int>();
-            for (int i = 0; i < map.MapSize.X; i++)
+            for (int x = 0; x < map.MapSize.X; x++)
             {
-                for (int j = 0; j < map.MapSize.Y; j++)
+                for (int y = 0; y < map.MapSize.Y; y++)
                 {
-                    var coord = new Vector2I(i, j);
+                    var coord = new Vector2I(x, y);
                     if (map.BuildingGrid.TryGet(coord, out DrawableBuilding mapBuilding))
                     {
                         var building = mapBuilding.BuildingTile;
@@ -112,7 +112,6 @@ namespace AWBWApp.Game.Editor
                     }
                 }
             }
-
 
             var infantryData = unitStorage.GetUnitByCode("Infantry");
             var infantryState = new ReplayUnit
@@ -246,7 +245,7 @@ namespace AWBWApp.Game.Editor
                     List<CapStop> chain = new List<CapStop>();
                     CapStop build = new CapStop(ownedFac);
                     // A bunch of "free funding turns" should convince the chain-sorter to put factory-captures first.
-                    build.extraTurns = distance/3 - 13; // inf move = 3
+                    build.ExtraTurns = distance/3 - 13; // inf move = 3
                     chain.Add(build);
                     CapStop cap = new CapStop(dest);
                     chain.Add(cap);
@@ -327,7 +326,7 @@ namespace AWBWApp.Game.Editor
                                 break;
 
                             CapStop last = chain.Last();
-                            if (last.extraTurns >= LOOKAHEAD_TURNS)
+                            if (last.ExtraTurns >= LOOKAHEAD_TURNS)
                             {
                                 if (chain.Count == 1)
                                     remainingFactories.Remove(last.coord);
@@ -342,13 +341,13 @@ namespace AWBWApp.Game.Editor
 
                             if (!feasiblePathExists(inf, dest, map))
                             {
-                                last.extraTurns = LOOKAHEAD_TURNS + 1;
+                                last.ExtraTurns = LOOKAHEAD_TURNS + 1;
                                 continue; // Can't reach
                             }
                             madeProgress = true; // We have somewhere we can still get to
 
                             int distance = start.ManhattanDistance(dest);
-                            int currentTotalMove = (last.extraTurns + 1) * infMove;
+                            int currentTotalMove = (last.ExtraTurns + 1) * infMove;
 
                             if (distance <= currentTotalMove)
                             {
@@ -357,7 +356,7 @@ namespace AWBWApp.Game.Editor
                                 chain.Add(cap);
                             }
                             else
-                                last.extraTurns++;
+                                last.ExtraTurns++;
                         }
                 }
             }
@@ -387,7 +386,7 @@ namespace AWBWApp.Game.Editor
 
             for(int i = 1; i < capList.Count || currentTurn >= turnLimit; ++i)
             {
-                int turnShift = capList[i-1].extraTurns;
+                int turnShift = capList[i-1].ExtraTurns;
                 currentTurn += turnShift + 1; // +1 for the extra cap turn
                 // We get income from the prop for every turn after we captured it
                 currentIncome += Math.Max(0, turnLimit - currentTurn);
