@@ -12,6 +12,7 @@ using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Bindables;
 
 namespace AWBWApp.Game.Editor
 {
@@ -57,13 +58,9 @@ namespace AWBWApp.Game.Editor
 
     public static class CaptureCalcHelper
     {
-        [Resolved]
-        private static BuildingStorage buildingStorage { get; set; }
-        [Resolved]
-        private static UnitStorage unitStorage { get; set; }
-
         const int LOOKAHEAD_TURNS = 3;
         const int TURN_SCALAR = 100;
+        const int NEUTRAL = -1;
 
         public static bool feasiblePathExists(DrawableUnit unit, Vector2I destination, GameMap map)
         {
@@ -78,7 +75,7 @@ namespace AWBWApp.Game.Editor
             return movementList.Contains(destination);
         }
 
-        public static CapPhaseAnalysis CalculateCapPhase(GameMap map)
+        public static CapPhaseAnalysis CalculateCapPhase(BuildingStorage buildingStorage, UnitStorage unitStorage, GameMap map)
         {
             var output = new CapPhaseAnalysis();
 
@@ -88,19 +85,19 @@ namespace AWBWApp.Game.Editor
             var factoryOwnership = new Dictionary<Vector2I, int>();
             var startingFactories = new Dictionary<int, List<Vector2I>>();
             var countries = new List<int>();
-            for( int i = 0; i < map.Width; i++ )
+            for (int i = 0; i < map.MapSize.X; i++)
             {
-                for (int j = 0; j < map.Height; j++)
+                for (int j = 0; j < map.MapSize.Y; j++)
                 {
                     var coord = new Vector2I(i, j);
-                    var env = map.GetDrawableTile(coord).TerrainTile;
-                    if (buildingStorage.TryGetBuildingByAWBWId(env.AWBWID, out var building))
+                    if (map.BuildingGrid.TryGet(coord, out DrawableBuilding mapBuilding))
                     {
+                        var building = mapBuilding.BuildingTile;
                         var country = building.CountryID;
                         if (!countries.Contains(country))
                             countries.Add(country);
 
-                        if (building.BuildingType.Equals("factory", StringComparison.InvariantCultureIgnoreCase))
+                        if (building.Name.Contains("base", StringComparison.InvariantCultureIgnoreCase))
                         {
                             factoryOwnership[coord] = country;
                             if (!startingFactories.ContainsKey(country))
@@ -130,27 +127,28 @@ namespace AWBWApp.Game.Editor
                 ID = 0,
                 MovementPoints = infantryData.MovementRange
             };
-            // new Bindable<CountryData>(countryStorage.GetCountryByCode("os"))
-            var inf = new DrawableUnit(infantryData, infantryState, null, null);
+            var inf = new DrawableUnit(infantryData, infantryState, new Bindable<CountryData>(new CountryData()), null);
 
             var rightfulProps = new Dictionary<int, List<Vector2I>>();
+            foreach (var country in countries)
+                rightfulProps[country] = new List<Vector2I>();
             var rightfulFactories = new Dictionary<int, List<Vector2I>>();
+            foreach (var country in countries)
+                rightfulFactories[country] = new List<Vector2I>();
             // Fully calculate factory ownership based on who can cap each first
             // Assumption: No contested factories
             foreach( Vector2I neutralFac in factoryOwnership.Keys )
             {
                 int currentOwner = factoryOwnership[neutralFac];
-                // TODO: Assumes neutral is 0
-                if( currentOwner == 0 )
+                if( currentOwner != NEUTRAL )
                     continue; // Not actually neutral
 
                 int newOwnerDistance = int.MaxValue;
-                int newOwner = 0;
+                int newOwner = NEUTRAL;
                 foreach( Vector2I ownedFac in factoryOwnership.Keys )
                 {
                     int owner = factoryOwnership[ownedFac];
-                    // TODO: Assumes neutral is 0
-                    if( owner == 0 )
+                    if( owner == NEUTRAL )
                         continue; // Not yet owned
 
                     inf.Position = ownedFac;
@@ -166,11 +164,8 @@ namespace AWBWApp.Game.Editor
                     }
                 }
                 factoryOwnership[neutralFac] = newOwner;
-                // TODO: Assumes neutral is 0
-                if( 0 != newOwner )
+                if( NEUTRAL != newOwner )
                 {
-                    if (!rightfulFactories.ContainsKey(newOwner))
-                        rightfulFactories[newOwner] = new List<Vector2I>();
                     rightfulFactories[newOwner].Add(neutralFac);
                 }
             }
@@ -183,8 +178,7 @@ namespace AWBWApp.Game.Editor
                 foreach( Vector2I ownedFac in factoryOwnership.Keys )
                 {
                     int owner = factoryOwnership[ownedFac];
-                    // TODO: Assumes neutral is 0
-                    if( owner == 0 )
+                    if( owner == NEUTRAL )
                         continue; // Don't barf in weird maps
 
                     inf.Position = ownedFac;
@@ -202,7 +196,7 @@ namespace AWBWApp.Game.Editor
                 }
 
                 // Calculate who's the closest, and if that army has real competition for this prop
-                int closestArmy = 0;
+                int closestArmy = NEUTRAL;
                 int closestDistance = int.MaxValue;
                 foreach( int army in possibleOwners.Keys )
                 {
@@ -230,8 +224,6 @@ namespace AWBWApp.Game.Editor
                     output.contestedProps.Add(propXYC);
                 else if( propsOwnership[propXYC] == closestArmy ) // Don't try to cap it if we already own it
                 {
-                    if (!rightfulProps.ContainsKey(closestArmy))
-                        rightfulProps[closestArmy] = new List<Vector2I>();
                     rightfulProps[closestArmy].Add(propXYC);
                 }
             }
@@ -268,7 +260,7 @@ namespace AWBWApp.Game.Editor
                 }
             }
 
-            buildBaseCapChains(output, map, rightfulProps, startingFactories);
+            buildBaseCapChains(output, unitStorage, map, rightfulProps, startingFactories);
 
             // Add our factory chains in at the start of each list
             foreach(List<CapStop> chain in factoryCapChains)
@@ -280,7 +272,7 @@ namespace AWBWApp.Game.Editor
             return output;
         }
 
-        private static void buildBaseCapChains(CapPhaseAnalysis output, GameMap map,
+        private static void buildBaseCapChains(CapPhaseAnalysis output, UnitStorage unitStorage, GameMap map,
                                                 Dictionary<int, List<Vector2I>> rightfulPropsDict, Dictionary<int, List<Vector2I>> startingFactoryDict)
         {
             var infantryData = unitStorage.GetUnitByCode("Infantry");
@@ -296,8 +288,7 @@ namespace AWBWApp.Game.Editor
                 ID = 0,
                 MovementPoints = infantryData.MovementRange
             };
-            // new Bindable<CountryData>(countryStorage.GetCountryByCode("os"))
-            var inf = new DrawableUnit(infantryData, infantryState, null, null);
+            var inf = new DrawableUnit(infantryData, infantryState, new Bindable<CountryData>(new CountryData()), null);
             int infMove = 3;
 
             foreach (var country in startingFactoryDict.Keys)

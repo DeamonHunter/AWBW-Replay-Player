@@ -5,6 +5,7 @@ using System.Linq;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
 using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
@@ -44,12 +45,15 @@ namespace AWBWApp.Game.Game.Logic
         [Resolved]
         protected CountryStorage CountryStorage { get; private set; }
 
+        [Resolved]
+        protected COStorage COStorage { get; private set; }
+
         protected CustomShoalGenerator ShoalGenerator { get; set; }
 
         public Bindable<WeatherType> CurrentWeather = new Bindable<WeatherType>();
 
         protected readonly TileGridContainer<DrawableTile> TileGrid;
-        protected readonly TileGridContainer<DrawableBuilding> BuildingGrid;
+        public readonly TileGridContainer<DrawableBuilding> BuildingGrid;
         protected bool HasLoadedMap;
 
         protected readonly Container<DrawableUnit> UnitsDrawable;
@@ -1010,8 +1014,10 @@ namespace AWBWApp.Game.Game.Logic
 
             var movementRange = unit.MovementRange.Value;
 
-            var action = ReplayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
-            var dayToDay = ReplayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+            var action = ReplayController?.GetActivePowerForPlayer(unit.OwnerID!.Value);
+            var dayToDay = ReplayController?.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+            // If there's no replayController, assume Andy
+            dayToDay = dayToDay ?? COStorage.GetCOByName("Andy").DayToDayPower;
 
             movementRange += action?.MovementRangeIncrease ?? 0;
 
