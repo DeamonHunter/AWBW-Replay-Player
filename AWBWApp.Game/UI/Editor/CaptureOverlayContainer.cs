@@ -101,7 +101,7 @@ namespace AWBWApp.Game.UI.Editor
                                     Colour = new Colour4(20, 50, 50, 255)
                                 });
                     }
-                    dieIconIndex = Math.Max(dice.Length, 1 + dieIconIndex);
+                    dieIconIndex = Math.Min(dice.Length-1, 1 + dieIconIndex);
                 }
             }
             lineContainer.Show();

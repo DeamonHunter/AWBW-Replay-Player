@@ -222,10 +222,8 @@ namespace AWBWApp.Game.Editor
                 // If it isn't contested and we want to try to cap it, add it to the list
                 if( contested )
                     output.contestedProps.Add(propXYC);
-                else if( propsOwnership[propXYC] == closestArmy ) // Don't try to cap it if we already own it
-                {
+                else if( propsOwnership[propXYC] != closestArmy ) // Don't try to cap it if we already own it
                     rightfulProps[closestArmy].Add(propXYC);
-                }
             }
 
             // Build cap chains to factories; don't continue them, since cap chains from that factory will be considered separately
