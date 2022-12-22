@@ -151,7 +151,7 @@ namespace AWBWApp.Game.Editor
                     if( owner == NEUTRAL )
                         continue; // Not yet owned
 
-                    inf.Position = ownedFac;
+                    inf.MoveToPosition(ownedFac);
                     if( !feasiblePathExists(inf, neutralFac, map) )
                         continue; // Can't reach
 
@@ -181,7 +181,7 @@ namespace AWBWApp.Game.Editor
                     if( owner == NEUTRAL )
                         continue; // Don't barf in weird maps
 
-                    inf.Position = ownedFac;
+                    inf.MoveToPosition(ownedFac);
                     if( !feasiblePathExists(inf, propXYC, map) )
                         continue; // Can't reach this city
                     
@@ -239,7 +239,7 @@ namespace AWBWApp.Game.Editor
                     facsOwned.OrderBy((x) => x.ManhattanDistance(dest));
                     Vector2I ownedFac = facsOwned[0];
 
-                    inf.Position = ownedFac;
+                    inf.MoveToPosition(ownedFac);
                     if( !feasiblePathExists(inf, dest, map) )
                         continue; // Can't reach
 
@@ -335,9 +335,7 @@ namespace AWBWApp.Game.Editor
                             }
 
                             Vector2I start = last.coord;
-                            inf.Position = start;
-
-
+                            inf.MoveToPosition(start);
 
                             // TODO: There's no easy way to grab the true move cost, so just use the Manhattan distance
                             rightfulProps.OrderBy((x) => x.ManhattanDistance(start));
