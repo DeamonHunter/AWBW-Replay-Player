@@ -35,9 +35,7 @@ namespace AWBWApp.Game.UI.Editor
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
-            InternalChildren = new Drawable[]
-            {
-                lineContainer = new Container()
+            InternalChild = lineContainer = new Container()
                 {
                     RelativeSizeAxes = Axes.Y,
                     Size = new Vector2(20, 2),

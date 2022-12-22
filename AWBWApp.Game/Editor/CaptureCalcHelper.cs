@@ -18,16 +18,17 @@ namespace AWBWApp.Game.Editor
 {
     public class CapStop
     {
-        public int extraTurns = 0; // Defines how many turns we have already looked ahead to try to find another cap stop
+        /// <summary>
+        /// The number of turns that we looked ahead to find another stop.
+        /// </summary>
+        public int extraTurns = 0; 
         public Vector2I coord;
+
         public CapStop(Vector2I coord)
         {
             this.coord = coord;
         }
-        public override String ToString()
-        {
-            return coord + "+" + extraTurns;
-        }
+        public override String ToString() => $"{coord}+{extraTurns}"
     }
 
     public class CapPhaseAnalysis
@@ -39,9 +40,8 @@ namespace AWBWApp.Game.Editor
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Contested properties:");
-            foreach( Vector2I contested in contestedProps )
-                sb.Append(String.Format(" %s ", contested));
-            sb.Append("\n");
+            foreach (var contested in contestedProps)
+                sb.AppendLine($" {contested} ");
             foreach( Vector2I factoryXYC in capChains.Keys )
             {
                 sb.Append(String.Format("Cap chains for %s:\n", factoryXYC));
@@ -84,7 +84,7 @@ namespace AWBWApp.Game.Editor
 
             var factoryOwnership = new Dictionary<Vector2I, int>();
             var startingFactories = new Dictionary<int, List<Vector2I>>();
-            var countries = new List<int>();
+            var countries = new HashSet<int>();
             for (int i = 0; i < map.MapSize.X; i++)
             {
                 for (int j = 0; j < map.MapSize.Y; j++)
