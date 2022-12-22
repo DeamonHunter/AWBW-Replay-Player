@@ -26,16 +26,6 @@ namespace AWBWApp.Game.UI.Editor
         private Container lineContainer;
         private EditorGameMap map;
 
-        private IconUsage[] dice = {
-            FontAwesome.Solid.DiceOne,
-            FontAwesome.Solid.DiceTwo,
-            FontAwesome.Solid.DiceThree,
-            FontAwesome.Solid.DiceFour,
-            FontAwesome.Solid.DiceFive,
-            FontAwesome.Solid.DiceSix,
-            FontAwesome.Solid.Dice,
-            };
-
         public CaptureOverlayContainer(EditorGameMap gameMap)
         {
             map = gameMap;
@@ -81,27 +71,47 @@ namespace AWBWApp.Game.UI.Editor
             // lineContainer.Position = adjustedCenter;
             // arrowA.Rotation = (arrowA.Rotation + 90) % 180;
             var capPhase = CaptureCalcHelper.CalculateCapPhase(buildingStorage, unitStorage, map);
+            foreach (var prop in capPhase.contestedProps)
+            {
+                var coord = new Vector2((prop.X + 0.5f) * DrawableTile.BASE_SIZE.X, (prop.Y + 0.5f) * DrawableTile.BASE_SIZE.Y);
+                lineContainer.Add(new SpriteIcon()
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Position = coord,
+                            Size = new Vector2(6, 4),
+                            Icon = FontAwesome.Solid.Dice,
+                            Colour = new Colour4(200, 50, 50, 255)
+                        });
+            }
             foreach (var factory in capPhase.capChains.Keys)
             {
                 var chainList = capPhase.capChains[factory];
-                int dieIconIndex = 0;
+                var arrowAlpha = 1.0;
                 foreach (var chain in chainList)
                 {
+                    var coordStart = chain[0].coord;
+                    var arrowStart = new Vector2((coordStart.X + 0.5f) * DrawableTile.BASE_SIZE.X, (coordStart.Y + 0.5f) * DrawableTile.BASE_SIZE.Y);
                     for (int i = 1; i < chain.Count; ++i) // Skip the first node since it's the factory
                     {
-                        var node = chain[i];
-                        var coord = new Vector2((node.coord.X + 0.5f) * DrawableTile.BASE_SIZE.X, (node.coord.Y + 0.5f) * DrawableTile.BASE_SIZE.Y);
-                        lineContainer.Add(new SpriteIcon()
+                        var coordEnd = chain[i].coord;
+                        var arrowEnd = new Vector2((coordEnd.X + 0.5f) * DrawableTile.BASE_SIZE.X, (coordEnd.Y + 0.5f) * DrawableTile.BASE_SIZE.Y);
+                        var arrowDiff = new Vector2(coordEnd.X - coordStart.X, coordEnd.Y - coordStart.Y);
+                        // I am not what you'd call a trig wizard
+                        var arrowAngle = Math.Atan2(arrowDiff.X, -arrowDiff.Y) * 180 / Math.PI;
+                        lineContainer.Add(new Box()
                                 {
                                     Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    Position = coord,
-                                    Size = new Vector2(6, 4),
-                                    Icon = dice[dieIconIndex],
-                                    Colour = new Colour4(20, 50, 50, 255)
+                                    Origin = Anchor.BottomCentre,
+                                    Position = arrowStart,
+                                    Rotation = (float)arrowAngle,
+                                    Size = new Vector2(4, arrowDiff.Length * DrawableTile.BASE_SIZE.X),
+                                    Colour = new Colour4(0.2f, 0.2f, 1f, (float)arrowAlpha)
                                 });
+                        coordStart = coordEnd;
+                        arrowStart = arrowEnd;
                     }
-                    dieIconIndex = Math.Min(dice.Length-1, 1 + dieIconIndex);
+                    arrowAlpha = Math.Max(0.2, arrowAlpha*0.75);
                 }
             }
             lineContainer.Show();
