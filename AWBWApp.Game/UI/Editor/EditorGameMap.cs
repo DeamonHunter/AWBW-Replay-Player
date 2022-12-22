@@ -322,7 +322,7 @@ namespace AWBWApp.Game.UI.Editor
             for (int y = 0; y < MapSize.Y; y++)
             {
                 for (int x = 0; x < MapSize.X; x++)
-                    replayMap.Ids[y * MapSize.Y + x] = tiles[x, y];
+                    replayMap.Ids[y * MapSize.X + x] = tiles[x, y];
             }
 
             return replayMap;
