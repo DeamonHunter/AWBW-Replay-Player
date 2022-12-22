@@ -62,7 +62,7 @@ namespace AWBWApp.Game.Game.Logic
 
         private readonly EffectAnimationController effectAnimationController;
 
-        private ReplayController replayController;
+        protected ReplayController ReplayController;
 
         private readonly MovingGrid grid;
 
@@ -86,7 +86,7 @@ namespace AWBWApp.Game.Game.Logic
 
         public GameMap(ReplayController controller)
         {
-            replayController = controller;
+            ReplayController = controller;
 
             AddRange(new Drawable[]
             {
@@ -245,7 +245,7 @@ namespace AWBWApp.Game.Game.Logic
                         {
                             if (!hasShownMapOutdatedWarning)
                             {
-                                replayController.ShowError(new Exception("Buildings do not match replay due to a map update. This can cause further errors, proceed with caution."), false);
+                                ReplayController.ShowError(new Exception("Buildings do not match replay due to a map update. This can cause further errors, proceed with caution."), false);
                                 hasShownMapOutdatedWarning = true;
                             }
                         }
@@ -273,7 +273,7 @@ namespace AWBWApp.Game.Game.Logic
                 var position = awbwBuilding.Value.Position;
 
                 var playerID = getPlayerIDFromCountryID(building.CountryID);
-                var country = playerID.HasValue ? replayController.Players[playerID.Value].Country : null;
+                var country = playerID.HasValue ? ReplayController.Players[playerID.Value].Country : null;
                 var drawableBuilding = new DrawableBuilding(building, position, playerID, country);
 
                 foreach (var player in gameState.ReplayInfo.Players)
@@ -445,7 +445,7 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     var unitData = UnitStorage.GetUnitByCode(unit.Value.UnitName);
 
-                    var player = replayController.Players[unit.Value.PlayerID!.Value];
+                    var player = ReplayController.Players[unit.Value.PlayerID!.Value];
                     var drawableUnit = new DrawableUnit(unitData, unit.Value, player.Country, player.UnitFaceDirection);
                     drawableUnit.FogOfWarActive.Value = IsTileFoggy(drawableUnit.MapPosition, drawableUnit.UnitData.MovementType == MovementType.Air);
                     Units.Add(unit.Value.ID, drawableUnit);
@@ -493,7 +493,7 @@ namespace AWBWApp.Game.Game.Logic
         public DrawableUnit AddUnit(ReplayUnit unit, bool schedule = true)
         {
             var unitData = UnitStorage.GetUnitByCode(unit.UnitName);
-            var player = replayController.Players[unit.PlayerID!.Value];
+            var player = ReplayController.Players[unit.PlayerID!.Value];
             var drawableUnit = new DrawableUnit(unitData, unit, player.Country, player.UnitFaceDirection);
             Units.Add(unit.ID, drawableUnit);
 
@@ -502,7 +502,7 @@ namespace AWBWApp.Game.Game.Logic
             else
                 UnitsDrawable.Add(drawableUnit);
 
-            replayController.Players[unit.PlayerID!.Value].UnitCount.Value++;
+            ReplayController.Players[unit.PlayerID!.Value].UnitCount.Value++;
             return drawableUnit;
         }
 
@@ -517,12 +517,12 @@ namespace AWBWApp.Game.Game.Logic
             if (!Units.Remove(unitId, out DrawableUnit unit))
                 return null;
 
-            if (explode && !replayController.ShouldPlayerActionBeHidden(unit.MapPosition, unit.UnitData.MovementType == MovementType.Air))
+            if (explode && !ReplayController.ShouldPlayerActionBeHidden(unit.MapPosition, unit.UnitData.MovementType == MovementType.Air))
                 playExplosion(unit.UnitData.MovementType, unit.MapPosition);
 
             UnitsDrawable.Remove(unit, true);
             if (unit.OwnerID.HasValue)
-                replayController.Players[unit.OwnerID.Value].UnitCount.Value--;
+                ReplayController.Players[unit.OwnerID.Value].UnitCount.Value--;
 
             if (unit.Cargo != null)
             {
@@ -659,7 +659,7 @@ namespace AWBWApp.Game.Game.Logic
                 if (BuildingStorage.TryGetBuildingByAWBWId(awbwBuilding.TerrainID.Value, out var buildingTile))
                 {
                     var playerID = getPlayerIDFromCountryID(buildingTile.CountryID);
-                    var country = playerID.HasValue ? replayController.Players[playerID.Value].Country : null;
+                    var country = playerID.HasValue ? ReplayController.Players[playerID.Value].Country : null;
                     var drawableBuilding = new DrawableBuilding(buildingTile, tilePosition, playerID, country);
                     drawableBuilding.FogOfWarActive.Value = IsTileFoggy(awbwBuilding.Position, false);
                     BuildingGrid.AddTile(drawableBuilding, tilePosition);
@@ -683,7 +683,7 @@ namespace AWBWApp.Game.Game.Logic
                     if (BuildingStorage.TryGetBuildingByAWBWId(awbwBuilding.TerrainID.Value, out var buildingTile))
                     {
                         var playerID = getPlayerIDFromCountryID(buildingTile.CountryID);
-                        var country = playerID.HasValue ? replayController.Players[playerID.Value].Country : null;
+                        var country = playerID.HasValue ? ReplayController.Players[playerID.Value].Country : null;
                         var newBuilding = new DrawableBuilding(buildingTile, tilePosition, playerID, country);
                         transferDiscovery(building, newBuilding);
                         newBuilding.FogOfWarActive.Value = IsTileFoggy(awbwBuilding.Position, false);
@@ -718,7 +718,7 @@ namespace AWBWApp.Game.Game.Logic
 
         public void RegisterDiscovery(DiscoveryCollection collection)
         {
-            var team = getCurrentTeamVisibility();
+            var team = GetCurrentTeamVisibility();
 
             foreach (var id in collection.DiscoveryByID)
             {
@@ -749,7 +749,7 @@ namespace AWBWApp.Game.Game.Logic
 
         public void UndoDiscovery(DiscoveryCollection collection)
         {
-            var team = getCurrentTeamVisibility();
+            var team = GetCurrentTeamVisibility();
 
             foreach (var building in collection.OriginalDiscovery)
             {
@@ -763,7 +763,7 @@ namespace AWBWApp.Game.Game.Logic
 
         public void UpdateDiscoveredBuildings()
         {
-            var team = getCurrentTeamVisibility();
+            var team = GetCurrentTeamVisibility();
             foreach (var building in BuildingGrid)
                 building.UpdateFogOfWarBuilding(revealUnknownInformation.Value, team);
         }
@@ -773,22 +773,22 @@ namespace AWBWApp.Game.Game.Logic
             newBuilding.TeamToTile.SetTo(originalBuilding.TeamToTile);
 
             if (originalBuilding.OwnerID.HasValue)
-                newBuilding.TeamToTile[replayController.Players[originalBuilding.OwnerID.Value].Team] = newBuilding.BuildingTile;
+                newBuilding.TeamToTile[ReplayController.Players[originalBuilding.OwnerID.Value].Team] = newBuilding.BuildingTile;
             if (newBuilding.OwnerID.HasValue)
-                newBuilding.TeamToTile[replayController.Players[newBuilding.OwnerID.Value].Team] = newBuilding.BuildingTile;
-            newBuilding.UpdateFogOfWarBuilding(revealUnknownInformation.Value, getCurrentTeamVisibility());
+                newBuilding.TeamToTile[ReplayController.Players[newBuilding.OwnerID.Value].Team] = newBuilding.BuildingTile;
+            newBuilding.UpdateFogOfWarBuilding(revealUnknownInformation.Value, GetCurrentTeamVisibility());
         }
 
-        private string getCurrentTeamVisibility()
+        protected virtual string GetCurrentTeamVisibility()
         {
-            if (replayController.CurrentFogView.Value is long id)
-                return replayController.Players[id].Team;
+            if (ReplayController.CurrentFogView.Value is long id)
+                return ReplayController.Players[id].Team;
 
-            var team = replayController.CurrentFogView.Value as string;
-            return team.IsNullOrEmpty() ? replayController.ActivePlayer.Team : team;
+            var team = ReplayController.CurrentFogView.Value as string;
+            return team.IsNullOrEmpty() ? ReplayController.ActivePlayer.Team : team;
         }
 
-        public bool OnPressed(KeyBindingPressEvent<AWBWGlobalAction> e)
+        public virtual bool OnPressed(KeyBindingPressEvent<AWBWGlobalAction> e)
         {
             if (e.Repeat)
                 return false;
@@ -870,10 +870,10 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     var range = unit.AttackRange.Value;
 
-                    var action = replayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
+                    var action = ReplayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
                     range.Y += action?.COPower.PowerIncreases?.FirstOrDefault(x => x.AffectedUnits.Contains("all") || x.AffectedUnits.Contains(unit.UnitData.Name))?.RangeIncrease ?? 0;
 
-                    var dayToDay = replayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+                    var dayToDay = ReplayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
                     range.Y += dayToDay.PowerIncreases?.FirstOrDefault(x => x.AffectedUnits.Contains("all") || x.AffectedUnits.Contains(unit.UnitData.Name))?.RangeIncrease ?? 0;
 
                     if (unit.UnitData.AttackRange != Vector2I.One)
@@ -899,8 +899,8 @@ namespace AWBWApp.Game.Game.Logic
 
                 case 2:
                 {
-                    var dayToDayPower = replayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
-                    var action = replayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
+                    var dayToDayPower = ReplayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+                    var action = ReplayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
                     var sightRangeModifier = dayToDayPower.SightIncrease + (action?.SightRangeIncrease ?? 0);
                     sightRangeModifier += unit.UnitData.MovementType != MovementType.Air ? TileGrid[unit.MapPosition.X, unit.MapPosition.Y].TerrainTile.SightDistanceIncrease : 0;
 
@@ -1010,8 +1010,8 @@ namespace AWBWApp.Game.Game.Logic
 
             var movementRange = unit.MovementRange.Value;
 
-            var action = replayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
-            var dayToDay = replayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+            var action = ReplayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
+            var dayToDay = ReplayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
 
             movementRange += action?.MovementRangeIncrease ?? 0;
 
@@ -1108,7 +1108,7 @@ namespace AWBWApp.Game.Game.Logic
             }
         }
 
-        private long? getPlayerIDFromCountryID(int countryID) => replayController.Players.FirstOrDefault(x => x.Value.OriginalCountryID == countryID).Value?.ID;
+        private long? getPlayerIDFromCountryID(int countryID) => ReplayController.Players.FirstOrDefault(x => x.Value.OriginalCountryID == countryID).Value?.ID;
 
         public UnitData GetUnitDataForUnitName(string unitName) => UnitStorage.GetUnitByCode(unitName);
 

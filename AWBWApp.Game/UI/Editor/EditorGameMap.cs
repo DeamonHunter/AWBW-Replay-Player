@@ -312,6 +312,11 @@ namespace AWBWApp.Game.UI.Editor
             lastCursorPosition = e.MousePosition;
         }
 
+        protected override string GetCurrentTeamVisibility()
+        {
+            return "";
+        }
+
         public ReplayMap GenerateMap()
         {
             var replayMap = new ReplayMap();
