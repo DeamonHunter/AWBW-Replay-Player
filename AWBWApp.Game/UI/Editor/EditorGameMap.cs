@@ -129,7 +129,7 @@ namespace AWBWApp.Game.UI.Editor
                 if (BuildingGrid.TryGet(position, out _))
                     return; //Buildings do not have alts
 
-                if (shoalTile == -1 || shoalTile == TileGrid[position.X, position.Y].TerrainTile.AWBWID)
+                if (shoalTile == -1 || shoalTile == (TileGrid[position.X, position.Y]?.TerrainTile.AWBWID ?? -1))
                     return;
             }
 
@@ -139,7 +139,7 @@ namespace AWBWApp.Game.UI.Editor
                 {
                     TileBefore = tiles[position.X, position.Y],
                     TileAfter = newTileID,
-                    AltBefore = (short)TileGrid[position.X, position.Y].TerrainTile.AWBWID,
+                    AltBefore = (short)(TileGrid[position.X, position.Y]?.TerrainTile.AWBWID ?? shoalTile),
                     AltAfter = shoalTile
                 };
 
