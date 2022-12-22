@@ -374,8 +374,26 @@ namespace AWBWApp.Game.Editor
                 }
 
             // Sort cap chains by profit
-            // foreach(List<List<CapStop>> chainList in output.capChains.Values)
-            // Collections.sort(chainList, new CapStopFundsComparator(infMove));
+            foreach (List<List<CapStop>> chainList in output.capChains.Values)
+                chainList.Sort((x, y) => EstimateIncome(y) - EstimateIncome(x));
+        }
+
+        const int TURN_LIMIT = 13;
+        private static int EstimateIncome(List<CapStop> capList, int turnLimit = TURN_LIMIT)
+        {
+            // Start at 1, since we know the first item is just a build
+            int currentTurn = 1;
+            int currentIncome = 0;
+
+            for(int i = 1; i < capList.Count || currentTurn >= turnLimit; ++i)
+            {
+                int turnShift = capList[i-1].extraTurns;
+                currentTurn += turnShift + 1; // +1 for the extra cap turn
+                // We get income from the prop for every turn after we captured it
+                currentIncome += Math.Max(0, turnLimit - currentTurn);
+            }
+
+            return currentIncome;
         }
     }
 }
