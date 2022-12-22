@@ -62,12 +62,12 @@ namespace AWBWApp.Game.Editor
         const int TURN_SCALAR = 100;
         const int NEUTRAL = -1;
 
-        public static bool feasiblePathExists(DrawableUnit unit, Vector2I destination, GameMap map)
+        public static bool feasiblePathExists(DrawableUnit unit, Vector2I destination, GameMap map, int lookaheadCount = LOOKAHEAD_TURNS)
         {
             var movementList = new List<Vector2I>();
             var oldMove = unit.MovementRange.Value;
 
-            unit.MovementRange.Value = oldMove * LOOKAHEAD_TURNS;
+            unit.MovementRange.Value = oldMove * lookaheadCount;
             // Note: If there are enemy units in relevant places on the map, this won't work as expected
             map.getMovementTiles(unit, movementList);
             unit.MovementRange.Value = oldMove;
@@ -182,7 +182,7 @@ namespace AWBWApp.Game.Editor
                         continue; // Don't barf in weird maps
 
                     inf.MoveToPosition(ownedFac);
-                    if( !feasiblePathExists(inf, propXYC, map) )
+                    if( !feasiblePathExists(inf, propXYC, map, 10) )
                         continue; // Can't reach this city
                     
                     int oldDistance = int.MaxValue;
@@ -234,8 +234,7 @@ namespace AWBWApp.Game.Editor
                 foreach (Vector2I dest in facsToGrab)
                 {
                     var facsOwned = startingFactories[owner];
-                    facsOwned.OrderBy((x) => x.ManhattanDistance(dest));
-                    Vector2I ownedFac = facsOwned[0];
+                    Vector2I ownedFac = facsOwned.OrderBy((x) => x.ManhattanDistance(dest)).First();
 
                     inf.MoveToPosition(ownedFac);
                     if( !feasiblePathExists(inf, dest, map) )
@@ -336,8 +335,7 @@ namespace AWBWApp.Game.Editor
                             inf.MoveToPosition(start);
 
                             // TODO: There's no easy way to grab the true move cost, so just use the Manhattan distance
-                            rightfulProps.OrderBy((x) => x.ManhattanDistance(start));
-                            Vector2I dest = rightfulProps[0];
+                            Vector2I dest = rightfulProps.OrderBy((x) => x.ManhattanDistance(start)).First();
 
                             if (!feasiblePathExists(inf, dest, map))
                             {
