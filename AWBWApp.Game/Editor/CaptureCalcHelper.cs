@@ -290,6 +290,9 @@ namespace AWBWApp.Game.Editor
 
             foreach (var country in startingFactoryDict.Keys)
             {
+                if (NEUTRAL == country)
+                    continue;
+
                 // Factory cache that we can remove ones we're done with from
                 List<Vector2I> remainingFactories = new List<Vector2I>();
                 remainingFactories.AddRange(startingFactoryDict[country]);
