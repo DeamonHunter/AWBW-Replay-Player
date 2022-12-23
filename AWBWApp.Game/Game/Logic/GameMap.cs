@@ -864,7 +864,7 @@ namespace AWBWApp.Game.Game.Logic
             {
                 case 0:
                 {
-                    getMovementTiles(unit, tileList);
+                    GetMovementTiles(unit, tileList);
                     colour = new Color4(50, 200, 50, 100);
                     outlineColour = new Color4(100, 150, 100, 255);
                     break;
@@ -946,7 +946,7 @@ namespace AWBWApp.Game.Game.Logic
         {
             var movementList = new List<Vector2I>();
 
-            getMovementTiles(unit, movementList);
+            GetMovementTiles(unit, movementList);
 
             var tileSet = new HashSet<Vector2I>();
 
@@ -1005,7 +1005,7 @@ namespace AWBWApp.Game.Game.Logic
             return true;
         }
 
-        public void getMovementTiles(DrawableUnit unit, List<Vector2I> positions)
+        public void GetMovementTiles(DrawableUnit unit, List<Vector2I> positions)
         {
             var visited = new HashSet<Vector2I>();
             var queue = new PriorityQueue<Vector2I, int>();
