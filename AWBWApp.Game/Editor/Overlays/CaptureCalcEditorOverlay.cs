@@ -102,7 +102,7 @@ namespace AWBWApp.Game.Editor.Overlays
                 }
             }
 
-            buildBaseCapChains(output, rightfulProps, startingFactories);
+            buildBaseCapChains(output, factoriesToCountry, rightfulProps, startingFactories);
 
             // Add our factory chains in at the start of each list
             foreach (var chain in factoryCapChains)
@@ -184,24 +184,16 @@ namespace AWBWApp.Game.Editor.Overlays
             }
         }
 
-        private bool feasiblePathExists(DrawableUnit unit, Vector2I destination, int lookaheadCount = lookahead_turns)
+        private void buildBaseCapChains(CapPhaseAnalysis output, Dictionary<Vector2I, int> factoriesToCountry, Dictionary<int, List<Vector2I>> rightfulProps, Dictionary<int, List<Vector2I>> startingFactory)
         {
-            var oldMove = unit.MovementRange.Value;
-            return map.CanUnitMoveToTile(unit.UnitData, unit.MapPosition, destination, oldMove * lookaheadCount, out _);
-        }
-
-        private void buildBaseCapChains(CapPhaseAnalysis output, Dictionary<int, List<Vector2I>> rightfulPropsDict, Dictionary<int, List<Vector2I>> startingFactoryDict)
-        {
-            var infMove = 3;
-
-            foreach (var (country, factories) in startingFactoryDict)
+            foreach (var (country, factories) in startingFactory)
             {
                 if (neutral_country_id == country)
                     continue;
 
                 // Factory cache that we can remove ones we're done with from
                 var remainingFactories = new List<Vector2I>(factories);
-                var rightfulProps = rightfulPropsDict[country];
+                var playersProps = rightfulProps[country];
 
                 // Build initial bits of capChains
                 foreach (var start in remainingFactories)
@@ -213,7 +205,7 @@ namespace AWBWApp.Game.Editor.Overlays
                 var madeProgress = true;
 
                 // Find the next stop or iterate extraTurns on all cap chains
-                while (madeProgress && rightfulProps.Count > 0)
+                while (madeProgress && playersProps.Count > 0)
                 {
                     // Create new cap chains
                     foreach (var start in remainingFactories)
@@ -226,14 +218,17 @@ namespace AWBWApp.Game.Editor.Overlays
 
                     madeProgress = false;
 
-                    foreach (var chainList in output.CapChains.Values)
+                    foreach (var (chainStart, chainList) in output.CapChains)
                     {
-                        if (rightfulProps.Count == 0)
+                        if (factoriesToCountry[chainStart] != country)
+                            continue;
+
+                        if (playersProps.Count == 0)
                             break;
 
                         foreach (var chain in chainList)
                         {
-                            if (rightfulProps.Count == 0)
+                            if (playersProps.Count == 0)
                                 break;
 
                             var finalStop = chain[^1];
@@ -246,7 +241,13 @@ namespace AWBWApp.Game.Editor.Overlays
                             }
 
                             var start = finalStop.Coord;
-                            var dest = rightfulProps.MinBy((x) => x.ManhattanDistance(start));
+                            var dest = playersProps.MinBy((x) =>
+                            {
+                                if (!map.CanUnitMoveToTile(infantryData, start, x, infantryData.MovementRange * (lookahead_turns + 1), out var movement))
+                                    return int.MaxValue;
+
+                                return movement;
+                            });
 
                             if (!map.CanUnitMoveToTile(infantryData, start, dest, infantryData.MovementRange * lookahead_turns, out var distance))
                             {
@@ -255,11 +256,11 @@ namespace AWBWApp.Game.Editor.Overlays
                             }
 
                             madeProgress = true; // We have somewhere we can still get to
-                            var currentTotalMove = (finalStop.ExtraTurns + 1) * infMove;
+                            var currentTotalMove = (finalStop.ExtraTurns + 1) * infantryData.MovementRange;
 
                             if (distance <= currentTotalMove)
                             {
-                                rightfulProps.Remove(dest);
+                                playersProps.Remove(dest);
                                 var cap = new CapStop(dest);
                                 chain.Add(cap);
                             }
