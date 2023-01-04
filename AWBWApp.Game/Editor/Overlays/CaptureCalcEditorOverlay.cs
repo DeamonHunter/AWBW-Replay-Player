@@ -330,7 +330,7 @@ namespace AWBWApp.Game.Editor.Overlays
             }
         }
 
-        public struct CapStop
+        public class CapStop
         {
             /// <summary>
             /// The number of turns that we looked ahead to find another stop.
@@ -341,7 +341,6 @@ namespace AWBWApp.Game.Editor.Overlays
             public CapStop(Vector2I coord)
             {
                 Coord = coord;
-                ExtraTurns = 0;
             }
 
             public override string ToString() => $"{Coord}+{ExtraTurns}";
