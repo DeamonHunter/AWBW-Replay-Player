@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Game.Building;
-using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Editor;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.Editor.Overlays
@@ -21,12 +18,12 @@ namespace AWBWApp.Game.Editor.Overlays
         private const int turn_limit = 13;
 
         private readonly EditorGameMap map;
-        private readonly UnitStorage unitStorage;
+        private readonly UnitData infantryData;
 
         public CaptureCalcEditorOverlay(EditorGameMap map, UnitStorage unitStorage)
         {
             this.map = map;
-            this.unitStorage = unitStorage;
+            infantryData = unitStorage.GetUnitByCode("Infantry");
         }
 
         public CapPhaseAnalysis CalculateCapPhase()
@@ -66,21 +63,6 @@ namespace AWBWApp.Game.Editor.Overlays
                 }
             }
 
-            var infantryData = unitStorage.GetUnitByCode("Infantry");
-            var infantryState = new ReplayUnit
-            {
-                HitPoints = 10,
-                Ammo = infantryData.MaxAmmo,
-                BeingCarried = false,
-                CargoUnits = null,
-                Cost = infantryData.Cost,
-                Fuel = infantryData.MaxFuel,
-                FuelPerTurn = infantryData.FuelUsagePerTurn,
-                ID = 0,
-                MovementPoints = infantryData.MovementRange
-            };
-            var inf = new DrawableUnit(infantryData, infantryState, new Bindable<CountryData>(new CountryData()), null);
-
             var rightfulProps = new Dictionary<int, List<Vector2I>>();
             var rightfulFactories = new Dictionary<int, List<Vector2I>>();
 
@@ -90,8 +72,8 @@ namespace AWBWApp.Game.Editor.Overlays
                 rightfulFactories[country] = new List<Vector2I>();
             }
 
-            checkForCapturableFactories(factoriesToCountry, inf, rightfulFactories);
-            checkForContestedProperties(propertiesToCountry, factoriesToCountry, inf, rightfulProps, output);
+            checkForCapturableFactories(factoriesToCountry, rightfulFactories);
+            checkForContestedProperties(propertiesToCountry, factoriesToCountry, rightfulProps, output);
 
             // Build cap chains to factories; don't continue them, since cap chains from that factory will be considered separately
             var factoryCapChains = new List<List<CapStop>>();
@@ -103,17 +85,13 @@ namespace AWBWApp.Game.Editor.Overlays
                     var facsOwned = startingFactories[owner];
                     var ownedFac = facsOwned.MinBy((x) => x.ManhattanDistance(dest));
 
-                    inf.MoveToPosition(ownedFac);
-                    if (!feasiblePathExists(inf, dest))
+                    if (!map.CanUnitMoveToTile(infantryData, ownedFac, dest, infantryData.MovementRange * lookahead_turns, out var distance))
                         continue; // Can't reach
-
-                    // TODO: There's no easy way to grab the true move cost, so just use the Manhattan distance
-                    var distance = dest.ManhattanDistance(ownedFac) * turn_scalar / 3; // inf move = 3
 
                     // A bunch of "free funding turns" should convince the chain-sorter to put factory-captures first.
                     var chain = new List<CapStop>()
                     {
-                        new CapStop(ownedFac) { ExtraTurns = distance / 3 - 13 }, // inf move = 3
+                        new CapStop(ownedFac) { ExtraTurns = Math.Max(-3, (distance / infantryData.MovementRange) - 4) },
                         new CapStop(dest)
                     };
 
@@ -124,7 +102,7 @@ namespace AWBWApp.Game.Editor.Overlays
                 }
             }
 
-            buildBaseCapChains(output, rightfulProps, startingFactories, inf);
+            buildBaseCapChains(output, rightfulProps, startingFactories);
 
             // Add our factory chains in at the start of each list
             foreach (var chain in factoryCapChains)
@@ -136,7 +114,7 @@ namespace AWBWApp.Game.Editor.Overlays
             return output;
         }
 
-        private void checkForCapturableFactories(Dictionary<Vector2I, int> factoriesToCountry, DrawableUnit inf, Dictionary<int, List<Vector2I>> rightfulFactories)
+        private void checkForCapturableFactories(Dictionary<Vector2I, int> factoriesToCountry, Dictionary<int, List<Vector2I>> rightfulFactories)
         {
             // Fully calculate factory ownership based on who can cap each first
             // Assumption: No contested factories
@@ -153,12 +131,8 @@ namespace AWBWApp.Game.Editor.Overlays
                     if (ownedFactoryOwner == neutral_country_id)
                         continue;
 
-                    inf.MoveToPosition(ownedFactoryPos);
-                    if (!feasiblePathExists(inf, neutralFactoryPos))
+                    if (!map.CanUnitMoveToTile(infantryData, ownedFactoryPos, neutralFactoryPos, infantryData.MovementRange * lookahead_turns, out var distance))
                         continue; // Can't reach
-
-                    // TODO: There's no easy way to grab the true move cost, so just use the Manhattan distance
-                    var distance = neutralFactoryPos.ManhattanDistance(ownedFactoryPos);
 
                     if (distance < newOwnerDistance)
                     {
@@ -173,7 +147,7 @@ namespace AWBWApp.Game.Editor.Overlays
             }
         }
 
-        private void checkForContestedProperties(Dictionary<Vector2I, int> propertiesToCountry, Dictionary<Vector2I, int> factoriesToCountry, DrawableUnit inf,
+        private void checkForContestedProperties(Dictionary<Vector2I, int> propertiesToCountry, Dictionary<Vector2I, int> factoriesToCountry,
                                                  Dictionary<int, List<Vector2I>> rightfulProps, CapPhaseAnalysis output)
         {
             // Finally, figure out what non-factories are contested or rightfully mine
@@ -187,15 +161,12 @@ namespace AWBWApp.Game.Editor.Overlays
                     if (ownedFactoryOwner == neutral_country_id)
                         continue;
 
-                    inf.MoveToPosition(ownedFactoryPos);
-                    if (!feasiblePathExists(inf, propertyPos, 10))
+                    if (!map.CanUnitMoveToTile(infantryData, ownedFactoryPos, propertyPos, infantryData.MovementRange * 10, out var distance))
                         continue; // Can't reach this city
 
                     if (!possibleOwners.TryGetValue(ownedFactoryOwner, out var oldDistance))
                         oldDistance = int.MaxValue;
 
-                    // TODO: There's no easy way to grab the true move cost, so just use the Manhattan distance
-                    var distance = propertyPos.ManhattanDistance(ownedFactoryPos) * turn_scalar / 3; // inf move = 3
                     if (distance < oldDistance)
                         possibleOwners[ownedFactoryOwner] = distance;
                 }
@@ -203,7 +174,7 @@ namespace AWBWApp.Game.Editor.Overlays
                 // Calculate who's the closest, and if that army has real competition for this prop
 
                 var (closestArmy, closestDistance) = possibleOwners.MinBy(x => x.Value);
-                var contested = possibleOwners.Any(x => x.Key != closestArmy && Math.Abs(x.Value - closestDistance) <= turn_scalar);
+                var contested = possibleOwners.Any(x => x.Key != closestArmy && Math.Abs(x.Value - closestDistance) / (float)infantryData.MovementRange <= 1);
 
                 // If it isn't contested and we want to try to cap it, add it to the list
                 if (contested)
@@ -219,7 +190,7 @@ namespace AWBWApp.Game.Editor.Overlays
             return map.CanUnitMoveToTile(unit.UnitData, unit.MapPosition, destination, oldMove * lookaheadCount, out _);
         }
 
-        private void buildBaseCapChains(CapPhaseAnalysis output, Dictionary<int, List<Vector2I>> rightfulPropsDict, Dictionary<int, List<Vector2I>> startingFactoryDict, DrawableUnit inf)
+        private void buildBaseCapChains(CapPhaseAnalysis output, Dictionary<int, List<Vector2I>> rightfulPropsDict, Dictionary<int, List<Vector2I>> startingFactoryDict)
         {
             var infMove = 3;
 
@@ -275,19 +246,15 @@ namespace AWBWApp.Game.Editor.Overlays
                             }
 
                             var start = finalStop.Coord;
-                            inf.MoveToPosition(start);
-
-                            // TODO: There's no easy way to grab the true move cost, so just use the Manhattan distance
                             var dest = rightfulProps.MinBy((x) => x.ManhattanDistance(start));
 
-                            if (!feasiblePathExists(inf, dest))
+                            if (!map.CanUnitMoveToTile(infantryData, start, dest, infantryData.MovementRange * lookahead_turns, out var distance))
                             {
                                 finalStop.ExtraTurns = lookahead_turns + 1;
                                 continue; // Can't reach
                             }
-                            madeProgress = true; // We have somewhere we can still get to
 
-                            var distance = start.ManhattanDistance(dest);
+                            madeProgress = true; // We have somewhere we can still get to
                             var currentTotalMove = (finalStop.ExtraTurns + 1) * infMove;
 
                             if (distance <= currentTotalMove)
