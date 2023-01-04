@@ -20,16 +20,22 @@ namespace AWBWApp.Game.Editor.Overlays
         private const int neutral_country_id = -1;
         private const int turn_limit = 13;
 
-        public CapPhaseAnalysis CalculateCapPhase(EditorGameMap map, UnitStorage unitStorage)
+        private readonly EditorGameMap map;
+        private readonly UnitStorage unitStorage;
+
+        public CaptureCalcEditorOverlay(EditorGameMap map, UnitStorage unitStorage)
+        {
+            this.map = map;
+            this.unitStorage = unitStorage;
+        }
+
+        public CapPhaseAnalysis CalculateCapPhase()
         {
             var output = new CapPhaseAnalysis();
 
-            var props = new List<Vector2I>(); // Non-factory properties, specifically
-            var propsOwnership = new Dictionary<Vector2I, int>();
-
-            var factoryOwnership = new Dictionary<Vector2I, int>();
+            var propertiesToCountry = new Dictionary<Vector2I, int>();
+            var factoriesToCountry = new Dictionary<Vector2I, int>();
             var startingFactories = new Dictionary<int, List<Vector2I>>();
-            var countries = new HashSet<int>();
 
             for (var x = 0; x < map.MapSize.X; x++)
             {
@@ -41,21 +47,21 @@ namespace AWBWApp.Game.Editor.Overlays
                     {
                         var building = mapBuilding.BuildingTile;
                         var country = building.CountryID;
-                        if (!countries.Contains(country))
-                            countries.Add(country);
 
+                        //Todo: Add building type categories
                         if (building.Name.Contains("base", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            factoryOwnership[coord] = country;
-                            if (!startingFactories.ContainsKey(country))
-                                startingFactories[country] = new List<Vector2I>();
-                            startingFactories[country].Add(coord);
+                            factoriesToCountry[coord] = country;
+
+                            if (!startingFactories.TryGetValue(country, out var factoryList))
+                            {
+                                factoryList = new List<Vector2I>();
+                                startingFactories.Add(country, factoryList);
+                            }
+                            factoryList.Add(coord);
                         }
                         else if (building.GivesMoneyWhenCaptured)
-                        {
-                            props.Add(coord);
-                            propsOwnership[coord] = country;
-                        }
+                            propertiesToCountry[coord] = country;
                     }
                 }
             }
@@ -76,138 +82,41 @@ namespace AWBWApp.Game.Editor.Overlays
             var inf = new DrawableUnit(infantryData, infantryState, new Bindable<CountryData>(new CountryData()), null);
 
             var rightfulProps = new Dictionary<int, List<Vector2I>>();
-            foreach (var country in countries)
-                rightfulProps[country] = new List<Vector2I>();
             var rightfulFactories = new Dictionary<int, List<Vector2I>>();
-            foreach (var country in countries)
+
+            foreach (var country in startingFactories.Keys)
+            {
+                rightfulProps[country] = new List<Vector2I>();
                 rightfulFactories[country] = new List<Vector2I>();
-
-            // Fully calculate factory ownership based on who can cap each first
-            // Assumption: No contested factories
-            foreach (var neutralFac in factoryOwnership.Keys)
-            {
-                var currentOwner = factoryOwnership[neutralFac];
-                if (currentOwner != neutral_country_id)
-                    continue; // Not actually neutral
-
-                var newOwnerDistance = int.MaxValue;
-                var newOwner = neutral_country_id;
-
-                foreach (var ownedFac in factoryOwnership.Keys)
-                {
-                    var owner = factoryOwnership[ownedFac];
-                    if (owner == neutral_country_id)
-                        continue; // Not yet owned
-
-                    inf.MoveToPosition(ownedFac);
-                    if (!feasiblePathExists(inf, neutralFac, map))
-                        continue; // Can't reach
-
-                    // TODO: There's no easy way to grab the true move cost, so just use the Manhattan distance
-                    var distance = neutralFac.ManhattanDistance(ownedFac);
-
-                    if (distance < newOwnerDistance)
-                    {
-                        newOwnerDistance = distance;
-                        newOwner = owner;
-                    }
-                }
-                factoryOwnership[neutralFac] = newOwner;
-
-                if (neutral_country_id != newOwner)
-                {
-                    rightfulFactories[newOwner].Add(neutralFac);
-                }
             }
 
-            // Finally, figure out what non-factories are contested or rightfully mine
-            foreach (var propXYC in props)
-            {
-                // Each country's turns to cap this prop, measured in % of a turn's movement
-                var possibleOwners = new Dictionary<int, int>();
-
-                foreach (var ownedFac in factoryOwnership.Keys)
-                {
-                    var owner = factoryOwnership[ownedFac];
-                    if (owner == neutral_country_id)
-                        continue; // Don't barf in weird maps
-
-                    inf.MoveToPosition(ownedFac);
-                    if (!feasiblePathExists(inf, propXYC, map, 10))
-                        continue; // Can't reach this city
-
-                    var oldDistance = int.MaxValue;
-                    if (possibleOwners.ContainsKey(owner))
-                        oldDistance = possibleOwners[owner];
-
-                    // TODO: There's no easy way to grab the true move cost, so just use the Manhattan distance
-                    var distance = propXYC.ManhattanDistance(ownedFac) * turn_scalar / 3; // inf move = 3
-                    if (distance < oldDistance)
-                        possibleOwners[owner] = distance;
-                }
-
-                // Calculate who's the closest, and if that army has real competition for this prop
-                var closestArmy = neutral_country_id;
-                var closestDistance = int.MaxValue;
-
-                foreach (var army in possibleOwners.Keys)
-                {
-                    var distance = possibleOwners[army];
-
-                    if (distance < closestDistance)
-                    {
-                        closestArmy = army;
-                        closestDistance = distance;
-                    }
-                }
-
-                var contested = false;
-
-                foreach (var army in possibleOwners.Keys)
-                {
-                    // TODO? Assumes all armies are enemies
-                    if (army == closestArmy)
-                        continue;
-                    var distance = possibleOwners[army];
-                    var distanceDelta = Math.Abs(closestDistance - distance);
-                    contested |= distanceDelta <= turn_scalar;
-                }
-
-                // If it isn't contested and we want to try to cap it, add it to the list
-                if (contested)
-                    output.ContestedProps.Add(propXYC);
-                else if (propsOwnership[propXYC] != closestArmy) // Don't try to cap it if we already own it
-                    rightfulProps[closestArmy].Add(propXYC);
-            }
+            checkForCapturableFactories(factoriesToCountry, inf, rightfulFactories);
+            checkForContestedProperties(propertiesToCountry, factoriesToCountry, inf, rightfulProps, output);
 
             // Build cap chains to factories; don't continue them, since cap chains from that factory will be considered separately
             var factoryCapChains = new List<List<CapStop>>();
 
-            foreach (var owner in rightfulFactories.Keys)
+            foreach (var (owner, factoriesToGrab) in rightfulFactories)
             {
-                var facsToGrab = rightfulFactories[owner];
-
-                foreach (var dest in facsToGrab)
+                foreach (var dest in factoriesToGrab)
                 {
                     var facsOwned = startingFactories[owner];
-                    var ownedFac = facsOwned.OrderBy((x) => x.ManhattanDistance(dest)).First();
+                    var ownedFac = facsOwned.MinBy((x) => x.ManhattanDistance(dest));
 
                     inf.MoveToPosition(ownedFac);
-                    if (!feasiblePathExists(inf, dest, map))
+                    if (!feasiblePathExists(inf, dest))
                         continue; // Can't reach
 
                     // TODO: There's no easy way to grab the true move cost, so just use the Manhattan distance
                     var distance = dest.ManhattanDistance(ownedFac) * turn_scalar / 3; // inf move = 3
 
                     // A bunch of "free funding turns" should convince the chain-sorter to put factory-captures first.
-                    var chain = new List<CapStop>();
-                    var build = new CapStop(ownedFac)
+                    var chain = new List<CapStop>()
                     {
-                        ExtraTurns = distance / 3 - 13 // inf move = 3
+                        new CapStop(ownedFac) { ExtraTurns = distance / 3 - 13 }, // inf move = 3
+                        new CapStop(dest)
                     };
-                    chain.Add(build);
-                    var cap = new CapStop(dest);
-                    chain.Add(cap);
+
                     factoryCapChains.Add(chain);
 
                     // Now that we're in grab-cities land, don't worry about whether we start with this factory or not.
@@ -215,7 +124,7 @@ namespace AWBWApp.Game.Editor.Overlays
                 }
             }
 
-            buildBaseCapChains(output, unitStorage, map, rightfulProps, startingFactories);
+            buildBaseCapChains(output, rightfulProps, startingFactories, inf);
 
             // Add our factory chains in at the start of each list
             foreach (var chain in factoryCapChains)
@@ -227,39 +136,100 @@ namespace AWBWApp.Game.Editor.Overlays
             return output;
         }
 
-        private static bool feasiblePathExists(DrawableUnit unit, Vector2I destination, EditorGameMap map, int lookaheadCount = lookahead_turns)
+        private void checkForCapturableFactories(Dictionary<Vector2I, int> factoriesToCountry, DrawableUnit inf, Dictionary<int, List<Vector2I>> rightfulFactories)
+        {
+            // Fully calculate factory ownership based on who can cap each first
+            // Assumption: No contested factories
+            foreach (var (neutralFactoryPos, neutralFactoryOwner) in factoriesToCountry)
+            {
+                if (neutralFactoryOwner != neutral_country_id)
+                    continue;
+
+                var newOwnerDistance = int.MaxValue;
+                var newOwner = neutral_country_id;
+
+                foreach (var (ownedFactoryPos, ownedFactoryOwner) in factoriesToCountry)
+                {
+                    if (ownedFactoryOwner == neutral_country_id)
+                        continue;
+
+                    inf.MoveToPosition(ownedFactoryPos);
+                    if (!feasiblePathExists(inf, neutralFactoryPos))
+                        continue; // Can't reach
+
+                    // TODO: There's no easy way to grab the true move cost, so just use the Manhattan distance
+                    var distance = neutralFactoryPos.ManhattanDistance(ownedFactoryPos);
+
+                    if (distance < newOwnerDistance)
+                    {
+                        newOwnerDistance = distance;
+                        newOwner = ownedFactoryOwner;
+                    }
+                }
+                factoriesToCountry[neutralFactoryPos] = newOwner;
+
+                if (neutral_country_id != newOwner)
+                    rightfulFactories[newOwner].Add(neutralFactoryPos);
+            }
+        }
+
+        private void checkForContestedProperties(Dictionary<Vector2I, int> propertiesToCountry, Dictionary<Vector2I, int> factoriesToCountry, DrawableUnit inf,
+                                                 Dictionary<int, List<Vector2I>> rightfulProps, CapPhaseAnalysis output)
+        {
+            // Finally, figure out what non-factories are contested or rightfully mine
+            foreach (var (propertyPos, propertyOwner) in propertiesToCountry)
+            {
+                // Each country's turns to cap this prop, measured in % of a turn's movement
+                var possibleOwners = new Dictionary<int, int>();
+
+                foreach (var (ownedFactoryPos, ownedFactoryOwner) in factoriesToCountry)
+                {
+                    if (ownedFactoryOwner == neutral_country_id)
+                        continue;
+
+                    inf.MoveToPosition(ownedFactoryPos);
+                    if (!feasiblePathExists(inf, propertyPos, 10))
+                        continue; // Can't reach this city
+
+                    if (!possibleOwners.TryGetValue(ownedFactoryOwner, out var oldDistance))
+                        oldDistance = int.MaxValue;
+
+                    // TODO: There's no easy way to grab the true move cost, so just use the Manhattan distance
+                    var distance = propertyPos.ManhattanDistance(ownedFactoryPos) * turn_scalar / 3; // inf move = 3
+                    if (distance < oldDistance)
+                        possibleOwners[ownedFactoryOwner] = distance;
+                }
+
+                // Calculate who's the closest, and if that army has real competition for this prop
+
+                var (closestArmy, closestDistance) = possibleOwners.MinBy(x => x.Value);
+                var contested = possibleOwners.Any(x => x.Key != closestArmy && Math.Abs(x.Value - closestDistance) <= turn_scalar);
+
+                // If it isn't contested and we want to try to cap it, add it to the list
+                if (contested)
+                    output.ContestedProps.Add(propertyPos);
+                else if (propertyOwner != closestArmy) // Don't try to cap it if we already own it
+                    rightfulProps[closestArmy].Add(propertyPos);
+            }
+        }
+
+        private bool feasiblePathExists(DrawableUnit unit, Vector2I destination, int lookaheadCount = lookahead_turns)
         {
             var oldMove = unit.MovementRange.Value;
             return map.CanUnitMoveToTile(unit.UnitData, unit.MapPosition, destination, oldMove * lookaheadCount, out _);
         }
 
-        private static void buildBaseCapChains(CapPhaseAnalysis output, UnitStorage unitStorage, EditorGameMap map,
-                                               Dictionary<int, List<Vector2I>> rightfulPropsDict, Dictionary<int, List<Vector2I>> startingFactoryDict)
+        private void buildBaseCapChains(CapPhaseAnalysis output, Dictionary<int, List<Vector2I>> rightfulPropsDict, Dictionary<int, List<Vector2I>> startingFactoryDict, DrawableUnit inf)
         {
-            var infantryData = unitStorage.GetUnitByCode("Infantry");
-            var infantryState = new ReplayUnit
-            {
-                HitPoints = 10,
-                Ammo = infantryData.MaxAmmo,
-                BeingCarried = false,
-                CargoUnits = null,
-                Cost = infantryData.Cost,
-                Fuel = infantryData.MaxFuel,
-                FuelPerTurn = infantryData.FuelUsagePerTurn,
-                ID = 0,
-                MovementPoints = infantryData.MovementRange
-            };
-            var inf = new DrawableUnit(infantryData, infantryState, new Bindable<CountryData>(new CountryData()), null);
             var infMove = 3;
 
-            foreach (var country in startingFactoryDict.Keys)
+            foreach (var (country, factories) in startingFactoryDict)
             {
                 if (neutral_country_id == country)
                     continue;
 
                 // Factory cache that we can remove ones we're done with from
-                var remainingFactories = new List<Vector2I>();
-                remainingFactories.AddRange(startingFactoryDict[country]);
+                var remainingFactories = new List<Vector2I>(factories);
                 var rightfulProps = rightfulPropsDict[country];
 
                 // Build initial bits of capChains
@@ -286,35 +256,39 @@ namespace AWBWApp.Game.Editor.Overlays
                     madeProgress = false;
 
                     foreach (var chainList in output.CapChains.Values)
+                    {
+                        if (rightfulProps.Count == 0)
+                            break;
+
                         foreach (var chain in chainList)
                         {
                             if (rightfulProps.Count == 0)
                                 break;
 
-                            var last = chain.Last();
+                            var finalStop = chain[^1];
 
-                            if (last.ExtraTurns >= lookahead_turns)
+                            if (finalStop.ExtraTurns >= lookahead_turns)
                             {
                                 if (chain.Count == 1)
-                                    remainingFactories.Remove(last.Coord);
+                                    remainingFactories.Remove(finalStop.Coord);
                                 break;
                             }
 
-                            var start = last.Coord;
+                            var start = finalStop.Coord;
                             inf.MoveToPosition(start);
 
                             // TODO: There's no easy way to grab the true move cost, so just use the Manhattan distance
-                            var dest = rightfulProps.OrderBy((x) => x.ManhattanDistance(start)).First();
+                            var dest = rightfulProps.MinBy((x) => x.ManhattanDistance(start));
 
-                            if (!feasiblePathExists(inf, dest, map))
+                            if (!feasiblePathExists(inf, dest))
                             {
-                                last.ExtraTurns = lookahead_turns + 1;
+                                finalStop.ExtraTurns = lookahead_turns + 1;
                                 continue; // Can't reach
                             }
                             madeProgress = true; // We have somewhere we can still get to
 
                             var distance = start.ManhattanDistance(dest);
-                            var currentTotalMove = (last.ExtraTurns + 1) * infMove;
+                            var currentTotalMove = (finalStop.ExtraTurns + 1) * infMove;
 
                             if (distance <= currentTotalMove)
                             {
@@ -323,21 +297,21 @@ namespace AWBWApp.Game.Editor.Overlays
                                 chain.Add(cap);
                             }
                             else
-                                last.ExtraTurns++;
+                                finalStop.ExtraTurns++;
                         }
+                    }
                 }
             }
 
             // Cull cap chains with no actual caps
             foreach (var chainList in output.CapChains.Values)
-                for (var i = 0; i < chainList.Count;)
+            {
+                for (var i = chainList.Count - 1; i >= 0; i--)
                 {
-                    var chain = chainList[i];
-                    if (chain.Count < 2)
+                    if (chainList[i].Count < 2)
                         chainList.RemoveAt(i);
-                    else
-                        ++i;
                 }
+            }
 
             // Sort cap chains by profit
             foreach (var chainList in output.CapChains.Values)

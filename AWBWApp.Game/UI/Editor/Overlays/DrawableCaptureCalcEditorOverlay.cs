@@ -1,5 +1,4 @@
 ﻿using AWBWApp.Game.Editor.Overlays;
-using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
 using osu.Framework.Allocation;
@@ -19,21 +18,13 @@ namespace AWBWApp.Game.UI.Editor.Overlays
         [Resolved]
         private Bindable<bool> showCaptureOverlay { get; set; }
 
-        [Resolved]
-        private BuildingStorage buildingStorage { get; set; }
-
-        [Resolved]
-        private UnitStorage unitStorage { get; set; }
-
         private readonly Container lineContainer;
         private readonly EditorGameMap map;
-        private readonly CaptureCalcEditorOverlay overlay;
+        private CaptureCalcEditorOverlay overlay;
 
         public DrawableCaptureCalcEditorOverlay(EditorGameMap gameMap)
         {
             map = gameMap;
-
-            overlay = new CaptureCalcEditorOverlay();
 
             RelativeSizeAxes = Axes.Both;
 
@@ -51,6 +42,12 @@ namespace AWBWApp.Game.UI.Editor.Overlays
             };
         }
 
+        [BackgroundDependencyLoader]
+        private void load(UnitStorage unitStorage)
+        {
+            overlay = new CaptureCalcEditorOverlay(map, unitStorage);
+        }
+
         protected override void LoadComplete()
         {
             base.LoadComplete();
@@ -61,7 +58,7 @@ namespace AWBWApp.Game.UI.Editor.Overlays
 
         public void CalcAndShowCaptures()
         {
-            if (!showCaptureOverlay.Value)
+            if (!showCaptureOverlay.Value || overlay == null)
             {
                 lineContainer.Hide();
                 return;
@@ -69,7 +66,7 @@ namespace AWBWApp.Game.UI.Editor.Overlays
 
             lineContainer.Clear();
 
-            var capPhase = overlay.CalculateCapPhase(map, unitStorage);
+            var capPhase = overlay.CalculateCapPhase();
 
             foreach (var prop in capPhase.ContestedProps)
             {
@@ -92,18 +89,8 @@ namespace AWBWApp.Game.UI.Editor.Overlays
                 {
                     var path = new Path();
                     path.PathRadius = 1.25f;
-
-                    var pathPosition = new Vector2(float.MaxValue);
-
                     foreach (var stop in chain)
-                    {
-                        var stopPosition = getTileCenter(stop);
-                        if (stopPosition.X < pathPosition.X)
-                            pathPosition.X = stopPosition.X;
-                        if (stopPosition.Y < pathPosition.Y)
-                            pathPosition.Y = stopPosition.Y;
-                        path.AddVertex(stopPosition);
-                    }
+                        path.AddVertex(getTileCenter(stop));
                     path.Colour = new Color4(0.2f, 0.2f, 1f, 1f);
                     lineContainer.Add(path);
                 }
