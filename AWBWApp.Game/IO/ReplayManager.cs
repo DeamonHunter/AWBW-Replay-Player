@@ -402,7 +402,7 @@ namespace AWBWApp.Game.IO
 
                 if (extension == ".zip")
                 {
-                    using (var readFileStream = new FileStream(path, FileMode.Open))
+                    using (var readFileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
                     {
                         var zipArchive = new ZipArchive(readFileStream, ZipArchiveMode.Read);
                         data = jsonParser.ParseReplayZip(zipArchive);
@@ -420,14 +420,14 @@ namespace AWBWApp.Game.IO
                 else if (extension == ".awbw")
                 {
                     //Old style AWBW replay
-                    using (var readFileStream = new FileStream(path, FileMode.Open))
+                    using (var readFileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
                         data = xmlParser.ParseReplayFile(readFileStream);
 
                     var movePath = underlyingStorage.GetFullPath($"{data.ReplayInfo.ID}.awbw");
 
                     if (movePath != path)
                     {
-                        using (var readFileStream = new FileStream(path, FileMode.Open))
+                        using (var readFileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
                         {
                             readFileStream.Seek(0, SeekOrigin.Begin);
                             using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}.awbw", FileAccess.Write, FileMode.Create))
@@ -438,14 +438,14 @@ namespace AWBWApp.Game.IO
                 else
                 {
                     //GZIP stream disposes the base stream. So we need to open this twice.
-                    using (var readFileStream = new FileStream(path, FileMode.Open))
+                    using (var readFileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
                         data = jsonParser.ParseReplayFile(readFileStream);
 
                     var movePath = underlyingStorage.GetFullPath($"{data.ReplayInfo.ID}");
 
                     if (movePath != path)
                     {
-                        using (var readFileStream = new FileStream(path, FileMode.Open))
+                        using (var readFileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
                         {
                             readFileStream.Seek(0, SeekOrigin.Begin);
                             using (var writeStream = underlyingStorage.GetStream($"{data.ReplayInfo.ID}", FileAccess.Write, FileMode.Create))
