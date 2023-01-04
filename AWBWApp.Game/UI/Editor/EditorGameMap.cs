@@ -334,5 +334,49 @@ namespace AWBWApp.Game.UI.Editor
 
             return replayMap;
         }
+
+        public bool CanUnitMoveToTile(UnitData unitData, Vector2I start, Vector2I destination, int availableMovementPoints, out int movementCost)
+        {
+            var visited = new HashSet<Vector2I>();
+            var queue = new PriorityQueue<Vector2I, int>();
+            queue.Enqueue(start, 0);
+
+            void addTileToQueueIfPossible(Vector2I position, int currentCost)
+            {
+                if (visited.Contains(position))
+                    return;
+
+                if (!TryGetTerrainTypeAndMovementCostsForTile(position, out _, out var moveCosts))
+                    return;
+
+                if (!moveCosts.TryGetValue(unitData.MovementType, out var cost))
+                    return;
+
+                if (currentCost + cost <= availableMovementPoints)
+                    queue.Enqueue(position, currentCost + cost);
+            }
+
+            while (queue.TryDequeue(out var tilePos, out var movement))
+            {
+                if (visited.Contains(tilePos))
+                    continue;
+
+                visited.Add(tilePos);
+
+                if (tilePos == destination)
+                {
+                    movementCost = movement;
+                    return true;
+                }
+
+                addTileToQueueIfPossible(tilePos + new Vector2I(1, 0), movement);
+                addTileToQueueIfPossible(tilePos + new Vector2I(-1, 0), movement);
+                addTileToQueueIfPossible(tilePos + new Vector2I(0, 1), movement);
+                addTileToQueueIfPossible(tilePos + new Vector2I(0, -1), movement);
+            }
+
+            movementCost = int.MaxValue;
+            return false;
+        }
     }
 }
