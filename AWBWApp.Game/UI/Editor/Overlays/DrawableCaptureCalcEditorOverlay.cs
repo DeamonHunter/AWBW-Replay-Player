@@ -81,14 +81,14 @@ namespace AWBWApp.Game.UI.Editor.Overlays
                 });
             }
 
-            foreach (var factory in capPhase.CapChains.Keys)
+            foreach (var chainList in capPhase.CapChains.Values)
             {
-                var chainList = capPhase.CapChains[factory];
-
                 foreach (var chain in chainList)
                 {
-                    var path = new Path();
-                    path.PathRadius = 1.25f;
+                    var path = new Path()
+                    {
+                        PathRadius = 1.25f
+                    };
                     foreach (var stop in chain)
                         path.AddVertex(getTileCenter(stop));
                     path.Colour = new Color4(0.2f, 0.2f, 1f, 1f);
