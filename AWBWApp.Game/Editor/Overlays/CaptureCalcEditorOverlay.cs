@@ -315,15 +315,15 @@ namespace AWBWApp.Game.Editor.Overlays
                 foreach (var contested in ContestedProps)
                     sb.AppendLine($" {contested} ");
 
-                foreach (var factoryXYC in CapChains.Keys)
+                foreach (var (factoryPos, factoryChains) in CapChains)
                 {
-                    sb.Append(string.Format("Cap chains for %s:\n", factoryXYC));
+                    sb.AppendLine($"Cap chains for {factoryPos}");
 
-                    foreach (var chain in CapChains[factoryXYC])
+                    foreach (var chain in factoryChains)
                     {
-                        sb.Append(string.Format("  chain\n"));
+                        sb.AppendLine("  chain");
                         foreach (var stop in chain)
-                            sb.Append(string.Format("    %s\n", stop));
+                            sb.AppendLine($"    {stop}");
                     }
                 }
                 return sb.ToString();
