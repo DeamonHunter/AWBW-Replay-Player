@@ -1,5 +1,5 @@
 ﻿using System;
-using AWBWApp.Game.Editor;
+using AWBWApp.Game.Editor.Overlays;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
@@ -11,9 +11,9 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osuTK;
 
-namespace AWBWApp.Game.UI.Editor
+namespace AWBWApp.Game.UI.Editor.Overlays
 {
-    public partial class CaptureOverlayContainer : Container
+    public partial class DrawableCaptureCalcEditorOverlay : Container
     {
         [Resolved]
         private Bindable<bool> showCaptureOverlay { get; set; }
@@ -24,12 +24,16 @@ namespace AWBWApp.Game.UI.Editor
         [Resolved]
         private UnitStorage unitStorage { get; set; }
 
-        private Container lineContainer;
-        private EditorGameMap map;
+        private readonly Container lineContainer;
+        private readonly EditorGameMap map;
+        private readonly CaptureCalcEditorOverlay overlay;
 
-        public CaptureOverlayContainer(EditorGameMap gameMap)
+        public DrawableCaptureCalcEditorOverlay(EditorGameMap gameMap)
         {
             map = gameMap;
+
+            overlay = new CaptureCalcEditorOverlay();
+
             RelativeSizeAxes = Axes.Both;
 
             Masking = true;
@@ -65,7 +69,7 @@ namespace AWBWApp.Game.UI.Editor
 
             lineContainer.Clear();
 
-            var capPhase = CaptureCalcHelper.CalculateCapPhase(buildingStorage, unitStorage, map);
+            var capPhase = overlay.CalculateCapPhase(map, unitStorage);
 
             foreach (var prop in capPhase.ContestedProps)
             {

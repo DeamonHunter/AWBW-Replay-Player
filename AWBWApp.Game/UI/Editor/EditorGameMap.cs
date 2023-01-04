@@ -7,6 +7,7 @@ using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
+using AWBWApp.Game.UI.Editor.Overlays;
 using AWBWApp.Game.UI.Replay;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -34,7 +35,7 @@ namespace AWBWApp.Game.UI.Editor
         private EditorTileCursor editorCursor;
         private EditorTileCursor symmetryEditorCursor;
         private SymmetryLineContainer symmetryContainer;
-        private CaptureOverlayContainer captureContainer;
+        private DrawableCaptureCalcEditorOverlay drawableCaptureCalcEditor;
         private Vector2 lastCursorPosition;
 
         private TileChangeHistory tileChanges;
@@ -43,7 +44,7 @@ namespace AWBWApp.Game.UI.Editor
             : base(null)
         {
             Add(symmetryContainer = new SymmetryLineContainer());
-            Add(captureContainer = new CaptureOverlayContainer(this));
+            Add(drawableCaptureCalcEditor = new DrawableCaptureCalcEditorOverlay(this));
             Add(symmetryEditorCursor = new EditorTileCursor(true) { Alpha = 0 });
         }
 
