@@ -1,11 +1,12 @@
-﻿using AWBWApp.Game.Editor.Overlays;
+﻿using System;
+using AWBWApp.Game.Editor.Overlays;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
+using AWBWApp.Game.UI.Editor.Components;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Sprites;
 using osuTK;
@@ -85,12 +86,16 @@ namespace AWBWApp.Game.UI.Editor.Overlays
             {
                 foreach (var chain in chainList)
                 {
-                    var path = new Path()
+                    var path = new MultiColourPath()
                     {
                         PathRadius = 1.25f
                     };
-                    foreach (var stop in chain)
-                        path.AddVertex(getTileCenter(stop));
+
+                    for (var i = 0; i < chain.Count; i++)
+                    {
+                        var alpha = Math.Max(0.2f, (float)Math.Pow(0.7f, i));
+                        path.AddVertex(getTileCenter(chain[i]), new Color4(1f, 1f, 1f, alpha));
+                    }
                     path.Colour = new Color4(0.2f, 0.2f, 1f, 1f);
                     lineContainer.Add(path);
                 }
