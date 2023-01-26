@@ -5,6 +5,7 @@ using System.Linq;
 using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.API.Replay.Actions;
 using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
@@ -43,6 +44,9 @@ namespace AWBWApp.Game.Game.Logic
 
         [Resolved]
         protected CountryStorage CountryStorage { get; private set; }
+
+        [Resolved]
+        protected COStorage COStorage { get; private set; }
 
         protected CustomShoalGenerator ShoalGenerator { get; set; }
 
@@ -1010,39 +1014,34 @@ namespace AWBWApp.Game.Game.Logic
 
             var movementRange = unit.MovementRange.Value;
 
-            var action = ReplayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
-            var dayToDay = ReplayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+            COPower dayToDay;
 
-            movementRange += action?.MovementRangeIncrease ?? 0;
-
-            void addTileIfCanMoveTo(Vector2I position, int movement)
+            if (ReplayController != null)
             {
-                Dictionary<MovementType, int> moveCosts;
+                var action = ReplayController.GetActivePowerForPlayer(unit.OwnerID!.Value);
+                dayToDay = ReplayController.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+                movementRange += action?.MovementRangeIncrease ?? 0;
+            }
+            else
+                dayToDay = COStorage.GetCOByName("No CO").DayToDayPower; //In case this is triggered in cases like the editor
 
-                TerrainType terrainType;
+            void addTileToQueueIfPossible(Vector2I position, int movement)
+            {
+                if (visited.Contains(position))
+                    return;
+                if (!TryGetTerrainTypeAndMovementCostsForTile(position, out var terrainType, out var moveCosts))
+                    return;
 
-                if (TryGetDrawableBuilding(position, out var building))
-                {
-                    moveCosts = building.BuildingTile.MovementCostsPerType;
-                    terrainType = TerrainType.Building;
-                }
-                else
-                {
-                    var tile = TileGrid[position.X, position.Y].TerrainTile;
-                    moveCosts = tile.MovementCostsPerType;
-                    terrainType = tile.TerrainType;
-                }
+                if (!moveCosts.TryGetValue(unit.UnitData.MovementType, out var cost))
+                    return;
 
-                if (moveCosts.TryGetValue(unit.UnitData.MovementType, out var cost))
-                {
-                    if (dayToDay.MoveCostPerTile != null && CurrentWeather.Value != WeatherType.Snow)
-                        cost = dayToDay.MoveCostPerTile.Value;
-                    else if (CurrentWeather.Value != WeatherType.Clear)
-                        cost = movementForWeather(unit.UnitData.MovementType, dayToDay.WeatherWithNoMovementAffect, dayToDay.WeatherWithAdditionalMovementAffect, terrainType, cost);
+                if (dayToDay.MoveCostPerTile != null && CurrentWeather.Value != WeatherType.Snow)
+                    cost = dayToDay.MoveCostPerTile.Value;
+                else if (CurrentWeather.Value != WeatherType.Clear)
+                    cost = GetMovementCostForCurrentWeather(unit.UnitData.MovementType, terrainType, cost, dayToDay.WeatherWithNoMovementAffect, dayToDay.WeatherWithAdditionalMovementAffect);
 
-                    if (movement + cost <= movementRange)
-                        queue.Enqueue(position, movement + cost);
-                }
+                if (movement + cost <= movementRange)
+                    queue.Enqueue(position, movement + cost);
             }
 
             while (queue.TryDequeue(out var tilePos, out var movement))
@@ -1053,25 +1052,38 @@ namespace AWBWApp.Game.Game.Logic
                 visited.Add(tilePos);
                 positions.Add(tilePos);
 
-                var nextTile = tilePos + new Vector2I(1, 0);
-                if (nextTile.X < MapSize.X && !visited.Contains(nextTile))
-                    addTileIfCanMoveTo(nextTile, movement);
-
-                nextTile = tilePos + new Vector2I(-1, 0);
-                if (nextTile.X >= 0 && !visited.Contains(nextTile))
-                    addTileIfCanMoveTo(nextTile, movement);
-
-                nextTile = tilePos + new Vector2I(0, 1);
-                if (nextTile.Y < MapSize.Y && !visited.Contains(nextTile))
-                    addTileIfCanMoveTo(nextTile, movement);
-
-                nextTile = tilePos + new Vector2I(0, -1);
-                if (nextTile.Y >= 0 && !visited.Contains(nextTile))
-                    addTileIfCanMoveTo(nextTile, movement);
+                addTileToQueueIfPossible(tilePos + new Vector2I(1, 0), movement);
+                addTileToQueueIfPossible(tilePos + new Vector2I(-1, 0), movement);
+                addTileToQueueIfPossible(tilePos + new Vector2I(0, 1), movement);
+                addTileToQueueIfPossible(tilePos + new Vector2I(0, -1), movement);
             }
         }
 
-        private int movementForWeather(MovementType moveType, WeatherType noAffect, WeatherType additionalEffect, TerrainType type, int cost)
+        protected bool TryGetTerrainTypeAndMovementCostsForTile(Vector2I position, out TerrainType terrainType, out Dictionary<MovementType, int> moveCosts)
+        {
+            if (position.X < 0 || position.X >= MapSize.X || position.Y < 0 || position.Y >= MapSize.Y)
+            {
+                terrainType = TerrainType.None;
+                moveCosts = null;
+                return false;
+            }
+
+            if (TryGetDrawableBuilding(position, out var building))
+            {
+                moveCosts = building.BuildingTile.MovementCostsPerType;
+                terrainType = TerrainType.Building;
+            }
+            else
+            {
+                var tile = TileGrid[position.X, position.Y].TerrainTile;
+                moveCosts = tile.MovementCostsPerType;
+                terrainType = tile.TerrainType;
+            }
+
+            return true;
+        }
+
+        protected int GetMovementCostForCurrentWeather(MovementType moveType, TerrainType type, int cost, WeatherType noAffect = WeatherType.Clear, WeatherType additionalEffect = WeatherType.Clear)
         {
             if (CurrentWeather.Value == WeatherType.Clear || CurrentWeather.Value == noAffect)
                 return cost;

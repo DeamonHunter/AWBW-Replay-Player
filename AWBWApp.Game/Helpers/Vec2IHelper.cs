@@ -11,6 +11,10 @@ namespace AWBWApp.Game.Helpers
         {
             return Math.Abs(vector.X) + Math.Abs(vector.Y);
         }
+        public static int ManhattanDistance(this Vector2I vector, Vector2I other)
+        {
+            return Math.Abs(vector.X - other.X) + Math.Abs(vector.Y - other.Y);
+        }
 
         private static readonly Dictionary<int, List<Vector2I>> distance_cache = new Dictionary<int, List<Vector2I>>();
 

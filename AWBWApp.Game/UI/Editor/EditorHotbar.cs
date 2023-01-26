@@ -23,6 +23,9 @@ namespace AWBWApp.Game.UI.Editor
         [Resolved]
         private Bindable<BuildingTile> selectedBuilding { get; set; }
 
+        [Resolved]
+        private Bindable<bool> showCaptureOverlay { get; set; }
+
         public EditorHotbar()
         {
             AutoSizeAxes = Axes.X;
@@ -74,6 +77,11 @@ namespace AWBWApp.Game.UI.Editor
                     Action = selectTile
                 });
             }
+            hotbar.Add(new EditorSpriteButton()
+            {
+                // Tile = tileStorage.GetTileByAWBWId(2),
+                Action = toggleCaptureCalcOverlay
+            });
         }
 
         public void SetHotbarSlot(int slot, TerrainTile tile, BuildingTile building)
@@ -94,6 +102,12 @@ namespace AWBWApp.Game.UI.Editor
         {
             selectedTile.Value = tile;
             selectedBuilding.Value = building;
+        }
+
+        private void toggleCaptureCalcOverlay(TerrainTile tile, BuildingTile building)
+        {
+            // selectedTile.Value = tile;
+            showCaptureOverlay.Value = !showCaptureOverlay.Value;
         }
 
         protected override bool OnMouseDown(MouseDownEvent e)
