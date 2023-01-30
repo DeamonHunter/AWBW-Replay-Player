@@ -678,6 +678,8 @@ namespace AWBWApp.Game.API.Replay.Actions
                 }
             }
 
+            ReplayActionHelper.AdjustStatsToPlayerAction(controller, controller.ActivePlayer.ID, originalUnits.Values, false);
+
             controller.WeatherController.ParticleMultiplier = 1;
             controller.WeatherController.ParticleVelocity = 1;
 
