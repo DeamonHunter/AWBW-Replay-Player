@@ -150,7 +150,7 @@ namespace AWBWApp.Game.API.Replay
                 {
                     readTurn(replayData, text, ref textIndex, textIndex == 0);
 
-                    if (textIndex >= text.Length || text[textIndex++] != '\n')
+                    if (textIndex >= text.Length - 1 || text[textIndex++] != '\n')
                         break;
                 }
             }
