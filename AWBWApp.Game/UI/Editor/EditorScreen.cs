@@ -10,6 +10,7 @@ using AWBWApp.Game.Input;
 using AWBWApp.Game.IO;
 using AWBWApp.Game.UI.Components;
 using AWBWApp.Game.UI.Editor.Components;
+using AWBWApp.Game.UI.Editor.Interrupt;
 using AWBWApp.Game.UI.Replay;
 using AWBWApp.Game.UI.Toolbar;
 using Newtonsoft.Json;
@@ -120,13 +121,19 @@ namespace AWBWApp.Game.UI.Editor
         {
             base.OnEntering(e);
             menuBar.SetShowEditorMenu(true);
-            menuBar.OnSaveEditorTriggered += () => saveMap(lastSaveLocation);
-            menuBar.OnSaveAsEditorTriggered += () => saveMap(null);
+            menuBar.OnSaveEditorTriggered += () => saveMap(lastSaveLocation, () => ShowMessage("Map Saved!"));
+            menuBar.OnSaveAsEditorTriggered += () => saveMap(null, () => ShowMessage("Map Saved!"));
             menuBar.OnUploadEditorTriggered += uploadMap;
         }
 
         public override bool OnExiting(ScreenExitEvent e)
         {
+            if (historyManager.NeedsSave)
+            {
+                showSavePrompt();
+                return true;
+            }
+
             menuBar.SetShowEditorMenu(false);
             return base.OnExiting(e);
         }
@@ -134,9 +141,6 @@ namespace AWBWApp.Game.UI.Editor
         protected override void LoadComplete()
         {
             base.LoadComplete();
-
-            //loadDefaultMap();
-            //return;
 
             var taskCompletion = new TaskCompletionSource<ReplayMap>();
             interruptOverlay.Push(new DownloadOrCreateMapInterrupt(taskCompletion));
@@ -150,15 +154,30 @@ namespace AWBWApp.Game.UI.Editor
                 }
                 catch (TaskCanceledException)
                 {
+                    Schedule(this.Exit);
                     return;
                 }
 
                 Schedule(() =>
                 {
+                    if (info == null)
+                    {
+                        this.Exit();
+                        return;
+                    }
+
                     map.SetMap(info);
                     ScheduleAfterChildren(() => cameraControllerWithGrid.FitMapToSpace());
                 });
             });
+        }
+
+        private void showSavePrompt()
+        {
+            if (interruptOverlay.CurrentInterrupt != null)
+                return;
+
+            interruptOverlay.Push(new ExitWithoutSavingInterrupt(this));
         }
 
         private void loadDefaultMap()
@@ -177,20 +196,30 @@ namespace AWBWApp.Game.UI.Editor
             });
         }
 
-        private void saveMap(string saveLocation)
+        public void SaveMap(Action onSaved) => saveMap(lastSaveLocation, onSaved);
+
+        private void saveMap(string saveLocation, Action onSaved)
         {
             if (saveLocation.IsNullOrEmpty())
             {
-                if (interruptOverlay.CurrentInterrupt != null)
+                if (interruptOverlay.CurrentInterrupt is FileSaveInterrupt)
                     return;
 
-                interruptOverlay.Push(new FileSaveInterrupt(lastSaveLocation, saveMap));
+                interruptOverlay.Push(new FileSaveInterrupt(lastSaveLocation, x => saveMap(x, onSaved)), false);
                 return;
             }
 
             var serializedMap = JsonConvert.SerializeObject(map.GenerateMap());
             SafeWriteHelper.WriteTextToFile(saveLocation, serializedMap);
             lastSaveLocation = saveLocation;
+
+            SetHasSaved();
+            onSaved?.Invoke();
+        }
+
+        public void SetHasSaved()
+        {
+            historyManager.NeedsSave = false;
         }
 
         private void uploadMap()
@@ -229,11 +258,11 @@ namespace AWBWApp.Game.UI.Editor
                     return true;
 
                 case AWBWGlobalAction.Save:
-                    saveMap(lastSaveLocation);
+                    saveMap(lastSaveLocation, () => ShowMessage("Map Saved!"));
                     return true;
 
                 case AWBWGlobalAction.SaveAs:
-                    saveMap(null);
+                    saveMap(null, () => ShowMessage("Map Saved!"));
                     return true;
 
                 case AWBWGlobalAction.ChangeSymmetry:

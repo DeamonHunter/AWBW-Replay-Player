@@ -1,10 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
-using AWBWApp.Game.API.Replay;
+using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Editor.Components;
 using AWBWApp.Game.UI.Interrupts;
-using Newtonsoft.Json;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -12,28 +10,28 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
-using osu.Framework.Logging;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 
-namespace AWBWApp.Game.UI.Editor
+namespace AWBWApp.Game.UI.Editor.Interrupt
 {
-    public partial class FileLoadInterrupt : BaseInterrupt
+    public partial class FileSaveInterrupt : BaseInterrupt
     {
         public const float ENTER_DURATION = 500;
         public const float EXIT_DURATION = 200;
 
         private readonly float animationBaseXOffset = -50f;
 
-        private TaskCompletionSource<ReplayMap> onFileOpened;
+        private Action<string> onFileSelected;
         private readonly TextFlowContainer errorText;
 
         private ReplayMapFileSelector fileSelector;
+        private BasicTextBox fileNameTextBox;
 
-        public FileLoadInterrupt(TaskCompletionSource<ReplayMap> onFileOpened)
+        public FileSaveInterrupt(string lastFile, Action<string> onFileSelected)
         {
-            this.onFileOpened = onFileOpened;
+            this.onFileSelected = onFileSelected;
 
             RelativeSizeAxes = Axes.Both;
             Children = new Drawable[]
@@ -65,7 +63,7 @@ namespace AWBWApp.Game.UI.Editor
                                 RelativeSizeAxes = Axes.X,
                                 Width = 0.95f,
                                 Font = FontUsage.Default.With(size: 25),
-                                Text = "Loading File"
+                                Text = "Saving File"
                             }
                         },
                         new Drawable[]
@@ -80,11 +78,24 @@ namespace AWBWApp.Game.UI.Editor
                                         RelativeSizeAxes = Axes.Both,
                                         Colour = new Color4(20, 20, 20, 180)
                                     },
-                                    fileSelector = new ReplayMapFileSelector(null)
+                                    fileSelector = new ReplayMapFileSelector(lastFile)
                                     {
                                         RelativeSizeAxes = Axes.Both
                                     }
                                 }
+                            }
+                        },
+                        new Drawable[]
+                        {
+                            fileNameTextBox = new BasicTextBox()
+                            {
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                RelativeSizeAxes = Axes.X,
+                                Height = 30,
+                                Width = 0.95f,
+                                PlaceholderText = "File Name",
+                                Text = lastFile.IsNullOrEmpty() ? "Map.json" : Path.GetFileName(lastFile)
                             }
                         },
                         new Drawable[]
@@ -105,10 +116,10 @@ namespace AWBWApp.Game.UI.Editor
                                     },
                                     new InterruptButton
                                     {
-                                        Text = "Open",
+                                        Text = "Save",
                                         BackgroundColour = Color4Extensions.FromHex(@"1d681e"),
                                         HoverColour = Color4Extensions.FromHex(@"1d681e").Lighten(0.2f),
-                                        Action = () => Schedule(openSelectedFile),
+                                        Action = () => Schedule(checkFileThenSend),
                                         RelativePositionAxes = Axes.X,
                                         Position = new Vector2(0.25f, 0f)
                                     }
@@ -119,7 +130,6 @@ namespace AWBWApp.Game.UI.Editor
                         {
                             errorText = new TextFlowContainer()
                             {
-                                Margin = new MarginPadding { Top = 5 },
                                 Anchor = Anchor.TopCentre,
                                 Origin = Anchor.TopCentre,
                                 TextAnchor = Anchor.TopCentre,
@@ -132,44 +142,38 @@ namespace AWBWApp.Game.UI.Editor
                 },
             };
 
-            fileSelector.CurrentFile.BindValueChanged(x => onDirectoryFileClicked(x.NewValue.Name));
+            fileSelector.CurrentFile.BindValueChanged(x => onDirectoryFileClicked(x.NewValue));
+            fileNameTextBox.Current.BindValueChanged(x => onTextFieldChange(x.NewValue), true);
             Show();
         }
 
-        private void onDirectoryFileClicked(string newValue)
+        private void onDirectoryFileClicked(FileInfo info)
+        {
+            if (info == null)
+                return;
+
+            fileNameTextBox.Text = info.Name;
+        }
+
+        private void onTextFieldChange(string newValue)
         {
             fileSelector.SetSelectionToFile(newValue);
         }
 
-        private void openSelectedFile()
+        private void checkFileThenSend()
         {
-            if (fileSelector.CurrentFile.Value == null)
+            if (fileNameTextBox.Text.IsNullOrEmpty())
             {
-                errorText.Text = "Please select a file.";
+                errorText.Text = "Please input a file name.";
                 return;
             }
 
-            ReplayMap map;
+            var directoryPath = fileSelector.CurrentPath.Value.FullName;
+            var filePath = Path.Combine(directoryPath, fileNameTextBox.Text);
 
-            try
-            {
-                using (var file = File.Open(fileSelector.CurrentFile.Value.FullName, FileMode.Open))
-                {
-                    using (var sr = new StreamReader(file))
-                        map = JsonConvert.DeserializeObject<ReplayMap>(sr.ReadToEnd());
+            //Todo: Throw warning if file exists
 
-                    if (map.Ids == null)
-                        throw new Exception("Failed to deserialise file.");
-                }
-            }
-            catch (Exception e)
-            {
-                errorText.Text = "Could not open file. The selected file may not be a map file.";
-                Logger.Log(e.ToString());
-                return;
-            }
-
-            onFileOpened.SetResult(map);
+            onFileSelected.Invoke(filePath);
             ActionInvoked();
             Schedule(Hide);
         }
@@ -200,12 +204,6 @@ namespace AWBWApp.Game.UI.Editor
             }
 
             return base.OnKeyDown(e);
-        }
-
-        protected override void Cancel()
-        {
-            base.Cancel();
-            onFileOpened.SetCanceled();
         }
 
         private partial class InterruptButton : BasicButton

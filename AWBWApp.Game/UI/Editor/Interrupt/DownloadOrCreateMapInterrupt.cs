@@ -17,7 +17,7 @@ using osu.Framework.Threading;
 using osuTK;
 using osuTK.Graphics;
 
-namespace AWBWApp.Game.UI.Editor
+namespace AWBWApp.Game.UI.Editor.Interrupt
 {
     public partial class DownloadOrCreateMapInterrupt : SideInterupt
     {

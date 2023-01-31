@@ -6,6 +6,8 @@ namespace AWBWApp.Game.Editor.History
 {
     public class HistoryManager
     {
+        public bool NeedsSave;
+
         private readonly List<IHistory> registeredStates = new List<IHistory>();
         private int currentIndex;
 
@@ -17,12 +19,16 @@ namespace AWBWApp.Game.Editor.History
 
             registeredStates.Add(history);
             currentIndex = registeredStates.Count;
+
+            NeedsSave = true;
         }
 
         public void Undo(EditorScreen screen, EditorGameMap map)
         {
             if (currentIndex <= 0)
                 return;
+
+            NeedsSave = true;
 
             currentIndex--;
             registeredStates[currentIndex].Undo(map);
@@ -33,6 +39,8 @@ namespace AWBWApp.Game.Editor.History
         {
             if (currentIndex >= registeredStates.Count)
                 return;
+
+            NeedsSave = true;
 
             registeredStates[currentIndex].Redo(map);
             screen.ShowMessage(LocalisableString.Format("Redo {0}", registeredStates[currentIndex].DisplayName));
