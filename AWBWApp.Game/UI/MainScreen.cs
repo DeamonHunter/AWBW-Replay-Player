@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using AWBWApp.Game.API.Replay;
-using AWBWApp.Game.UI;
 using AWBWApp.Game.UI.Components;
+using AWBWApp.Game.UI.Editor;
 using AWBWApp.Game.UI.Interrupts;
 using AWBWApp.Game.UI.Replay;
 using AWBWApp.Game.UI.Select;
@@ -19,7 +19,7 @@ using osu.Framework.Screens;
 using osuTK;
 using osuTK.Graphics;
 
-namespace AWBWApp.Game
+namespace AWBWApp.Game.UI
 {
     public partial class MainScreen : EscapeableScreen
     {
@@ -65,7 +65,7 @@ namespace AWBWApp.Game
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.TopCentre,
-                    Position = new Vector2(0, 50),
+                    Position = new Vector2(0, 40),
                     Direction = FillDirection.Vertical,
                     AutoSizeAxes = Axes.Y,
                     Spacing = new Vector2(0, 10),
@@ -81,16 +81,14 @@ namespace AWBWApp.Game
                         {
                             Text = "Import A Replay",
                             Action = openGetNewReplayInterrupt
+                        },
+                        new MainMenuButton(false)
+                        {
+                            Text = "Map Editor",
+                            Action = GoToMapEditor
                         }
                     }
                 },
-                hintBox = new HintBox()
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.TopCentre,
-                    Position = new Vector2(0, 220),
-                    Width = 400,
-                }
             };
 
             if (host.CanExit)
@@ -101,6 +99,14 @@ namespace AWBWApp.Game
                     Action = () => this.Exit()
                 });
             }
+
+            buttonsContainer.Add(hintBox = new HintBox()
+            {
+                Anchor = Anchor.TopCentre,
+                Origin = Anchor.TopCentre,
+                Margin = new MarginPadding { Top = 10 },
+                Width = 400,
+            });
 
             preLoadReplaySelect();
         }
@@ -183,12 +189,14 @@ namespace AWBWApp.Game
 
         public void GoToReplaySelect() => ScheduleAfterChildren(() => this.Push(consumeReplaySelect()));
 
+        public void GoToMapEditor() => ScheduleAfterChildren(() => this.Push(new EditorScreen()));
+
         private partial class MainMenuButton : BasicButton
         {
             public MainMenuButton(bool exit)
             {
-                Anchor = Anchor.Centre;
-                Origin = Anchor.Centre;
+                Anchor = Anchor.TopCentre;
+                Origin = Anchor.TopCentre;
 
                 RelativeSizeAxes = Axes.X;
                 Size = new Vector2(1, 40);

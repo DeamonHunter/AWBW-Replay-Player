@@ -1,4 +1,5 @@
-﻿using AWBWApp.Game.UI.Notifications;
+﻿using AWBWApp.Game.UI;
+using AWBWApp.Game.UI.Notifications;
 using AWBWApp.Game.UI.Toolbar;
 using NUnit.Framework;
 using osu.Framework.Allocation;
@@ -17,7 +18,9 @@ namespace AWBWApp.Game.Tests.Visual.Screens
         [Cached]
         private NotificationOverlay notificationOverlay { get; set; } = new NotificationOverlay();
 
-        private AWBWMenuBar menuBar { get; set; }
+        private MainControlMenuBar menuBar { get; set; }
+
+        private DependencyContainer dependencies;
 
         public TestSceneMainScreen()
         {
@@ -37,6 +40,13 @@ namespace AWBWApp.Game.Tests.Visual.Screens
         private void load()
         {
             Add(menuBar = new MainControlMenuBar(ScreenStack.Exit, notificationOverlay));
+            dependencies.Cache(menuBar);
+        }
+
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        {
+            dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+            return dependencies;
         }
     }
 }
