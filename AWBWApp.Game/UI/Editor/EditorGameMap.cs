@@ -4,6 +4,7 @@ using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Editor;
 using AWBWApp.Game.Editor.History;
 using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
@@ -30,6 +31,9 @@ namespace AWBWApp.Game.UI.Editor
         private Bindable<BuildingTile> selectedBuilding { get; set; }
 
         [Resolved]
+        private Bindable<(CountryData, CountryData)> selectedCountries { get; set; }
+
+        [Resolved]
         private HistoryManager historyManager { get; set; }
 
         private EditorTileCursor editorCursor;
@@ -51,6 +55,7 @@ namespace AWBWApp.Game.UI.Editor
         public void SetMap(ReplayMap map)
         {
             SetMapSize(map.Size);
+            selectedCountries.Value = (CountryStorage.GetCountryByAWBWID(1), CountryStorage.GetCountryByAWBWID(2));
 
             var shoalMap = ShoalGenerator.CreateCustomShoalVersion(map);
 
@@ -189,8 +194,15 @@ namespace AWBWApp.Game.UI.Editor
                     newTile = new Vector2I(newTile.X / 2, newTile.Y / 2);
 
                     int newTileID;
+
                     if (selectedBuilding.Value != null)
-                        newTileID = SymmetryHelper.GetBuildingTileForSymmetry(selectedBuilding.Value, symmetryContainer.SymmetryMode, symmetryContainer.SymmetryDirection);
+                    {
+                        var building = selectedBuilding.Value;
+                        if (selectedBuilding.Value.CountryID > 0)
+                            building = BuildingStorage.GetBuildingByTypeAndCountry(selectedBuilding.Value.BuildingType, selectedCountries.Value.Item2.AWBWID);
+
+                        newTileID = SymmetryHelper.GetBuildingTileForSymmetry(building, symmetryContainer.SymmetryMode, symmetryContainer.SymmetryDirection);
+                    }
                     else
                         newTileID = SymmetryHelper.GetTerrainTileForSymmetry(selectedTile.Value, symmetryContainer.SymmetryMode, symmetryContainer.SymmetryDirection);
 

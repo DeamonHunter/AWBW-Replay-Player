@@ -4,11 +4,13 @@ using AWBWApp.Game.API.Replay;
 using AWBWApp.Game.Editor;
 using AWBWApp.Game.Editor.History;
 using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.Input;
 using AWBWApp.Game.IO;
 using AWBWApp.Game.UI.Components;
+using AWBWApp.Game.UI.Components.Tooltip;
 using AWBWApp.Game.UI.Editor.Components;
 using AWBWApp.Game.UI.Editor.Interrupt;
 using AWBWApp.Game.UI.Replay;
@@ -45,10 +47,13 @@ namespace AWBWApp.Game.UI.Editor
         private Bindable<TerrainTile> selectedTile = new Bindable<TerrainTile>();
 
         [Cached]
-        private Bindable<bool> showCaptureOverlay = new Bindable<bool>();
+        private Bindable<SelectedOverlay> showCaptureOverlay = new Bindable<SelectedOverlay>();
 
         [Cached]
         private Bindable<BuildingTile> selectedBuilding = new Bindable<BuildingTile>();
+
+        [Cached]
+        private Bindable<(CountryData, CountryData)> selectedCountries = new Bindable<(CountryData, CountryData)>();
 
         [Cached]
         private HistoryManager historyManager = new HistoryManager();
@@ -87,28 +92,33 @@ namespace AWBWApp.Game.UI.Editor
             AddInternal(new AWBWNonRelativeContextMenuContainer()
             {
                 RelativeSizeAxes = Axes.Both,
-                Children = new Drawable[]
+                Child = new AWBWTooltipContainer()
                 {
-                    cameraControllerWithGrid = new CameraControllerWithGrid()
+                    RelativeSizeAxes = Axes.Both,
+
+                    Children = new Drawable[]
                     {
-                        AllowLeftMouseToDrag = false,
-                        MaxScale = 8,
-                        MapSpace = mapPadding,
-                        MovementRegion = safeMovement,
-                        RelativeSizeAxes = Axes.Both,
-                        Child = map = new EditorGameMap(),
-                    },
-                    menu = new EditorMenu(),
-                    infoPopup = new DetailedInformationPopup(),
-                    messageContainer = new FillFlowContainer()
-                    {
-                        Anchor = Anchor.BottomCentre,
-                        Origin = Anchor.BottomCentre,
-                        Position = new Vector2(0, -75),
-                        Direction = FillDirection.Vertical,
-                        AutoSizeAxes = Axes.Both,
-                        LayoutEasing = Easing.OutCubic,
-                        LayoutDuration = 100
+                        cameraControllerWithGrid = new CameraControllerWithGrid()
+                        {
+                            AllowLeftMouseToDrag = false,
+                            MaxScale = 8,
+                            MapSpace = mapPadding,
+                            MovementRegion = safeMovement,
+                            RelativeSizeAxes = Axes.Both,
+                            Child = map = new EditorGameMap(),
+                        },
+                        menu = new EditorMenu(),
+                        infoPopup = new DetailedInformationPopup(),
+                        messageContainer = new FillFlowContainer()
+                        {
+                            Anchor = Anchor.BottomCentre,
+                            Origin = Anchor.BottomCentre,
+                            Position = new Vector2(0, -75),
+                            Direction = FillDirection.Vertical,
+                            AutoSizeAxes = Axes.Both,
+                            LayoutEasing = Easing.OutCubic,
+                            LayoutDuration = 100
+                        }
                     }
                 }
             });
@@ -292,6 +302,12 @@ namespace AWBWApp.Game.UI.Editor
                         }
                     }
 
+                    return true;
+                }
+
+                case AWBWGlobalAction.SwapSelectedCountries:
+                {
+                    selectedCountries.Value = (selectedCountries.Value.Item2, selectedCountries.Value.Item1);
                     return true;
                 }
             }

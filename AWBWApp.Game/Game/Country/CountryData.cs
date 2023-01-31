@@ -22,6 +22,11 @@ namespace AWBWApp.Game.Game.Country
 
         [JsonProperty]
         public Dictionary<string, string> Colours { get; set; } //Todo: Work out how to use direct colours in JSON
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
     public enum FaceDirection

@@ -70,6 +70,7 @@ namespace AWBWApp.Game.UI.Interrupts
                 },
                 createKeyRebindRow(AWBWGlobalAction.ChangeSymmetry),
                 createKeyRebindRow(AWBWGlobalAction.PickTile),
+                createKeyRebindRow(AWBWGlobalAction.SwapSelectedCountries),
                 createKeyRebindRow(AWBWGlobalAction.Undo),
                 createKeyRebindRow(AWBWGlobalAction.Redo),
                 createKeyRebindRow(AWBWGlobalAction.Save),
@@ -108,7 +109,7 @@ namespace AWBWApp.Game.UI.Interrupts
                 }
             });
 
-            SetInnerPositionOffsets(new Vector2(0, -0.38f));
+            SetInnerPositionOffsets(new Vector2(0, -0.41f));
         }
 
         private KeyRebindRow createKeyRebindRow(AWBWGlobalAction action)

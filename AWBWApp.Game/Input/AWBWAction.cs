@@ -16,6 +16,7 @@
         Undo,
         Redo,
         ChangeSymmetry,
-        PickTile
+        PickTile,
+        SwapSelectedCountries
     }
 }

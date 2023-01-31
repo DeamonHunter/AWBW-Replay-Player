@@ -8,15 +8,17 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
 using osuTK;
 using osuTK.Graphics;
 
 namespace AWBWApp.Game.UI.Editor.Components
 {
-    public partial class EditorSpriteButton : CompositeDrawable
+    public partial class EditorSpriteButton : CompositeDrawable, IHasTooltip
     {
         public Action<TerrainTile, BuildingTile> Action;
 
@@ -30,6 +32,7 @@ namespace AWBWApp.Game.UI.Editor.Components
                 if (tile == value)
                     return;
 
+                texturePath = null;
                 tile = value;
                 building = null;
                 updateVisual();
@@ -46,11 +49,31 @@ namespace AWBWApp.Game.UI.Editor.Components
                 if (building == value)
                     return;
 
+                texturePath = null;
                 building = value;
                 tile = null;
                 updateVisual();
             }
         }
+
+        private string texturePath;
+
+        public string TexturePath
+        {
+            get => texturePath;
+            set
+            {
+                if (texturePath == value)
+                    return;
+
+                texturePath = value;
+                building = null;
+                tile = null;
+                updateVisual();
+            }
+        }
+
+        public LocalisableString TooltipText { get; set; }
 
         private Sprite tileSprite;
         private Box background;
@@ -106,16 +129,22 @@ namespace AWBWApp.Game.UI.Editor.Components
 
         private void updateVisual()
         {
-            if (textureStore == null || (tile == null && building == null))
+            if (textureStore == null || (tile == null && building == null && texturePath == null))
                 return;
 
-            string texturePath;
-            if (building != null)
-                texturePath = $"Map/{currentSkin.Value}/{building?.Textures[WeatherType.Clear]}-0";
-            else
-                texturePath = $"Map/{currentSkin.Value}/{tile?.Textures[WeatherType.Clear]}";
+            string tileTexturePath;
 
-            tileSprite.Texture = textureStore.Get(texturePath);
+            if (texturePath == null)
+            {
+                if (building != null)
+                    tileTexturePath = $"Map/{currentSkin.Value}/{building?.Textures[WeatherType.Clear]}-0";
+                else
+                    tileTexturePath = $"Map/{currentSkin.Value}/{tile?.Textures[WeatherType.Clear]}";
+            }
+            else
+                tileTexturePath = texturePath;
+
+            tileSprite.Texture = textureStore.Get(tileTexturePath);
 
             var max = Math.Max(tileSprite.Texture.Size.X, tileSprite.Texture.Size.Y);
             tileSprite.Size = tileSprite.Texture.Size * 2 * Math.Min(1, 20 / max);

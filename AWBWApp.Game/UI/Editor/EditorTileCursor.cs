@@ -1,5 +1,6 @@
 ﻿using AWBWApp.Game.Editor;
 using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
@@ -25,6 +26,9 @@ namespace AWBWApp.Game.UI.Editor
 
         [Resolved]
         private Bindable<BuildingTile> selectedBuilding { get; set; }
+
+        [Resolved]
+        private Bindable<(CountryData, CountryData)> selectedCountries { get; set; }
 
         [Resolved]
         private Bindable<SymmetryMode> symmetryMode { get; set; }
@@ -68,6 +72,7 @@ namespace AWBWApp.Game.UI.Editor
             currentSkin.BindValueChanged(_ => updateVisual());
             selectedTile.BindValueChanged(_ => updateVisual());
             selectedBuilding.BindValueChanged(_ => updateVisual());
+            selectedCountries.BindValueChanged(_ => updateVisual());
             symmetryMode.BindValueChanged(_ => updateVisual());
             symmetryDirection.BindValueChanged(_ => updateVisual());
             updateVisual();
@@ -81,7 +86,11 @@ namespace AWBWApp.Game.UI.Editor
 
                 if (showSymmetry)
                 {
-                    var symmetricalTile = SymmetryHelper.GetBuildingTileForSymmetry(building, symmetryMode.Value, symmetryDirection.Value);
+                    var symmetricalBuilding = building;
+                    if (selectedBuilding.Value.CountryID > 0)
+                        symmetricalBuilding = buildingStorage.GetBuildingByTypeAndCountry(symmetricalBuilding.BuildingType, selectedCountries.Value.Item2.AWBWID);
+
+                    var symmetricalTile = SymmetryHelper.GetBuildingTileForSymmetry(symmetricalBuilding, symmetryMode.Value, symmetryDirection.Value);
                     if (building.AWBWID != symmetricalTile)
                         building = buildingStorage.GetBuildingByAWBWId(symmetricalTile);
                 }

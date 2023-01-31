@@ -49,9 +49,20 @@ namespace AWBWApp.Game.UI.Editor.Components
                 set => Text.Text = value;
             }
 
-            protected readonly SpriteText Text;
+            private float minimumWidth = 160;
 
-            private const float minimum_width = 160;
+            public float MinimumWidth
+            {
+                get => minimumWidth;
+                set
+                {
+                    minimumWidth = value;
+                    Spacer.Width = minimumWidth;
+                }
+            }
+
+            protected readonly SpriteText Text;
+            protected readonly Container Spacer;
 
             public EditorDropdownHeader()
             {
@@ -70,11 +81,11 @@ namespace AWBWApp.Game.UI.Editor.Components
                 Foreground.AutoSizeAxes = Axes.Both;
                 Foreground.Children = new Drawable[]
                 {
-                    new Container() //Spacer to set minimum Size
+                    Spacer = new Container() //Spacer to set minimum Size
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Size = new Vector2(minimum_width, 35)
+                        Size = new Vector2(minimumWidth, 35)
                     },
                     Text = new SpriteText()
                     {

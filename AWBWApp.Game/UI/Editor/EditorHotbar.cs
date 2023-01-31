@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AWBWApp.Game.Game.Building;
+using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.UI.Editor.Components;
 using osu.Framework.Allocation;
@@ -24,7 +25,10 @@ namespace AWBWApp.Game.UI.Editor
         private Bindable<BuildingTile> selectedBuilding { get; set; }
 
         [Resolved]
-        private Bindable<bool> showCaptureOverlay { get; set; }
+        private Bindable<(CountryData, CountryData)> selectedCountries { get; set; }
+
+        [Resolved]
+        private BuildingStorage buildingStorage { get; set; }
 
         public EditorHotbar()
         {
@@ -77,11 +81,6 @@ namespace AWBWApp.Game.UI.Editor
                     Action = selectTile
                 });
             }
-            hotbar.Add(new EditorSpriteButton()
-            {
-                // Tile = tileStorage.GetTileByAWBWId(2),
-                Action = toggleCaptureCalcOverlay
-            });
         }
 
         public void SetHotbarSlot(int slot, TerrainTile tile, BuildingTile building)
@@ -96,18 +95,13 @@ namespace AWBWApp.Game.UI.Editor
             base.LoadComplete();
             selectedTile.BindValueChanged(_ => onSelectedTileChanged(), true);
             selectedBuilding.BindValueChanged(_ => onSelectedTileChanged(), true);
+            selectedCountries.BindValueChanged(_ => onSelectedCountryChanged(), true);
         }
 
         private void selectTile(TerrainTile tile, BuildingTile building)
         {
             selectedTile.Value = tile;
             selectedBuilding.Value = building;
-        }
-
-        private void toggleCaptureCalcOverlay(TerrainTile tile, BuildingTile building)
-        {
-            // selectedTile.Value = tile;
-            showCaptureOverlay.Value = !showCaptureOverlay.Value;
         }
 
         protected override bool OnMouseDown(MouseDownEvent e)
@@ -120,6 +114,17 @@ namespace AWBWApp.Game.UI.Editor
         {
             foreach (var box in hotbar.Children)
                 box.SetSelected(box.Tile == selectedTile.Value && box.Building == selectedBuilding.Value);
+        }
+
+        private void onSelectedCountryChanged()
+        {
+            foreach (var box in hotbar.Children)
+            {
+                if (box.Building == null || box.Building.CountryID < 0)
+                    continue;
+
+                box.Building = buildingStorage.GetBuildingByTypeAndCountry(box.Building.BuildingType, selectedCountries.Value.Item1.AWBWID);
+            }
         }
     }
 }

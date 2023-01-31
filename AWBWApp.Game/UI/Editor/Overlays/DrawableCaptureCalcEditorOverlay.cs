@@ -17,7 +17,7 @@ namespace AWBWApp.Game.UI.Editor.Overlays
     public partial class DrawableCaptureCalcEditorOverlay : Container
     {
         [Resolved]
-        private Bindable<bool> showCaptureOverlay { get; set; }
+        private Bindable<SelectedOverlay> showCaptureOverlay { get; set; }
 
         private readonly Container lineContainer;
         private readonly EditorGameMap map;
@@ -59,7 +59,7 @@ namespace AWBWApp.Game.UI.Editor.Overlays
 
         public void CalcAndShowCaptures()
         {
-            if (!showCaptureOverlay.Value || overlay == null)
+            if (showCaptureOverlay.Value != SelectedOverlay.Capture || overlay == null)
             {
                 lineContainer.Hide();
                 return;
