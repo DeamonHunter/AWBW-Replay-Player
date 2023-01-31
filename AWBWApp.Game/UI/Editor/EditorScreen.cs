@@ -121,8 +121,8 @@ namespace AWBWApp.Game.UI.Editor
         {
             base.OnEntering(e);
             menuBar.SetShowEditorMenu(true);
-            menuBar.OnSaveEditorTriggered += () => saveMap(lastSaveLocation, () => ShowMessage("Map Saved!"));
-            menuBar.OnSaveAsEditorTriggered += () => saveMap(null, () => ShowMessage("Map Saved!"));
+            menuBar.OnSaveEditorTriggered += saveSelected;
+            menuBar.OnSaveAsEditorTriggered += saveAsSelected;
             menuBar.OnUploadEditorTriggered += uploadMap;
         }
 
@@ -133,6 +133,10 @@ namespace AWBWApp.Game.UI.Editor
                 showSavePrompt();
                 return true;
             }
+
+            menuBar.OnSaveEditorTriggered -= saveSelected;
+            menuBar.OnSaveAsEditorTriggered -= saveAsSelected;
+            menuBar.OnUploadEditorTriggered -= uploadMap;
 
             menuBar.SetShowEditorMenu(false);
             return base.OnExiting(e);
@@ -198,6 +202,9 @@ namespace AWBWApp.Game.UI.Editor
 
         public void SaveMap(Action onSaved) => saveMap(lastSaveLocation, onSaved);
 
+        private void saveSelected() => saveMap(lastSaveLocation, () => ShowMessage("Map Saved!"));
+        private void saveAsSelected() => saveMap(null, () => ShowMessage("Map Saved!"));
+
         private void saveMap(string saveLocation, Action onSaved)
         {
             if (saveLocation.IsNullOrEmpty())
@@ -258,11 +265,11 @@ namespace AWBWApp.Game.UI.Editor
                     return true;
 
                 case AWBWGlobalAction.Save:
-                    saveMap(lastSaveLocation, () => ShowMessage("Map Saved!"));
+                    saveSelected();
                     return true;
 
                 case AWBWGlobalAction.SaveAs:
-                    saveMap(null, () => ShowMessage("Map Saved!"));
+                    saveAsSelected();
                     return true;
 
                 case AWBWGlobalAction.ChangeSymmetry:
