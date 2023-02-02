@@ -1508,7 +1508,7 @@ namespace AWBWApp.Game.API.Replay
                     break;
             }
             var number = text[startIndex..(index - 1)];
-            return int.Parse(number, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
+            return int.Parse(number, NumberStyles.Any, CultureInfo.InvariantCulture);
         }
 
         private long readLong(ReadOnlySpan<char> text, ref int index)
@@ -1527,7 +1527,7 @@ namespace AWBWApp.Game.API.Replay
                     break;
             }
             var number = text[startIndex..(index - 1)];
-            return long.Parse(number, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
+            return long.Parse(number, NumberStyles.Any, CultureInfo.InvariantCulture);
         }
 
         private int? readNullableInteger(ReadOnlySpan<char> text, ref int index)
@@ -1557,7 +1557,7 @@ namespace AWBWApp.Game.API.Replay
                     break;
             }
             var number = text[startIndex..(index - 1)];
-            return int.Parse(number, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
+            return int.Parse(number, NumberStyles.Any, CultureInfo.InvariantCulture);
         }
 
         private float readFloat(ReadOnlySpan<char> text, ref int index)
@@ -1576,7 +1576,7 @@ namespace AWBWApp.Game.API.Replay
                     break;
             }
             var number = text[startIndex..(index - 1)];
-            return float.Parse(number);
+            return float.Parse(number, NumberStyles.Any, CultureInfo.InvariantCulture);
         }
 
         private bool readBool(ReadOnlySpan<char> text, ref int index)
