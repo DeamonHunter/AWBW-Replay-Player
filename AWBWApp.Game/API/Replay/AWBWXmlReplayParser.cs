@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -362,7 +363,7 @@ namespace AWBWApp.Game.API.Replay
                         throw new Exception($"Unknown Game xml entry: {node.Name}");
 
                     case "Id":
-                        data.ReplayInfo.ID = long.Parse(node.InnerText);
+                        data.ReplayInfo.ID = long.Parse(node.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture);
                         break;
 
                     case "Name":
@@ -372,7 +373,7 @@ namespace AWBWApp.Game.API.Replay
                     case "Map":
                         //Todo: Does this map exist.
 
-                        data.ReplayInfo.MapId = long.Parse(node.SelectSingleNode("Id")!.InnerText);
+                        data.ReplayInfo.MapId = long.Parse(node.SelectSingleNode("Id")!.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture);
                         break;
 
                     case "PlayerInfos":
@@ -576,7 +577,7 @@ namespace AWBWApp.Game.API.Replay
                                     switch (playerInfoNode.Name)
                                     {
                                         case "Funds":
-                                            playerTurn.Funds = int.Parse(playerInfoNode.InnerText);
+                                            playerTurn.Funds = int.Parse(playerInfoNode.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture);
                                             break;
 
                                         case "HasLost":
@@ -593,7 +594,7 @@ namespace AWBWApp.Game.API.Replay
                                             break;
 
                                         case "PowerBarChargePercentage":
-                                            playerTurn.PowerPercentage = double.Parse(playerInfoNode.InnerText) / 100;
+                                            playerTurn.PowerPercentage = double.Parse(playerInfoNode.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture) / 100;
                                             break;
 
                                         case "PowerType":
