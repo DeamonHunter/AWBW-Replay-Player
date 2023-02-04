@@ -82,6 +82,19 @@ namespace AWBWApp.Game.UI.Editor.Overlays
                 });
             }
 
+            foreach (var prop in capPhase.UnknownProps)
+            {
+                lineContainer.Add(new SpriteIcon()
+                {
+                    Anchor = Anchor.TopLeft,
+                    Origin = Anchor.Centre,
+                    Position = getTileCenter(prop),
+                    Size = new Vector2(5, 5),
+                    Icon = FontAwesome.Solid.QuestionCircle,
+                    Colour = new Colour4(50, 50, 50, 255)
+                });
+            }
+
             foreach (var chainList in capPhase.CapChains.Values)
             {
                 foreach (var chain in chainList)

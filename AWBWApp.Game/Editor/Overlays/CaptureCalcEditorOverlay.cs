@@ -175,6 +175,12 @@ namespace AWBWApp.Game.Editor.Overlays
                         possibleOwners[ownedFactoryOwner] = distance;
                 }
 
+                if (possibleOwners.Count <= 0)
+                {
+                    output.UnknownProps.Add(propertyPos);
+                    continue;
+                }
+
                 // Calculate who's the closest, and if that army has real competition for this prop
 
                 var (closestArmy, closestDistance) = possibleOwners.MinBy(x => x.Value);
@@ -311,6 +317,7 @@ namespace AWBWApp.Game.Editor.Overlays
         {
             public Dictionary<Vector2I, List<List<CapStop>>> CapChains = new Dictionary<Vector2I, List<List<CapStop>>>();
             public List<Vector2I> ContestedProps = new List<Vector2I>(); // as was probably considered by the map designer; doesn't necessarily take movement/production differences into account
+            public List<Vector2I> UnknownProps = new List<Vector2I>(); // Unknown Props. Either the map is too big, or its seperated by water.
 
             public override string ToString()
             {
@@ -318,6 +325,10 @@ namespace AWBWApp.Game.Editor.Overlays
                 sb.Append("Contested properties:");
                 foreach (var contested in ContestedProps)
                     sb.AppendLine($" {contested} ");
+
+                sb.Append("Unknown properties:");
+                foreach (var unknown in UnknownProps)
+                    sb.AppendLine($" {unknown} ");
 
                 foreach (var (factoryPos, factoryChains) in CapChains)
                 {
