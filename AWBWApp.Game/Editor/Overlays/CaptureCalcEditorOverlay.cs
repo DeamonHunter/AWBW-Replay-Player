@@ -20,6 +20,8 @@ namespace AWBWApp.Game.Editor.Overlays
         private readonly EditorGameMap map;
         private readonly UnitData infantryData;
 
+        private static readonly HashSet<string> ignored_property_types = new HashSet<string> { "PipeSeam", "Missile" };
+
         public CaptureCalcEditorOverlay(EditorGameMap map, UnitStorage unitStorage)
         {
             this.map = map;
@@ -45,8 +47,10 @@ namespace AWBWApp.Game.Editor.Overlays
                         var building = mapBuilding.BuildingTile;
                         var country = building.CountryID;
 
-                        //Todo: Add building type categories
-                        if (building.Name.Contains("base", StringComparison.InvariantCultureIgnoreCase))
+                        if (ignored_property_types.Contains(building.BuildingType))
+                            continue;
+
+                        if (building.BuildingType == "Base")
                         {
                             factoriesToCountry[coord] = country;
 

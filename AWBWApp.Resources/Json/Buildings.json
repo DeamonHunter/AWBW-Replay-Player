@@ -11,6 +11,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "BuildingType": "City",
         "Textures": {
             "Clear": "Neutral/City",
             "Rain": "Neutral/City_Rain",
@@ -30,6 +31,7 @@
             "Air": 1,
             "Pipe": 1
         },
+        "BuildingType": "Base",
         "Textures": {
             "Clear": "Neutral/Base",
             "Rain": "Neutral/Base_Rain",
@@ -48,6 +50,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "BuildingType": "Airport",
         "Textures": {
             "Clear": "Neutral/Airport",
             "Rain": "Neutral/Airport_Rain",
@@ -68,6 +71,7 @@
             "Sea": 1,
             "Lander": 1
         },
+        "BuildingType": "Port",
         "Textures": {
             "Clear": "Neutral/Port",
             "Rain": "Neutral/Port_Rain",
@@ -86,6 +90,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "BuildingType": "ComTower",
         "GivesMoneyWhenCaptured": false,
         "Textures": {
             "Clear": "Neutral/ComTower",
@@ -105,6 +110,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "BuildingType": "Lab",
         "GivesMoneyWhenCaptured": false,
         "Textures": {
             "Clear": "Neutral/Lab",
@@ -124,6 +130,7 @@
             "Tire": 1,
             "Air": 1
         },
+        "BuildingType": "Missile",
         "Textures": {
             "Clear": "Neutral/Silo",
             "Rain": "Neutral/Silo_Rain",
@@ -138,6 +145,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "BuildingType": "PipeSeam",
         "Textures": {
             "Clear": "Neutral/HSeam",
             "Rain": "Neutral/HSeam_Rain",
@@ -153,6 +161,7 @@
         "MovementCostsPerType": {
             "Pipe": 1
         },
+        "BuildingType": "PipeSeam",
         "Textures": {
             "Clear": "Neutral/VSeam",
             "Rain": "Neutral/VSeam_Rain",
