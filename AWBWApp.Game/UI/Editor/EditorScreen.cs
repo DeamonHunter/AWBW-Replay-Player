@@ -108,7 +108,10 @@ namespace AWBWApp.Game.UI.Editor
                             Child = map = new EditorGameMap(),
                         },
                         menu = new EditorMenu(),
-                        infoPopup = new DetailedInformationPopup(),
+                        infoPopup = new DetailedInformationPopup()
+                        {
+                            ForceRightSide = true
+                        },
                         messageContainer = new FillFlowContainer()
                         {
                             Anchor = Anchor.BottomCentre,
