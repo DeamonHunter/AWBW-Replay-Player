@@ -89,7 +89,7 @@ namespace AWBWApp.Game.UI.Replay
 
         private void popupPositionChanged()
         {
-            var rightSide = forceRightSide || !playerListLeftSide.Value;
+            var rightSide = forceRightSide || playerListLeftSide.Value;
             Anchor = rightSide ? Anchor.BottomRight : Anchor.BottomLeft;
             Origin = rightSide ? Anchor.BottomRight : Anchor.BottomLeft;
             Position = rightSide ? new Vector2(-10, -10) : new Vector2(10, -10);
