@@ -73,6 +73,7 @@ namespace AWBWApp.Game.Game.Units
         public Bindable<Vector2I> AttackRange = new Bindable<Vector2I>();
 
         public BindableBool Dived = new BindableBool();
+        public BindableBool Stunned = new BindableBool();
         public Vector2I MapPosition { get; private set; }
 
         private DrawableUnitSpriteContainer spriteContainer;
@@ -147,7 +148,11 @@ namespace AWBWApp.Game.Game.Units
                 Ammo.Value = unit.Ammo.Value;
 
             if (unit.TimesMoved.HasValue)
+            {
                 CanMove.Value = unit.TimesMoved.Value == 0;
+                Stunned.Value = unit.TimesMoved.Value < 0;
+            }
+
             if (unit.SubHasDived.HasValue)
                 Dived.Value = unit.SubHasDived.Value;
 
@@ -184,8 +189,11 @@ namespace AWBWApp.Game.Game.Units
 
             CanMove.BindValueChanged(x => updateUnitColour(x.NewValue));
             FogOfWarActive.BindValueChanged(x => updateUnitColour(x.NewValue));
-            Dived.BindValueChanged(x => updateUnitColour(x.NewValue));
 
+            Dived.BindValueChanged(x => updateUnitColour(x.NewValue));
+            Dived.BindValueChanged(x => updateStatIndicators(false));
+
+            Stunned.BindValueChanged(_ => updateStatIndicators(false));
             IsCapturing.BindValueChanged(_ => updateStatIndicators(false));
             Fuel.BindValueChanged(_ => updateStatIndicators(false));
             Ammo.BindValueChanged(_ => updateStatIndicators(false), true);
@@ -298,8 +306,10 @@ namespace AWBWApp.Game.Game.Units
             var lowAmmo = UnitData.MaxAmmo > 0 && (float)Ammo.Value / UnitData.MaxAmmo <= 0.25f;
             var hasCargo = Cargo.Count > 0;
             var capturing = IsCapturing.Value;
+            var dived = Dived.Value;
+            var stunned = Stunned.Value;
 
-            if (!unitRevealed && !lowAmmo && !lowFuel && !hasCargo && !capturing)
+            if (!unitRevealed && !lowAmmo && !lowFuel && !hasCargo && !capturing && !dived && !stunned)
             {
                 statsAnimation.Hide();
                 return;
@@ -319,7 +329,13 @@ namespace AWBWApp.Game.Game.Units
             if (capturing)
                 statsAnimation.AddFrame(textureStore.Get("UI/Capturing"), 1000);
 
-            if (statsAnimation.FrameCount < 2 && !capturing && !hasCargo)
+            if (dived)
+                statsAnimation.AddFrame(textureStore.Get("UI/Dive"), 1000);
+
+            if (stunned)
+                statsAnimation.AddFrame(textureStore.Get("UI/Stun"), 1000);
+
+            if (statsAnimation.FrameCount < 2 && !capturing && !hasCargo && !stunned)
                 statsAnimation.AddFrame(null, 1000);
 
             if (statsAnimation.Alpha == 0)

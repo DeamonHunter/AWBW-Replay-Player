@@ -634,8 +634,12 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                             controller.Players[unit.OwnerID!.Value].UnitValue.Value += ReplayActionHelper.CalculateUnitCost(unit, dayToDay, null) - originalValue;
                         }
+
                         if (change.Value.UnitsMoved.HasValue)
+                        {
                             unit.CanMove.Value = change.Value.UnitsMoved.Value == 0;
+                            unit.Stunned.Value = change.Value.UnitsMoved.Value == -1;
+                        }
 
                         if (change.Value.MovementPoints.HasValue && MovementRangeIncrease == 0)
                             unit.MovementRange.Value = change.Value.MovementPoints.Value;
