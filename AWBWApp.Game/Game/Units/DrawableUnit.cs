@@ -335,7 +335,7 @@ namespace AWBWApp.Game.Game.Units
             if (stunned)
                 statsAnimation.AddFrame(textureStore.Get("UI/Stun"), 1000);
 
-            if (statsAnimation.FrameCount < 2 && !capturing && !hasCargo && !stunned)
+            if (statsAnimation.FrameCount < 2 && !capturing && !hasCargo && !stunned && !dived)
                 statsAnimation.AddFrame(null, 1000);
 
             if (statsAnimation.Alpha == 0)
