@@ -124,6 +124,17 @@ namespace AWBWApp.Game.IO
                 }
             }
 
+            //Check for if the replay actually still exists
+            var set = underlyingStorage.GetFiles("").ToHashSet();
+            var missing = knownReplays.Where(x =>
+            {
+                var fileName = x.Key.ToString();
+                return !set.Contains(fileName) && !set.Contains(fileName + ".awbw") && !set.Contains(fileName + ".zip");
+            });
+
+            foreach (var file in missing)
+                knownReplays.Remove(file.Key);
+
             Task.Run(async () =>
             {
                 try
