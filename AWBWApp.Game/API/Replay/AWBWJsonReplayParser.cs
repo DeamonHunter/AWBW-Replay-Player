@@ -469,6 +469,10 @@ namespace AWBWApp.Game.API.Replay
                                 type = MatchType.Tag;
                                 break;
 
+                            case "V":
+                                type = MatchType.LiveQueue;
+                                break;
+
                             default:
                                 throw new Exception("Unknown Match Type: " + value);
                         }
