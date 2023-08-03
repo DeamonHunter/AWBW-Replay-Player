@@ -51,6 +51,7 @@ namespace AWBWApp.Game.API.Replay
     public enum MatchType
     {
         League,
+        LiveQueue,
         Normal,
         Tag
     }
