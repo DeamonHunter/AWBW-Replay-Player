@@ -126,7 +126,11 @@ namespace AWBWApp.Game.API.Replay.Actions
                 foreach (var suppliedID in SuppliedUnits)
                 {
                     if (!context.Units.TryGetValue(suppliedID, out var supplied))
-                        throw new ReplayMissingUnitException(suppliedID);
+                    {
+                        //This can trigger is some rare circumstances. Maybe just let it go.
+                        Logger.Log($"Failed to find a unit to supply: {suppliedID}. Skipping unit.");
+                        continue;
+                    }
 
                     if (!originalUnits.ContainsKey(suppliedID))
                         originalUnits.Add(suppliedID, supplied.Clone());
