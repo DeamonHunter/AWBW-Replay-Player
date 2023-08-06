@@ -29,17 +29,26 @@ namespace AWBWApp.Game.UI.Replay
                 pools.Add(animation, pool);
             }
 
-            var drawable = pool.Get(x =>
+            EffectAnimation drawable;
+
+            while (true)
             {
-                x.Position = GameMap.GetDrawablePositionForBottomOfTile(position) + DrawableTile.HALF_BASE_SIZE;
-                x.Scale = Vector2.One;
-                x.Alpha = 1;
-                x.Rotation = 0;
-                x.Setup(animation, length, startDelay, onLoaded);
-            });
+                drawable = pool.Get(x =>
+                {
+                    x.Position = GameMap.GetDrawablePositionForBottomOfTile(position) + DrawableTile.HALF_BASE_SIZE;
+                    x.Scale = Vector2.One;
+                    x.Alpha = 1;
+                    x.Rotation = 0;
+                    x.Setup(animation, length, startDelay, onLoaded);
+                });
+
+                if (drawable.Disposed)
+                    continue;
+
+                break;
+            }
 
             AddInternal(drawable);
-
             return drawable;
         }
     }
@@ -116,6 +125,8 @@ namespace AWBWApp.Game.UI.Replay
 
     public partial class EffectAnimation : PoolableDrawable
     {
+        public bool Disposed;
+
         private AdjustableRateTextureAnimation clockController;
         private string animationPath;
 
@@ -208,6 +219,12 @@ namespace AWBWApp.Game.UI.Replay
                 this.Delay(duration).Expire();
                 onLoaded?.Invoke(this);
             }
+        }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            base.Dispose(isDisposing);
+            Disposed = true;
         }
     }
 }
