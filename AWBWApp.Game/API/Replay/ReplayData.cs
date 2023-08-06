@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using osu.Framework.Graphics.Primitives;
 
 namespace AWBWApp.Game.API.Replay
@@ -51,6 +52,7 @@ namespace AWBWApp.Game.API.Replay
     public enum MatchType
     {
         League,
+        [Description("Live Queue")]
         LiveQueue,
         Normal,
         Tag

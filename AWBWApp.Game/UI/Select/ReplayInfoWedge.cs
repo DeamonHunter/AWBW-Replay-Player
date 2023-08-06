@@ -6,6 +6,7 @@ using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.IO;
 using osu.Framework.Allocation;
+using osu.Framework.Extensions;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
@@ -299,8 +300,8 @@ namespace AWBWApp.Game.UI.Select
             };
 
             addStat(statsFlow, "Game ID", replay.ID.ToString());
+            addStat(statsFlow, "Game Type", replay.Type.GetDescription());
             addStat(statsFlow, "Fog", replay.Fog ? "On" : "Off");
-            addStat(statsFlow, "Tag COs", replay.Type == MatchType.Tag ? "On" : "Off");
             addStat(statsFlow, "CO Powers", replay.PowersAllowed ? "On" : "Off");
 
             addStat(statsFlow, "Weather", replay.WeatherType);
