@@ -48,6 +48,7 @@ namespace AWBWApp.Game
             SetDefault(AWBWSetting.ReplayShowMovementArrows, true);
             SetDefault(AWBWSetting.PlayerListScale, 1f);
             SetDefault(AWBWSetting.PlayerListLeftSide, false);
+            SetDefault(AWBWSetting.TileInfoPopupAnchor, Anchor.BottomLeft);
             SetDefault(AWBWSetting.ReplayBarControlScale, 1f);
             SetDefault(AWBWSetting.ReplayBarControlPositionX, 0f);
             SetDefault(AWBWSetting.ReplayBarControlPositionY, 0f);
@@ -78,6 +79,7 @@ namespace AWBWApp.Game
         ReplayShowMovementArrows,
         PlayerListScale,
         PlayerListLeftSide,
+        TileInfoPopupAnchor,
         ReplayBarControlScale,
         ReplayBarControlPositionX,
         ReplayBarControlPositionY,

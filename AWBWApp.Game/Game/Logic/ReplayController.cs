@@ -92,7 +92,7 @@ namespace AWBWApp.Game.Game.Logic
         private Dictionary<int, EndTurnDesync> endTurnDesyncs = new Dictionary<int, EndTurnDesync>();
         private BuildingDiscoveryController buildingDiscoveryController = new BuildingDiscoveryController();
 
-        private const int player_list_width = 225;
+        public const int PLAYER_LIST_WIDTH = 225;
 
         public BindableFloat AutoAdvanceDelay { get; private set; } = new BindableFloat(0.5f) { MaxValue = 5, MinValue = 0.05f, Precision = 0.05f };
         private AWBWGlobalAction? autoAdvance;
@@ -147,7 +147,7 @@ namespace AWBWApp.Game.Game.Logic
                             Anchor = Anchor.TopRight,
                             Origin = Anchor.TopRight,
                             RelativeSizeAxes = Axes.Y,
-                            Size = new Vector2(player_list_width, 1)
+                            Size = new Vector2(PLAYER_LIST_WIDTH, 1)
                         },
                         barWidget = new MoveableReplayBarWidget(this),
                         Stats = new StatsHandler

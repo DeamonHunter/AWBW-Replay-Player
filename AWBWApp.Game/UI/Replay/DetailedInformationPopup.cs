@@ -1,4 +1,5 @@
-﻿using AWBWApp.Game.Game.Building;
+﻿using System;
+using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
@@ -34,6 +35,8 @@ namespace AWBWApp.Game.UI.Replay
         private UnitPopup unitPopup;
 
         private Bindable<bool> playerListLeftSide;
+        private Bindable<float> playerListScale;
+        private Bindable<Anchor> infoPopupAnchor;
 
         public DetailedInformationPopup()
         {
@@ -84,15 +87,46 @@ namespace AWBWApp.Game.UI.Replay
         private void load(AWBWConfigManager configManager)
         {
             playerListLeftSide = configManager.GetBindable<bool>(AWBWSetting.PlayerListLeftSide);
-            playerListLeftSide.BindValueChanged(_ => popupPositionChanged(), true);
+            playerListLeftSide.BindValueChanged(_ => popupPositionChanged());
+
+            playerListScale = configManager.GetBindable<float>(AWBWSetting.PlayerListScale);
+            playerListScale.BindValueChanged(_ => popupPositionChanged());
+
+            infoPopupAnchor = configManager.GetBindable<Anchor>(AWBWSetting.TileInfoPopupAnchor);
+            infoPopupAnchor.BindValueChanged(_ => popupPositionChanged(), true);
         }
 
         private void popupPositionChanged()
         {
-            var rightSide = forceRightSide || playerListLeftSide.Value;
-            Anchor = rightSide ? Anchor.BottomRight : Anchor.BottomLeft;
-            Origin = rightSide ? Anchor.BottomRight : Anchor.BottomLeft;
-            Position = rightSide ? new Vector2(-10, -10) : new Vector2(10, -10);
+            if (ForceRightSide)
+            {
+                Anchor = Anchor.BottomRight;
+                Origin = Anchor.BottomRight;
+                Position = new Vector2(-10, -10);
+                return;
+            }
+
+            Anchor = infoPopupAnchor.Value;
+            Origin = infoPopupAnchor.Value;
+
+            var leftSide = playerListLeftSide.Value;
+
+            var listOffset = ReplayController.PLAYER_LIST_WIDTH * playerListScale.Value + 10;
+
+            Vector2 offset = infoPopupAnchor.Value switch
+            {
+                Anchor.TopLeft => new Vector2(leftSide ? listOffset : 10, 10),
+                Anchor.TopCentre => new Vector2(0, 10),
+                Anchor.TopRight => new Vector2(leftSide ? -10 : -listOffset, 10),
+                Anchor.CentreLeft => new Vector2(leftSide ? listOffset : 10, 0),
+                Anchor.Centre => new Vector2(0, 0),
+                Anchor.CentreRight => new Vector2(leftSide ? -10 : -listOffset, 0),
+                Anchor.BottomLeft => new Vector2(leftSide ? listOffset : 10, -10),
+                Anchor.BottomCentre => new Vector2(0, -10),
+                Anchor.BottomRight => new Vector2(leftSide ? -10 : -listOffset, -10),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            Position = offset;
         }
 
         public void ShowDetails(DrawableTile tile, DrawableBuilding building, DrawableUnit unit)

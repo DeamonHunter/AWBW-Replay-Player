@@ -42,6 +42,7 @@ namespace AWBWApp.Game.UI.Replay
                     x.Setup(animation, length, startDelay, onLoaded);
                 });
 
+                //Very very occasionally a drawable here is disposed? Its weird this is the case though...
                 if (drawable.Disposed)
                     continue;
 
