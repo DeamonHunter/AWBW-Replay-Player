@@ -149,7 +149,7 @@ namespace AWBWApp.Game.UI.Interrupts
 
         private void failed(string reason)
         {
-            Logger.Log("Failed to login: " + errorText, level: LogLevel.Verbose);
+            Logger.Log("Failed to login: " + reason, level: LogLevel.Verbose);
             Schedule(() =>
             {
                 errorText.Text = reason;

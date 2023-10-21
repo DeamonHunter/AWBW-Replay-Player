@@ -1,20 +1,4 @@
 {
-    "Black Tile": {
-        "AWBWID": 0,
-        "BaseDefence": 1,
-        "MovementCostsPerType": {
-            "LightInf": 0,
-            "HeavyInf": 0,
-            "Tread": 0,
-            "Tire": 0,
-            "Air": 0
-        },
-        "Colour": "#272529",
-        "TerrainType": "Plain",
-        "Textures": {
-            "Clear": "Black"
-        }
-    },
     "Plain": {
         "AWBWID": 1,
         "BaseDefence": 1,
@@ -827,6 +811,22 @@
             "Snow": "Neutral/VRubble_Snow-0"
         },
         "SymmetryMirror": [116, 115, 116, 115]
+    },
+    "Teleport Tile": {
+        "AWBWID": 195,
+        "BaseDefence": 1,
+        "MovementCostsPerType": {
+            "LightInf": 0,
+            "HeavyInf": 0,
+            "Tread": 0,
+            "Tire": 0,
+            "Air": 0
+        },
+        "Colour": "#272529",
+        "TerrainType": "Plain",
+        "Textures": {
+            "Clear": "Teleporter"
+        }
     },
 
     //Custom Sea Tiles

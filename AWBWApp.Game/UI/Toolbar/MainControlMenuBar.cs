@@ -23,6 +23,9 @@ namespace AWBWApp.Game.UI.Toolbar
         public Action OnSaveAsEditorTriggered;
         public Action OnUploadEditorTriggered;
 
+        [Resolved]
+        private GameHost host { get; set; }
+
         public MainControlMenuBar(Action exitScreenAction, NotificationOverlay overlay)
             : base(null, overlay)
         {

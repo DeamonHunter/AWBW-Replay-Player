@@ -20,6 +20,9 @@ namespace AWBWApp.Game.Game.Tile
 
             foreach (var tile in tilesByCode)
                 tilesByAWBWId.Add(tile.Value.AWBWID, tile.Value);
+
+            //Map ID 0 to the teleport tile as well.
+            tilesByAWBWId[0] = tilesByCode["Teleport Tile"];
         }
 
         public TerrainTile GetTileByCode(string code)
