@@ -173,6 +173,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
         public string GetReadibleName(ReplayController controller, bool shortName)
         {
+            if (originalDefender == null)
+                return "Attack (Defender Missing)";
+
             if (shortName)
                 return MoveUnit != null ? "Move + Attack" : "Attack";
 
@@ -198,17 +201,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (!context.Units.TryGetValue(Attacker.ID, out var attacker))
                 throw new ReplayMissingUnitException(Attacker.ID);
-            if (!context.Units.TryGetValue(Defender.ID, out var defender))
-                throw new ReplayMissingUnitException(Defender.ID);
 
             originalAttacker = attacker.Clone();
-            originalDefender = defender.Clone();
-
             originalUnits.Add(originalAttacker.ID, originalAttacker);
-            originalUnits.Add(originalDefender.ID, originalDefender);
-
             var attackerCO = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[attacker.PlayerID!.Value].ActiveCOID);
-            var defenderCO = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[defender.PlayerID!.Value].ActiveCOID);
 
             if (Attacker.HitPoints!.Value > 0)
             {
@@ -225,6 +221,16 @@ namespace AWBWApp.Game.API.Replay.Actions
                     buildingBelow.Capture = 20;
                 }
             }
+
+            if (!context.Units.TryGetValue(Defender.ID, out var defender))
+            {
+                Logger.Error(new ReplayMissingUnitException(Defender.ID), "A attack within this replay is missing a defending unit.", LoggingTarget.Information);
+                return;
+            }
+
+            originalDefender = defender.Clone();
+            originalUnits.Add(originalDefender.ID, originalDefender);
+            var defenderCO = controller.COStorage.GetCOByAWBWId(context.PlayerTurns[defender.PlayerID!.Value].ActiveCOID);
 
             if (Defender.HitPoints!.Value > 0)
             {
@@ -287,6 +293,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
                 attackerUnit.CanMove.Value = true;
             }
+
+            if (originalDefender == null)
+                yield break;
 
             //Reverse order if the defender has a power active that reverses order, but not if the attacker also has a power to reverse order.
             var attackerPower = controller.GetActivePowerForPlayer(attackerUnit.OwnerID.Value);
