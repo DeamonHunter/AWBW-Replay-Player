@@ -129,7 +129,8 @@ namespace AWBWApp.Game.UI.Interrupts
 
         public static long ParseReplayString([NotNull] string replay)
         {
-            const string site_link = "https://awbw.amarriner.com/2030.php?games_id=";
+            const string site_link = "https://awbw.amarriner.com/game.php?games_id=";
+            const string old_site_link = "https://awbw.amarriner.com/2030.php?games_id=";
 
             if (long.TryParse(replay, out var replayID))
                 return replayID;
@@ -143,6 +144,22 @@ namespace AWBWApp.Game.UI.Interrupts
                     possibleId = replay[site_link.Length..turnIndex];
                 else
                     possibleId = replay[site_link.Length..];
+
+                if (long.TryParse(possibleId, out replayID))
+                    return replayID;
+
+                throw new Exception("Was unable to parse the replay in the website URL: " + replay);
+            }
+
+            if (replay.StartsWith(old_site_link))
+            {
+                var turnIndex = replay.IndexOf("&ndx=", StringComparison.InvariantCulture);
+
+                string possibleId;
+                if (turnIndex >= 0 && turnIndex > old_site_link.Length)
+                    possibleId = replay[old_site_link.Length..turnIndex];
+                else
+                    possibleId = replay[old_site_link.Length..];
 
                 if (long.TryParse(possibleId, out replayID))
                     return replayID;
