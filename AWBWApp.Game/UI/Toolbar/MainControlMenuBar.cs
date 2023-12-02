@@ -43,6 +43,7 @@ namespace AWBWApp.Game.UI.Toolbar
                     Items = new MenuItem[]
                     {
                         new EnumMenuItem<WindowMode>("Fullscreen Mode", frameworkConfig.GetBindable<WindowMode>(FrameworkSetting.WindowMode), host.Window?.SupportedWindowModes.ToList() ?? new List<WindowMode>() { WindowMode.Windowed }),
+                        new EnumMenuItem<FrameSync>("Frame Sync", frameworkConfig.GetBindable<FrameSync>(FrameworkSetting.FrameSync), new[] { FrameSync.VSync, FrameSync.Limit2x, FrameSync.Unlimited }),
                         new MenuItem("Map Background Colour")
                         {
                             Items = new[] { new ColourPickerMenuItem(configManager.GetBindable<Colour4>(AWBWSetting.MapGridBaseColour)) }
