@@ -273,7 +273,6 @@ namespace AWBWApp.Game.API.Replay.Actions
             Logger.Log("Performing Attack Action.");
 
             var attackerUnit = controller.Map.GetDrawableUnit(Attacker.ID);
-            var defenderUnit = controller.Map.GetDrawableUnit(Defender.ID);
 
             var attackerStats = Attacker;
             var defenderStats = Defender;
@@ -283,8 +282,6 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (!attackerUnit.OwnerID.HasValue)
                 throw new Exception("Attacking unit doesn't have an owner id?");
-            if (!defenderUnit.OwnerID.HasValue)
-                throw new Exception("Defending unit doesn't have an owner id?");
 
             if (MoveUnit != null)
             {
@@ -296,6 +293,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (originalDefender == null)
                 yield break;
+
+            var defenderUnit = controller.Map.GetDrawableUnit(Defender.ID);
+            if (!defenderUnit.OwnerID.HasValue)
+                throw new Exception("Defending unit doesn't have an owner id?");
 
             //Reverse order if the defender has a power active that reverses order, but not if the attacker also has a power to reverse order.
             var attackerPower = controller.GetActivePowerForPlayer(attackerUnit.OwnerID.Value);
