@@ -61,11 +61,20 @@ namespace AWBWApp.Game.UI.Replay
                     Colour = Color4.Black,
                     Alpha = 0.3f
                 },
+                new Box()
+                {
+                    RelativeSizeAxes = Axes.X,
+                    Height = 25,
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.TopCentre,
+                    Colour = Color4.Black,
+                    Alpha = 0.5f
+                },
                 new BasicScrollContainer()
                 {
                     RelativeSizeAxes = Axes.Both,
                     ScrollbarAnchor = Anchor.TopRight,
-                    Margin = new MarginPadding { Bottom = 10 },
+                    Margin = new MarginPadding { Bottom = 10, Top = 25 },
                     ScrollbarOverlapsContent = false,
                     Child = fillContainer = new FillFlowContainer()
                     {
