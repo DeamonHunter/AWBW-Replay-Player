@@ -328,12 +328,12 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (!swappedUnits)
                 attackerUnit.CanMove.Value = false;
-            defenderUnit.UpdateUnit(defenderStats);
+            defenderUnit.UpdateUnit(defenderStats, true);
             controller.Players[defenderUnit.OwnerID!.Value].UnitValue.Value -= defenderValue;
 
             if (defenderUnit.HealthPoints.Value <= 0 || !defenderCounters)
             {
-                attackerUnit.UpdateUnit(attackerStats);
+                attackerUnit.UpdateUnit(attackerStats, true);
                 if (defenderUnit.HealthPoints.Value <= 0)
                     controller.Map.DeleteUnit(defenderUnit.UnitID, true);
                 controller.Players[attackerUnit.OwnerID!.Value].UnitValue.Value -= attackerValue;
@@ -355,7 +355,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (swappedUnits)
                 defenderUnit.CanMove.Value = false;
 
-            attackerUnit.UpdateUnit(attackerStats);
+            attackerUnit.UpdateUnit(attackerStats, true);
 
             if (attackerUnit.HealthPoints.Value <= 0)
             {
@@ -453,7 +453,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             foreach (var originalUnit in originalUnits)
             {
                 if (controller.Map.TryGetDrawableUnit(originalUnit.Key, out var drawableUnit))
-                    drawableUnit.UpdateUnit(originalUnit.Value);
+                    drawableUnit.UpdateUnit(originalUnit.Value, true);
                 else
                     controller.Map.AddUnit(originalUnit.Value);
             }

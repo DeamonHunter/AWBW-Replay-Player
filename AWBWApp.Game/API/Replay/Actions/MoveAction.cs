@@ -151,7 +151,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 yield return ReplayWait.WaitForTransformable(unit);
             }
 
-            unit.UpdateUnit(Unit);
+            unit.UpdateUnit(Unit, true);
 
             unit.CanMove.Value = false;
 
@@ -236,7 +236,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             Logger.Log("Undoing Move Action.");
 
             var unit = controller.Map.GetDrawableUnit(Unit.ID);
-            unit.UpdateUnit(originalUnit);
+            unit.UpdateUnit(originalUnit, true);
 
             if (belowBuildingHP != null)
             {

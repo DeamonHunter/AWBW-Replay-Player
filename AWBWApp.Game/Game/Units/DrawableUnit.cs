@@ -131,10 +131,10 @@ namespace AWBWApp.Game.Game.Units
             movementState = new Bindable<MovementState>();
             movementState.BindValueChanged(x => spriteContainer.SetMovementState(movementAnimations.Value ? x.NewValue : MovementState.Idle));
 
-            UpdateUnit(unit);
+            UpdateUnit(unit, false);
         }
 
-        public void UpdateUnit(ReplayUnit unit)
+        public void UpdateUnit(ReplayUnit unit, bool duringTurn)
         {
             UnitID = unit.ID;
             if (unit.PlayerID.HasValue)
@@ -165,7 +165,8 @@ namespace AWBWApp.Game.Game.Units
             if (unit.MovementPoints.HasValue)
                 MovementRange.Value = unit.MovementPoints.Value;
 
-            if (unit.Range.HasValue && unit.Range != Vector2I.Zero)
+            //This is kinda a hacky work around to avoid having grit double apply his passive.
+            if (!duringTurn && unit.Range.HasValue && unit.Range != Vector2I.Zero)
                 AttackRange.Value = unit.Range.Value;
 
             Cargo.Clear();

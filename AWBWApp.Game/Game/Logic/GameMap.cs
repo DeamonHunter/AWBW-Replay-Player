@@ -443,7 +443,7 @@ namespace AWBWApp.Game.Game.Logic
             {
                 if (Units.TryGetValue(unit.Value.ID, out DrawableUnit existingUnit))
                 {
-                    existingUnit.UpdateUnit(unit.Value);
+                    existingUnit.UpdateUnit(unit.Value, false);
                 }
                 else
                 {

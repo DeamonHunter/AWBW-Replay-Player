@@ -122,7 +122,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             yield return ReplayWait.WaitForTransformable(unloadingUnit);
 
-            unloadingUnit.UpdateUnit(UnloadedUnit);
+            unloadingUnit.UpdateUnit(UnloadedUnit, true);
             unloadingUnit.CanMove.Value = false;
 
             controller.UpdateFogOfWar();

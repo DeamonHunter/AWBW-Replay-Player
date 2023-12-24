@@ -88,7 +88,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             }
 
             var hiddenUnit = controller.Map.GetDrawableUnit(RevealingUnit.ID);
-            hiddenUnit.UpdateUnit(RevealingUnit);
+            hiddenUnit.UpdateUnit(RevealingUnit, true);
         }
 
         public void UndoAction(ReplayController controller)
@@ -96,7 +96,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             Logger.Log("Undoing Unhide Action.");
 
             var hiddenUnit = controller.Map.GetDrawableUnit(originalUnit.ID);
-            hiddenUnit.UpdateUnit(originalUnit);
+            hiddenUnit.UpdateUnit(originalUnit, true);
 
             MoveUnit?.UndoAction(controller);
         }

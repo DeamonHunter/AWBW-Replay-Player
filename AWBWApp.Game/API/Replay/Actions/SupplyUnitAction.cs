@@ -137,7 +137,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             Logger.Log("Undoing Supply Action.");
 
             foreach (var unit in originalUnits)
-                controller.Map.GetDrawableUnit(unit.ID).UpdateUnit(unit);
+                controller.Map.GetDrawableUnit(unit.ID).UpdateUnit(unit, true);
 
             MoveUnit?.UndoAction(controller);
         }

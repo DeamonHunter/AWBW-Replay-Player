@@ -175,7 +175,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 if (controller.Map.TryGetDrawableUnit(replayUnit.Key, out var unit))
                 {
                     owner.UnitValue.Value += (originalValue - ReplayActionHelper.CalculateUnitCost(unit, owner.ActiveCO.Value.CO.DayToDayPower, null));
-                    unit.UpdateUnit(replayUnit.Value);
+                    unit.UpdateUnit(replayUnit.Value, true);
                 }
                 else
                 {

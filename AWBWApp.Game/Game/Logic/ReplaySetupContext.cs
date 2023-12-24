@@ -415,7 +415,7 @@ namespace AWBWApp.Game.Game.Logic
             foreach (var unit in ChangedUnits)
             {
                 if (controller.Map.TryGetDrawableUnit(unit.Key, out var drawable))
-                    drawable.UpdateUnit(unit.Value);
+                    drawable.UpdateUnit(unit.Value, false);
                 else
                     controller.Map.AddUnit(unit.Value);
             }

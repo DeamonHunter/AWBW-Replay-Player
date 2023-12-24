@@ -294,7 +294,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             foreach (var unit in originalUnits)
             {
                 if (controller.Map.TryGetDrawableUnit(unit.Key, out var drawableUnit))
-                    drawableUnit.UpdateUnit(unit.Value);
+                    drawableUnit.UpdateUnit(unit.Value, false);
                 else
                 {
                     var dayToDay = controller.Players[unit.Value.PlayerID!.Value].ActiveCO.Value.CO.DayToDayPower;

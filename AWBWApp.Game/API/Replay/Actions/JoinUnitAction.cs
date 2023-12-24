@@ -122,7 +122,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             controller.ActivePlayer.UnitValue.Value += valueChange;
             controller.Stats.CurrentTurnStatsReadout[originalJoinedUnit.PlayerID!.Value].RegisterUnitStats(UnitStatType.JoinUnit | UnitStatType.UnitCountChanged, originalJoiningUnit.UnitName, originalJoiningUnit.PlayerID!.Value, Math.Max(-valueChange, 0));
 
-            joinedUnit.UpdateUnit(JoinedUnit);
+            joinedUnit.UpdateUnit(JoinedUnit, true);
             controller.UpdateFogOfWar();
         }
 
@@ -131,7 +131,7 @@ namespace AWBWApp.Game.API.Replay.Actions
             Logger.Log("Undoing Join Action.");
 
             controller.Map.AddUnit(originalJoiningUnit);
-            controller.Map.GetDrawableUnit(originalJoinedUnit.ID).UpdateUnit(originalJoinedUnit);
+            controller.Map.GetDrawableUnit(originalJoinedUnit.ID).UpdateUnit(originalJoinedUnit, true);
             controller.Stats.CurrentTurnStatsReadout[originalJoinedUnit.PlayerID!.Value].RegisterUnitStats(UnitStatType.JoinUnit | UnitStatType.UnitCountChanged | UnitStatType.Undo, originalJoiningUnit.UnitName, originalJoiningUnit.PlayerID!.Value, Math.Max(-valueChange, 0));
 
             controller.ActivePlayer.UnitValue.Value -= valueChange;

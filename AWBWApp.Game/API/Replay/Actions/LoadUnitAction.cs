@@ -110,8 +110,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             var loadingUnit = controller.Map.GetDrawableUnit(LoadedID);
             var transportUnit = controller.Map.GetDrawableUnit(TransportID);
 
-            loadingUnit.UpdateUnit(originalLoadedUnit);
-            transportUnit.UpdateUnit(originalTransportUnit);
+            loadingUnit.UpdateUnit(originalLoadedUnit, true);
+            transportUnit.UpdateUnit(originalTransportUnit, true);
 
             controller.UpdateFogOfWar();
             MoveUnit?.UndoAction(controller);

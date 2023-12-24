@@ -762,7 +762,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 if (controller.Map.TryGetDrawableUnit(unit.Key, out var drawableUnit))
                 {
                     var originalValue = ReplayActionHelper.CalculateUnitCost(drawableUnit, dayToDay, null);
-                    drawableUnit.UpdateUnit(unit.Value);
+                    drawableUnit.UpdateUnit(unit.Value, true);
                     controller.Players[unit.Value.PlayerID!.Value].UnitValue.Value += ReplayActionHelper.CalculateUnitCost(drawableUnit, dayToDay, null) - originalValue;
                 }
                 else
