@@ -163,7 +163,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
             unit.HitPoints = (float)(random.NextDouble() * 10);
             unit.Ammo = random.Next(drawable.UnitData.MaxAmmo);
             unit.Fuel = random.Next(drawable.UnitData.MaxFuel);
-            drawable.UpdateUnit(unit);
+            drawable.UpdateUnit(unit, false);
         }
 
         private (DrawableTile, DrawableBuilding) chooseRandomBaseTile()
