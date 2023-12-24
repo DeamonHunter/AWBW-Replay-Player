@@ -53,7 +53,7 @@ namespace AWBWApp.Game.API.Replay.Actions
         private readonly Dictionary<long, ReplayUnit> originalUnits = new Dictionary<long, ReplayUnit>();
         private ReplayBuilding originalBuilding;
 
-        private const int explosion_range = 3;
+        private const int explosion_range = 2;
         private const int used_silo_id = 112; //TODO: Remove this hardcoded value
 
         public string GetReadibleName(ReplayController controller, bool shortName)
