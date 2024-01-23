@@ -473,8 +473,13 @@ namespace AWBWApp.Game.API.Replay
                                 type = MatchType.LiveQueue;
                                 break;
 
+                            case "W":
+                                type = MatchType.LiveLeague;
+                                break;
+
                             default:
-                                throw new Exception("Unknown Match Type: " + value);
+                                type = MatchType.Unknown;
+                                break;
                         }
 
                         if (!firstTurn && replayData.ReplayInfo.Type != type)

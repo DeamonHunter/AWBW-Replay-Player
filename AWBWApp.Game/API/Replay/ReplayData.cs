@@ -54,8 +54,11 @@ namespace AWBWApp.Game.API.Replay
         League,
         [Description("Live Queue")]
         LiveQueue,
+        [Description("Live League")]
+        LiveLeague,
         Normal,
-        Tag
+        Tag,
+        Unknown
     }
 
     public class TurnData
