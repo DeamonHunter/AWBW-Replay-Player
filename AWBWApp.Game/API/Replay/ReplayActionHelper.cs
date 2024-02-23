@@ -156,6 +156,18 @@ namespace AWBWApp.Game.API.Replay
 
             return building;
         }
+        public static ReplayBuilding ParseJObjectIntoReplaySeam(JObject jObject)
+        {
+            var building = new ReplayBuilding
+            {
+                // ID = buildings_ID,   //Action Attack Seam does not get the ID of the Seam, so i guess they dont have any
+                TerrainID = (int?)jObject["buildings_terrain_id"],
+                Capture = (int)jObject["buildings_hit_points"],
+                Position = new Vector2I((int)jObject["seamX"], (int)jObject["seamY"])
+            };
+
+            return building;
+        }
 
         public static bool ParseReplayBool(string boolean)
         {
