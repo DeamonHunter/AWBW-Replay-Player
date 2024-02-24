@@ -665,6 +665,8 @@ namespace AWBWApp.Game.Game.Logic
                     var playerID = getPlayerIDFromCountryID(buildingTile.CountryID);
                     var country = playerID.HasValue ? ReplayController.Players[playerID.Value].Country : null;
                     var drawableBuilding = new DrawableBuilding(buildingTile, tilePosition, playerID, country);
+                    if (awbwBuilding.Capture.HasValue)
+                        drawableBuilding.CaptureHealth.Value = awbwBuilding.Capture.Value;
                     drawableBuilding.FogOfWarActive.Value = IsTileFoggy(awbwBuilding.Position, false);
                     BuildingGrid.AddTile(drawableBuilding, tilePosition);
                     return;

@@ -103,10 +103,10 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             originalSeam = seam.Clone();
 
-            //Destroyed pipeseams seem to have different CP values depending on Fog and weather voth player have vision on it? idk man but sometimes it gets set to 20 and sometimes not
-            //causes desync sadly
+            //Seems like destroyed pipe seams can have differing CP values depending on how they are destroyed. (e.g. In Fog, overkill).
+            //This value will get set to 0 for consistency.
             if (Seam.TerrainID != originalSeam.TerrainID)
-                Seam.Capture = originalSeam.Capture;
+                Seam.Capture = 0;
 
             Seam.ID = seam.ID;
 
@@ -117,6 +117,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             originalUnit = unit.Clone();
 
+            unit.TimesMoved = 1;
             unit.TimesFired++;
             unit.Ammo = (int)AttackerCombatInfo["units_ammo"];
         }
@@ -182,14 +183,6 @@ namespace AWBWApp.Game.API.Replay.Actions
         {
             Logger.Log("Undoing Attack Seam Action.");
             controller.Map.UpdateBuilding(originalSeam, true);
-
-            if (Seam.TerrainID != originalSeam.TerrainID)
-            {
-                //HP of restored Seam has to be updated
-                controller.Map.TryGetDrawableBuilding(Seam.Position, out var restoredSeam);
-                restoredSeam.CaptureHealth.Value = originalSeam.Capture ?? 100;
-            }
-
             if (controller.Map.TryGetDrawableUnit(UnitID, out var drawableUnit))
                 drawableUnit.UpdateUnit(originalUnit, true);
             else
