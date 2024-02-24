@@ -4,7 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Logic;
+using AWBWApp.Game.Game.Tile;
+using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
+using AWBWApp.Game.UI.Replay;
 using Newtonsoft.Json.Linq;
 using OpenTabletDriver.Plugin;
 using osu.Framework.Graphics;
@@ -35,7 +38,7 @@ namespace AWBWApp.Game.API.Replay.Actions
                 if (moveAction == null)
                     throw new Exception("Attack Seam action was expecting a movement action.");
             }
-            
+
             var attackSeamData = (JObject)jObject["AttackSeam"];
             action.Seam = ReplayActionHelper.ParseJObjectIntoReplaySeam((JObject)attackSeamData);
 
@@ -46,8 +49,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             var combatInfoVision = attackSeamData["unit"];
             var attackerInfoVisionData = (JObject)ReplayActionHelper.GetPlayerSpecificDataFromJObject((JObject)combatInfoVision, turnData.ActiveTeam, turnData.ActivePlayerID);
             action.AttackerCombatInfo = attackerInfoVisionData["combatInfo"];
-            action.UnitID = (long) action.AttackerCombatInfo["units_id"];
-            
+            action.UnitID = (long)action.AttackerCombatInfo["units_id"];
+
             return action;
         }
     }
@@ -91,7 +94,6 @@ namespace AWBWApp.Game.API.Replay.Actions
             return !controller.ShouldPlayerActionBeHidden(Seam.Position, false);
         }
 
-
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context)
         {
             MoveUnit?.SetupAndUpdate(controller, context);
@@ -103,9 +105,9 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             //Destroyed pipeseams seem to have different CP values depending on Fog and weather voth player have vision on it? idk man but sometimes it gets set to 20 and sometimes not
             //causes desync sadly
-            if(Seam.TerrainID != originalSeam.TerrainID) {
+            if (Seam.TerrainID != originalSeam.TerrainID)
                 Seam.Capture = originalSeam.Capture;
-            }
+
             Seam.ID = seam.ID;
 
             seam.Overwrite(Seam);
@@ -114,9 +116,9 @@ namespace AWBWApp.Game.API.Replay.Actions
                 throw new ReplayMissingUnitException(UnitID);
 
             originalUnit = unit.Clone();
-            
+
             unit.TimesFired++;
-            unit.Ammo = (int) AttackerCombatInfo["units_ammo"];
+            unit.Ammo = (int)AttackerCombatInfo["units_ammo"];
         }
 
         public IEnumerable<ReplayWait> PerformAction(ReplayController controller)
@@ -132,40 +134,71 @@ namespace AWBWApp.Game.API.Replay.Actions
             var actionHidden = controller.ShouldPlayerActionBeHidden(Seam.Position, false);
             controller.Map.TryGetDrawableBuilding(Seam.Position, out var capturingBuilding);
 
+            var attackerUnit = controller.Map.GetDrawableUnit(UnitID);
+            if (!attackerUnit.OwnerID.HasValue)
+                throw new Exception("Attacking unit doesn't have an owner id?");
+
             if (capturingBuilding != null && (controller.ShowAnimationsWhenUnitsHidden.Value || !actionHidden))
             {
                 var anim = controller.Map.PlaySelectionAnimation(capturingBuilding);
                 yield return ReplayWait.WaitForTransformable(anim);
+
+                var reticule = PlayAttackAnimation(controller, attackerUnit.MapPosition, capturingBuilding.MapPosition, attackerUnit, true);
+                yield return ReplayWait.WaitForTransformable(reticule);
             }
 
             controller.Map.UpdateBuilding(Seam, false); //This will set the unit above to be capturing
+            if (Seam.TerrainID != originalSeam.TerrainID)
+                controller.Map.PlayEffect("Effects/Explosion/Explosion-Land", 500, Seam.Position + new Vector2I(0, 0), 0, x => x.ScaleTo(0.75f));
+            else
+            {
+                capturingBuilding.MoveToOffset(new Vector2(actionHidden ? 1f : 1.5f, 0), 45)
+                                 .Then().MoveToOffset(new Vector2(actionHidden ? -2 : -3, 0), 90)
+                                 .Then().MoveToOffset(new Vector2(actionHidden ? 2 : 3, 0), 45)
+                                 .Then().MoveToOffset(new Vector2(actionHidden ? -2 : -3, 0), 90)
+                                 .Then().MoveToOffset(new Vector2(actionHidden ? 1f : 1.5f, 0), 45);
+            }
 
-            var attackerUnit = controller.Map.GetDrawableUnit(UnitID);
-            if (!attackerUnit.OwnerID.HasValue)
-                throw new Exception("Attacking unit doesn't have an owner id?");
             attackerUnit.CanMove.Value = false;
         }
 
+        public EffectAnimation PlayAttackAnimation(ReplayController controller, Vector2I start, Vector2I end, DrawableUnit attacker, bool counterAttack)
+        {
+            var scale = counterAttack ? 0.75f : 1f;
+            var lengthModifier = counterAttack ? 0.66f : 0.9f;
+
+            var effect = controller.Map.PlayEffect("Effects/Target", 600 * lengthModifier, start, 0, x =>
+            {
+                x.WaitForTransformationToComplete(attacker)
+                 .MoveTo(GameMap.GetDrawablePositionForBottomOfTile(start) + DrawableTile.HALF_BASE_SIZE).FadeTo(0.5f).ScaleTo(0.5f * scale)
+                 .FadeTo(1, 250 * lengthModifier, Easing.In).MoveTo(GameMap.GetDrawablePositionForBottomOfTile(end) + DrawableTile.HALF_BASE_SIZE, 400 * lengthModifier, Easing.In)
+                 .ScaleTo(scale, 600 * lengthModifier, Easing.OutBounce).RotateTo(180, 400 * lengthModifier).Then().Expire();
+            });
+
+            return effect;
+        }
 
         public void UndoAction(ReplayController controller)
         {
             Logger.Log("Undoing Attack Seam Action.");
             controller.Map.UpdateBuilding(originalSeam, true);
-            if(Seam.TerrainID != originalSeam.TerrainID) {
+
+            if (Seam.TerrainID != originalSeam.TerrainID)
+            {
                 //HP of restored Seam has to be updated
                 controller.Map.TryGetDrawableBuilding(Seam.Position, out var restoredSeam);
                 restoredSeam.CaptureHealth.Value = originalSeam.Capture ?? 100;
             }
 
+            if (controller.Map.TryGetDrawableUnit(UnitID, out var drawableUnit))
+                drawableUnit.UpdateUnit(originalUnit, true);
+            else
+                controller.Map.AddUnit(originalUnit);
+
             if (MoveUnit != null)
                 MoveUnit.UndoAction(controller);
-            else {
-                var attackerUnit = controller.Map.GetDrawableUnit(UnitID);
-                if (!attackerUnit.OwnerID.HasValue)
-                    throw new Exception("Attacking unit doesn't have an owner id?");
-                attackerUnit.CanMove.Value = true;
-                unit.Overwrite(originalUnit);
-            }
+            else if (drawableUnit != null)
+                drawableUnit.CanMove.Value = true;
         }
     }
 }
