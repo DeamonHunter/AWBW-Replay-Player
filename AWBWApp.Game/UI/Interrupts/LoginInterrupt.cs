@@ -48,17 +48,17 @@ namespace AWBWApp.Game.UI.Interrupts
                         TabbableContentContainer = this
                     },
                     passwordInput = new BasicPasswordTextBox()
-                            {
-                                PlaceholderText = "Password",
-                                RelativeSizeAxes = Axes.X,
-                                Anchor = Anchor.TopCentre,
-                                Origin = Anchor.TopCentre,
-                                Width = 0.95f,
-                                Margin = new MarginPadding { Top = 5 },
-                                Height = 40,
-                                TabbableContentContainer = this,
-                                CommitOnFocusLost = false
-                            },
+                    {
+                        PlaceholderText = "Password",
+                        RelativeSizeAxes = Axes.X,
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.TopCentre,
+                        Width = 0.95f,
+                        Margin = new MarginPadding { Top = 5 },
+                        Height = 40,
+                        TabbableContentContainer = this,
+                        CommitOnFocusLost = false
+                    },
                     errorText = new TextFlowContainer()
                     {
                         Anchor = Anchor.TopCentre,
