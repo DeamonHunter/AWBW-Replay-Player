@@ -48,16 +48,17 @@ namespace AWBWApp.Game.UI.Interrupts
                         TabbableContentContainer = this
                     },
                     passwordInput = new BasicPasswordTextBox()
-                    {
-                        PlaceholderText = "Password",
-                        RelativeSizeAxes = Axes.X,
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.TopCentre,
-                        Width = 0.95f,
-                        Margin = new MarginPadding { Top = 5 },
-                        Height = 40,
-                        TabbableContentContainer = this
-                    },
+                            {
+                                PlaceholderText = "Password",
+                                RelativeSizeAxes = Axes.X,
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre,
+                                Width = 0.95f,
+                                Margin = new MarginPadding { Top = 5 },
+                                Height = 40,
+                                TabbableContentContainer = this,
+                                CommitOnFocusLost = false
+                            },
                     errorText = new TextFlowContainer()
                     {
                         Anchor = Anchor.TopCentre,
@@ -95,6 +96,8 @@ namespace AWBWApp.Game.UI.Interrupts
                     }
                 }
             );
+            
+            passwordInput.OnCommit += onPasswordBoxCommit;
 
             Add(blockingLayer = new LoadingLayer(true)
             {
@@ -105,6 +108,10 @@ namespace AWBWApp.Game.UI.Interrupts
         private void scheduleLogin()
         {
             Schedule(attemptLogin);
+        }
+        private void onPasswordBoxCommit(TextBox sender, bool newText)
+        {
+            scheduleLogin();
         }
 
         private async void attemptLogin()
