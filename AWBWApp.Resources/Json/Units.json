@@ -634,7 +634,7 @@
         "AWBWId": 46,
         "MaxFuel": 99,
         "MaxAmmo": 9,
-        "FuelUsagePerTurn": 1,
+        "FuelUsagePerTurn": 0,
         "Vision": 1,
         "MovementRange": 6,
         "AttackRange": {"x": 1, "y": 1},
