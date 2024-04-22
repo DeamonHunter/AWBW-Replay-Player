@@ -19,6 +19,7 @@ namespace AWBWApp.Game.Game.Logic
         public Bindable<FaceDirection> UnitFaceDirection = new Bindable<FaceDirection>();
 
         public BindableBool Eliminated = new BindableBool();
+        public Bindable<int> Clock = new Bindable<int>();
         public Bindable<COInfo> ActiveCO = new Bindable<COInfo>();
         public Bindable<COInfo> TagCO = new Bindable<COInfo>();
         public Bindable<ActiveCOPower> ActivePower = new Bindable<ActiveCOPower>();
@@ -72,6 +73,7 @@ namespace AWBWApp.Game.Game.Logic
             };
 
             ActivePower.Value = activePower;
+            Clock.Value = turn.Clock.Value;
         }
 
         public void UpdateUndo(ReplayUserTurn turn, COStorage coStorage, int turnNumber, int unitCount, int unitValue, int propertyValue, ActiveCOPower activePower)

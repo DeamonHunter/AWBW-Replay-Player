@@ -62,6 +62,7 @@ namespace AWBWApp.Game.UI.Toolbar
                         new ToggleMenuItem("Show Animations for Hidden Actions", configManager.GetBindable<bool>(AWBWSetting.ShowAnimationsForHiddenActions)),
                         new ToggleMenuItem("Skip End Turn Animations", configManager.GetBindable<bool>(AWBWSetting.ReplaySkipEndTurn)),
                         new EnumMenuItem<SonjaHPVisibility>("Sonja HP Visibility", configManager.GetBindable<SonjaHPVisibility>(AWBWSetting.SonjaHPVisiblity)),
+                        new ToggleMenuItem("Show Clock", configManager.GetBindable<bool>(AWBWSetting.ShowClock)),
                         new EnumMenuItem<Anchor>("Tile Info Popup Anchor", configManager.GetBindable<Anchor>(AWBWSetting.TileInfoPopupAnchor),
                             new[]
                             {

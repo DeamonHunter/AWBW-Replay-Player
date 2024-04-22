@@ -41,7 +41,8 @@ namespace AWBWApp.Game.API.Replay
         public int? TagRequiredPowerForSuper; //This changes every time we use a power.
 
         public ActiveCOPower COPowerOn;
-
+    
+        public int? Clock; //how much time player has left at start of the turn in seconds
         public bool Eliminated;
 
         public void Copy(ReplayUserTurn other)
@@ -59,6 +60,7 @@ namespace AWBWApp.Game.API.Replay
             TagRequiredPowerForNormal = other.TagRequiredPowerForNormal;
             TagRequiredPowerForSuper = other.TagRequiredPowerForSuper;
 
+            Clock = other.Clock;
             Eliminated = other.Eliminated;
         }
 

@@ -62,6 +62,7 @@ namespace AWBWApp.Game
             SetDefault(AWBWSetting.ShowTileCursor, true);
             SetDefault(AWBWSetting.ShowAnimationsForHiddenActions, true);
             SetDefault(AWBWSetting.SonjaHPVisiblity, SonjaHPVisibility.AlwaysVisible);
+            SetDefault(AWBWSetting.ShowClock, true);
 
             SetDefault(AWBWSetting.MapGridBaseColour, new Colour4(42, 91, 139, 255).Lighten(0.2f));
             SetDefault(AWBWSetting.MapGridGridColour, new Colour4(42, 91, 139, 255).Darken(0.8f));
@@ -94,7 +95,8 @@ namespace AWBWApp.Game
         ShowAnimationsForHiddenActions,
         MapGridBaseColour,
         MapGridGridColour,
-        SonjaHPVisiblity
+        SonjaHPVisiblity,
+        ShowClock
     }
 
     public enum MapSkin
