@@ -73,7 +73,7 @@ namespace AWBWApp.Game.Game.Logic
             };
 
             ActivePower.Value = activePower;
-            Clock.Value = turn.Clock.Value;
+            Clock.Value = turn.Clock ?? 0;
         }
 
         public void UpdateUndo(ReplayUserTurn turn, COStorage coStorage, int turnNumber, int unitCount, int unitValue, int propertyValue, ActiveCOPower activePower)
