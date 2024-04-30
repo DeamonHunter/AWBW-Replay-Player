@@ -538,7 +538,7 @@ namespace AWBWApp.Game.UI.Replay
             {
                 Items = countryStorage.GetAllCountryIDs().Select(x =>
                 {
-                    var country = countryStorage.GetCountryByAWBWID(x);
+                    var country = countryStorage.SafeGetCountryByAWBWID(x);
                     return new StatefulMenuItem(country.Name, countryBindable, country.Code);
                 }).ToArray()
             };

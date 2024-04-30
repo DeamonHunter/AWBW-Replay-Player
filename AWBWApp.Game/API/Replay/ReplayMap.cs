@@ -55,7 +55,7 @@ namespace AWBWApp.Game.API.Replay
                     {
                         if (building.CountryID != -1)
                         {
-                            var colour = Color4Extensions.FromHex(countryStorage.GetCountryByAWBWID(building.CountryID).Colours["playerList"]).Lighten(0.2f);
+                            var colour = Color4Extensions.FromHex(countryStorage.SafeGetCountryByAWBWID(building.CountryID).Colours["playerList"]).Lighten(0.2f);
                             var darkenedColour = colour.Darken(0.4f);
                             pixel = new Rgba32(new Vector4(colour.R, colour.G, colour.B, colour.A));
                             secondaryPixel = new Rgba32(new Vector4(darkenedColour.R, darkenedColour.G, darkenedColour.B, darkenedColour.A));

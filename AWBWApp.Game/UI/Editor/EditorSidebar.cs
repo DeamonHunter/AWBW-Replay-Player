@@ -123,7 +123,7 @@ namespace AWBWApp.Game.UI.Editor
             var countries = new List<CountryData>();
 
             foreach (var countryID in countryStorage.GetAllCountryIDs())
-                countries.Add(countryStorage.GetCountryByAWBWID(countryID));
+                countries.Add(countryStorage.SafeGetCountryByAWBWID(countryID));
 
             Add(selectedCountry = new EditorDetachedDropdown<CountryData>()
             {

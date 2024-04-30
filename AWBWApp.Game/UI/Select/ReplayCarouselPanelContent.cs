@@ -55,7 +55,7 @@ namespace AWBWApp.Game.UI.Select
                     Text = userText,
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
-                    Colour = Color4Extensions.FromHex(countryStorage.GetCountryByAWBWID(player.Value.CountryID).Colours["replayList"]).Lighten(0.5f), //Todo: Fix config
+                    Colour = Color4Extensions.FromHex(countryStorage.SafeGetCountryByAWBWID(player.Value.CountryID).Colours["replayList"]).Lighten(0.5f), //Todo: Fix config
                     Font = FontUsage.Default.With(size: 20, italics: true)
                 });
 

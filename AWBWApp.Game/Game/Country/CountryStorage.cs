@@ -7,6 +7,7 @@ namespace AWBWApp.Game.Game.Country
 {
     public class CountryStorage
     {
+        private const int default_country_id = 1;
         private readonly Dictionary<int, CountryData> countriesByAWBWID = new Dictionary<int, CountryData>();
         private readonly Dictionary<string, CountryData> countriesByCode = new Dictionary<string, CountryData>();
         private readonly Dictionary<string, CountryData> countriesByName = new Dictionary<string, CountryData>();
@@ -25,9 +26,9 @@ namespace AWBWApp.Game.Game.Country
             }
         }
 
-        public CountryData GetCountryByAWBWID(int id)
+        public CountryData SafeGetCountryByAWBWID(int id)
         {
-            return countriesByAWBWID[id];
+            return countriesByAWBWID.TryGetValue(id, out var country) ? country : countriesByAWBWID[default_country_id];
         }
 
         public CountryData GetCountryByCode(string name)

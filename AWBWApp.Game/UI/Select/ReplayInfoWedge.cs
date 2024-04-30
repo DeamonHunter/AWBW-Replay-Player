@@ -222,7 +222,7 @@ namespace AWBWApp.Game.UI.Select
                     {
                         var username = player.Value.GetUIFriendlyUsername();
 
-                        var colour = Color4Extensions.FromHex(countryStorage.GetCountryByAWBWID(player.Value.CountryID).Colours["replayList"]).Lighten(0.5f);
+                        var colour = Color4Extensions.FromHex(countryStorage.SafeGetCountryByAWBWID(player.Value.CountryID).Colours["replayList"]).Lighten(0.5f);
                         textFlow.AddText(username + "  ", text =>
                         {
                             text.Colour = colour;
@@ -240,7 +240,7 @@ namespace AWBWApp.Game.UI.Select
                 {
                     var username = player.Value.GetUIFriendlyUsername();
 
-                    var colour = Color4Extensions.FromHex(countryStorage.GetCountryByAWBWID(player.Value.CountryID).Colours["replayList"]).Lighten(0.5f);
+                    var colour = Color4Extensions.FromHex(countryStorage.SafeGetCountryByAWBWID(player.Value.CountryID).Colours["replayList"]).Lighten(0.5f);
                     textFlow.AddText(username + "  ", text =>
                     {
                         text.Colour = colour;

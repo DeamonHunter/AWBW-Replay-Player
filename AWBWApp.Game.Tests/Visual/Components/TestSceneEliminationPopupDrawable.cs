@@ -46,7 +46,7 @@ namespace AWBWApp.Game.Tests.Visual.Components
                 TagRequiredPowerForSuper = 180000
             };
 
-            var playerInfo = new PlayerInfo(user, countryStorage.GetCountryByAWBWID(user.CountryID));
+            var playerInfo = new PlayerInfo(user, countryStorage.SafeGetCountryByAWBWID(user.CountryID));
             playerInfo.UpdateTurn(turn, coStorage, 1, 1, 1000, 2000, ActiveCOPower.None);
 
             AddStep("Create", () =>

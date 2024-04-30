@@ -55,7 +55,7 @@ namespace AWBWApp.Game.UI.Editor
         public void SetMap(ReplayMap map)
         {
             SetMapSize(map.Size);
-            selectedCountries.Value = (CountryStorage.GetCountryByAWBWID(1), CountryStorage.GetCountryByAWBWID(2));
+            selectedCountries.Value = (CountryStorage.SafeGetCountryByAWBWID(1), CountryStorage.SafeGetCountryByAWBWID(2));
 
             var shoalMap = ShoalGenerator.CreateCustomShoalVersion(map);
 

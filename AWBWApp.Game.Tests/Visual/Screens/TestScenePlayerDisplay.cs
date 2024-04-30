@@ -72,7 +72,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
             if (addTag)
                 replayPlayer.COsUsedByPlayer.Add(3);
 
-            playerInfo = new PlayerInfo(replayPlayer, countryStorage.GetCountryByAWBWID(1));
+            playerInfo = new PlayerInfo(replayPlayer, countryStorage.SafeGetCountryByAWBWID(1));
 
             var replayPlayerTurn = new ReplayUserTurn
             {
