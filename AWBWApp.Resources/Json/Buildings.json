@@ -3039,5 +3039,183 @@
             "Rain": "WhiteNova/Lab_Rain",
             "Snow": "WhiteNova/Lab_Snow"
         }
+    },
+    /*
+    Azure Asteroid
+    */
+    "Azure Asteroid Airport": {
+        "AWBWID": 196,
+        "CountryID": 23, //aa
+        "Name": "Azure Asteroid Airport",
+        "BuildingType": "Airport",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "frames": [
+            300,
+            1200,
+            100
+        ],
+        "Textures": {
+            "Clear": "AzureAsteroid/Airport",
+            "Rain": "AzureAsteroid/Airport_Rain",
+            "Snow": "AzureAsteroid/Airport_Snow"
+        }
+    },
+    "Azure Asteroid Base": {
+        "AWBWID": 197,
+        "BaseDefence": 3,
+        "CountryID": 23, //wn
+        "Name": "Azure Asteroid Base",
+        "BuildingType": "Base",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "frames": [
+            300,
+            100,
+            400,
+            400,
+            300,
+            100
+        ],
+        "Textures": {
+            "Clear": "AzureAsteroid/Base",
+            "Rain": "AzureAsteroid/Base_Rain",
+            "Snow": "AzureAsteroid/Base_Snow"
+        }
+    },
+    "Azure Asteroid City": {
+        "AWBWID": 198,
+        "BaseDefence": 3,
+        "CountryID": 23, //aa
+        "Name": "Azure Asteroid City",
+        "BuildingType": "City",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "frames": [
+            300,
+            1200,
+            100
+        ],
+        "Textures": {
+            "Clear": "AzureAsteroid/City",
+            "Rain": "AzureAsteroid/City_Rain",
+            "Snow": "AzureAsteroid/City_Snow"
+        }
+    },
+    "Azure Asteroid HQ": {
+        "AWBWID": 200,
+        "BaseDefence": 4,
+        "CountryID": 23, //aa
+        "Name": "Azure Asteroid HQ",
+        "BuildingType": "HQ",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "frames": [
+            300,
+            1200,
+            100
+        ],
+        "Textures": {
+            "Clear": "AzureAsteroid/HQ",
+            "Rain": "AzureAsteroid/HQ_Rain",
+            "Snow": "AzureAsteroid/HQ_Snow"
+        }
+    },
+    "Azure Asteroid Port": {
+        "AWBWID": 202,
+        "BaseDefence": 3,
+        "CountryID": 23, //aa
+        "Name": "Azure Asteroid Port",
+        "BuildingType": "Port",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "frames": [
+            300,
+            1200,
+            100
+        ],
+        "Textures": {
+            "Clear": "AzureAsteroid/Port",
+            "Rain": "AzureAsteroid/Port_Rain",
+            "Snow": "AzureAsteroid/Port_Snow"
+        }
+    },
+    "Azure Asteroid Com Tower": {
+        "AWBWID": 199,
+        "BaseDefence": 3,
+        "CountryID": 23, //aa
+        "Name": "Azure Asteroid Com Tower",
+        "BuildingType": "ComTower",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "GivesMoneyWhenCaptured": false,
+        "frames": [
+            300,
+            1200,
+            100
+        ],
+        "Textures": {
+            "Clear": "AzureAsteroid/ComTower",
+            "Rain": "AzureAsteroid/ComTower_Rain",
+            "Snow": "AzureAsteroid/ComTower_Snow"
+        }
+    },
+    "Azure Asteroid Lab": {
+        "AWBWID": 201,
+        "BaseDefence": 3,
+        "CountryID": 23, //aa
+        "Name": "Azure Asteroid Lab",
+        "BuildingType": "Lab",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "GivesMoneyWhenCaptured": false,
+        "frames": [
+            300,
+            1200,
+            100
+        ],
+        "Textures": {
+            "Clear": "AzureAsteroid/Lab",
+            "Rain": "AzureAsteroid/Lab_Rain",
+            "Snow": "AzureAsteroid/Lab_Snow"
+        }
     }
 }

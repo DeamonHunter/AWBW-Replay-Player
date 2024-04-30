@@ -174,5 +174,16 @@
             "playerList": "#e2ae93",
             "replayList": "#e2ae93"
         }
+    },
+    "Azure Asteroid": {
+        "AWBWID": 23,
+        "code": "aa",
+        "name": "Azure Asteroid",
+        "unitPath": "Units/AzureAsteroid",
+        "faceDirection": "Right",
+        "colours": {
+            "playerList": "#e2ae93",
+            "replayList": "#e2ae93"
+        }
     }
 }
