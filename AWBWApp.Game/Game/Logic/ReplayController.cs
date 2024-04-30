@@ -78,6 +78,7 @@ namespace AWBWApp.Game.Game.Logic
         private IBindable<SonjaHPVisibility> sonjaHPVisibility;
 
         public IBindable<bool> ShowAnimationsWhenUnitsHidden;
+        public IBindable<bool> ShowClock;
 
         [Cached(typeof(IBindable<MapSkin>))]
         private Bindable<MapSkin> selectedMapSkin = new Bindable<MapSkin>();
@@ -207,6 +208,8 @@ namespace AWBWApp.Game.Game.Logic
 
             sonjaHPVisibility = configManager.GetBindable<SonjaHPVisibility>(AWBWSetting.SonjaHPVisiblity);
             sonjaHPVisibility.BindValueChanged(x => UpdateFogOfWar());
+
+            ShowClock = configManager.GetBindable<bool>(AWBWSetting.ShowClock);
 
             ShowAnimationsWhenUnitsHidden = configManager.GetBindable<bool>(AWBWSetting.ShowAnimationsForHiddenActions);
 

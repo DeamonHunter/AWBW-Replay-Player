@@ -103,7 +103,7 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             originalSeam = seam.Clone();
 
-            //Seems like destroyed pipe seams can have differing CP values depending on how they are destroyed. (e.g. In Fog, overkill).
+            //CP value of destroyed pipeseams in AWBW is inconsitent over time
             //This value will get set to 0 for consistency.
             if (Seam.TerrainID != originalSeam.TerrainID)
                 Seam.Capture = 0;

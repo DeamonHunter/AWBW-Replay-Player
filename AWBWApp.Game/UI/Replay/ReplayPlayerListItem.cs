@@ -72,7 +72,7 @@ namespace AWBWApp.Game.UI.Replay
         private ReplayPlayerList playerList;
         private List<DrawableUnit> tooltipContent;
 
-        public ReplayPlayerListItem(ReplayPlayerList playerList, PlayerInfo info, Action<long> openPlayerStats, bool usePercentagePowers, Func<long, List<DrawableUnit>> getUnits)
+        public ReplayPlayerListItem(ReplayPlayerList playerList, PlayerInfo info, Action<long> openPlayerStats, bool usePercentagePowers, Func<long, List<DrawableUnit>> getUnits, IBindable<bool> ShowClock)
         {
             PlayerID = info.ID;
             RoundOrder = info.RoundOrder;
@@ -133,7 +133,7 @@ namespace AWBWApp.Game.UI.Replay
                     },
                     Children = new Drawable[]
                     {
-                        createNameAndTeamContainer(info),
+                        createNameAndTeamContainer(info, ShowClock),
                         new Container()
                         {
                             RelativeSizeAxes = Axes.X,
@@ -222,7 +222,7 @@ namespace AWBWApp.Game.UI.Replay
             SetShowHiddenInformation(true);
         }
 
-        private Drawable createNameAndTeamContainer(PlayerInfo info)
+        private Drawable createNameAndTeamContainer(PlayerInfo info, IBindable<bool> showClock)
         {
             var container = new Container()
             {
@@ -241,42 +241,88 @@ namespace AWBWApp.Game.UI.Replay
 
             var text = new SpriteText()
             {
-                Anchor = Anchor.TopRight,
-                Origin = Anchor.TopRight,
-                RelativeSizeAxes = Axes.Both,
-                Padding = new MarginPadding { Right = 5 },
+                Anchor = Anchor.TopLeft,
+                Origin = Anchor.TopLeft,
                 Text = info.Username,
+                Padding = new MarginPadding { Left = 3, Right = 3 },
                 Truncate = true
             };
+            TimeSpan time = TimeSpan.FromSeconds((double) info.Clock.Value);
 
-            if (Team == null)
+            
+            var clock = new SpriteText()
             {
-                container.Add(text);
-                return container;
-            }
+                Anchor = Anchor.TopRight,
+                Origin = Anchor.TopRight,
+                Text = showClock.Value ? time .ToString(@"hh\:mm\:ss") : "",
+                Padding = new MarginPadding { Right = 3 },
+                Truncate = true
+            };
+            info.Clock.ValueChanged += clockValue =>
+            {
+                if(showClock.Value) {
+                    TimeSpan time = TimeSpan.FromSeconds((double) clockValue.NewValue);
+                    clock.Text = time .ToString(@"hh\:mm\:ss");
+                }
+            };
+            showClock.ValueChanged += showClockValue => 
+            {
+                if(showClockValue.NewValue) {
+                    TimeSpan time = TimeSpan.FromSeconds((double) info.Clock.Value);
+                    clock.Text = time .ToString(@"hh\:mm\:ss");
+                } else {
+                    clock.Text = "";
+                }
+            };
 
-            container.Add(new TableContainer
-            {
-                RelativeSizeAxes = Axes.Both,
-                ShowHeaders = false,
-                Columns = new[]
+            //If true, there are no teams 
+            if(int.TryParse(Team, out int value)) {
+                container.Add(new TableContainer
                 {
-                    new TableColumn(dimension: new Dimension(mode: GridSizeMode.Distributed)),
-                    new TableColumn(dimension: new Dimension(mode: GridSizeMode.Absolute, size: 45), anchor: Anchor.CentreRight)
-                },
-                Content = new Drawable[1, 2]
-                {
+                    
+                    RelativeSizeAxes = Axes.Both,
+                    ShowHeaders = false,
+                    Columns = new[]
                     {
-                        text,
-                        teamSprite = new Sprite
+                        new TableColumn(dimension: new Dimension(mode: GridSizeMode.Distributed)),
+                        new TableColumn(dimension: new Dimension(mode: GridSizeMode.AutoSize))
+                    },
+                    Content = new Drawable[1, 2]
+                    {
                         {
-                            Size = new Vector2(43, 19),
-                            Anchor = Anchor.CentreRight,
-                            Origin = Anchor.CentreRight
+                            text,
+                            clock
                         }
                     }
-                }
-            });
+                });
+            } else {
+                //Case: There are teams
+                container.Add(new TableContainer
+                {
+                    
+                    RelativeSizeAxes = Axes.Both,
+                    ShowHeaders = false,
+                    Columns = new[]
+                    {
+                        new TableColumn(dimension: new Dimension(mode: GridSizeMode.Distributed)),
+                        new TableColumn(dimension: new Dimension(mode: GridSizeMode.AutoSize)),
+                        new TableColumn(dimension: new Dimension(mode: GridSizeMode.Absolute, size: 45), anchor: Anchor.CentreRight)
+                    },
+                    Content = new Drawable[1, 3]
+                    {
+                        {
+                            text,
+                            clock,
+                            teamSprite = new Sprite
+                            {
+                                Size = new Vector2(43, 19),
+                                Anchor = Anchor.CentreRight,
+                                Origin = Anchor.CentreRight
+                            }
+                        }
+                    }
+                });
+            }
 
             return container;
         }
@@ -381,7 +427,7 @@ namespace AWBWApp.Game.UI.Replay
         [BackgroundDependencyLoader]
         private void load(AWBWConfigManager config)
         {
-            if (Team != null)
+            if (Team != null && teamSprite != null)
                 teamSprite.Texture = textureStore.Get($"UI/Team-{Team}");
 
             unitValueCoin.Texture = textureStore.Get("UI/Coin");

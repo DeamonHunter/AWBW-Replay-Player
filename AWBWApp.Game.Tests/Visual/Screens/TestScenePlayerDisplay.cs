@@ -8,6 +8,7 @@ using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.UI.Replay;
 using NUnit.Framework;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -21,6 +22,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
     public partial class TestScenePlayerDisplay : AWBWAppTestScene
     {
         private PlayerInfo playerInfo;
+            IBindable<bool> showClock;
 
         [Resolved]
         private COStorage coStorage { get; set; }
@@ -31,32 +33,32 @@ namespace AWBWApp.Game.Tests.Visual.Screens
         [Test]
         public void TestCreateReplayPlayer()
         {
-            AddStep("Create Replay Player", () => reset(false, false));
+            AddStep("Create Replay Player", () => reset(false, false,showClock));
             addTests(false);
         }
 
         [Test]
         public void TestCreateReplayPlayerWithTeam()
         {
-            AddStep("Create Replay Player", () => reset(true, false));
+            AddStep("Create Replay Player", () => reset(true, false,showClock));
             addTests(false);
         }
 
         [Test]
         public void TestCreateReplayPlayerWithTag()
         {
-            AddStep("Create Replay Player", () => reset(false, true));
+            AddStep("Create Replay Player", () => reset(false, true,showClock));
             addTests(true);
         }
 
         [Test]
         public void TestCreateReplayPlayerWithTeamAndTag()
         {
-            AddStep("Create Replay Player", () => reset(true, true));
+            AddStep("Create Replay Player", () => reset(true, true,showClock));
             addTests(true);
         }
 
-        private void reset(bool addTeam, bool addTag)
+        private void reset(bool addTeam, bool addTag, IBindable<bool> showClock)
         {
             var replayPlayer = new ReplayUser
             {
@@ -110,7 +112,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
                         Colour = new Color4(42, 91, 139, 255).Lighten(0.2f),
                         Size = new Vector2(2)
                     },
-                    new ReplayPlayerListItem(null, playerInfo, null, false, x => new List<DrawableUnit>())
+                    new ReplayPlayerListItem(null, playerInfo, null, false, x => new List<DrawableUnit>(), showClock)
                 }
             };
         }
