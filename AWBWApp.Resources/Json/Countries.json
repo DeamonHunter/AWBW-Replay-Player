@@ -182,8 +182,8 @@
         "unitPath": "Units/AzureAsteroid",
         "faceDirection": "Right",
         "colours": {
-            "playerList": "#e2ae93",
-            "replayList": "#e2ae93"
+            "playerList": "#84dfe8",
+            "replayList": "#84dfe8"
         }
     }
 }
