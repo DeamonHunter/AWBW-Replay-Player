@@ -224,6 +224,15 @@ namespace AWBWApp.Game.UI.Replay
 
         private Drawable createNameAndTeamContainer(PlayerInfo info, IBindable<bool> showClock)
         {
+            static string secondsToString(int seconds)
+            {
+                TimeSpan timeSpan = TimeSpan.FromSeconds((double)seconds);
+                if (timeSpan.TotalHours < 1)
+                    return timeSpan.ToString(@"mm\:ss");
+                if (timeSpan.TotalHours < 100)
+                    return (((uint)timeSpan.TotalHours).ToString() + ":") + timeSpan.ToString(@"mm\:ss");
+                return ((uint)timeSpan.TotalHours / 24 + 1).ToString() + " days";
+            }
             var container = new Container()
             {
                 RelativeSizeAxes = Axes.X,
@@ -241,36 +250,31 @@ namespace AWBWApp.Game.UI.Replay
 
             var text = new SpriteText()
             {
-                Anchor = Anchor.TopLeft,
-                Origin = Anchor.TopLeft,
                 Text = info.Username,
-                Padding = new MarginPadding { Left = 3, Right = 3 },
+                RelativeSizeAxes = Axes.Both,
+                Padding = new MarginPadding { Left = 3 },
                 Truncate = true
             };
-            TimeSpan time = TimeSpan.FromSeconds((double)info.Clock.Value);
+
+
 
             var clock = new SpriteText()
             {
-                Anchor = Anchor.TopRight,
-                Origin = Anchor.TopRight,
-                Text = showClock.Value ? time.ToString(@"hh\:mm\:ss") : "",
-                Padding = new MarginPadding { Right = 3 },
-                Truncate = true
+                Text = showClock.Value ? secondsToString(info.Clock.Value) : "",
+                Padding = new MarginPadding { Right = 2 },
             };
             info.Clock.ValueChanged += clockValue =>
             {
                 if (showClock.Value)
                 {
-                    TimeSpan time = TimeSpan.FromSeconds((double)clockValue.NewValue);
-                    clock.Text = time.ToString(@"hh\:mm\:ss");
+                    clock.Text = secondsToString(clockValue.NewValue);
                 }
             };
             showClock.ValueChanged += showClockValue =>
             {
                 if (showClockValue.NewValue)
                 {
-                    TimeSpan time = TimeSpan.FromSeconds((double)info.Clock.Value);
-                    clock.Text = time.ToString(@"hh\:mm\:ss");
+                    clock.Text = secondsToString(info.Clock.Value);
                 }
                 else
                 {
@@ -279,7 +283,7 @@ namespace AWBWApp.Game.UI.Replay
             };
 
             //If true, there are no teams
-            if (int.TryParse(Team, out int value))
+            if (Team == null || int.TryParse(Team, out int value))
             {
                 container.Add(new TableContainer
                 {
