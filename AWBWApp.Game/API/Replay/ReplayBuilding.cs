@@ -11,6 +11,9 @@ namespace AWBWApp.Game.API.Replay
         public int? LastCapture;
         public string Team;
 
+        private const int h_pipe_rubble = 115;
+        private const int v_pipe_rubble = 116;
+
         public void Overwrite(ReplayBuilding other)
         {
             ID = other.ID;
@@ -37,8 +40,9 @@ namespace AWBWApp.Game.API.Replay
                 return false;
             if (Position != other.Position)
                 return false;
-            //For destroyed Pipeseams Capture is undefined
-            if (TerrainID != 115 && TerrainID != 116 && Capture != other.Capture)
+
+            //Destroyed pipes have an undefined capture which can cause issues so skip over that.
+            if (TerrainID != h_pipe_rubble && TerrainID != v_pipe_rubble && Capture != other.Capture)
                 return false;
 
             return true;

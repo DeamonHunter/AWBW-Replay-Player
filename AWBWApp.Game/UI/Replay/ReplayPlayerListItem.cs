@@ -247,39 +247,43 @@ namespace AWBWApp.Game.UI.Replay
                 Padding = new MarginPadding { Left = 3, Right = 3 },
                 Truncate = true
             };
-            TimeSpan time = TimeSpan.FromSeconds((double) info.Clock.Value);
+            TimeSpan time = TimeSpan.FromSeconds((double)info.Clock.Value);
 
-            
             var clock = new SpriteText()
             {
                 Anchor = Anchor.TopRight,
                 Origin = Anchor.TopRight,
-                Text = showClock.Value ? time .ToString(@"hh\:mm\:ss") : "",
+                Text = showClock.Value ? time.ToString(@"hh\:mm\:ss") : "",
                 Padding = new MarginPadding { Right = 3 },
                 Truncate = true
             };
             info.Clock.ValueChanged += clockValue =>
             {
-                if(showClock.Value) {
-                    TimeSpan time = TimeSpan.FromSeconds((double) clockValue.NewValue);
-                    clock.Text = time .ToString(@"hh\:mm\:ss");
+                if (showClock.Value)
+                {
+                    TimeSpan time = TimeSpan.FromSeconds((double)clockValue.NewValue);
+                    clock.Text = time.ToString(@"hh\:mm\:ss");
                 }
             };
-            showClock.ValueChanged += showClockValue => 
+            showClock.ValueChanged += showClockValue =>
             {
-                if(showClockValue.NewValue) {
-                    TimeSpan time = TimeSpan.FromSeconds((double) info.Clock.Value);
-                    clock.Text = time .ToString(@"hh\:mm\:ss");
-                } else {
+                if (showClockValue.NewValue)
+                {
+                    TimeSpan time = TimeSpan.FromSeconds((double)info.Clock.Value);
+                    clock.Text = time.ToString(@"hh\:mm\:ss");
+                }
+                else
+                {
                     clock.Text = "";
                 }
             };
 
-            //If true, there are no teams 
-            if(int.TryParse(Team, out int value)) {
+            //If true, there are no teams
+            if (int.TryParse(Team, out int value))
+            {
                 container.Add(new TableContainer
                 {
-                    
+
                     RelativeSizeAxes = Axes.Both,
                     ShowHeaders = false,
                     Columns = new[]
@@ -295,11 +299,13 @@ namespace AWBWApp.Game.UI.Replay
                         }
                     }
                 });
-            } else {
+            }
+            else
+            {
                 //Case: There are teams
                 container.Add(new TableContainer
                 {
-                    
+
                     RelativeSizeAxes = Axes.Both,
                     ShowHeaders = false,
                     Columns = new[]
@@ -728,13 +734,12 @@ namespace AWBWApp.Game.UI.Replay
 
             public ITooltip<UnitMouseoverTooltip.UnitMouseOverInfo> GetCustomTooltip() => new UnitMouseoverTooltip();
 
-            public UnitMouseoverTooltip.UnitMouseOverInfo TooltipContent =>
-                new UnitMouseoverTooltip.UnitMouseOverInfo
-                {
-                    Units = getUnits(),
-                    ShowValue = value,
-                    ValueMultiplier = unitPriceMultiplier
-                };
+            public UnitMouseoverTooltip.UnitMouseOverInfo TooltipContent => new UnitMouseoverTooltip.UnitMouseOverInfo
+            {
+                Units = getUnits(),
+                ShowValue = value,
+                ValueMultiplier = unitPriceMultiplier
+            };
         }
     }
 }

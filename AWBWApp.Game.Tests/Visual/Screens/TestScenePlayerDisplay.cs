@@ -22,7 +22,7 @@ namespace AWBWApp.Game.Tests.Visual.Screens
     public partial class TestScenePlayerDisplay : AWBWAppTestScene
     {
         private PlayerInfo playerInfo;
-            IBindable<bool> showClock;
+        private readonly IBindable<bool> showClock = new Bindable<bool>(true);
 
         [Resolved]
         private COStorage coStorage { get; set; }
@@ -33,28 +33,28 @@ namespace AWBWApp.Game.Tests.Visual.Screens
         [Test]
         public void TestCreateReplayPlayer()
         {
-            AddStep("Create Replay Player", () => reset(false, false,showClock));
+            AddStep("Create Replay Player", () => reset(false, false, showClock));
             addTests(false);
         }
 
         [Test]
         public void TestCreateReplayPlayerWithTeam()
         {
-            AddStep("Create Replay Player", () => reset(true, false,showClock));
+            AddStep("Create Replay Player", () => reset(true, false, showClock));
             addTests(false);
         }
 
         [Test]
         public void TestCreateReplayPlayerWithTag()
         {
-            AddStep("Create Replay Player", () => reset(false, true,showClock));
+            AddStep("Create Replay Player", () => reset(false, true, showClock));
             addTests(true);
         }
 
         [Test]
         public void TestCreateReplayPlayerWithTeamAndTag()
         {
-            AddStep("Create Replay Player", () => reset(true, true,showClock));
+            AddStep("Create Replay Player", () => reset(true, true, showClock));
             addTests(true);
         }
 

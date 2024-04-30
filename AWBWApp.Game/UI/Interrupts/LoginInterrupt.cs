@@ -96,7 +96,7 @@ namespace AWBWApp.Game.UI.Interrupts
                     }
                 }
             );
-            
+
             passwordInput.OnCommit += onPasswordBoxCommit;
 
             Add(blockingLayer = new LoadingLayer(true)
@@ -109,6 +109,7 @@ namespace AWBWApp.Game.UI.Interrupts
         {
             Schedule(attemptLogin);
         }
+
         private void onPasswordBoxCommit(TextBox sender, bool newText)
         {
             scheduleLogin();
