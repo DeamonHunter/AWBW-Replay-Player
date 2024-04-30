@@ -855,8 +855,8 @@ namespace AWBWApp.Game.API.Replay
                         case "turn_clock":
                         {
                             //Describes how much time this player had at the start of the turn.
-                            //Not useful for us as we don't really care when turns begin and end.
-                            readNullableInteger(text, ref textIndex);
+                            var clock = readNullableInteger(text, ref textIndex);
+                            playerDataTurn.Clock = clock;
                             break;
                         }
 

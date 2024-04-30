@@ -37,7 +37,8 @@ namespace AWBWApp.Game.API.Replay
                 return false;
             if (Position != other.Position)
                 return false;
-            if (Capture != other.Capture)
+            //For destroyed Pipeseams Capture is undefined
+            if (TerrainID != 115 && TerrainID != 116 && Capture != other.Capture)
                 return false;
 
             return true;
