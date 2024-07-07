@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Units;
@@ -446,7 +445,10 @@ namespace AWBWApp.Game.API.Replay.Actions
                 foreach (var change in UnitChanges)
                 {
                     if (!context.Units.TryGetValue(change.Key, out var unit))
-                        throw new ReplayMissingUnitException(change.Key);
+                    {
+                        Logger.Log($"Parse Error: Unable to find unit: {change.Key}, during power action. Will not be able to apply unit changes.", level: LogLevel.Important);
+                        continue;
+                    }
 
                     if (!originalUnits.ContainsKey(change.Key))
                         originalUnits.Add(change.Key, unit.Clone());
@@ -618,47 +620,48 @@ namespace AWBWApp.Game.API.Replay.Actions
             {
                 foreach (var change in UnitChanges)
                 {
-                    if (controller.Map.TryGetDrawableUnit(change.Key, out var unit))
+                    if (!controller.Map.TryGetDrawableUnit(change.Key, out var unit))
                     {
-                        if (change.Value.Ammo.HasValue)
-                            unit.Ammo.Value = change.Value.Ammo.Value;
-                        if (change.Value.Fuel.HasValue)
-                            unit.Fuel.Value = change.Value.Fuel.Value;
-
-                        if (change.Value.HitPoints.HasValue)
-                        {
-                            var dayToDay = controller.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
-                            var originalValue = ReplayActionHelper.CalculateUnitCost(unit, dayToDay, null);
-
-                            unit.HealthPoints.Value = change.Value.HitPoints.Value;
-
-                            controller.Players[unit.OwnerID!.Value].UnitValue.Value += ReplayActionHelper.CalculateUnitCost(unit, dayToDay, null) - originalValue;
-                        }
-
-                        if (change.Value.UnitsMoved.HasValue)
-                        {
-                            unit.CanMove.Value = change.Value.UnitsMoved.Value == 0;
-                            unit.Stunned.Value = change.Value.UnitsMoved.Value == -1;
-                        }
-
-                        if (change.Value.MovementPoints.HasValue && MovementRangeIncrease == 0)
-                            unit.MovementRange.Value = change.Value.MovementPoints.Value;
-
-                        if (change.Value.Range.HasValue)
-                        {
-                            if (COPower.PowerIncreases == null || !COPower.PowerIncreases.Exists(x => x.AffectedUnits.Contains("all") || x.AffectedUnits.Contains(unit.UnitData.Name)))
-                                unit.AttackRange.Value = new Vector2I(unit.AttackRange.Value.X, change.Value.Range.Value);
-                        }
-                        if (unit.HealthPoints.Value <= 0.1f)
-                            unit.HealthPoints.Value = 1;
-
-                        playEffectForUnitChange(controller, unit);
-
-                        if ((MissileCoords == null || MissileCoords.Count <= 0) && !controller.ShouldPlayerActionBeHidden(unit.MapPosition, unit.UnitData.MovementType == MovementType.Air))
-                            yield return ReplayWait.WaitForMilliseconds(75);
+                        Logger.Log($"Unable to find unit: {change.Key}, therefore can't apply changes.", level: LogLevel.Important);
+                        continue;
                     }
-                    else
-                        throw new Exception("Unable to find unit: " + change.Key);
+
+                    if (change.Value.Ammo.HasValue)
+                        unit.Ammo.Value = change.Value.Ammo.Value;
+                    if (change.Value.Fuel.HasValue)
+                        unit.Fuel.Value = change.Value.Fuel.Value;
+
+                    if (change.Value.HitPoints.HasValue)
+                    {
+                        var dayToDay = controller.Players[unit.OwnerID!.Value].ActiveCO.Value.CO.DayToDayPower;
+                        var originalValue = ReplayActionHelper.CalculateUnitCost(unit, dayToDay, null);
+
+                        unit.HealthPoints.Value = change.Value.HitPoints.Value;
+
+                        controller.Players[unit.OwnerID!.Value].UnitValue.Value += ReplayActionHelper.CalculateUnitCost(unit, dayToDay, null) - originalValue;
+                    }
+
+                    if (change.Value.UnitsMoved.HasValue)
+                    {
+                        unit.CanMove.Value = change.Value.UnitsMoved.Value == 0;
+                        unit.Stunned.Value = change.Value.UnitsMoved.Value == -1;
+                    }
+
+                    if (change.Value.MovementPoints.HasValue && MovementRangeIncrease == 0)
+                        unit.MovementRange.Value = change.Value.MovementPoints.Value;
+
+                    if (change.Value.Range.HasValue)
+                    {
+                        if (COPower.PowerIncreases == null || !COPower.PowerIncreases.Exists(x => x.AffectedUnits.Contains("all") || x.AffectedUnits.Contains(unit.UnitData.Name)))
+                            unit.AttackRange.Value = new Vector2I(unit.AttackRange.Value.X, change.Value.Range.Value);
+                    }
+                    if (unit.HealthPoints.Value <= 0.1f)
+                        unit.HealthPoints.Value = 1;
+
+                    playEffectForUnitChange(controller, unit);
+
+                    if ((MissileCoords == null || MissileCoords.Count <= 0) && !controller.ShouldPlayerActionBeHidden(unit.MapPosition, unit.UnitData.MovementType == MovementType.Air))
+                        yield return ReplayWait.WaitForMilliseconds(75);
                 }
             }
 

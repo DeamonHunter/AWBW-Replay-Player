@@ -1,21 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using AWBWApp.Game.Exceptions;
-using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
 using AWBWApp.Game.Helpers;
 using AWBWApp.Game.UI.Replay;
 using Newtonsoft.Json.Linq;
-using OpenTabletDriver.Plugin;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Primitives;
-using osu.Framework.Input.Events;
 using osu.Framework.Logging;
 using osuTK;
-using osuTK.Graphics.ES11;
 
 namespace AWBWApp.Game.API.Replay.Actions
 {
