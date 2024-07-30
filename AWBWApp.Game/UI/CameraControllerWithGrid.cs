@@ -34,7 +34,7 @@ namespace AWBWApp.Game.UI
         private IBindable<bool> allowLeftMouseToDragUserOption;
         private IBindable<Colour4> baseMapColour;
         private IBindable<Colour4> baseGridColour;
-        private Bindable<bool> lockMapPosition;
+        private IBindable<bool> lockMapPosition;
 
         public CameraControllerWithGrid()
         {
@@ -98,10 +98,7 @@ namespace AWBWApp.Game.UI
 
         protected override bool OnScroll(ScrollEvent e)
         {
-            if (lockMapPosition.Value) // disable zoom if map is locked
-            {
-                return false;
-            }
+            if (lockMapPosition.Value) return false; // disable zoom if map is locked
 
             var cursorPosition = ToParentSpace(e.MousePosition);
             var offset = content.AnchorPosition + content.Position;
@@ -127,9 +124,8 @@ namespace AWBWApp.Game.UI
 
         protected override bool OnDragStart(DragStartEvent e)
         {
-            if (lockMapPosition.Value) { // disable drag if map is locked
-                return false;
-            }
+            if (lockMapPosition.Value) return false; // disable drag if map is locked
+
             if (e.Button == MouseButton.Left)
             {
                 if (!AllowLeftMouseToDrag || !allowLeftMouseToDragUserOption.Value)
