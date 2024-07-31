@@ -76,6 +76,7 @@ namespace AWBWApp.Game.UI.Toolbar
                                 Anchor.BottomRight,
                             }
                         ),
+                        new ToggleMenuItem("Lock Map Position", configManager.GetBindable<bool>(AWBWSetting.LockMapPosition)),
                     }
                 },
                 new MenuItem("Control Settings")
