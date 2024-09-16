@@ -185,5 +185,16 @@
             "playerList": "#84dfe8",
             "replayList": "#84dfe8"
         }
+    },
+    "Noir Eclipse": {
+        "AWBWID": 24,
+        "code": "ne",
+        "name": "Noir Eclipse",
+        "unitPath": "Units/NoirEclipse",
+        "faceDirection": "Left",
+        "colours": {
+            "playerList": "#84dfe8",
+            "replayList": "#84dfe8"
+        }
     }
 }

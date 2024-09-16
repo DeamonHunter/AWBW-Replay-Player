@@ -3217,5 +3217,183 @@
             "Rain": "AzureAsteroid/Lab_Rain",
             "Snow": "AzureAsteroid/Lab_Snow"
         }
+    },
+    /*
+    Noir Eclipse
+    */
+    "Noir Eclipse Airport": {
+        "AWBWID": 203,
+        "CountryID": 24, //ne
+        "Name": "Noir Eclipse Airport",
+        "BuildingType": "Airport",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "frames": [
+            300,
+            1200,
+            100
+        ],
+        "Textures": {
+            "Clear": "NoirEclipse/Airport",
+            "Rain": "NoirEclipse/Airport_Rain",
+            "Snow": "NoirEclipse/Airport_Snow"
+        }
+    },
+    "Noir Eclipse Base": {
+        "AWBWID": 204,
+        "BaseDefence": 3,
+        "CountryID": 24, //ne
+        "Name": "Noir Eclipse Base",
+        "BuildingType": "Base",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "frames": [
+            300,
+            100,
+            400,
+            400,
+            300,
+            100
+        ],
+        "Textures": {
+            "Clear": "NoirEclipse/Base",
+            "Rain": "NoirEclipse/Base_Rain",
+            "Snow": "NoirEclipse/Base_Snow"
+        }
+    },
+    "Noir Eclipse City": {
+        "AWBWID": 205,
+        "BaseDefence": 3,
+        "CountryID": 24, //ne
+        "Name": "Noir Eclipse City",
+        "BuildingType": "City",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "frames": [
+            300,
+            1200,
+            100
+        ],
+        "Textures": {
+            "Clear": "NoirEclipse/City",
+            "Rain": "NoirEclipse/City_Rain",
+            "Snow": "NoirEclipse/City_Snow"
+        }
+    },
+    "Noir Eclipse HQ": {
+        "AWBWID": 207,
+        "BaseDefence": 4,
+        "CountryID": 24, //ne
+        "Name": "Noir Eclipse HQ",
+        "BuildingType": "HQ",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "frames": [
+            300,
+            1200,
+            100
+        ],
+        "Textures": {
+            "Clear": "NoirEclipse/HQ",
+            "Rain": "NoirEclipse/HQ_Rain",
+            "Snow": "NoirEclipse/HQ_Snow"
+        }
+    },
+    "Noir Eclipse Port": {
+        "AWBWID": 209,
+        "BaseDefence": 3,
+        "CountryID": 24, //ne
+        "Name": "Noir Eclipse Port",
+        "BuildingType": "Port",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "frames": [
+            300,
+            1200,
+            100
+        ],
+        "Textures": {
+            "Clear": "NoirEclipse/Port",
+            "Rain": "NoirEclipse/Port_Rain",
+            "Snow": "NoirEclipse/Port_Snow"
+        }
+    },
+    "Noir Eclipse Com Tower": {
+        "AWBWID": 206,
+        "BaseDefence": 3,
+        "CountryID": 24, //ne
+        "Name": "Noir Eclipse Com Tower",
+        "BuildingType": "ComTower",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "GivesMoneyWhenCaptured": false,
+        "frames": [
+            300,
+            1200,
+            100
+        ],
+        "Textures": {
+            "Clear": "NoirEclipse/ComTower",
+            "Rain": "NoirEclipse/ComTower_Rain",
+            "Snow": "NoirEclipse/ComTower_Snow"
+        }
+    },
+    "Noir Eclipse Lab": {
+        "AWBWID": 208,
+        "BaseDefence": 3,
+        "CountryID": 24, //ne
+        "Name": "Noir Eclipse Lab",
+        "BuildingType": "Lab",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "GivesMoneyWhenCaptured": false,
+        "frames": [
+            300,
+            1200,
+            100
+        ],
+        "Textures": {
+            "Clear": "NoirEclipse/Lab",
+            "Rain": "NoirEclipse/Lab_Rain",
+            "Snow": "NoirEclipse/Lab_Snow"
+        }
     }
 }

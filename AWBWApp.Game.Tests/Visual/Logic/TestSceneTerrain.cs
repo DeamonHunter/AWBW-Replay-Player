@@ -17,7 +17,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
     [TestFixture]
     public partial class TestSceneTerrain : BaseGameMapTestScene
     {
-        private const int max_awbw_id = 202;
+        private const int max_awbw_id = 209;
         private const int grass_terrain_id = 1;
 
         private const int orange_star_hq_id = 42;
