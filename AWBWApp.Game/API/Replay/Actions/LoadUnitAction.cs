@@ -40,6 +40,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class LoadUnitAction : IReplayAction
     {
+        public bool SuccessfullySetup { get; set; }
+
         public long LoadedID { get; set; }
         public long TransportID { get; set; }
 

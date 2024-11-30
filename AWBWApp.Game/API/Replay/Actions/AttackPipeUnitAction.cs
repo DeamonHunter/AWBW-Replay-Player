@@ -52,6 +52,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class AttackSeamAction : IReplayAction
     {
+        public bool SuccessfullySetup { get; set; }
+
         public MoveUnitAction MoveUnit;
         public ReplayBuilding Seam;
 

@@ -53,6 +53,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class GameOverAction : IReplayAction, IActionCanEndGame
     {
+        public bool SuccessfullySetup { get; set; }
+
         public int FinishedDay;
         public string GameEndDate;
         public string EndMessage;

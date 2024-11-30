@@ -51,6 +51,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class SupplyUnitAction : IReplayAction
     {
+        public bool SuccessfullySetup { get; set; }
+
         public MoveUnitAction MoveUnit;
 
         public long SupplyingUnitId;

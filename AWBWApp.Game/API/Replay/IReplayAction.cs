@@ -6,6 +6,8 @@ namespace AWBWApp.Game.API.Replay
 {
     public interface IReplayAction
     {
+        bool SuccessfullySetup { get; set; }
+
         string GetReadibleName(ReplayController controller, bool shortName);
 
         void SetupAndUpdate(ReplayController controller, ReplaySetupContext context);

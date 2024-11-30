@@ -93,6 +93,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class EndTurnAction : IReplayAction
     {
+        public bool SuccessfullySetup { get; set; }
+
         public long NextPlayerID;
         public int NextDay;
         public bool TagSwitchOccurred;

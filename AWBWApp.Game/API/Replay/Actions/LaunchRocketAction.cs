@@ -44,6 +44,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class LaunchRocketAction : IReplayAction
     {
+        public bool SuccessfullySetup { get; set; }
+
         public Vector2I SiloPosition;
         public Vector2I TargetPosition;
         public float HPChange;

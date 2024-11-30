@@ -440,12 +440,14 @@ namespace AWBWApp.Game.Game.Logic
                     for (int j = 0; j < setupContext.CurrentTurn.Actions.Count; j++)
                     {
                         setupContext.CurrentActionIndex = j;
-                        nextTurn.Actions[j].SetupAndUpdate(this, setupContext);
+                        var action = nextTurn.Actions[j];
+                        action.SetupAndUpdate(this, setupContext);
+                        action.SuccessfullySetup = true;
                     }
                 }
                 catch (Exception e)
                 {
-                    throw new AggregateException($"Failed to setup turn {i}.", e);
+                    Logger.Error(e, $"Failed to setup turn {i}.");
                 }
             }
 
@@ -494,6 +496,9 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     var currentAction = currentTurn.Actions[currentActionIndex];
 
+                    if (!currentAction.SuccessfullySetup)
+                        return "Next Action is Corrupted";
+
                     if (currentAction is EndTurnAction)
                     {
                         if (HasNextTurn())
@@ -507,7 +512,12 @@ namespace AWBWApp.Game.Game.Logic
                 }
 
                 if (currentActionIndex + 1 < currentTurn.Actions.Count)
-                    return currentTurn.Actions[currentActionIndex + 1].GetReadibleName(this, shortenActionTooltipsBindable.Value);
+                {
+                    var currentAction = currentTurn.Actions[currentActionIndex + 1];
+                    if (!currentAction.SuccessfullySetup)
+                        return "Next Action is Corrupted";
+                    return currentAction.GetReadibleName(this, shortenActionTooltipsBindable.Value);
+                }
             }
 
             return "Next Turn";
@@ -519,7 +529,13 @@ namespace AWBWApp.Game.Game.Logic
                 return null;
 
             if (currentActionIndex >= 0)
-                return currentTurn.Actions[currentActionIndex].GetReadibleName(this, shortenActionTooltipsBindable.Value);
+            {
+                var currentAction = currentTurn.Actions[currentActionIndex];
+                if (!currentAction.SuccessfullySetup)
+                    return "Prev Action is Corrupted";
+
+                return currentAction.GetReadibleName(this, shortenActionTooltipsBindable.Value);
+            }
 
             return "Previous Turn";
         }
@@ -574,6 +590,12 @@ namespace AWBWApp.Game.Game.Logic
                 if (action == null)
                 {
                     GoToNextAction();
+                    return;
+                }
+
+                if (!action.SuccessfullySetup)
+                {
+                    GoToNextTurn();
                     return;
                 }
 

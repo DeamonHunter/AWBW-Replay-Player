@@ -39,6 +39,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class BuildUnitAction : IReplayAction
     {
+        public bool SuccessfullySetup { get; set; }
+
         public ReplayUnit NewUnit;
         private int unitCost;
         private int unitValue;

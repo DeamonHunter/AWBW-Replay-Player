@@ -38,6 +38,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class DeleteUnitAction : IReplayAction
     {
+        public bool SuccessfullySetup { get; set; }
+
         public MoveUnitAction MoveUnit;
 
         public long DeletedUnitId { get; set; }

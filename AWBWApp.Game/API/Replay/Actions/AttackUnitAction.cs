@@ -153,6 +153,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class AttackUnitAction : IReplayAction, IActionCanEndGame
     {
+        public bool SuccessfullySetup { get; set; }
+
         public ReplayUnit Attacker { get; set; }
         public ReplayUnit Defender { get; set; }
         public List<COPowerChange> PowerChanges { get; set; }

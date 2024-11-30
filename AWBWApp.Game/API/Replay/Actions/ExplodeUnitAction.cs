@@ -43,6 +43,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class ExplodeUnitAction : IReplayAction
     {
+        public bool SuccessfullySetup { get; set; }
+
         public string ReadibleName => "Explode";
 
         public long ExplodedUnitId { get; set; }

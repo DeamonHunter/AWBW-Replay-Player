@@ -7,6 +7,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 {
     public class EmptyAction : IReplayAction
     {
+        public bool SuccessfullySetup { get; set; }
+
         public string GetReadibleName(ReplayController controller, bool shortName) => "Empty";
 
         public void SetupAndUpdate(ReplayController controller, ReplaySetupContext context) { }

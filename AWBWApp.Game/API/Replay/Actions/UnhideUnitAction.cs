@@ -39,6 +39,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class UnhideUnitAction : IReplayAction
     {
+        public bool SuccessfullySetup { get; set; }
+
         public ReplayUnit RevealingUnit { get; set; }
 
         public MoveUnitAction MoveUnit;

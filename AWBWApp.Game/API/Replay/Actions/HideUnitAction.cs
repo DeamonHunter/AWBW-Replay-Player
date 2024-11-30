@@ -40,6 +40,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class HideUnitAction : IReplayAction
     {
+        public bool SuccessfullySetup { get; set; }
+
         public long HidingUnitID { get; set; }
         private Vector2I hidingUnitPosition;
 

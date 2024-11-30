@@ -65,6 +65,8 @@ namespace AWBWApp.Game.API.Replay.Actions
 
     public class EliminatedAction : IReplayAction, IActionCanEndGame
     {
+        public bool SuccessfullySetup { get; set; }
+
         public long? CausedByPlayerID;
         public long EliminatedPlayerID;
         public string EliminationMessage;
