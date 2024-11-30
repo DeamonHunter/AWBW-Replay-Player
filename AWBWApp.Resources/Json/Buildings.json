@@ -2875,6 +2875,7 @@
     */
     "White Nova Airport": {
         "AWBWID": 188,
+        "BaseDefence": 3,
         "CountryID": 22, //wn
         "Name": "White Nova Airport",
         "BuildingType": "Airport",
@@ -3045,6 +3046,7 @@
     */
     "Azure Asteroid Airport": {
         "AWBWID": 196,
+        "BaseDefence": 3,
         "CountryID": 23, //aa
         "Name": "Azure Asteroid Airport",
         "BuildingType": "Airport",
@@ -3223,6 +3225,7 @@
     */
     "Noir Eclipse Airport": {
         "AWBWID": 203,
+        "BaseDefence": 3,
         "CountryID": 24, //ne
         "Name": "Noir Eclipse Airport",
         "BuildingType": "Airport",
@@ -3401,6 +3404,7 @@
     */
     "Silver Claw Airport": {
         "AWBWID": 210,
+        "BaseDefence": 3,
         "CountryID": 25, //sc
         "Name": "Silver Claw Airport",
         "BuildingType": "Airport",
