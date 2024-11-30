@@ -193,8 +193,19 @@
         "unitPath": "Units/NoirEclipse",
         "faceDirection": "Left",
         "colours": {
-            "playerList": "#84dfe8",
-            "replayList": "#84dfe8"
+            "playerList": "#574A4A",
+            "replayList": "#574A4A"
+        }
+    },
+    "Silver Claw": {
+        "AWBWID": 25,
+        "code": "sc",
+        "name": "Silver Claw",
+        "unitPath": "Units/SilverClaw",
+        "faceDirection": "Right",
+        "colours": {
+            "playerList": "#B7DEE8",
+            "replayList": "#B7DEE8"
         }
     }
 }

@@ -17,7 +17,6 @@ namespace AWBWApp.Game.Tests.Visual.Logic
     [TestFixture]
     public partial class TestSceneTerrain : BaseGameMapTestScene
     {
-        private const int max_awbw_id = 209;
         private const int grass_terrain_id = 1;
 
         private const int orange_star_hq_id = 42;
@@ -129,7 +128,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
                 for (int y = 0; y < ySize; y++)
                 {
                     var id = x * ySize + y + 1; //+1 to skip id 0
-                    if (id > max_awbw_id)
+                    if (id > buildingStorage.HighestBuildingId)
                         id = grass_terrain_id;
 
                     if ((id > 57 && id < 81) || (id > 176 && id < 181))

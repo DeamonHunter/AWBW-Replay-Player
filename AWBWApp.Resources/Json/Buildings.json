@@ -3386,14 +3386,194 @@
         },
         "GivesMoneyWhenCaptured": false,
         "frames": [
-            300,
+            200,
             1200,
-            100
+            200
         ],
         "Textures": {
             "Clear": "NoirEclipse/Lab",
             "Rain": "NoirEclipse/Lab_Rain",
             "Snow": "NoirEclipse/Lab_Snow"
+        }
+    },
+    /*
+    Silver Claw
+    */
+    "Silver Claw Airport": {
+        "AWBWID": 210,
+        "CountryID": 25, //sc
+        "Name": "Silver Claw Airport",
+        "BuildingType": "Airport",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "frames": [
+            1000,
+            400,
+            200
+        ],
+        "Textures": {
+            "Clear": "SilverClaw/Airport",
+            "Rain": "SilverClaw/Airport_Rain",
+            "Snow": "SilverClaw/Airport_Snow"
+        }
+    },
+    "Silver Claw Base": {
+        "AWBWID": 211,
+        "BaseDefence": 3,
+        "CountryID": 25, //sc
+        "Name": "Silver Claw Base",
+        "BuildingType": "Base",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "frames": [
+            400,
+            400,
+            200,
+            200,
+            200,
+            200
+        ],
+        "Textures": {
+            "Clear": "SilverClaw/Base",
+            "Rain": "SilverClaw/Base_Rain",
+            "Snow": "SilverClaw/Base_Snow"
+        }
+    },
+    "Silver Claw City": {
+        "AWBWID": 212,
+        "BaseDefence": 3,
+        "CountryID": 25, //sc
+        "Name": "Silver Claw City",
+        "BuildingType": "City",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "frames": [
+            1000,
+            400,
+            200
+        ],
+        "Textures": {
+            "Clear": "SilverClaw/City",
+            "Rain": "SilverClaw/City_Rain",
+            "Snow": "SilverClaw/City_Snow"
+        }
+    },
+    "Silver Claw HQ": {
+        "AWBWID": 214,
+        "BaseDefence": 4,
+        "CountryID": 25, //sc
+        "Name": "Silver Claw HQ",
+        "BuildingType": "HQ",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "frames": [
+            400,
+            200,
+            600,
+            200,
+            200
+        ],
+        "Textures": {
+            "Clear": "SilverClaw/HQ",
+            "Rain": "SilverClaw/HQ_Rain",
+            "Snow": "SilverClaw/HQ_Snow"
+        }
+    },
+    "Silver Claw Port": {
+        "AWBWID": 216,
+        "BaseDefence": 3,
+        "CountryID": 25, //sc
+        "Name": "Silver Claw Port",
+        "BuildingType": "Port",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "frames": [
+            1000,
+            400,
+            200
+        ],
+        "Textures": {
+            "Clear": "SilverClaw/Port",
+            "Rain": "SilverClaw/Port_Rain",
+            "Snow": "SilverClaw/Port_Snow"
+        }
+    },
+    "Silver Claw Com Tower": {
+        "AWBWID": 213,
+        "BaseDefence": 3,
+        "CountryID": 25, //sc
+        "Name": "Silver Claw Com Tower",
+        "BuildingType": "ComTower",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "GivesMoneyWhenCaptured": false,
+        "frames": [
+            1000,
+            400,
+            200
+        ],
+        "Textures": {
+            "Clear": "SilverClaw/ComTower",
+            "Rain": "SilverClaw/ComTower_Rain",
+            "Snow": "SilverClaw/ComTower_Snow"
+        }
+    },
+    "Silver Claw Lab": {
+        "AWBWID": 215,
+        "BaseDefence": 3,
+        "CountryID": 25, //sc
+        "Name": "Silver Claw Lab",
+        "BuildingType": "Lab",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "GivesMoneyWhenCaptured": false,
+        "frames": [
+            1000,
+            400,
+            200
+        ],
+        "Textures": {
+            "Clear": "SilverClaw/Lab",
+            "Rain": "SilverClaw/Lab_Rain",
+            "Snow": "SilverClaw/Lab_Snow"
         }
     }
 }
