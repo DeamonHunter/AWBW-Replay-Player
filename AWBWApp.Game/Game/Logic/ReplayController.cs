@@ -634,7 +634,7 @@ namespace AWBWApp.Game.Game.Logic
                 var previousTurnIndex = CurrentTurnIndex.Value - 1;
                 var turn = replayData.TurnData[previousTurnIndex];
 
-                if (turn.Actions == null || turn.Actions.Count == 0)
+                if (turn.Actions == null || turn.Actions.Count == 0 || !turn.Actions.Last().SuccessfullySetup)
                 {
                     goToTurnWithIdx(previousTurnIndex, true);
                     return;
