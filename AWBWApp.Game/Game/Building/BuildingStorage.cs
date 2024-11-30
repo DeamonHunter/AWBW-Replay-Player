@@ -7,6 +7,8 @@ namespace AWBWApp.Game.Game.Building
 {
     public class BuildingStorage
     {
+        public int HighestBuildingId { get; private set; }
+
         private readonly Dictionary<int, BuildingTile> buildingsByAWBWId = new Dictionary<int, BuildingTile>();
         private readonly Dictionary<string, BuildingTile> buildingsByCode = new Dictionary<string, BuildingTile>();
         private readonly Dictionary<string, Dictionary<int, BuildingTile>> buildingsByTypeThenCountry = new Dictionary<string, Dictionary<int, BuildingTile>>();
@@ -21,6 +23,7 @@ namespace AWBWApp.Game.Game.Building
             foreach (var tile in buildingsByCode)
             {
                 buildingsByAWBWId.Add(tile.Value.AWBWID, tile.Value);
+                HighestBuildingId = HighestBuildingId < tile.Value.AWBWID ? tile.Value.AWBWID : HighestBuildingId;
 
                 if (tile.Value.CountryID != -1)
                 {
@@ -41,6 +44,16 @@ namespace AWBWApp.Game.Game.Building
         public BuildingTile GetBuildingByAWBWId(int id) => buildingsByAWBWId[id];
 
         public bool TryGetBuildingByAWBWId(int id, out BuildingTile building) => buildingsByAWBWId.TryGetValue(id, out building);
+
+        public BuildingTile SafeGetBuildingByAWBWId(int id)
+        {
+            if (TryGetBuildingByAWBWId(id, out var buildingData))
+                return buildingData;
+
+            var buildId = (id - (HighestBuildingId + 1)) % 7;
+            buildingData = GetBuildingByAWBWId(buildId + (HighestBuildingId - 6));
+            return buildingData;
+        }
 
         public BuildingTile GetBuildingByTypeAndCountry(string type, int countryID) => buildingsByTypeThenCountry[type][countryID];
 

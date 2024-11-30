@@ -8,6 +8,7 @@ using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.COs;
 using AWBWApp.Game.UI.Replay;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Logging;
 
 namespace AWBWApp.Game.Game.Logic
 {
@@ -350,7 +351,11 @@ namespace AWBWApp.Game.Game.Logic
             if (!BuildingKnowledge.TryGetValue(building.Position, out var discoveries))
                 return;
 
-            var buildingData = BuildingStorage.GetBuildingByAWBWId(building.TerrainID!.Value);
+            if (!BuildingStorage.TryGetBuildingByAWBWId(building.TerrainID!.Value, out var buildingData))
+            {
+                Logger.Log($"Failed to find building: {building.TerrainID!.Value}");
+                buildingData = BuildingStorage.SafeGetBuildingByAWBWId(building.TerrainID!.Value);
+            }
 
             discoveries[ActivePlayerTeam] = buildingData;
 

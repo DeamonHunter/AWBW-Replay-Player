@@ -7,7 +7,8 @@ namespace AWBWApp.Game.Game.Country
 {
     public class CountryStorage
     {
-        private const int default_country_id = 1;
+        public int HighestCountryId { get; private set; }
+
         private readonly Dictionary<int, CountryData> countriesByAWBWID = new Dictionary<int, CountryData>();
         private readonly Dictionary<string, CountryData> countriesByCode = new Dictionary<string, CountryData>();
         private readonly Dictionary<string, CountryData> countriesByName = new Dictionary<string, CountryData>();
@@ -21,6 +22,7 @@ namespace AWBWApp.Game.Game.Country
 
             foreach (var co in countriesByName)
             {
+                HighestCountryId = HighestCountryId < co.Value.AWBWID ? co.Value.AWBWID : HighestCountryId;
                 countriesByAWBWID.Add(co.Value.AWBWID, co.Value);
                 countriesByCode.Add(co.Value.Code, co.Value);
             }
@@ -28,7 +30,7 @@ namespace AWBWApp.Game.Game.Country
 
         public CountryData SafeGetCountryByAWBWID(int id)
         {
-            return countriesByAWBWID.TryGetValue(id, out var country) ? country : countriesByAWBWID[default_country_id];
+            return countriesByAWBWID.TryGetValue(id, out var country) ? country : countriesByAWBWID[HighestCountryId];
         }
 
         public CountryData GetCountryByCode(string name)

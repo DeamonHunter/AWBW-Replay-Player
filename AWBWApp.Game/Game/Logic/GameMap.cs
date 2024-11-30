@@ -23,6 +23,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osu.Framework.Threading;
 using osuTK;
 using osuTK.Graphics;
@@ -272,8 +273,10 @@ namespace AWBWApp.Game.Game.Logic
                     if (TerrainTileStorage.TryGetTileByAWBWId(awbwBuilding.Value.TerrainID.Value, out _))
                         continue;
 
-                    throw new Exception("Unknown Building ID: " + awbwBuilding.Value.TerrainID.Value);
+                    Logger.Log($"Failed to find building: {awbwBuilding.Value.TerrainID.Value}");
+                    building = BuildingStorage.SafeGetBuildingByAWBWId(awbwBuilding.Value.TerrainID.Value);
                 }
+
                 var position = awbwBuilding.Value.Position;
 
                 var playerID = getPlayerIDFromCountryID(building.CountryID);
@@ -660,25 +663,40 @@ namespace AWBWApp.Game.Game.Logic
                 if (!awbwBuilding.TerrainID.HasValue)
                     throw new Exception("Tried to update a missing building. But it didn't have a terrain id.");
 
-                if (BuildingStorage.TryGetBuildingByAWBWId(awbwBuilding.TerrainID.Value, out var buildingTile))
+                void update(BuildingTile tile, bool safe)
                 {
-                    var playerID = getPlayerIDFromCountryID(buildingTile.CountryID);
+                    var playerID = getPlayerIDFromCountryID(safe ? 23 : tile.CountryID);
                     var country = playerID.HasValue ? ReplayController.Players[playerID.Value].Country : null;
-                    var drawableBuilding = new DrawableBuilding(buildingTile, tilePosition, playerID, country);
+                    var drawableBuilding = new DrawableBuilding(tile, tilePosition, playerID, country);
                     if (awbwBuilding.Capture.HasValue)
                         drawableBuilding.CaptureHealth.Value = awbwBuilding.Capture.Value;
                     drawableBuilding.FogOfWarActive.Value = IsTileFoggy(awbwBuilding.Position, false);
                     BuildingGrid.AddTile(drawableBuilding, tilePosition);
+                }
+
+                if (BuildingStorage.TryGetBuildingByAWBWId(awbwBuilding.TerrainID.Value, out var buildingTile))
+                {
+                    update(buildingTile, false);
                     return;
                 }
 
                 if (TerrainTileStorage.TryGetTileByAWBWId(awbwBuilding.TerrainID.Value, out _))
                     return;
 
-                throw new Exception("Unknown Building ID: " + awbwBuilding.TerrainID.Value);
+                Logger.Log($"Failed to find building: {awbwBuilding.TerrainID.Value}");
+                buildingTile = BuildingStorage.SafeGetBuildingByAWBWId(awbwBuilding.TerrainID.Value);
+                update(buildingTile, true);
+                return;
             }
 
             var comparisonTerrainId = awbwBuilding.TerrainID ?? 0;
+
+            //Safety for new buildings.
+            if (comparisonTerrainId > BuildingStorage.HighestBuildingId)
+            {
+                var buildId = (comparisonTerrainId - (BuildingStorage.HighestBuildingId + 1)) % 7;
+                comparisonTerrainId = buildId + (BuildingStorage.HighestBuildingId - 6);
+            }
 
             if (comparisonTerrainId != 0 && building.BuildingTile.AWBWID != comparisonTerrainId)
             {
