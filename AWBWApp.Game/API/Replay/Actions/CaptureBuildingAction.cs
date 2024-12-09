@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AWBWApp.Game.Exceptions;
 using AWBWApp.Game.Game.Building;
 using AWBWApp.Game.Game.Logic;
@@ -35,7 +36,8 @@ namespace AWBWApp.Game.API.Replay.Actions
             if (captureData == null)
                 throw new Exception("Capture Replay Action did not contain information about Capture.");
 
-            action.Building = ReplayActionHelper.ParseJObjectIntoReplayBuilding((JObject)captureData["buildingInfo"]);
+            var buildingInfo = (JObject)captureData["buildingInfo"];
+            action.Building = ReplayActionHelper.ParseJObjectIntoReplayBuilding(buildingInfo);
 
             var incomeObj = captureData["income"];
 
@@ -54,7 +56,28 @@ namespace AWBWApp.Game.API.Replay.Actions
 
             if (captureData.TryGetValue("eliminated", out var eliminatedData) && eliminatedData.Type != JTokenType.Null)
             {
-                var eliminationAction = Database.GetActionBuilder("Eliminated").ParseJObjectIntoReplayAction((JObject)eliminatedData, replayData, turnData);
+                var eliminatedObj = (JObject)eliminatedData;
+                if (!eliminatedObj.ContainsKey("eliminatedByPId"))
+                    eliminatedObj["eliminatedByPId"] = turnData.ActivePlayerID;
+
+                if (!eliminatedObj.ContainsKey("playerId"))
+                    eliminatedObj["playerId"] = buildingInfo!.ContainsKey("buildings_players_id") ? (long)buildingInfo["buildings_players_id"] : replayData.ReplayInfo.Players.First(x => x.Key != turnData.ActivePlayerID).Key;
+
+                if (!eliminatedObj.ContainsKey("message"))
+                {
+                    if (eliminatedObj.TryGetValue("GameOver", out var value))
+                    {
+                        var gameOver = (JObject)value;
+                        if (gameOver!.TryGetValue("message", out var message))
+                            eliminatedObj["message"] = message;
+                        else
+                            eliminatedObj["message"] = "Missing";
+                    }
+                    else
+                        eliminatedObj["message"] = "Missing";
+                }
+
+                var eliminationAction = Database.GetActionBuilder("Eliminated").ParseJObjectIntoReplayAction(eliminatedObj, replayData, turnData);
                 action.EliminatedAction = eliminationAction as EliminatedAction;
                 if (eliminationAction == null)
                     throw new Exception("Capture action was expecting a elimination action.");
