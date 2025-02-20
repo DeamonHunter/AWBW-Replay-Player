@@ -47,6 +47,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         }
 
         [Test]
+        [Category("NoCI")] // because this test needs to be manually updated, it is unfit to be run in CI
         public void TestDownloadMapAndRun()
         {
             //Note due to how AWBW functions, this test needs to be updated once every 1-2 weeks for it to not fail in headless.
