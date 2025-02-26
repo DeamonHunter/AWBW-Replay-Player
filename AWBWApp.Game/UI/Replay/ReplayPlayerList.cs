@@ -13,6 +13,7 @@ using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Lists;
 using osuTK;
 using osuTK.Graphics;
@@ -22,7 +23,8 @@ namespace AWBWApp.Game.UI.Replay
     public partial class ReplayPlayerList : Container, IHasContextMenu
     {
         public ReplayBarWidget ReplayBarWidget;
-        public ReplayController controller;
+        public ReplayController Controller;
+        public SpriteText TerrainNameSprite;
 
         private FillFlowContainer fillContainer;
 
@@ -44,7 +46,7 @@ namespace AWBWApp.Game.UI.Replay
 
         public ReplayPlayerList(ReplayController controller)
         {
-            this.controller = controller;
+            this.Controller = controller;
             Masking = true;
             EdgeEffect = new EdgeEffectParameters
             {
@@ -109,7 +111,18 @@ namespace AWBWApp.Game.UI.Replay
                             Origin = Anchor.BottomCentre,
                         }
                     }
-                }
+                },
+                TerrainNameSprite = new SpriteText()
+                {
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.BottomCentre,
+                    Colour = Color4.White,
+                    Padding = new MarginPadding { Left = 3 },
+                    Shadow = true,
+                    Truncate = true,
+                    Font = FontUsage.Default.With(size: 18),
+                    Text = "Map: " + Controller.Map.TerrainName,
+                },
             };
 
             fogDropdown.Current.BindTo(controller.CurrentFogView);
@@ -197,7 +210,13 @@ namespace AWBWApp.Game.UI.Replay
 
                 foreach (var player in players)
                 {
-                    var drawable = new ReplayPlayerListItem(this, player.Value, x => controller.Stats.ShowStatsForPlayer(controller.Players, x), usePercentagePowers, x => controller.Map.GetDrawableUnitsFromPlayer(x).ToList(), controller.ShowClock);
+                    var drawable = new ReplayPlayerListItem(
+                        playerList: this,
+                        info: player.Value,
+                        openPlayerStats: x => controller.Stats.ShowStatsForPlayer(controller.Players, x),
+                        usePercentagePowers: usePercentagePowers,
+                        getUnits: x => controller.Map.GetDrawableUnitsFromPlayer(x).ToList(),
+                        ShowClock: controller.ShowClock);
                     drawablePlayers.Add(drawable);
                     fillContainer.Add(drawable);
                 }
@@ -281,6 +300,11 @@ namespace AWBWApp.Game.UI.Replay
 
                 fillContainer.SetLayoutPosition(player, i);
             }
+        }
+
+        public void UpdateTerrainName()
+        {
+            TerrainNameSprite.Text = "Map: " + Controller.Map.TerrainName;
         }
 
         public MenuItem[] ContextMenuItems { get; private set; }
