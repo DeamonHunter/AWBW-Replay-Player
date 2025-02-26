@@ -352,7 +352,7 @@ namespace AWBWApp.Game.Game.Logic
                 CurrentTurnIndex.Value = 0;
 
                 setupActions();
-                updatePlayerList(0, true, false);
+                updatePlayerList(0, reset: true, undo: false);
 
                 Map.SetToInitialGameState(this.replayData, map);
 
@@ -361,7 +361,7 @@ namespace AWBWApp.Game.Game.Logic
                 {
                     HasLoadedReplay = true;
                     UpdateFogOfWar();
-                    updatePlayerList(0, false, false);
+                    updatePlayerList(0, reset: false, undo: false);
                     cameraControllerWithGrid.FitMapToSpace();
                     CurrentTurnIndex.TriggerChange();
                     updateReplayBarActions();
