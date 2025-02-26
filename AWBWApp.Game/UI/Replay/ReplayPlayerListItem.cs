@@ -70,7 +70,7 @@ namespace AWBWApp.Game.UI.Replay
         private bool usePercentagePowers;
         private float unitPriceMultiplier;
         private ReplayPlayerList playerList;
-        private List<DrawableUnit> tooltipContent;
+        // private List<DrawableUnit> tooltipContent; // TODO: unused?
 
         public ReplayPlayerListItem(ReplayPlayerList playerList, PlayerInfo info, Action<long> openPlayerStats, bool usePercentagePowers, Func<long, List<DrawableUnit>> getUnits, IBindable<bool> ShowClock)
         {
