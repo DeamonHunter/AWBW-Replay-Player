@@ -817,6 +817,8 @@ namespace AWBWApp.Game.Game.Logic
             }
 
             playerList.SortList(currentTurn.ActivePlayerID, turnIdx);
+            if (HasLoadedReplay)
+                playerList.UpdateTerrainName();
         }
 
         public void UpdateFogOfWar()
