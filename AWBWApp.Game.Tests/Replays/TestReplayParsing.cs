@@ -8,6 +8,7 @@ using osu.Framework.Platform;
 namespace AWBWApp.Game.Tests.Replays
 {
     [TestFixture]
+    [Category("NoCI")]
     public class TestReplayParsing
     {
         //Todo: This test doesn't really work outside of a desktop environment.
