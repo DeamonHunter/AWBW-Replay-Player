@@ -63,6 +63,8 @@ namespace AWBWApp.Game.Game.Logic
         private readonly UnitRangeIndicator rangeIndicator;
         protected TileCursor TileCursor;
 
+        public string TerrainName;
+
         private FogOfWarGenerator fogOfWarGenerator;
 
         private readonly EffectAnimationController effectAnimationController;
@@ -170,6 +172,7 @@ namespace AWBWApp.Game.Game.Logic
             loadingMap = ShoalGenerator.CreateCustomShoalVersion(loadingMap);
 
             MapSize = loadingMap.Size;
+            TerrainName = "";
 
             TileGrid.ClearToSize(MapSize);
             BuildingGrid.ClearToSize(MapSize);
@@ -220,6 +223,7 @@ namespace AWBWApp.Game.Game.Logic
             map = ShoalGenerator.CreateCustomShoalVersion(map);
 
             MapSize = map.Size;
+            TerrainName = map.TerrainName;
 
             //Calculate the map size as this isn't given by the api
             //Todo: Check buildings
