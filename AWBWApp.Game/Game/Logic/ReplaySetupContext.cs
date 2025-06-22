@@ -143,7 +143,8 @@ namespace AWBWApp.Game.Game.Logic
                 EndMessage = "Match ended in Draw!",
                 Winners = PlayerInfos.Select(x => x.Key).ToList(),
                 Draw = true,
-                Losers = null
+                Losers = null,
+                SuccessfullySetup = true
             };
 
             CurrentTurn.Actions.Add(gameOverAction);
