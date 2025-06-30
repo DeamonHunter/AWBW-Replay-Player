@@ -96,6 +96,7 @@ namespace AWBWApp.Game.UI.Replay
                     Direction = FillDirection.Vertical,
                     AutoSizeEasing = Easing.OutQuint,
                     AutoSizeDuration = 150,
+                    Padding = new MarginPadding() { Bottom = 25 },
                     Children = new Drawable[]
                     {
                         fogDropdown = new TeamOrPlayerDropdown()
@@ -112,17 +113,40 @@ namespace AWBWApp.Game.UI.Replay
                         }
                     }
                 },
-                TerrainNameSprite = new SpriteText()
+                new Container()
                 {
                     Anchor = Anchor.BottomCentre,
                     Origin = Anchor.BottomCentre,
-                    Colour = Color4.White,
-                    Padding = new MarginPadding { Left = 3 },
-                    Shadow = true,
-                    Truncate = true,
-                    Font = FontUsage.Default.With(size: 18),
-                    Text = "Map: " + Controller.Map.TerrainName,
-                },
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Masking = true,
+                    CornerRadius = 3,
+                    Width = 1,
+                    Children = new Drawable[]
+                    {
+                        new Box()
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            Colour = Color4.Black,
+                            Alpha = 0.5f
+                        },
+                        TerrainNameSprite = new SpriteText()
+                        {
+                            Anchor = Anchor.BottomCentre,
+                            Origin = Anchor.BottomCentre,
+                            Colour = Color4.White,
+                            Height = 25,
+                            //MaxWidth = 1,
+                            //RelativeSizeAxes = Axes.X,
+                            Shadow = true,
+                            Truncate = true,
+                            Font = FontUsage.Default.With(size: 18),
+                            Text = "Map: " + Controller.Map.TerrainName
+                        },
+                    }
+                }
             };
 
             fogDropdown.Current.BindTo(controller.CurrentFogView);
