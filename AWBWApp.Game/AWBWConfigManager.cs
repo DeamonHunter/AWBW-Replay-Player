@@ -58,7 +58,8 @@ namespace AWBWApp.Game
             SetDefault(AWBWSetting.ReplayMovementAnimations, true);
             SetDefault(AWBWSetting.ReplayShowWeather, true);
             SetDefault(AWBWSetting.ReplayAllowLeftMouseToDragMap, true);
-            SetDefault(AWBWSetting.MapSkin, MapSkin.AW2);
+            SetDefault(AWBWSetting.MapSkin, MapSkin.Classic);
+            SetDefault(AWBWSetting.BuildingSkin, BuildingSkin.AW2);
             SetDefault(AWBWSetting.ShowTileCursor, true);
             SetDefault(AWBWSetting.ShowAnimationsForHiddenActions, true);
             SetDefault(AWBWSetting.SonjaHPVisiblity, SonjaHPVisibility.AlwaysVisible);
@@ -92,6 +93,7 @@ namespace AWBWApp.Game
         ReplayShowWeather,
         ReplayAllowLeftMouseToDragMap,
         MapSkin,
+        BuildingSkin,
         ShowTileCursor,
         ShowAnimationsForHiddenActions,
         MapGridBaseColour,
@@ -102,6 +104,24 @@ namespace AWBWApp.Game
     }
 
     public enum MapSkin
+    {
+        Classic,
+        Desert,
+        DoR
+    }
+
+    public static class MapSkinHelper
+    {
+        public static string ToFolder(this MapSkin skin, BuildingSkin buildingSkin)
+        {
+            if (skin == MapSkin.Classic && buildingSkin == BuildingSkin.AW1)
+                return "ClassicAW1";
+
+            return skin.ToString();
+        }
+    }
+
+    public enum BuildingSkin
     {
         AW1,
         AW2

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AWBWApp.Game.Game.Country;
 using AWBWApp.Game.Game.Logic;
+using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Helpers;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -10,6 +11,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Animations;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osuTK.Graphics;
 
@@ -34,7 +36,9 @@ namespace AWBWApp.Game.Game.Building
         private BuildingTile shownBuildingTile;
 
         private TextureAnimation textureAnimation;
-        private Dictionary<WeatherType, List<Texture>> texturesByWeather;
+        private Sprite baseTile;
+        private Dictionary<WeatherType, List<Texture>> buildingTexturesByWeather;
+        private Dictionary<WeatherType, Texture> baseTextureByWeather;
 
         [Resolved]
         private NearestNeighbourTextureStore textureStore { get; set; }
@@ -43,10 +47,16 @@ namespace AWBWApp.Game.Game.Building
         private BuildingStorage buildingStorage { get; set; }
 
         [Resolved]
+        private TerrainTileStorage terrainStorage { get; set; }
+
+        [Resolved]
         private IBindable<WeatherType> currentWeather { get; set; }
 
         [Resolved]
-        private IBindable<MapSkin> currentSkin { get; set; }
+        private IBindable<BuildingSkin> buildingSkin { get; set; }
+
+        [Resolved]
+        private IBindable<MapSkin> mapSkin { get; set; }
 
         private readonly IBindable<CountryData> countryBindindable;
         private IBindable<bool> revealBuildingInFog;
@@ -57,11 +67,19 @@ namespace AWBWApp.Game.Game.Building
             OwnerID = ownerID;
             MapPosition = tilePosition;
 
-            InternalChild = textureAnimation = new TextureAnimation()
+            InternalChildren = new Drawable[]
             {
-                Anchor = Anchor.BottomLeft,
-                Origin = Anchor.BottomLeft,
-                Loop = true
+                baseTile = new Sprite()
+                {
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
+                },
+                textureAnimation = new TextureAnimation()
+                {
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
+                    Loop = true
+                }
             };
 
             countryBindindable = country?.GetBoundCopy();
@@ -82,7 +100,8 @@ namespace AWBWApp.Game.Game.Building
         private void load(AWBWConfigManager configManager)
         {
             countryBindindable?.BindValueChanged(_ => updateAnimation());
-            currentSkin?.BindValueChanged(_ => updateAnimation());
+            mapSkin?.BindValueChanged(_ => updateAnimation());
+            buildingSkin?.BindValueChanged(_ => updateAnimation());
             currentWeather.BindValueChanged(x => changeWeather(x.NewValue));
 
             revealBuildingInFog = configManager.GetBindable<bool>(AWBWSetting.ReplayOnlyShownKnownInfo);
@@ -106,7 +125,8 @@ namespace AWBWApp.Game.Game.Building
 
         private void updateAnimation()
         {
-            texturesByWeather = new Dictionary<WeatherType, List<Texture>>();
+            buildingTexturesByWeather = new Dictionary<WeatherType, List<Texture>>();
+            baseTextureByWeather = new Dictionary<WeatherType, Texture>();
 
             var buildingTile = FogOfWarActive.Value ? shownBuildingTile : BuildingTile;
 
@@ -124,21 +144,29 @@ namespace AWBWApp.Game.Game.Building
 
                 for (int i = 0; i < frameLength; i++)
                 {
-                    var texture = textureStore.Get($"Map/{currentSkin.Value}/{texturePair.Value}-{i}");
+                    var texture = textureStore.Get($"Map/{buildingSkin.Value}/{texturePair.Value}-{i}");
 
                     if (texture == null)
                     {
                         //AW1 skin doesn't have animations
-                        if (currentSkin.Value == MapSkin.AW1 && i != 0)
+                        if (buildingSkin.Value == BuildingSkin.AW1 && i != 0)
                             break;
 
-                        throw new Exception($"Improperly configured BuildingTile. Animation count wrong or image missing: Map/{currentSkin.Value}/{texturePair.Value}-{i}");
+                        throw new Exception($"Improperly configured BuildingTile. Animation count wrong or image missing: Map/{buildingSkin.Value}/{texturePair.Value}-{i}");
                     }
 
                     textureList.Add(texture);
                 }
 
-                texturesByWeather.Add(texturePair.Key, textureList);
+                buildingTexturesByWeather.Add(texturePair.Key, textureList);
+            }
+
+            var grassTile = terrainStorage.GetTileByAWBWId(1);
+
+            foreach (var texturePair in grassTile.Textures)
+            {
+                var texture = textureStore.Get($"Map/{mapSkin.Value.ToFolder(buildingSkin.Value)}/{texturePair.Value}");
+                baseTextureByWeather.Add(texturePair.Key, texture);
             }
 
             changeWeather(currentWeather.Value);
@@ -146,8 +174,8 @@ namespace AWBWApp.Game.Game.Building
 
         private void changeWeather(WeatherType weatherType)
         {
-            if (!texturesByWeather.TryGetValue(weatherType, out var weatherTextures))
-                weatherTextures = texturesByWeather[WeatherType.Clear];
+            if (!buildingTexturesByWeather.TryGetValue(weatherType, out var weatherTextures))
+                weatherTextures = buildingTexturesByWeather[WeatherType.Clear];
 
             var playbackPosition = textureAnimation.PlaybackPosition;
             if (double.IsNaN(playbackPosition))
@@ -176,6 +204,10 @@ namespace AWBWApp.Game.Game.Building
             textureAnimation.Seek(playbackPosition);
             textureAnimation.Play();
 
+            if (!baseTextureByWeather.TryGetValue(weatherType, out var baseTexture))
+                baseTexture = baseTextureByWeather[WeatherType.Clear];
+
+            baseTile.Texture = baseTexture;
             updateBuildingColour(false);
         }
 

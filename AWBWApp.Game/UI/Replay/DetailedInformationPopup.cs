@@ -267,6 +267,9 @@ namespace AWBWApp.Game.UI.Replay
             [Resolved]
             private IBindable<MapSkin> currentSkin { get; set; }
 
+            [Resolved]
+            private IBindable<BuildingSkin> currentBuildingSkin { get; set; }
+
             public BuildingPopup()
             {
                 Anchor = Anchor.CentreLeft;
@@ -339,14 +342,14 @@ namespace AWBWApp.Game.UI.Replay
                 };
                 spriteContainer.Child = unitSprite;
 
-                var firstTexture = textureStore.Get($"Map/{currentSkin.Value}/{boundToData.Textures[WeatherType.Clear]}-0");
+                var firstTexture = textureStore.Get($"Map/{currentBuildingSkin.Value}/{boundToData.Textures[WeatherType.Clear]}-0");
                 unitSprite.Size = firstTexture.Size * 2;
 
                 if (boundToData.Frames != null)
                 {
                     unitSprite.AddFrame(firstTexture, boundToData.Frames[0]);
                     for (int i = 1; i < boundToData.Frames.Length; i++)
-                        unitSprite.AddFrame(textureStore.Get($"Map/{currentSkin.Value}/{boundToData.Textures[WeatherType.Clear]}-{i}"), boundToData.Frames[i]);
+                        unitSprite.AddFrame(textureStore.Get($"Map/{currentBuildingSkin.Value}/{boundToData.Textures[WeatherType.Clear]}-{i}"), boundToData.Frames[i]);
                 }
                 else
                     unitSprite.AddFrame(firstTexture);

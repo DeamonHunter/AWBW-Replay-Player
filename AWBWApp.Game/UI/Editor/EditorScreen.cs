@@ -32,7 +32,10 @@ namespace AWBWApp.Game.UI.Editor
     public partial class EditorScreen : EscapeableScreen, IKeyBindingHandler<AWBWGlobalAction>
     {
         [Cached(type: typeof(IBindable<MapSkin>))]
-        private Bindable<MapSkin> MapSkin = new Bindable<MapSkin>(AWBWApp.Game.MapSkin.AW2);
+        private Bindable<MapSkin> MapSkin = new Bindable<MapSkin>(AWBWApp.Game.MapSkin.Classic);
+
+        [Cached(type: typeof(IBindable<BuildingSkin>))]
+        private Bindable<BuildingSkin> BuildingSkin = new Bindable<BuildingSkin>(AWBWApp.Game.BuildingSkin.AW2);
 
         [Resolved]
         private InterruptDialogueOverlay interruptOverlay { get; set; }

@@ -82,6 +82,8 @@ namespace AWBWApp.Game.Game.Logic
 
         [Cached(typeof(IBindable<MapSkin>))]
         private Bindable<MapSkin> selectedMapSkin = new Bindable<MapSkin>();
+        [Cached(typeof(IBindable<BuildingSkin>))]
+        private Bindable<BuildingSkin> selectedBuildingSkin = new Bindable<BuildingSkin>();
 
         public Dictionary<long, PlayerInfo> Players { get; private set; } = new Dictionary<long, PlayerInfo>();
         public PlayerInfo ActivePlayer => currentTurn != null ? Players[currentTurn.ActivePlayerID] : null;
@@ -205,6 +207,7 @@ namespace AWBWApp.Game.Game.Logic
             shortenActionTooltipsBindable = configManager.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips);
             showMovementArrowsBindable = configManager.GetBindable<bool>(AWBWSetting.ReplayShowMovementArrows);
             selectedMapSkin.BindTo(configManager.GetBindable<MapSkin>(AWBWSetting.MapSkin));
+            selectedBuildingSkin.BindTo(configManager.GetBindable<BuildingSkin>(AWBWSetting.BuildingSkin));
 
             sonjaHPVisibility = configManager.GetBindable<SonjaHPVisibility>(AWBWSetting.SonjaHPVisiblity);
             sonjaHPVisibility.BindValueChanged(x => UpdateFogOfWar());

@@ -36,6 +36,9 @@ namespace AWBWApp.Game.Game.Tile
         [Resolved]
         private IBindable<MapSkin> currentSkin { get; set; }
 
+        [Resolved]
+        private IBindable<BuildingSkin> currentBuildingSkin { get; set; }
+
         public DrawableTile(TerrainTile terrainTile)
         {
             TerrainTile = terrainTile;
@@ -64,9 +67,9 @@ namespace AWBWApp.Game.Game.Tile
 
             foreach (var texturePair in TerrainTile.Textures)
             {
-                var textureValue = textureStore.Get($"Map/{skin}/{texturePair.Value}");
+                var textureValue = textureStore.Get($"Map/{skin.ToFolder(currentBuildingSkin.Value)}/{texturePair.Value}");
                 if (textureValue == null)
-                    throw new Exception($"Unable to find texture: Map/{skin}/{texturePair.Value}");
+                    throw new Exception($"Unable to find texture: Map/{skin.ToFolder(currentBuildingSkin.Value)}/{texturePair.Value}");
 
                 texturesByWeather.Add(texturePair.Key, textureValue);
             }
