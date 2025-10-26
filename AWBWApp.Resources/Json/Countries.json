@@ -87,11 +87,11 @@
             "replayList": "#bc8248"
         }
     },
-    "Amber Blaze": {
+    "Amber Blossom": {
         "AWBWID": 9,
         "code": "ab",
-        "name": "Amber Blaze",
-        "unitPath": "Units/AmberBlaze",
+        "name": "Amber Blossom",
+        "unitPath": "Units/AmberBlossom",
         "faceDirection": "Left",
         "colours": {
             "playerList": "#e78716",

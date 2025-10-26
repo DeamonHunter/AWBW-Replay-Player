@@ -121,9 +121,9 @@ namespace AWBWApp.Game.Tests.Visual.Tools
 
                     foreach (var buildingTile in _buildingTiles)
                     {
-                        filesToDownload.Add("neutral" + buildingTile.Key, "Neutral/" + buildingTile.Value);
-                        filesToDownload.Add("neutral" + buildingTile.Key + "_rain", "Neutral/" + buildingTile.Value + "_Rain");
-                        filesToDownload.Add("neutral" + buildingTile.Key + "_snow", "Neutral/" + buildingTile.Value + "_Snow");
+                        filesToDownload.Add("neutral" + buildingTile.Key, "Neutral/" + buildingTile.Value + "-0");
+                        filesToDownload.Add("neutral" + buildingTile.Key + "_rain", "Neutral/" + buildingTile.Value + "_Rain-0");
+                        filesToDownload.Add("neutral" + buildingTile.Key + "_snow", "Neutral/" + buildingTile.Value + "_Snow-0");
                     }
 
                     foreach (var buildingTile in _neutralBuildings)
@@ -135,9 +135,17 @@ namespace AWBWApp.Game.Tests.Visual.Tools
                 }
                 else
                 {
-                    filesToDownload = null;
-                    webUrl = null;
-                    fileLocation = null;
+                    webUrl = terrain_path + _buildingType.Current.Value.ToString().ToLowerInvariant() + "/";
+                    fileLocation = Path.GetFullPath(Path.Combine(Environment.ProcessPath, "..", "..", "..", "..", "..", "AWBWApp.Resources", "Textures", "Map", _buildingType.Current.Value.ToString())) + "/";
+
+                    var countryPath = _codeToFolder[_code.Current.Value];
+                    filesToDownload = new Dictionary<string, string>();
+                    foreach (var buildingTile in _buildingTiles)
+                    {
+                        filesToDownload.Add(countryPath.ToLower() + buildingTile.Key, countryPath + "/" + buildingTile.Value + "-0");
+                        filesToDownload.Add(countryPath.ToLower() + buildingTile.Key + "_rain", countryPath + "/" + buildingTile.Value + "_Rain-0");
+                        filesToDownload.Add(countryPath.ToLower() + buildingTile.Key + "_snow", countryPath + "/" + buildingTile.Value + "_Snow-0");
+                    }
                 }
 
                 Logger.Log($"Input Web: {webUrl}", level: LogLevel.Important);
@@ -203,6 +211,30 @@ namespace AWBWApp.Game.Tests.Visual.Tools
             UW
         }
 
+        private Dictionary<CountryCode, string> _codeToFolder = new Dictionary<CountryCode, string>()
+        {
+            { CountryCode.OS, "OrangeStar" },
+            { CountryCode.BM, "BlueMoon" },
+            { CountryCode.GE, "GreenEarth" },
+            { CountryCode.YC, "YellowComet" },
+            { CountryCode.BH, "BlackHole" },
+            { CountryCode.RF, "RedFire" },
+            { CountryCode.GS, "GreySky" },
+            { CountryCode.BD, "BrownDesert" },
+            { CountryCode.AB, "AmberBlossom" },
+            { CountryCode.JS, "JadeSun" },
+            { CountryCode.CI, "CobaltIce" },
+            { CountryCode.PC, "PinkCosmos" },
+            { CountryCode.TG, "TealGalaxy" },
+            { CountryCode.PL, "PurpleLightning" },
+            { CountryCode.AR, "AcidRain" },
+            { CountryCode.WN, "WhiteNova" },
+            { CountryCode.AA, "AzureAsteroid" },
+            { CountryCode.NE, "NoirEclipse" },
+            { CountryCode.SC, "SilverClaw" },
+            { CountryCode.UW, "UmberWilds" },
+        };
+
         private Dictionary<string, string> _terrainTiles = new Dictionary<string, string>()
         {
             { "plain", "Plain" },
@@ -239,6 +271,8 @@ namespace AWBWApp.Game.Tests.Visual.Tools
         {
             { "missilesilo", "Silo" },
             { "missilesiloempty", "SiloEmpty" },
+            { "hpipeseam", "HSeam-0" },
+            { "vpipeseam", "VSeam-0" },
         };
     }
 }

@@ -1601,13 +1601,13 @@
         }
     },
     /*
-    Amber Blaze
+    Amber Blossom
     */
-    "Amber Blaze Airport": {
+    "Amber Blossom Airport": {
         "AWBWID": 117,
         "BaseDefence": 3,
         "CountryID": 9, //ab
-        "Name": "Amber Blaze Airport",
+        "Name": "Amber Blossom Airport",
         "BuildingType": "Airport",
         "MovementCostsPerType": {
             "LightInf": 1,
@@ -1622,16 +1622,16 @@
             500
         ],
         "Textures": {
-            "Clear": "AmberBlaze/Airport",
-            "Rain": "AmberBlaze/Airport_Rain",
-            "Snow": "AmberBlaze/Airport_Snow"
+            "Clear": "AmberBlossom/Airport",
+            "Rain": "AmberBlossom/Airport_Rain",
+            "Snow": "AmberBlossom/Airport_Snow"
         }
     },
-    "Amber Blaze Base": {
+    "Amber Blossom Base": {
         "AWBWID": 118,
         "BaseDefence": 3,
         "CountryID": 9, //ab
-        "Name": "Amber Blaze Base",
+        "Name": "Amber Blossom Base",
         "BuildingType": "Base",
         "MovementCostsPerType": {
             "LightInf": 1,
@@ -1650,16 +1650,16 @@
             400
         ],
         "Textures": {
-            "Clear": "AmberBlaze/Base",
-            "Rain": "AmberBlaze/Base_Rain",
-            "Snow": "AmberBlaze/Base_Snow"
+            "Clear": "AmberBlossom/Base",
+            "Rain": "AmberBlossom/Base_Rain",
+            "Snow": "AmberBlossom/Base_Snow"
         }
     },
-    "Amber Blaze City": {
+    "Amber Blossom City": {
         "AWBWID": 119,
         "BaseDefence": 3,
         "CountryID": 9, //ab
-        "Name": "Amber Blaze City",
+        "Name": "Amber Blossom City",
         "BuildingType": "City",
         "MovementCostsPerType": {
             "LightInf": 1,
@@ -1674,16 +1674,16 @@
             500
         ],
         "Textures": {
-            "Clear": "AmberBlaze/City",
-            "Rain": "AmberBlaze/City_Rain",
-            "Snow": "AmberBlaze/City_Snow"
+            "Clear": "AmberBlossom/City",
+            "Rain": "AmberBlossom/City_Rain",
+            "Snow": "AmberBlossom/City_Snow"
         }
     },
-    "Amber Blaze HQ": {
+    "Amber Blossom HQ": {
         "AWBWID": 120,
         "BaseDefence": 4,
         "CountryID": 9, //ab
-        "Name": "Amber Blaze HQ",
+        "Name": "Amber Blossom HQ",
         "BuildingType": "HQ",
         "MovementCostsPerType": {
             "LightInf": 1,
@@ -1698,16 +1698,16 @@
             500
         ],
         "Textures": {
-            "Clear": "AmberBlaze/HQ",
-            "Rain": "AmberBlaze/HQ_Rain",
-            "Snow": "AmberBlaze/HQ_Snow"
+            "Clear": "AmberBlossom/HQ",
+            "Rain": "AmberBlossom/HQ_Rain",
+            "Snow": "AmberBlossom/HQ_Snow"
         }
     },
-    "Amber Blaze Port": {
+    "Amber Blossom Port": {
         "AWBWID": 121,
         "BaseDefence": 3,
         "CountryID": 9, //ab
-        "Name": "Amber Blaze Port",
+        "Name": "Amber Blossom Port",
         "BuildingType": "Port",
         "MovementCostsPerType": {
             "LightInf": 1,
@@ -1724,16 +1724,16 @@
             500
         ],
         "Textures": {
-            "Clear": "AmberBlaze/Port",
-            "Rain": "AmberBlaze/Port_Rain",
-            "Snow": "AmberBlaze/Port_Snow"
+            "Clear": "AmberBlossom/Port",
+            "Rain": "AmberBlossom/Port_Rain",
+            "Snow": "AmberBlossom/Port_Snow"
         }
     },
-    "Amber Blaze Com Tower": {
+    "Amber Blossom Com Tower": {
         "AWBWID": 127,
         "BaseDefence": 3,
         "CountryID": 9, //ab
-        "Name": "Amber Blaze Com Tower",
+        "Name": "Amber Blossom Com Tower",
         "BuildingType": "ComTower",
         "MovementCostsPerType": {
             "LightInf": 1,
@@ -1749,16 +1749,16 @@
             500
         ],
         "Textures": {
-            "Clear": "AmberBlaze/ComTower",
-            "Rain": "AmberBlaze/ComTower_Rain",
-            "Snow": "AmberBlaze/ComTower_Snow"
+            "Clear": "AmberBlossom/ComTower",
+            "Rain": "AmberBlossom/ComTower_Rain",
+            "Snow": "AmberBlossom/ComTower_Snow"
         }
     },
-    "Amber Blaze Lab": {
+    "Amber Blossom Lab": {
         "AWBWID": 138,
         "BaseDefence": 3,
         "CountryID": 9, //ab
-        "Name": "Amber Blaze Lab",
+        "Name": "Amber Blossom Lab",
         "BuildingType": "Lab",
         "MovementCostsPerType": {
             "LightInf": 1,
@@ -1774,9 +1774,9 @@
             500
         ],
         "Textures": {
-            "Clear": "AmberBlaze/Lab",
-            "Rain": "AmberBlaze/Lab_Rain",
-            "Snow": "AmberBlaze/Lab_Snow"
+            "Clear": "AmberBlossom/Lab",
+            "Rain": "AmberBlossom/Lab_Rain",
+            "Snow": "AmberBlossom/Lab_Snow"
         }
     },
     /*
