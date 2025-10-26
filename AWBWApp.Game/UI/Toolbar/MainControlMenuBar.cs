@@ -77,6 +77,7 @@ namespace AWBWApp.Game.UI.Toolbar
                             }
                         ),
                         new ToggleMenuItem("Lock Map Position", configManager.GetBindable<bool>(AWBWSetting.LockMapPosition)),
+                        new EnumMenuItem<MapSkin>("Map Skin", configManager.GetBindable<MapSkin>(AWBWSetting.MapSkin))
                     }
                 },
                 new MenuItem("Control Settings")
