@@ -100,29 +100,30 @@ namespace AWBWApp.Game.Tests.Visual.Tools
                 //Todo: Non-standard setups will break this... but meh
 
                 Dictionary<string, string> filesToDownload;
+                bool animated;
 
                 if (_code.Current.Value == CountryCode.Terrain)
                 {
                     filesToDownload = _terrainTiles;
-
+                    animated = false;
                     if (_buildingType.Current.Value == BuildingSkin.AW1)
                     {
-                        webUrl = terrain_path + _buildingType.Current.Value.ToString().ToLowerInvariant() + "/";
+                        webUrl = terrain_path + (_buildingType.Current.Value == BuildingSkin.AW2 ? "ani" : "aw1") + "/";
                         fileLocation = Path.GetFullPath(Path.Combine(Environment.ProcessPath, "..", "..", "..", "..", "..", "AWBWApp.Resources", "Textures", "Map", "ClassicAW1")) + "/";
                     }
                     else
                     {
-                        webUrl = terrain_path + _terrainType.Current.Value.ToString().ToLowerInvariant() + "/";
+                        webUrl = terrain_path + (_buildingType.Current.Value == BuildingSkin.AW2 ? "ani" : "aw1") + "/";
                         fileLocation = Path.GetFullPath(Path.Combine(Environment.ProcessPath, "..", "..", "..", "..", "..", "AWBWApp.Resources", "Textures", "Map", _terrainType.Current.Value.ToString())) + "/";
                     }
                 }
                 else if (_code.Current.Value == CountryCode.Neutral)
                 {
-                    webUrl = terrain_path + _buildingType.Current.Value.ToString().ToLowerInvariant() + "/";
+                    webUrl = terrain_path + (_buildingType.Current.Value == BuildingSkin.AW2 ? "ani" : "aw1") + "/";
                     fileLocation = Path.GetFullPath(Path.Combine(Environment.ProcessPath, "..", "..", "..", "..", "..", "AWBWApp.Resources", "Textures", "Map", _buildingType.Current.Value.ToString())) + "/";
 
                     filesToDownload = new Dictionary<string, string>();
-
+                    animated = _buildingType.Current.Value == BuildingSkin.AW2;
                     foreach (var buildingTile in _buildingTiles)
                     {
                         filesToDownload.Add("neutral" + buildingTile.Key, "Neutral/" + buildingTile.Value + "-0");
@@ -139,9 +140,10 @@ namespace AWBWApp.Game.Tests.Visual.Tools
                 }
                 else
                 {
-                    webUrl = terrain_path + _buildingType.Current.Value.ToString().ToLowerInvariant() + "/";
+                    webUrl = terrain_path + (_buildingType.Current.Value == BuildingSkin.AW2 ? "ani" : "aw1") + "/";
                     fileLocation = Path.GetFullPath(Path.Combine(Environment.ProcessPath, "..", "..", "..", "..", "..", "AWBWApp.Resources", "Textures", "Map", _buildingType.Current.Value.ToString())) + "/";
 
+                    animated = _buildingType.Current.Value == BuildingSkin.AW2;
                     var countryPath = _codeToFolder[_code.Current.Value];
                     filesToDownload = new Dictionary<string, string>();
                     foreach (var buildingTile in _buildingTiles)
@@ -157,7 +159,7 @@ namespace AWBWApp.Game.Tests.Visual.Tools
 
                 foreach (var (webPart, filePart) in filesToDownload)
                 {
-                    await DownloadAndSave(webUrl + webPart + ".gif", fileLocation + filePart + ".png");
+                    await DownloadAndSave(webUrl + webPart + ".gif", fileLocation + filePart + ".png", animated);
                 }
             }
             catch (Exception e)
@@ -173,7 +175,7 @@ namespace AWBWApp.Game.Tests.Visual.Tools
             }
         }
 
-        private async Task DownloadAndSave(string webUrl, string fileLocation)
+        private async Task DownloadAndSave(string webUrl, string fileLocation, bool animated)
         {
             Logger.Log($"Downloading file {webUrl} to {fileLocation}");
             using (HttpClient client = new HttpClient())
@@ -183,7 +185,17 @@ namespace AWBWApp.Game.Tests.Visual.Tools
                     using (var stream = new MemoryStream(await webStream.ReadAllRemainingBytesToArrayAsync()))
                     {
                         var gif = new GifDecoder().Decode(Configuration.Default, stream, CancellationToken.None);
-                        await gif.SaveAsPngAsync(fileLocation);
+
+                        if (animated)
+                        {
+                            for (var i = 0; i < gif.Frames.Count; i++)
+                            {
+                                var newLocation = fileLocation.Replace("-0", $"-{i}");
+                                await gif.Frames.CloneFrame(i).SaveAsPngAsync(newLocation);
+                            }
+                        }
+                        else
+                            await gif.SaveAsPngAsync(fileLocation);
                     }
                 }
             }
