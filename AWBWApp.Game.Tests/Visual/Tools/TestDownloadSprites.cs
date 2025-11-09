@@ -104,12 +104,17 @@ namespace AWBWApp.Game.Tests.Visual.Tools
                 if (_code.Current.Value == CountryCode.Terrain)
                 {
                     filesToDownload = _terrainTiles;
-                    if (_buildingType.Current.Value == BuildingSkin.AW1)
-                        webUrl = terrain_path + _buildingType.Current.Value.ToString().ToLowerInvariant() + "/";
-                    else
-                        webUrl = terrain_path + _terrainType.Current.Value.ToString().ToLowerInvariant() + "/";
-                    fileLocation = Path.GetFullPath(Path.Combine(Environment.ProcessPath, "..", "..", "..", "..", "..", "AWBWApp.Resources", "Textures", "Map", _terrainType.Current.Value.ToString())) + "/";
 
+                    if (_buildingType.Current.Value == BuildingSkin.AW1)
+                    {
+                        webUrl = terrain_path + _buildingType.Current.Value.ToString().ToLowerInvariant() + "/";
+                        fileLocation = Path.GetFullPath(Path.Combine(Environment.ProcessPath, "..", "..", "..", "..", "..", "AWBWApp.Resources", "Textures", "Map", "ClassicAW1")) + "/";
+                    }
+                    else
+                    {
+                        webUrl = terrain_path + _terrainType.Current.Value.ToString().ToLowerInvariant() + "/";
+                        fileLocation = Path.GetFullPath(Path.Combine(Environment.ProcessPath, "..", "..", "..", "..", "..", "AWBWApp.Resources", "Textures", "Map", _terrainType.Current.Value.ToString())) + "/";
+                    }
                 }
                 else if (_code.Current.Value == CountryCode.Neutral)
                 {
