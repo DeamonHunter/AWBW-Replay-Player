@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using AWBWApp.Game.Game.Country;
-using AWBWApp.Game.UI.Select;
 using NUnit.Framework;
 using OpenTabletDriver.Plugin.DependencyInjection;
 using osu.Framework.Extensions;
@@ -14,7 +11,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Logging;
 using osuTK;
@@ -108,7 +104,10 @@ namespace AWBWApp.Game.Tests.Visual.Tools
                 if (_code.Current.Value == CountryCode.Terrain)
                 {
                     filesToDownload = _terrainTiles;
-                    webUrl = terrain_path + _terrainType.Current.Value.ToString().ToLowerInvariant() + "/";
+                    if (_buildingType.Current.Value == BuildingSkin.AW1)
+                        webUrl = terrain_path + _buildingType.Current.Value.ToString().ToLowerInvariant() + "/";
+                    else
+                        webUrl = terrain_path + _terrainType.Current.Value.ToString().ToLowerInvariant() + "/";
                     fileLocation = Path.GetFullPath(Path.Combine(Environment.ProcessPath, "..", "..", "..", "..", "..", "AWBWApp.Resources", "Textures", "Map", _terrainType.Current.Value.ToString())) + "/";
 
                 }
