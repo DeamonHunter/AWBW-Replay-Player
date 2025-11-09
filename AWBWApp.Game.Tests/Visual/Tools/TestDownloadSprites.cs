@@ -104,9 +104,31 @@ namespace AWBWApp.Game.Tests.Visual.Tools
 
                 if (_code.Current.Value == CountryCode.Terrain)
                 {
-                    filesToDownload = _terrainTiles;
+                    filesToDownload = new Dictionary<string, string>();
                     animated = false;
-                    if (_buildingType.Current.Value == BuildingSkin.AW1)
+
+                    foreach (var terrainTile in _terrainTiles)
+                    {
+                        filesToDownload.Add(terrainTile.Key, terrainTile.Value);
+                        if (terrainTile.Key == "teleporter")
+                            continue;
+
+                        filesToDownload.Add(terrainTile.Key + "_snow", terrainTile.Value + "_Snow");
+                    }
+
+                    if (_terrainType.Current.Value == MapSkin.Desert)
+                    {
+                        webUrl = terrain_path + "desert/";
+                        fileLocation = Path.GetFullPath(Path.Combine(Environment.ProcessPath, "..", "..", "..", "..", "..", "AWBWApp.Resources", "Textures", "Map", "Desert")) + "/";
+                        filesToDownload.Remove("teleporter");
+                    }
+                    else if (_terrainType.Current.Value == MapSkin.DoR)
+                    {
+                        webUrl = terrain_path + "dor/";
+                        fileLocation = Path.GetFullPath(Path.Combine(Environment.ProcessPath, "..", "..", "..", "..", "..", "AWBWApp.Resources", "Textures", "Map", "DoR")) + "/";
+                        filesToDownload.Remove("teleporter");
+                    }
+                    else if (_buildingType.Current.Value == BuildingSkin.AW1)
                     {
                         webUrl = terrain_path + (_buildingType.Current.Value == BuildingSkin.AW2 ? "ani" : "aw1") + "/";
                         fileLocation = Path.GetFullPath(Path.Combine(Environment.ProcessPath, "..", "..", "..", "..", "..", "AWBWApp.Resources", "Textures", "Map", "ClassicAW1")) + "/";
@@ -271,6 +293,17 @@ namespace AWBWApp.Game.Tests.Visual.Tools
             { "nesroad", "Road/NES" },
             { "hbridge", "Road/HBridge" },
             { "vbridge", "Road/VBridge" },
+            { "hriver", "River/H" },
+            { "vriver", "River/V" },
+            { "criver", "River/C" },
+            { "esriver", "River/ES" },
+            { "swriver", "River/SW" },
+            { "wnriver", "River/WN" },
+            { "neriver", "River/NE" },
+            { "eswriver", "River/ESW" },
+            { "swnriver", "River/SWN" },
+            { "wneriver", "River/WNE" },
+            { "nesriver", "River/NES" },
         };
 
         private Dictionary<string, string> _buildingTiles = new Dictionary<string, string>()
