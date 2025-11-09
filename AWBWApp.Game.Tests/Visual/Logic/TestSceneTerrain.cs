@@ -56,8 +56,31 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         public void TestBuildings()
         {
             AddStep("Render All IDs", () => renderMapWithAllIDs(16, 16));
+            AddStep("Set To AW1 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW1));
             AddStep("Change Weather", () => ReplayController.GoToNextTurn());
             AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Set To AW2 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Set To AW1 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Set To AW2 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Set To AW1 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Set To AW2 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+        }
+
+        private void SetSkin(MapSkin map, BuildingSkin building)
+        {
+            ReplayController.GoToTurn(0);
+            MapSkin.Value = map;
+            BuildingSkin.Value = building;
         }
 
         [Test]

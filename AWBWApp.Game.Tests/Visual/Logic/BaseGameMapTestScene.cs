@@ -7,6 +7,7 @@ using AWBWApp.Game.Game.Logic;
 using AWBWApp.Game.Game.Tile;
 using AWBWApp.Game.Game.Units;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.IO.Stores;
@@ -27,6 +28,14 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         [Cached]
         private CountryStorage countryStorage = new CountryStorage();
 
+        [Cached(typeof(IBindable<MapSkin>))]
+        protected Bindable<MapSkin> MapSkin = new Bindable<MapSkin>();
+        private Bindable<MapSkin> originalMapSkin;
+
+        [Cached(typeof(IBindable<BuildingSkin>))]
+        protected Bindable<BuildingSkin> BuildingSkin = new Bindable<BuildingSkin>();
+        private Bindable<BuildingSkin> originalBuildingSkin;
+
         protected ReplayController ReplayController;
 
         protected ScreenStack ScreenStack;
@@ -45,7 +54,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         }
 
         [BackgroundDependencyLoader]
-        private void load(ResourceStore<byte[]> storage)
+        private void load(ResourceStore<byte[]> storage, AWBWConfigManager configManager)
         {
             var tilesJson = storage.GetStream("Json/Tiles");
             terrainTileStorage.LoadStream(tilesJson);
@@ -57,6 +66,12 @@ namespace AWBWApp.Game.Tests.Visual.Logic
             coStorage.LoadStream(cosJson);
             var countriesJson = storage.GetStream("Json/Countries");
             countryStorage.LoadStream(countriesJson);
+
+            originalMapSkin = configManager.GetBindable<MapSkin>(AWBWSetting.MapSkin);
+            originalBuildingSkin = configManager.GetBindable<BuildingSkin>(AWBWSetting.BuildingSkin);
+
+            MapSkin.BindTo(originalMapSkin);
+            BuildingSkin.BindTo(originalBuildingSkin);
         }
 
         protected TerrainTileStorage GetTileStorage()
