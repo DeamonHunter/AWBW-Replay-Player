@@ -269,6 +269,7 @@ namespace AWBWApp.Game.Tests.Visual.Tools
             { "comtower", "ComTower" },
             { "lab", "Lab" },
             { "port", "Port" },
+            { "hq", "HQ" },
         };
 
         private Dictionary<string, string> _neutralBuildings = new Dictionary<string, string>()
