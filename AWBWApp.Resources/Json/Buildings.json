@@ -3579,5 +3579,186 @@
             "Rain": "SilverClaw/Lab_Rain",
             "Snow": "SilverClaw/Lab_Snow"
         }
+    },
+    /*
+    Umber Wilds
+    */
+    "Umber Wilds Airport": {
+        "AWBWID": 217,
+        "BaseDefence": 3,
+        "CountryID": 26, //uw
+        "Name": "Umber Wilds Airport",
+        "BuildingType": "Airport",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "frames": [
+            1000,
+            400,
+            200
+        ],
+        "Textures": {
+            "Clear": "UmberWilds/Airport",
+            "Rain": "UmberWilds/Airport_Rain",
+            "Snow": "UmberWilds/Airport_Snow"
+        }
+    },
+    "Umber Wilds Base": {
+        "AWBWID": 218,
+        "BaseDefence": 3,
+        "CountryID": 26, //uw
+        "Name": "Umber Wilds Base",
+        "BuildingType": "Base",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Pipe": 1
+        },
+        "frames": [
+            400,
+            400,
+            200,
+            200,
+            200,
+            200
+        ],
+        "Textures": {
+            "Clear": "UmberWilds/Base",
+            "Rain": "UmberWilds/Base_Rain",
+            "Snow": "UmberWilds/Base_Snow"
+        }
+    },
+    "Umber Wilds City": {
+        "AWBWID": 219,
+        "BaseDefence": 3,
+        "CountryID": 26, //uw
+        "Name": "Umber Wilds City",
+        "BuildingType": "City",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "frames": [
+            1000,
+            400,
+            200
+        ],
+        "Textures": {
+            "Clear": "UmberWilds/City",
+            "Rain": "UmberWilds/City_Rain",
+            "Snow": "UmberWilds/City_Snow"
+        }
+    },
+    "Umber Wilds HQ": {
+        "AWBWID": 221,
+        "BaseDefence": 4,
+        "CountryID": 26, //uw
+        "Name": "Umber Wilds HQ",
+        "BuildingType": "HQ",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "frames": [
+            400,
+            200,
+            600,
+            200,
+            200
+        ],
+        "Textures": {
+            "Clear": "UmberWilds/HQ",
+            "Rain": "UmberWilds/HQ_Rain",
+            "Snow": "UmberWilds/HQ_Snow"
+        }
+    },
+    "Umber Wilds Port": {
+        "AWBWID": 223,
+        "BaseDefence": 3,
+        "CountryID": 26, //uw
+        "Name": "Umber Wilds Port",
+        "BuildingType": "Port",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1,
+            "Sea": 1,
+            "Lander": 1
+        },
+        "frames": [
+            1000,
+            400,
+            200
+        ],
+        "Textures": {
+            "Clear": "UmberWilds/Port",
+            "Rain": "UmberWilds/Port_Rain",
+            "Snow": "UmberWilds/Port_Snow"
+        }
+    },
+    "Umber Wilds Com Tower": {
+        "AWBWID": 220,
+        "BaseDefence": 3,
+        "CountryID": 26, //uw
+        "Name": "Umber Wilds Com Tower",
+        "BuildingType": "ComTower",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "GivesMoneyWhenCaptured": false,
+        "frames": [
+            1000,
+            400,
+            200
+        ],
+        "Textures": {
+            "Clear": "UmberWilds/ComTower",
+            "Rain": "UmberWilds/ComTower_Rain",
+            "Snow": "UmberWilds/ComTower_Snow"
+        }
+    },
+    "Umber Wilds Lab": {
+        "AWBWID": 222,
+        "BaseDefence": 3,
+        "CountryID": 26, //uw
+        "Name": "Umber Wilds Lab",
+        "BuildingType": "Lab",
+        "MovementCostsPerType": {
+            "LightInf": 1,
+            "HeavyInf": 1,
+            "Tread": 1,
+            "Tire": 1,
+            "Air": 1
+        },
+        "GivesMoneyWhenCaptured": false,
+        "frames": [
+            1000,
+            400,
+            200
+        ],
+        "Textures": {
+            "Clear": "UmberWilds/Lab",
+            "Rain": "UmberWilds/Lab_Rain",
+            "Snow": "UmberWilds/Lab_Snow"
+        }
     }
 }

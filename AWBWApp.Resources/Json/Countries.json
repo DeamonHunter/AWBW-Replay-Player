@@ -202,10 +202,21 @@
         "code": "sc",
         "name": "Silver Claw",
         "unitPath": "Units/SilverClaw",
-        "faceDirection": "Right",
+        "faceDirection": "Left",
         "colours": {
             "playerList": "#B7DEE8",
             "replayList": "#B7DEE8"
+        }
+    },
+    "Umber Wilds": {
+        "AWBWID": 26,
+        "code": "uw",
+        "name": "Umber Wilds",
+        "unitPath": "Units/UmberWilds",
+        "faceDirection": "Right",
+        "colours": {
+            "playerList": "#C76000",
+            "replayList": "#C76000"
         }
     }
 }
