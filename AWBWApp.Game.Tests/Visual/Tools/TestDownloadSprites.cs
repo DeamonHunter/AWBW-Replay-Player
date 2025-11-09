@@ -277,6 +277,8 @@ namespace AWBWApp.Game.Tests.Visual.Tools
             { "missilesiloempty", "SiloEmpty" },
             { "hpipeseam", "HSeam-0" },
             { "vpipeseam", "VSeam-0" },
+            { "hpiperubble", "HRubble-0" },
+            { "vpiperubble", "VRubble-0" },
         };
     }
 }
