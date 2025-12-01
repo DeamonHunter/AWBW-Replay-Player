@@ -87,10 +87,40 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         public void TestCustomShoalRendering()
         {
             AddStep("Map: Sea Test", () => loadMapFromFile("Json/Maps/SeaTest"));
+            AddStep("Set To AW1 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Set To AW2 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Set To AW1 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Set To AW2 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Set To AW1 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Set To AW2 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW2));
             AddStep("Map: Shoal Test", () => loadMapFromFile("Json/Maps/ShoalTest"));
+            AddStep("Set To AW1 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Set To AW2 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Set To AW1 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Set To AW2 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Set To AW1 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Set To AW2 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW2));
             AddStep("Map: Shoal Alt Test A", () => loadMapFromFile("Json/Maps/ShoalAltTestA"));
+            AddStep("Set To AW1 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Set To AW2 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Set To AW1 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Set To AW2 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Set To AW1 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Set To AW2 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW2));
             AddStep("Map: Shoal Alt Test B", () => loadMapFromFile("Json/Maps/ShoalAltTestB"));
+            AddStep("Set To AW1 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Set To AW2 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Set To AW1 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Set To AW2 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Set To AW1 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Set To AW2 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW2));
             AddStep("Map: Custom Shoals", () => loadMapFromFile("Json/Maps/98331"));
+            AddStep("Set To AW1 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Set To AW2 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Set To AW1 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Set To AW2 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Set To AW1 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Set To AW2 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW2));
         }
 
         [Test]
