@@ -88,6 +88,7 @@ namespace AWBWApp.Game.Game.Units
 
         private IBindable<bool> revealUnitInFog;
         private IBindable<CountryData> country;
+        private IBindable<FaceDirection> unitFaceDirection;
         private IBindable<bool> movementAnimations;
 
         [Resolved]
@@ -96,6 +97,7 @@ namespace AWBWApp.Game.Game.Units
         public DrawableUnit(UnitData unitData, ReplayUnit unit, IBindable<CountryData> country, IBindable<FaceDirection> unitFaceDirection)
         {
             this.country = country.GetBoundCopy();
+            this.unitFaceDirection = unitFaceDirection.GetBoundCopy();
             UnitData = unitData;
             Size = BASE_SIZE;
 
@@ -127,7 +129,6 @@ namespace AWBWApp.Game.Game.Units
 
             HealthPoints.BindValueChanged(x => updateHp(), true);
             BeingCarried.BindValueChanged(x => updateUnitColour(x.NewValue));
-            unitFaceDirection?.BindValueChanged(x => spriteContainer.UpdateFaceDirection(x.NewValue, this.country.Value), true);
             movementState = new Bindable<MovementState>();
             movementState.BindValueChanged(x => spriteContainer.SetMovementState(movementAnimations.Value ? x.NewValue : MovementState.Idle));
 
@@ -182,6 +183,8 @@ namespace AWBWApp.Game.Game.Units
         private void load(AWBWConfigManager configManager)
         {
             country.BindValueChanged(x => spriteContainer.LoadAnimations(UnitData, x.NewValue, textureStore), true);
+            unitFaceDirection?.BindValueChanged(x => spriteContainer.UpdateFaceDirection(x.NewValue, country.Value), true);
+            country?.BindValueChanged(x => spriteContainer.UpdateFaceDirection(unitFaceDirection.Value, country.Value), true);
 
             revealUnitInFog = configManager.GetBindable<bool>(AWBWSetting.ReplayOnlyShownKnownInfo);
             revealUnitInFog.BindValueChanged(x => updateUnitColour(x.NewValue));
