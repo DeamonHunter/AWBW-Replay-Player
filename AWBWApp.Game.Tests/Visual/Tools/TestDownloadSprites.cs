@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using OpenTabletDriver.Plugin.DependencyInjection;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -14,6 +15,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Logging;
 using osuTK;
+using osuTK.Graphics;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Gif;
 using Configuration = SixLabors.ImageSharp.Configuration;
@@ -28,6 +30,8 @@ namespace AWBWApp.Game.Tests.Visual.Tools
         private Dropdown<CountryCode> _code;
         private BasicButton _button;
         private Sprite _sprite;
+        private BasicSliderBar<double> _progress;
+        private SpriteText _progressText;
 
         [Resolved]
         private IRenderer renderer { get; set; }
@@ -73,6 +77,28 @@ namespace AWBWApp.Game.Tests.Visual.Tools
                         Text = "Download",
                         Action = DownloadPressed
                     },
+                    new Container()
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Width = 400,
+                        Height = 30,
+                        Children = new Drawable[]
+                        {
+                            _progress = new BasicSliderBar<double>()
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                BackgroundColour = new Color4(50, 75, 50, 255),
+                                SelectionColour = new Color4(100, 150, 100, 255),
+                                Current = new BindableDouble()
+                                {
+                                    MinValue = 0f,
+                                    MaxValue = 1f,
+                                    Default = 0.5f,
+                                }
+                            }
+                        }
+                    },
                     _sprite = new Sprite()
                     {
                         Width = 64,
@@ -82,6 +108,13 @@ namespace AWBWApp.Game.Tests.Visual.Tools
                     }
                 }
             };
+
+            _progress.Add(_progressText = new SpriteText()
+            {
+                Text = "Waiting for Input.",
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+            });
 
             Add(container);
         }
@@ -179,10 +212,17 @@ namespace AWBWApp.Game.Tests.Visual.Tools
                 Logger.Log($"Input Web: {webUrl}", level: LogLevel.Important);
                 Logger.Log($"Output Location: {fileLocation}", level: LogLevel.Important);
 
+                var count = 0;
+                _progress.Current.Value = 0;
                 foreach (var (webPart, filePart) in filesToDownload)
                 {
+                    _progressText.Text = $"{count}/{filesToDownload.Count}";
                     await DownloadAndSave(webUrl + webPart + ".gif", fileLocation + filePart + ".png", animated);
+                    count++;
+                    _progress.Current.Value = (float)count / filesToDownload.Count;
                 }
+
+                _progressText.Text = "Done";
             }
             catch (Exception e)
             {
