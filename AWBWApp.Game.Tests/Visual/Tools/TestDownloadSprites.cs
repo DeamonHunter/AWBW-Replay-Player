@@ -208,6 +208,8 @@ namespace AWBWApp.Game.Tests.Visual.Tools
                     animated = _buildingType.Current.Value == BuildingSkin.AW2;
                     foreach (var buildingTile in _buildingTiles)
                     {
+                        if (buildingTile.Key.Contains("hq"))
+                            continue;
                         filesToDownload.Add("neutral" + buildingTile.Key, "Neutral/" + buildingTile.Value + "-0");
                         filesToDownload.Add("neutral" + buildingTile.Key + "_rain", "Neutral/" + buildingTile.Value + "_Rain-0");
                         filesToDownload.Add("neutral" + buildingTile.Key + "_snow", "Neutral/" + buildingTile.Value + "_Snow-0");
