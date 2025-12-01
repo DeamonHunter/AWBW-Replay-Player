@@ -29,6 +29,7 @@ namespace AWBWApp.Game.Tests.Visual.Tools
         private Dropdown<BuildingSkin> _buildingType;
         private Dropdown<CountryCode> _code;
         private BasicButton _button;
+        private BasicButton _unitButton;
         private Sprite _sprite;
         private BasicSliderBar<double> _progress;
         private SpriteText _progressText;
@@ -37,6 +38,8 @@ namespace AWBWApp.Game.Tests.Visual.Tools
         private IRenderer renderer { get; set; }
 
         private const string terrain_path = "https://awbw.amarriner.com/terrain/";
+        private const string unit_path = "https://awbw.amarriner.com/terrain/ani/";
+        private const string movement_path = "https://awbw.amarriner.com/terrain/aw2/movement/";
 
         public TestDownloadSprites()
         {
@@ -76,6 +79,15 @@ namespace AWBWApp.Game.Tests.Visual.Tools
                         Height = 30,
                         Text = "Download",
                         Action = DownloadPressed
+                    },
+                    _unitButton = new BasicButton()
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Width = 400,
+                        Height = 30,
+                        Text = "Unit Download",
+                        Action = UnitDownloadPressed
                     },
                     new Container()
                     {
@@ -121,8 +133,23 @@ namespace AWBWApp.Game.Tests.Visual.Tools
 
         private void DownloadPressed()
         {
-            _button.Enabled.Value = false;
+            SetEnabled(false);
             Task.Run(DownloadTask, CancellationToken.None);
+        }
+
+        private void UnitDownloadPressed()
+        {
+            SetEnabled(false);
+            Task.Run(UnitDownloadTask, CancellationToken.None);
+        }
+
+        private void SetEnabled(bool enabled)
+        {
+            _button.Enabled.Value = enabled;
+            _unitButton.Enabled.Value = enabled;
+            _terrainType.Current.Disabled = !enabled;
+            _buildingType.Current.Disabled = !enabled;
+            _code.Current.Disabled = !enabled;
         }
 
         private async Task DownloadTask()
@@ -214,12 +241,16 @@ namespace AWBWApp.Game.Tests.Visual.Tools
 
                 var count = 0;
                 _progress.Current.Value = 0;
-                foreach (var (webPart, filePart) in filesToDownload)
+
+                using (HttpClient client = new HttpClient())
                 {
-                    _progressText.Text = $"{count}/{filesToDownload.Count}";
-                    await DownloadAndSave(webUrl + webPart + ".gif", fileLocation + filePart + ".png", animated);
-                    count++;
-                    _progress.Current.Value = (float)count / filesToDownload.Count;
+                    foreach (var (webPart, filePart) in filesToDownload)
+                    {
+                        _progressText.Text = $"{count}/{filesToDownload.Count}";
+                        await DownloadAndSave(webUrl + webPart + ".gif", fileLocation + filePart + ".png", animated, false, client);
+                        count++;
+                        _progress.Current.Value = (float)count / filesToDownload.Count;
+                    }
                 }
 
                 _progressText.Text = "Done";
@@ -232,33 +263,97 @@ namespace AWBWApp.Game.Tests.Visual.Tools
             {
                 Schedule(() =>
                 {
-                    _button.Enabled.Value = true;
+                    SetEnabled(true);
                 });
             }
         }
 
-        private async Task DownloadAndSave(string webUrl, string fileLocation, bool animated)
+        private async Task UnitDownloadTask()
+        {
+            try
+            {
+                //Todo: Non-standard setups will break this... but meh
+
+                Dictionary<string, string> filesToDownload;
+
+                switch (_code.Current.Value)
+                {
+                    case CountryCode.Terrain:
+                    case CountryCode.Neutral:
+                        return;
+                }
+
+                var fileLocation = Path.GetFullPath(Path.Combine(Environment.ProcessPath, "..", "..", "..", "..", "..", "AWBWApp.Resources", "Textures", "Units")) + "/";
+
+                var countryPath = _codeToFolder[_code.Current.Value];
+                filesToDownload = new Dictionary<string, string>();
+                var code = _code.Current.Value.ToString().ToLowerInvariant();
+
+                foreach (var unit in _units)
+                {
+                    filesToDownload.Add(unit_path + code + unit.Key, countryPath + "/" + unit.Value);
+                    filesToDownload.Add(movement_path + code + "/" + code + unit.Key.Replace(".", "") + "_mside", countryPath + "/" + unit.Value + "_MSide");
+                    filesToDownload.Add(movement_path + code + "/" + code + unit.Key.Replace(".", "") + "_mup", countryPath + "/" + unit.Value + "_MUp");
+                    filesToDownload.Add(movement_path + code + "/" + code + unit.Key.Replace(".", "") + "_mdown", countryPath + "/" + unit.Value + "_MDown");
+                }
+
+                Logger.Log($"Output Location: {fileLocation}", level: LogLevel.Important);
+
+                var count = 0;
+                _progress.Current.Value = 0;
+
+                using (HttpClient client = new HttpClient())
+                {
+                    foreach (var (webPart, filePart) in filesToDownload)
+                    {
+                        _progressText.Text = $"{count}/{filesToDownload.Count}";
+                        await DownloadAndSave(webPart + ".gif", fileLocation + filePart + ".png", true, true, client);
+                        count++;
+                        _progress.Current.Value = (float)count / filesToDownload.Count;
+                    }
+                }
+
+                _progressText.Text = "Done";
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Download");
+            }
+            finally
+            {
+                Schedule(() =>
+                {
+                    SetEnabled(true);
+                });
+            }
+        }
+
+        private async Task DownloadAndSave(string webUrl, string fileLocation, bool animated, bool appendFrame, HttpClient client)
         {
             Logger.Log($"Downloading file {webUrl} to {fileLocation}");
-            using (HttpClient client = new HttpClient())
+            using (var webStream = await client.GetStreamAsync(webUrl))
             {
-                using (var webStream = await client.GetStreamAsync(webUrl))
+                using (var stream = new MemoryStream(await webStream.ReadAllRemainingBytesToArrayAsync()))
                 {
-                    using (var stream = new MemoryStream(await webStream.ReadAllRemainingBytesToArrayAsync()))
-                    {
-                        var gif = new GifDecoder().Decode(Configuration.Default, stream, CancellationToken.None);
+                    var gif = new GifDecoder().Decode(Configuration.Default, stream, CancellationToken.None);
 
-                        if (animated)
+                    if (animated)
+                    {
+                        for (var i = 0; i < gif.Frames.Count; i++)
                         {
-                            for (var i = 0; i < gif.Frames.Count; i++)
+                            if (appendFrame)
+                            {
+                                await gif.Frames.CloneFrame(i).SaveAsPngAsync(fileLocation.Replace(".png", $"-{i}.png"));
+                            }
+                            else
                             {
                                 var newLocation = fileLocation.Replace("-0", $"-{i}");
                                 await gif.Frames.CloneFrame(i).SaveAsPngAsync(newLocation);
                             }
                         }
-                        else
-                            await gif.SaveAsPngAsync(fileLocation);
                     }
+                    else
+                        await gif.SaveAsPngAsync(fileLocation);
                 }
             }
         }
@@ -365,6 +460,35 @@ namespace AWBWApp.Game.Tests.Visual.Tools
             { "vpipeseam", "VSeam-0" },
             { "hpiperubble", "HRubble-0" },
             { "vpiperubble", "VRubble-0" },
+        };
+
+        private Dictionary<string, string> _units = new Dictionary<string, string>()
+        {
+            { "anti-air", "Anti-Air" },
+            { "apc", "APC" },
+            { "artillery", "Artillery" },
+            { "b-copter", "B-Copter" },
+            { "battleship", "Battleship" },
+            { "blackboat", "BlackBoat" },
+            { "blackbomb", "BlackBomb" },
+            { "bomber", "Bomber" },
+            { "carrier", "Carrier" },
+            { "cruiser", "Cruiser" },
+            { "fighter", "Fighter" },
+            { "infantry", "Infantry" },
+            { "lander", "Lander" },
+            { "md.tank", "MdTank" },
+            { "mech", "Mech" },
+            { "megatank", "MegaTank" },
+            { "missile", "Missile" },
+            { "neotank", "NeoTank" },
+            { "piperunner", "PipeRunner" },
+            { "recon", "Recon" },
+            { "rocket", "Rocket" },
+            { "stealth", "Stealth" },
+            { "sub", "Sub" },
+            { "tank", "Tank" },
+            { "t-copter", "T-Copter" },
         };
     }
 }
