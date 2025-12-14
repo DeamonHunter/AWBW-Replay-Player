@@ -44,15 +44,6 @@ namespace AWBWApp.Game.UI.Toolbar
                     {
                         new EnumMenuItem<WindowMode>("Fullscreen Mode", frameworkConfig.GetBindable<WindowMode>(FrameworkSetting.WindowMode), host.Window?.SupportedWindowModes.ToList() ?? new List<WindowMode>() { WindowMode.Windowed }),
                         new EnumMenuItem<FrameSync>("Frame Sync", frameworkConfig.GetBindable<FrameSync>(FrameworkSetting.FrameSync), new[] { FrameSync.VSync, FrameSync.Limit2x, FrameSync.Unlimited }),
-                        new MenuItem("Map Background Colour")
-                        {
-                            Items = new[] { new ColourPickerMenuItem(configManager.GetBindable<Colour4>(AWBWSetting.MapGridBaseColour)) }
-                        },
-                        new MenuItem("Map Background Grid Colour")
-                        {
-                            Items = new[] { new ColourPickerMenuItem(configManager.GetBindable<Colour4>(AWBWSetting.MapGridGridColour)) }
-                        },
-                        new ToggleMenuItem("Show Grid Overlay", configManager.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap)),
                         new ToggleMenuItem("Show Tile Cursor", configManager.GetBindable<bool>(AWBWSetting.ShowTileCursor)),
                         new ToggleMenuItem("Show Hidden Building/Units in Fog", configManager.GetBindable<bool>(AWBWSetting.ReplayOnlyShownKnownInfo)),
                         new ToggleMenuItem("Show Funds/Unit Count in Fog", configManager.GetBindable<bool>(AWBWSetting.ReplayShowPlayerDetailsInFog)),
@@ -76,9 +67,23 @@ namespace AWBWApp.Game.UI.Toolbar
                                 Anchor.BottomRight,
                             }
                         ),
-                        new ToggleMenuItem("Lock Map Position", configManager.GetBindable<bool>(AWBWSetting.LockMapPosition)),
+                    }
+                },
+                new MenuItem("Map Visual Settings")
+                {
+                    Items = new MenuItem[]
+                    {
+                        new ToggleMenuItem("Show Grid Overlay", configManager.GetBindable<bool>(AWBWSetting.ReplayShowGridOverMap)),
                         new EnumMenuItem<MapSkin>("Map Skin", configManager.GetBindable<MapSkin>(AWBWSetting.MapSkin)),
-                        new EnumMenuItem<BuildingSkin>("Building Skin", configManager.GetBindable<BuildingSkin>(AWBWSetting.BuildingSkin))
+                        new EnumMenuItem<BuildingSkin>("Building Skin", configManager.GetBindable<BuildingSkin>(AWBWSetting.BuildingSkin)),
+                        new MenuItem("Map Background Colour")
+                        {
+                            Items = new[] { new ColourPickerMenuItem(configManager.GetBindable<Colour4>(AWBWSetting.MapGridBaseColour)) }
+                        },
+                        new MenuItem("Map Background Grid Colour")
+                        {
+                            Items = new[] { new ColourPickerMenuItem(configManager.GetBindable<Colour4>(AWBWSetting.MapGridGridColour)) }
+                        },
                     }
                 },
                 new MenuItem("Control Settings")
@@ -89,6 +94,7 @@ namespace AWBWApp.Game.UI.Toolbar
                         new ToggleMenuItem("Allow Left Mouse to Drag Map", configManager.GetBindable<bool>(AWBWSetting.ReplayAllowLeftMouseToDragMap)),
                         new ToggleMenuItem("Shorten Action Tooltips", configManager.GetBindable<bool>(AWBWSetting.ReplayShortenActionToolTips)),
                         new ToggleMenuItem("Move Controls Bar to Player List", configManager.GetBindable<bool>(AWBWSetting.ReplayCombineReplayListAndControlBar)),
+                        new ToggleMenuItem("Lock Map Position", configManager.GetBindable<bool>(AWBWSetting.LockMapPosition)),
                     }
                 },
             };
