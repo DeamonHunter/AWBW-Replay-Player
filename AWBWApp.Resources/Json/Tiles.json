@@ -1848,8 +1848,8 @@
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/N-W",
-            "Rain": "Shoal/N-AW_Rain",
-            "Snow": "Shoal/N-AW_Snow"
+            "Rain": "Shoal/N-W_Rain",
+            "Snow": "Shoal/N-W_Snow"
         }
     },
     "Shoal-N-AW": {
@@ -1943,8 +1943,8 @@
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/E-AS",
-            "Rain": "Shoal/E-S_Rain",
-            "Snow": "Shoal/E-S_Snow"
+            "Rain": "Shoal/E-AS_Rain",
+            "Snow": "Shoal/E-AS_Snow"
         }
     },
     "Shoal-AE-S": {

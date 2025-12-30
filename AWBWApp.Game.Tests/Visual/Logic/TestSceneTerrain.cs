@@ -67,16 +67,36 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         }
 
         [Test]
-        public void TestCustomShoalRendering()
+        public void TestCustomShoalRenderingSeaTest()
         {
             AddStep("Map: Sea Test", () => loadMapFromFile("Json/Maps/SeaTest"));
             AddSkinTestingSteps();
+        }
+
+        [Test]
+        public void TestCustomShoalRenderingShoalTest()
+        {
             AddStep("Map: Shoal Test", () => loadMapFromFile("Json/Maps/ShoalTest"));
             AddSkinTestingSteps();
+        }
+
+        [Test]
+        public void TestCustomShoalRenderingShoalAltATest()
+        {
             AddStep("Map: Shoal Alt Test A", () => loadMapFromFile("Json/Maps/ShoalAltTestA"));
             AddSkinTestingSteps();
+        }
+
+        [Test]
+        public void TestCustomShoalRenderingShoalAltBTest()
+        {
             AddStep("Map: Shoal Alt Test B", () => loadMapFromFile("Json/Maps/ShoalAltTestB"));
             AddSkinTestingSteps();
+        }
+
+        [Test]
+        public void TestCustomShoalRenderingNormalMap()
+        {
             AddStep("Map: Custom Shoals", () => loadMapFromFile("Json/Maps/98331"));
             AddSkinTestingSteps();
         }
