@@ -512,7 +512,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/Sea"
+            "Clear": "Sea/Sea",
+            "Rain": "Sea/Sea_Rain",
+            "Snow": "Sea/Sea_Snow"
         }
     },
     "Shoal-N": {
@@ -529,7 +531,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N"
+            "Clear": "Shoal/N",
+            "Rain": "Sea/N_Rain",
+            "Snow": "Sea/N_Snow"
         }
     },
     "Shoal-S": {
@@ -546,7 +550,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/S"
+            "Clear": "Shoal/S",
+            "Rain": "Sea/S_Rain",
+            "Snow": "Sea/S_Snow"
         }
     },
     "Shoal-E": {
@@ -563,7 +569,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/E"
+            "Clear": "Shoal/E",
+            "Rain": "Sea/E_Rain",
+            "Snow": "Sea/E_Snow"
         }
     },
     "Shoal-W": {
@@ -580,7 +588,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/W"
+            "Clear": "Shoal/W",
+            "Rain": "Sea/W_Rain",
+            "Snow": "Sea/W_Snow"
         }
     },
     "Reef": {
@@ -595,7 +605,9 @@
         "Colour": "#b6619a",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Reef"
+            "Clear": "Reef",
+            "Rain": "Reef_Rain",
+            "Snow": "Reef_Snow"
         }
     },
     "VPipe": {
@@ -841,7 +853,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/N-E-S-W"
+            "Clear": "Sea/N-E-S-W",
+            "Rain": "Sea/N-E-S-W_Rain",
+            "Snow": "Sea/N-E-S-W_Snow"
         }
     },
     "Sea-E-S-W": {
@@ -855,7 +869,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/E-S-W"
+            "Clear": "Sea/E-S-W",
+            "Rain": "Sea/E-S-W_Rain",
+            "Snow": "Sea/E-S-W_Snow"
         }
     },
     "Sea-N-S-W": {
@@ -869,7 +885,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/N-S-W"
+            "Clear": "Sea/N-S-W",
+            "Rain": "Sea/N-S-W_Rain",
+            "Snow": "Sea/N-S-W_Snow"
         }
     },
     "Sea-N-E-W": {
@@ -883,7 +901,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/N-E-W"
+            "Clear": "Sea/N-E-W",
+            "Rain": "Sea/N-E-W_Rain",
+            "Snow": "Sea/N-E-W_Snow"
         }
     },
     "Sea-N-E-S": {
@@ -897,7 +917,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/N-E-S"
+            "Clear": "Sea/N-E-S",
+            "Rain": "Sea/N-E-S_Rain",
+            "Snow": "Sea/N-E-S_Snow"
         }
     },
     "Sea-N-S": {
@@ -911,7 +933,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/N-S"
+            "Clear": "Sea/N-S",
+            "Rain": "Sea/N-S_Rain",
+            "Snow": "Sea/N-S_Snow"
         }
     },
     "Sea-E-W": {
@@ -925,7 +949,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/E-W"
+            "Clear": "Sea/E-W",
+            "Rain": "Sea/E-W_Rain",
+            "Snow": "Sea/E-W_Snow"
         }
     },
     "Sea-N-E-SW": {
@@ -939,7 +965,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/N-E-SW"
+            "Clear": "Sea/N-E-SW",
+            "Rain": "Sea/N-E-SW_Rain",
+            "Snow": "Sea/N-E-SW_Snow"
         }
     },
     "Sea-N-E": {
@@ -953,7 +981,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/N-E"
+            "Clear": "Sea/N-E",
+            "Rain": "Sea/N-E_Rain",
+            "Snow": "Sea/N-E_Snow"
         }
     },
     "Sea-E-S-NW": {
@@ -967,7 +997,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/E-S-NW"
+            "Clear": "Sea/E-S-NW",
+            "Rain": "Sea/E-S-NW_Rain",
+            "Snow": "Sea/E-S-NW_Snow"
         }
     },
     "Sea-E-S": {
@@ -981,7 +1013,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/E-S"
+            "Clear": "Sea/E-S",
+            "Rain": "Sea/E-S_Rain",
+            "Snow": "Sea/E-S_Snow"
         }
     },
     "Sea-S-W-NE": {
@@ -995,7 +1029,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/S-W-NE"
+            "Clear": "Sea/S-W-NE",
+            "Rain": "Sea/S-W-NE_Rain",
+            "Snow": "Sea/S-W-NE_Snow"
         }
     },
     "Sea-S-W": {
@@ -1009,7 +1045,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/S-W"
+            "Clear": "Sea/S-W",
+            "Rain": "Sea/S-W_Rain",
+            "Snow": "Sea/S-W_Snow"
         }
     },
     "Sea-N-W-SE": {
@@ -1023,7 +1061,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/N-W-SE"
+            "Clear": "Sea/N-W-SE",
+            "Rain": "Sea/N-W-SE_Rain",
+            "Snow": "Sea/N-W-SE_Snow"
         }
     },
     "Sea-N-W": {
@@ -1037,7 +1077,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/N-W"
+            "Clear": "Sea/N-W",
+            "Rain": "Sea/N-W_Rain",
+            "Snow": "Sea/N-W_Snow"
         }
     },
     "Sea-N-SE-SW": {
@@ -1051,7 +1093,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/N-SE-SW"
+            "Clear": "Sea/N-SE-SW",
+            "Rain": "Sea/N-SE-SW_Rain",
+            "Snow": "Sea/N-SE-SW_Snow"
         }
     },
     "Sea-N-SE": {
@@ -1065,7 +1109,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/N-SE"
+            "Clear": "Sea/N-SE",
+            "Rain": "Sea/N-SE_Rain",
+            "Snow": "Sea/N-SE_Snow"
         }
     },
     "Sea-N-SW": {
@@ -1079,7 +1125,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/N-SW"
+            "Clear": "Sea/N-SW",
+            "Rain": "Sea/N-SW_Rain",
+            "Snow": "Sea/N-SW_Snow"
         }
     },
     "Sea-N": {
@@ -1093,7 +1141,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/N"
+            "Clear": "Sea/N",
+            "Rain": "Sea/N_Rain",
+            "Snow": "Sea/N_Snow"
         }
     },
     "Sea-E-NW-SW": {
@@ -1107,7 +1157,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/E-NW-SW"
+            "Clear": "Sea/E-NW-SW",
+            "Rain": "Sea/E-NW-SW_Rain",
+            "Snow": "Sea/E-NW-SW_Snow"
         }
     },
     "Sea-E-NW": {
@@ -1121,7 +1173,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/E-NW"
+            "Clear": "Sea/E-NW",
+            "Rain": "Sea/E-NW_Rain",
+            "Snow": "Sea/E-NW_Snow"
         }
     },
     "Sea-E-SW": {
@@ -1135,7 +1189,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/E-SW"
+            "Clear": "Sea/E-SW",
+            "Rain": "Sea/E-SW_Rain",
+            "Snow": "Sea/E-SW_Snow"
         }
     },
     "Sea-E": {
@@ -1149,7 +1205,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/E"
+            "Clear": "Sea/E",
+            "Rain": "Sea/E_Rain",
+            "Snow": "Sea/E_Snow"
         }
     },
     "Sea-S-NW-NE": {
@@ -1163,7 +1221,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/S-NW-NE"
+            "Clear": "Sea/S-NW-NE",
+            "Rain": "Sea/S-NW-NE_Rain",
+            "Snow": "Sea/S-NW-NE_Snow"
         }
     },
     "Sea-S-NW": {
@@ -1177,7 +1237,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/S-NW"
+            "Clear": "Sea/S-NW",
+            "Rain": "Sea/S-NW_Rain",
+            "Snow": "Sea/S-NW_Snow"
         }
     },
     "Sea-S-NE": {
@@ -1191,7 +1253,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/S-NE"
+            "Clear": "Sea/S-NE",
+            "Rain": "Sea/S-NE_Rain",
+            "Snow": "Sea/S-NE_Snow"
         }
     },
     "Sea-S": {
@@ -1205,7 +1269,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/S"
+            "Clear": "Sea/S",
+            "Rain": "Sea/S_Rain",
+            "Snow": "Sea/S_Snow"
         }
     },
     "Sea-W-NE-SE": {
@@ -1219,7 +1285,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/W-NE-SE"
+            "Clear": "Sea/W-NE-SE",
+            "Rain": "Sea/W-NE-SE_Rain",
+            "Snow": "Sea/W-NE-SE_Snow"
         }
     },
     "Sea-W-NE": {
@@ -1233,7 +1301,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/W-NE"
+            "Clear": "Sea/W-NE",
+            "Rain": "Sea/W-NE_Rain",
+            "Snow": "Sea/W-NE_Snow"
         }
     },
     "Sea-W-SE": {
@@ -1247,7 +1317,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/W-SE"
+            "Clear": "Sea/W-SE",
+            "Rain": "Sea/W-SE_Rain",
+            "Snow": "Sea/W-SE_Snow"
         }
     },
     "Sea-W": {
@@ -1261,7 +1333,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/W"
+            "Clear": "Sea/W",
+            "Rain": "Sea/W_Rain",
+            "Snow": "Sea/W_Snow"
         }
     },
     "Sea-NW-NE-SE-SW": {
@@ -1275,7 +1349,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/NW-NE-SE-SW"
+            "Clear": "Sea/NW-NE-SE-SW",
+            "Rain": "Sea/NW-NE-SE-SW_Rain",
+            "Snow": "Sea/NW-NE-SE-SW_Snow"
         }
     },
     "Sea-NE-SE-SW": {
@@ -1289,7 +1365,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/NE-SE-SW"
+            "Clear": "Sea/NE-SE-SW",
+            "Rain": "Sea/NE-SE-SW_Rain",
+            "Snow": "Sea/NE-SE-SW_Snow"
         }
     },
     "Sea-NW-SE-SW": {
@@ -1303,7 +1381,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/NW-SE-SW"
+            "Clear": "Sea/NW-SE-SW",
+            "Rain": "Sea/NW-SE-SW_Rain",
+            "Snow": "Sea/NW-SE-SW_Snow"
         }
     },
     "Sea-NW-NE-SW": {
@@ -1317,7 +1397,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/NW-NE-SW"
+            "Clear": "Sea/NW-NE-SW",
+            "Rain": "Sea/NW-NE-SW_Rain",
+            "Snow": "Sea/NW-NE-SW_Snow"
         }
     },
     "Sea-NW-NE-SE": {
@@ -1331,7 +1413,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/NW-NE-SE"
+            "Clear": "Sea/NW-NE-SE",
+            "Rain": "Sea/NW-NE-SE_Rain",
+            "Snow": "Sea/NW-NE-SE_Snow"
         }
     },
     "Sea-SE-SW": {
@@ -1345,7 +1429,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/SE-SW"
+            "Clear": "Sea/SE-SW",
+            "Rain": "Sea/SE-SW_Rain",
+            "Snow": "Sea/SE-SW_Snow"
         }
     },
     "Sea-NW-SW": {
@@ -1359,7 +1445,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/NW-SW"
+            "Clear": "Sea/NW-SW",
+            "Rain": "Sea/NW-SW_Rain",
+            "Snow": "Sea/NW-SW_Snow"
         }
     },
     "Sea-NW-NE": {
@@ -1373,7 +1461,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/NW-NE"
+            "Clear": "Sea/NW-NE",
+            "Rain": "Sea/NW-NE_Rain",
+            "Snow": "Sea/NW-NE_Snow"
         }
     },
     "Sea-NE-SE": {
@@ -1387,7 +1477,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/NE-SE"
+            "Clear": "Sea/NE-SE",
+            "Rain": "Sea/NE-SE_Rain",
+            "Snow": "Sea/NE-SE_Snow"
         }
     },
     "Sea-NW-SE": {
@@ -1401,7 +1493,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/NW-SE"
+            "Clear": "Sea/NW-SE",
+            "Rain": "Sea/NW-SE_Rain",
+            "Snow": "Sea/NW-SE_Snow"
         }
     },
     "Sea-NE-SW": {
@@ -1415,7 +1509,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/NE-SW"
+            "Clear": "Sea/NE-SW",
+            "Rain": "Sea/NE-SW_Rain",
+            "Snow": "Sea/NE-SW_Snow"
         }
     },
     "Sea-NW": {
@@ -1429,7 +1525,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/NW"
+            "Clear": "Sea/NW",
+            "Rain": "Sea/NW_Rain",
+            "Snow": "Sea/NW_Snow"
         }
     },
     "Sea-NE": {
@@ -1443,7 +1541,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/NE"
+            "Clear": "Sea/NE",
+            "Rain": "Sea/NE_Rain",
+            "Snow": "Sea/NE_Snow"
         }
     },
     "Sea-SE": {
@@ -1457,7 +1557,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/SE"
+            "Clear": "Sea/SE",
+            "Rain": "Sea/SE_Rain",
+            "Snow": "Sea/SE_Snow"
         }
     },
     "Sea-SW": {
@@ -1471,7 +1573,9 @@
         "Colour": "#735dff",
         "TerrainType": "Sea",
         "Textures": {
-            "Clear": "Sea/SW"
+            "Clear": "Sea/SW",
+            "Rain": "Sea/SW_Rain",
+            "Snow": "Sea/SW_Snow"
         }
     },
 
@@ -1494,7 +1598,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/C"
+            "Clear": "Shoal/C",
+            "Rain": "Shoal/C_Rain",
+            "Snow": "Shoal/C_Snow"
         }
     },
     "Shoal-AN": {
@@ -1511,11 +1617,11 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN"
+            "Clear": "Shoal/AN",
+            "Rain": "Shoal/AN_Rain",
+            "Snow": "Shoal/AN_Snow"
         }
     },
-
-    //Duo Defined Shoals
     "Shoal-AE": {
         "AWBWID": 1048,
         "BaseDefence": 0,
@@ -1530,7 +1636,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AE"
+            "Clear": "Shoal/AE",
+            "Rain": "Shoal/AE_Rain",
+            "Snow": "Shoal/AE_Snow"
         }
     },
     "Shoal-AS": {
@@ -1547,7 +1655,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AS"
+            "Clear": "Shoal/AS",
+            "Rain": "Shoal/AS_Rain",
+            "Snow": "Shoal/AS_Snow"
         }
     },
     "Shoal-AW": {
@@ -1564,9 +1674,13 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AW"
+            "Clear": "Shoal/AW",
+            "Rain": "Shoal/AW_Rain",
+            "Snow": "Shoal/AW_Snow"
         }
     },
+    
+    //Duo Defined Shoals
     "Shoal-N-E": {
         "AWBWID": 1051,
         "BaseDefence": 0,
@@ -1581,7 +1695,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-E"
+            "Clear": "Shoal/N-E",
+            "Rain": "Shoal/N-E_Rain",
+            "Snow": "Shoal/N-E_Snow"
         }
     },
     "Shoal-N-AE": {
@@ -1598,7 +1714,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-AE"
+            "Clear": "Shoal/N-AE",
+            "Rain": "Shoal/N-AE_Rain",
+            "Snow": "Shoal/N-AE_Snow"
         }
     },
     "Shoal-AN-E": {
@@ -1615,7 +1733,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-E"
+            "Clear": "Shoal/AN-E",
+            "Rain": "Shoal/AN-E_Rain",
+            "Snow": "Shoal/AN-E_Snow"
         }
     },
     "Shoal-AN-AE": {
@@ -1632,7 +1752,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-AE"
+            "Clear": "Shoal/AN-AE",
+            "Rain": "Shoal/AN-AE_Rain",
+            "Snow": "Shoal/AN-AE_Snow"
         }
     },
     "Shoal-N-S": {
@@ -1649,7 +1771,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-S"
+            "Clear": "Shoal/N-S",
+            "Rain": "Shoal/N-S_Rain",
+            "Snow": "Shoal/N-S_Snow"
         }
     },
     "Shoal-N-AS": {
@@ -1666,7 +1790,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-AS"
+            "Clear": "Shoal/N-AS",
+            "Rain": "Shoal/N-AS_Rain",
+            "Snow": "Shoal/N-AS_Snow"
         }
     },
     "Shoal-AN-S": {
@@ -1683,7 +1809,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-S"
+            "Clear": "Shoal/AN-S",
+            "Rain": "Shoal/AN-S_Rain",
+            "Snow": "Shoal/AN-S_Snow"
         }
     },
     "Shoal-AN-AS": {
@@ -1700,7 +1828,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-AS"
+            "Clear": "Shoal/AN-AS",
+            "Rain": "Shoal/AN-AS_Rain",
+            "Snow": "Shoal/AN-AS_Snow"
         }
     },
     "Shoal-N-W": {
@@ -1717,7 +1847,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-W"
+            "Clear": "Shoal/N-W",
+            "Rain": "Shoal/N-AW_Rain",
+            "Snow": "Shoal/N-AW_Snow"
         }
     },
     "Shoal-N-AW": {
@@ -1734,7 +1866,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-AW"
+            "Clear": "Shoal/N-AW",
+            "Rain": "Shoal/N-AW_Rain",
+            "Snow": "Shoal/N-AW_Snow"
         }
     },
     "Shoal-AN-W": {
@@ -1751,7 +1885,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-W"
+            "Clear": "Shoal/AN-W",
+            "Rain": "Shoal/AN-W_Rain",
+            "Snow": "Shoal/AN-W_Snow"
         }
     },
     "Shoal-AN-AW": {
@@ -1768,7 +1904,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-AW"
+            "Clear": "Shoal/AN-AW",
+            "Rain": "Shoal/AN-AW_Rain",
+            "Snow": "Shoal/AN-AW_Snow"
         }
     },
     "Shoal-E-S": {
@@ -1785,7 +1923,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/E-S"
+            "Clear": "Shoal/E-S",
+            "Rain": "Shoal/E-S_Rain",
+            "Snow": "Shoal/E-S_Snow"
         }
     },
     "Shoal-E-AS": {
@@ -1802,7 +1942,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/E-AS"
+            "Clear": "Shoal/E-AS",
+            "Rain": "Shoal/E-S_Rain",
+            "Snow": "Shoal/E-S_Snow"
         }
     },
     "Shoal-AE-S": {
@@ -1819,7 +1961,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AE-S"
+            "Clear": "Shoal/AE-S",
+            "Rain": "Shoal/AE-S_Rain",
+            "Snow": "Shoal/AE-S_Snow"
         }
     },
     "Shoal-AE-AS": {
@@ -1836,7 +1980,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AE-AS"
+            "Clear": "Shoal/AE-AS",
+            "Rain": "Shoal/AE-AS_Rain",
+            "Snow": "Shoal/AE-AS_Snow"
         }
     },
     "Shoal-E-W": {
@@ -1853,7 +1999,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/E-W"
+            "Clear": "Shoal/E-W",
+            "Rain": "Shoal/E-W_Rain",
+            "Snow": "Shoal/E-W_Snow"
         }
     },
     "Shoal-E-AW": {
@@ -1870,7 +2018,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/E-AW"
+            "Clear": "Shoal/E-AW",
+            "Rain": "Shoal/E-AW_Rain",
+            "Snow": "Shoal/E-AW_Snow"
         }
     },
     "Shoal-AE-W": {
@@ -1887,7 +2037,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AE-W"
+            "Clear": "Shoal/AE-W",
+            "Rain": "Shoal/AE-W_Rain",
+            "Snow": "Shoal/AE-W_Snow"
         }
     },
     "Shoal-AE-AW": {
@@ -1904,7 +2056,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AE-AW"
+            "Clear": "Shoal/AE-AW",
+            "Rain": "Shoal/AE-AW_Rain",
+            "Snow": "Shoal/AE-AW_Snow"
         }
     },
     "Shoal-S-W": {
@@ -1921,7 +2075,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/S-W"
+            "Clear": "Shoal/S-W",
+            "Rain": "Shoal/S-W_Rain",
+            "Snow": "Shoal/S-W_Snow"
         }
     },
     "Shoal-S-AW": {
@@ -1938,7 +2094,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/S-AW"
+            "Clear": "Shoal/S-AW",
+            "Rain": "Shoal/S-AW_Rain",
+            "Snow": "Shoal/S-AW_Snow"
         }
     },
     "Shoal-AS-W": {
@@ -1955,7 +2113,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AS-W"
+            "Clear": "Shoal/AS-W",
+            "Rain": "Shoal/AS-W_Rain",
+            "Snow": "Shoal/AS-W_Snow"
         }
     },
     "Shoal-AS-AW": {
@@ -1972,7 +2132,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AS-AW"
+            "Clear": "Shoal/AS-AW",
+            "Rain": "Shoal/AS-AW_Rain",
+            "Snow": "Shoal/AS-AW_Snow"
         }
     },
 
@@ -1991,7 +2153,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-E-S"
+            "Clear": "Shoal/N-E-S",
+            "Rain": "Shoal/N-E-S_Rain",
+            "Snow": "Shoal/N-E-S_Snow"
         }
     },
     "Shoal-N-E-AS": {
@@ -2008,7 +2172,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-E-AS"
+            "Clear": "Shoal/N-E-AS",
+            "Rain": "Shoal/N-E-AS_Rain",
+            "Snow": "Shoal/N-E-AS_Snow"
         }
     },
     "Shoal-N-AE-S": {
@@ -2025,7 +2191,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-AE-S"
+            "Clear": "Shoal/N-AE-S",
+            "Rain": "Shoal/N-AE-S_Rain",
+            "Snow": "Shoal/N-AE-S_Snow"
         }
     },
     "Shoal-N-AE-AS": {
@@ -2042,7 +2210,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-AE-AS"
+            "Clear": "Shoal/N-AE-AS",
+            "Rain": "Shoal/N-AE-AS_Rain",
+            "Snow": "Shoal/N-AE-AS_Snow"
         }
     },
     "Shoal-AN-E-S": {
@@ -2059,7 +2229,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-E-S"
+            "Clear": "Shoal/AN-E-S",
+            "Rain": "Shoal/AN-E-S_Rain",
+            "Snow": "Shoal/AN-E-S_Snow"
         }
     },
     "Shoal-AN-E-AS": {
@@ -2076,7 +2248,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-E-AS"
+            "Clear": "Shoal/AN-E-AS",
+            "Rain": "Shoal/AN-E-AS_Rain",
+            "Snow": "Shoal/AN-E-AS_Snow"
         }
     },
     "Shoal-AN-AE-S": {
@@ -2093,7 +2267,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-AE-S"
+            "Clear": "Shoal/AN-AE-S",
+            "Rain": "Shoal/AN-AE-S_Rain",
+            "Snow": "Shoal/AN-AE-S_Snow"
         }
     },
     "Shoal-AN-AE-AS": {
@@ -2110,7 +2286,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-AE-AS"
+            "Clear": "Shoal/AN-AE-AS",
+            "Rain": "Shoal/AN-AE-AS_Rain",
+            "Snow": "Shoal/AN-AE-AS_Snow"
         }
     },
     "Shoal-N-S-W": {
@@ -2127,7 +2305,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-S-W"
+            "Clear": "Shoal/N-S-W",
+            "Rain": "Shoal/N-S-W_Rain",
+            "Snow": "Shoal/N-S-W_Snow"
         }
     },
     "Shoal-N-S-AW": {
@@ -2144,7 +2324,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-S-AW"
+            "Clear": "Shoal/N-S-AW",
+            "Rain": "Shoal/N-S-AW_Rain",
+            "Snow": "Shoal/N-S-AW_Snow"
         }
     },
     "Shoal-N-AS-W": {
@@ -2161,7 +2343,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-AS-W"
+            "Clear": "Shoal/N-AS-W",
+            "Rain": "Shoal/N-AS-W_Rain",
+            "Snow": "Shoal/N-AS-W_Snow"
         }
     },
     "Shoal-N-AS-AW": {
@@ -2178,7 +2362,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-AS-AW"
+            "Clear": "Shoal/N-AS-AW",
+            "Rain": "Shoal/N-AS-AW_Rain",
+            "Snow": "Shoal/N-AS-AW_Snow"
         }
     },
     "Shoal-AN-S-W": {
@@ -2195,7 +2381,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-S-W"
+            "Clear": "Shoal/AN-S-W",
+            "Rain": "Shoal/AN-S-W_Rain",
+            "Snow": "Shoal/AN-S-W_Snow"
         }
     },
     "Shoal-AN-S-AW": {
@@ -2212,7 +2400,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-S-AW"
+            "Clear": "Shoal/AN-S-AW",
+            "Rain": "Shoal/AN-S-AW_Rain",
+            "Snow": "Shoal/AN-S-AW_Snow"
         }
     },
     "Shoal-AN-AS-W": {
@@ -2229,7 +2419,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-AS-W"
+            "Clear": "Shoal/AN-AS-W",
+            "Rain": "Shoal/AN-AS-W_Rain",
+            "Snow": "Shoal/AN-AS-W_Snow"
         }
     },
     "Shoal-AN-AS-AW": {
@@ -2246,7 +2438,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-AS-AW"
+            "Clear": "Shoal/AN-AS-AW",
+            "Rain": "Shoal/AN-AS-AW_Rain",
+            "Snow": "Shoal/AN-AS-AW_Snow"
         }
     },
     "Shoal-N-E-W": {
@@ -2263,7 +2457,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-E-W"
+            "Clear": "Shoal/N-E-W",
+            "Rain": "Shoal/N-E-W_Rain",
+            "Snow": "Shoal/N-E-W_Snow"
         }
     },
     "Shoal-N-E-AW": {
@@ -2280,7 +2476,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-E-AW"
+            "Clear": "Shoal/N-E-AW",
+            "Rain": "Shoal/N-E-AW_Rain",
+            "Snow": "Shoal/N-E-AW_Snow"
         }
     },
     "Shoal-N-AE-W": {
@@ -2297,7 +2495,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-AE-W"
+            "Clear": "Shoal/N-AE-W",
+            "Rain": "Shoal/N-AE-W_Rain",
+            "Snow": "Shoal/N-AE-W_Snow"
         }
     },
     "Shoal-N-AE-AW": {
@@ -2314,7 +2514,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-AE-AW"
+            "Clear": "Shoal/N-AE-AW",
+            "Rain": "Shoal/N-AE-AW_Rain",
+            "Snow": "Shoal/N-AE-AW_Snow"
         }
     },
     "Shoal-AN-E-W": {
@@ -2331,7 +2533,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-E-W"
+            "Clear": "Shoal/AN-E-W",
+            "Rain": "Shoal/AN-E-W_Rain",
+            "Snow": "Shoal/AN-E-W_Snow"
         }
     },
     "Shoal-AN-E-AW": {
@@ -2348,7 +2552,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-E-AW"
+            "Clear": "Shoal/AN-E-AW",
+            "Rain": "Shoal/AN-E-AW_Rain",
+            "Snow": "Shoal/AN-E-AW_Snow"
         }
     },
     "Shoal-AN-AE-W": {
@@ -2365,7 +2571,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-AE-W"
+            "Clear": "Shoal/AN-AE-W",
+            "Rain": "Shoal/AN-AE-W_Rain",
+            "Snow": "Shoal/AN-AE-W_Snow"
         }
     },
     "Shoal-AN-AE-AW": {
@@ -2382,7 +2590,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-AE-AW"
+            "Clear": "Shoal/AN-AE-AW",
+            "Rain": "Shoal/AN-AE-AW_Rain",
+            "Snow": "Shoal/AN-AE-AW_Snow"
         }
     },
     "Shoal-E-S-W": {
@@ -2399,7 +2609,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/E-S-W"
+            "Clear": "Shoal/E-S-W",
+            "Rain": "Shoal/E-S-W_Rain",
+            "Snow": "Shoal/E-S-W_Snow"
         }
     },
     "Shoal-E-S-AW": {
@@ -2416,7 +2628,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/E-S-AW"
+            "Clear": "Shoal/E-S-AW",
+            "Rain": "Shoal/E-S-AW_Rain",
+            "Snow": "Shoal/E-S-AW_Snow"
         }
     },
     "Shoal-E-AS-W": {
@@ -2433,7 +2647,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/E-AS-W"
+            "Clear": "Shoal/E-AS-W",
+            "Rain": "Shoal/E-AS-W_Rain",
+            "Snow": "Shoal/E-AS-W_Snow"
         }
     },
     "Shoal-E-AS-AW": {
@@ -2450,7 +2666,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/E-AS-AW"
+            "Clear": "Shoal/E-AS-AW",
+            "Rain": "Shoal/E-AS-AW_Rain",
+            "Snow": "Shoal/E-AS-AW_Snow"
         }
     },
     "Shoal-AE-S-W": {
@@ -2467,7 +2685,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AE-S-W"
+            "Clear": "Shoal/AE-S-W",
+            "Rain": "Shoal/AE-S-W_Rain",
+            "Snow": "Shoal/AE-S-W_Snow"
         }
     },
     "Shoal-AE-S-AW": {
@@ -2484,7 +2704,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AE-S-AW"
+            "Clear": "Shoal/AE-S-AW",
+            "Rain": "Shoal/AE-S-AW_Rain",
+            "Snow": "Shoal/AE-S-AW_Snow"
         }
     },
     "Shoal-AE-AS-W": {
@@ -2501,7 +2723,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AE-AS-W"
+            "Clear": "Shoal/AE-AS-W",
+            "Rain": "Shoal/AE-AS-W_Rain",
+            "Snow": "Shoal/AE-AS-W_Snow"
         }
     },
     "Shoal-AE-AS-AW": {
@@ -2518,7 +2742,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AE-AS-AW"
+            "Clear": "Shoal/AE-AS-AW",
+            "Rain": "Shoal/AE-AS-AW_Rain",
+            "Snow": "Shoal/AE-AS-AW_Snow"
         }
     },
     "Shoal-N-E-S-W": {
@@ -2535,7 +2761,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-E-S-W"
+            "Clear": "Shoal/N-E-S-W",
+            "Rain": "Shoal/N-E-S-W_Rain",
+            "Snow": "Shoal/N-E-S-W_Snow"
         }
     },
     "Shoal-N-E-S-AW": {
@@ -2552,7 +2780,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-E-S-AW"
+            "Clear": "Shoal/N-E-S-AW",
+            "Rain": "Shoal/N-E-S-AW_Rain",
+            "Snow": "Shoal/N-E-S-AW_Snow"
         }
     },
     "Shoal-N-E-AS-W": {
@@ -2569,7 +2799,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-E-AS-W"
+            "Clear": "Shoal/N-E-AS-W",
+            "Rain": "Shoal/N-E-AS-W_Rain",
+            "Snow": "Shoal/N-E-AS-W_Snow"
         }
     },
     "Shoal-N-E-AS-AW": {
@@ -2586,7 +2818,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-E-AS-AW"
+            "Clear": "Shoal/N-E-AS-AW",
+            "Rain": "Shoal/N-E-AS-AW_Rain",
+            "Snow": "Shoal/N-E-AS-AW_Snow"
         }
     },
     "Shoal-N-AE-S-W": {
@@ -2603,7 +2837,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-AE-S-W"
+            "Clear": "Shoal/N-AE-S-W",
+            "Rain": "Shoal/N-AE-S-W_Rain",
+            "Snow": "Shoal/N-AE-S-W_Snow"
         }
     },
     "Shoal-N-AE-S-AW": {
@@ -2620,7 +2856,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-AE-S-AW"
+            "Clear": "Shoal/N-AE-S-AW",
+            "Rain": "Shoal/N-AE-S-AW_Rain",
+            "Snow": "Shoal/N-AE-S-AW_Snow"
         }
     },
     "Shoal-N-AE-AS-W": {
@@ -2637,7 +2875,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-AE-AS-W"
+            "Clear": "Shoal/N-AE-AS-W",
+            "Rain": "Shoal/N-AE-AS-W_Rain",
+            "Snow": "Shoal/N-AE-AS-W_Snow"
         }
     },
     "Shoal-N-AE-AS-AW": {
@@ -2654,7 +2894,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/N-AE-AS-AW"
+            "Clear": "Shoal/N-AE-AS-AW",
+            "Rain": "Shoal/N-AE-AS-AW_Rain",
+            "Snow": "Shoal/N-AE-AS-AW_Snow"
         }
     },
     "Shoal-AN-E-S-W": {
@@ -2671,7 +2913,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-E-S-W"
+            "Clear": "Shoal/AN-E-S-W",
+            "Rain": "Shoal/AN-E-S-W_Rain",
+            "Snow": "Shoal/AN-E-S-W_Snow"
         }
     },
     "Shoal-AN-E-S-AW": {
@@ -2688,7 +2932,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-E-S-AW"
+            "Clear": "Shoal/AN-E-S-AW",
+            "Rain": "Shoal/AN-E-S-AW_Rain",
+            "Snow": "Shoal/AN-E-S-AW_Snow"
         }
     },
     "Shoal-AN-E-AS-W": {
@@ -2705,7 +2951,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-E-AS-W"
+            "Clear": "Shoal/AN-E-AS-W",
+            "Rain": "Shoal/AN-E-AS-W_Rain",
+            "Snow": "Shoal/AN-E-AS-W_Snow"
         }
     },
     "Shoal-AN-E-AS-AW": {
@@ -2722,7 +2970,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-E-AS-AW"
+            "Clear": "Shoal/AN-E-AS-AW",
+            "Rain": "Shoal/AN-E-AS-AW_Rain",
+            "Snow": "Shoal/AN-E-AS-AW_Snow"
         }
     },
     "Shoal-AN-AE-S-W": {
@@ -2739,7 +2989,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-AE-S-W"
+            "Clear": "Shoal/AN-AE-S-W",
+            "Rain": "Shoal/AN-AE-S-W_Rain",
+            "Snow": "Shoal/AN-AE-S-W_Snow"
         }
     },
     "Shoal-AN-AE-S-AW": {
@@ -2756,7 +3008,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-AE-S-AW"
+            "Clear": "Shoal/AN-AE-S-AW",
+            "Rain": "Shoal/AN-AE-S-AW_Rain",
+            "Snow": "Shoal/AN-AE-S-AW_Snow"
         }
     },
     "Shoal-AN-AE-AS-W": {
@@ -2773,7 +3027,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-AE-AS-W"
+            "Clear": "Shoal/AN-AE-AS-W",
+            "Rain": "Shoal/AN-AE-AS-W_Rain",
+            "Snow": "Shoal/AN-AE-AS-W_Snow"
         }
     },
     "Shoal-AN-AE-AS-AW": {
@@ -2790,7 +3046,9 @@
         "Colour": "#ffe249",
         "TerrainType": "Shoal",
         "Textures": {
-            "Clear": "Shoal/AN-AE-AS-AW"
+            "Clear": "Shoal/AN-AE-AS-AW",
+            "Rain": "Shoal/AN-AE-AS-AW_Rain",
+            "Snow": "Shoal/AN-AE-AS-AW_Snow"
         }
     }
 }
