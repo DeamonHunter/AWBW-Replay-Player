@@ -532,8 +532,8 @@
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/N",
-            "Rain": "Sea/N_Rain",
-            "Snow": "Sea/N_Snow"
+            "Rain": "Shoal/N_Rain",
+            "Snow": "Shoal/N_Snow"
         }
     },
     "Shoal-S": {
@@ -551,8 +551,8 @@
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/S",
-            "Rain": "Sea/S_Rain",
-            "Snow": "Sea/S_Snow"
+            "Rain": "Shoal/S_Rain",
+            "Snow": "Shoal/S_Snow"
         }
     },
     "Shoal-E": {
@@ -570,8 +570,8 @@
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/E",
-            "Rain": "Sea/E_Rain",
-            "Snow": "Sea/E_Snow"
+            "Rain": "Shoal/E_Rain",
+            "Snow": "Shoal/E_Snow"
         }
     },
     "Shoal-W": {
@@ -589,8 +589,8 @@
         "TerrainType": "Shoal",
         "Textures": {
             "Clear": "Shoal/W",
-            "Rain": "Sea/W_Rain",
-            "Snow": "Sea/W_Snow"
+            "Rain": "Shoal/W_Rain",
+            "Snow": "Shoal/W_Snow"
         }
     },
     "Reef": {
