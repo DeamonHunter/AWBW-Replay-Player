@@ -56,24 +56,7 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         public void TestBuildings()
         {
             AddStep("Render All IDs", () => renderMapWithAllIDs(16, 16));
-            AddStep("Set To AW1 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW1));
-            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
-            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
-            AddStep("Set To AW2 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW2));
-            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
-            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
-            AddStep("Set To AW1 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW1));
-            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
-            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
-            AddStep("Set To AW2 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW2));
-            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
-            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
-            AddStep("Set To AW1 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW1));
-            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
-            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
-            AddStep("Set To AW2 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW2));
-            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
-            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddSkinTestingSteps();
         }
 
         private void SetSkin(MapSkin map, BuildingSkin building)
@@ -87,40 +70,37 @@ namespace AWBWApp.Game.Tests.Visual.Logic
         public void TestCustomShoalRendering()
         {
             AddStep("Map: Sea Test", () => loadMapFromFile("Json/Maps/SeaTest"));
-            AddStep("Set To AW1 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW1));
-            AddStep("Set To AW2 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW2));
-            AddStep("Set To AW1 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW1));
-            AddStep("Set To AW2 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW2));
-            AddStep("Set To AW1 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW1));
-            AddStep("Set To AW2 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW2));
+            AddSkinTestingSteps();
             AddStep("Map: Shoal Test", () => loadMapFromFile("Json/Maps/ShoalTest"));
-            AddStep("Set To AW1 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW1));
-            AddStep("Set To AW2 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW2));
-            AddStep("Set To AW1 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW1));
-            AddStep("Set To AW2 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW2));
-            AddStep("Set To AW1 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW1));
-            AddStep("Set To AW2 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW2));
+            AddSkinTestingSteps();
             AddStep("Map: Shoal Alt Test A", () => loadMapFromFile("Json/Maps/ShoalAltTestA"));
-            AddStep("Set To AW1 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW1));
-            AddStep("Set To AW2 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW2));
-            AddStep("Set To AW1 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW1));
-            AddStep("Set To AW2 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW2));
-            AddStep("Set To AW1 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW1));
-            AddStep("Set To AW2 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW2));
+            AddSkinTestingSteps();
             AddStep("Map: Shoal Alt Test B", () => loadMapFromFile("Json/Maps/ShoalAltTestB"));
-            AddStep("Set To AW1 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW1));
-            AddStep("Set To AW2 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW2));
-            AddStep("Set To AW1 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW1));
-            AddStep("Set To AW2 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW2));
-            AddStep("Set To AW1 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW1));
-            AddStep("Set To AW2 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW2));
+            AddSkinTestingSteps();
             AddStep("Map: Custom Shoals", () => loadMapFromFile("Json/Maps/98331"));
+            AddSkinTestingSteps();
+        }
+
+        private void AddSkinTestingSteps()
+        {
             AddStep("Set To AW1 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
             AddStep("Set To AW2 Classic", () => SetSkin(AWBWApp.Game.MapSkin.Classic, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
             AddStep("Set To AW1 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
             AddStep("Set To AW2 Desert", () => SetSkin(AWBWApp.Game.MapSkin.Desert, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
             AddStep("Set To AW1 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW1));
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
             AddStep("Set To AW2 DoR", () => SetSkin(AWBWApp.Game.MapSkin.DoR, AWBWApp.Game.BuildingSkin.AW2));
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
+            AddStep("Change Weather", () => ReplayController.GoToNextTurn());
         }
 
         [Test]
@@ -256,6 +236,22 @@ namespace AWBWApp.Game.Tests.Visual.Logic
 
             var shoal = generator.CreateCustomShoalVersion(gameMap);
 
+            replay.TurnData.Add(new TurnData
+            {
+                ActivePlayerID = 0,
+                Players = new Dictionary<long, ReplayUserTurn> { { 0, new ReplayUserTurn { ActiveCOID = 1, RequiredPowerForNormal = 90000, RequiredPowerForSuper = 180000 } } },
+                ReplayUnit = turn.ReplayUnit,
+                Buildings = turn.Buildings,
+                StartWeather = new ReplayWeather { Type = WeatherType.Rain }
+            });
+            replay.TurnData.Add(new TurnData
+            {
+                ActivePlayerID = 0,
+                Players = new Dictionary<long, ReplayUserTurn> { { 0, new ReplayUserTurn { ActiveCOID = 1, RequiredPowerForNormal = 90000, RequiredPowerForSuper = 180000 } } },
+                ReplayUnit = turn.ReplayUnit,
+                Buildings = turn.Buildings,
+                StartWeather = new ReplayWeather { Type = WeatherType.Snow }
+            });
             ReplayController.LoadReplay(replay, shoal);
         }
 
